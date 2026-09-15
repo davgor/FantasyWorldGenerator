@@ -22,6 +22,14 @@ class AssetListTests(unittest.TestCase):
         self.assertIn("building.building_market_stall_generic", assets)
         self.assertTrue(any(item["kind"] == "plant" for item in assets.values()))
 
+    def test_history_potential_states_are_exhaustive(self):
+        from icarus_sim.terrain_history import biome_catalogue
+        assets={a['id']:a for a in compile_asset_list()['assets']}
+        for biome in biome_catalogue():
+            self.assertIn(biome['asset_id'],assets)
+            self.assertEqual(assets[biome['asset_id']]['selectors']['magic_school'],biome['magic_school'])
+        self.assertIn('marker.city_ruins',assets)
+
     def test_output_is_deterministic_and_ids_are_unique(self):
         first = compile_asset_list()
         second = compile_asset_list()

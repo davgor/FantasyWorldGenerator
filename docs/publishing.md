@@ -19,7 +19,7 @@ The workflow uploads mutable-retention build evidence to GitHub Actions; it does
 ## Portfolio samples on GitHub Pages
 
 After each push/merge to this repository's `main`, the export workflow validates the repository,
-regenerates three 65-grid worlds (seeds 42, 73, 108), and pushes only `public/mathlab/` to
+regenerates three recipe-2, 65-grid worlds (seeds 42, 73, 108), and pushes only `public/mathlab/` to
 [davgor.github.io](https://github.com/davgor/davgor.github.io). That commit triggers the portfolio's
 normal Pages deployment, including browser tests. No cron or cross-repository personal token is used.
 Pull requests build and test the same samples but cannot publish. Manual workflow dispatch can retry
@@ -35,7 +35,7 @@ unchanged; normal lab exports are unaffected. Generated snapshots are committed 
 included in its Pages artifact, so its code and live site can be traced to the source revision.
 
 Pages cannot run Python. Inspection, layers and JSON export work from saved data; generation and local
-patch controls are hidden. A failed generator build never updates the portfolio. A failed Pages build
+patch and age-advancement controls are hidden. A failed generator build never updates the portfolio. A failed Pages build
 leaves the previous deployment live. This is not an Unreal runtime or packaged-game integration.
 
 ### Publishing credential and recovery

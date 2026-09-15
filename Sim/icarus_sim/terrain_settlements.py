@@ -790,7 +790,7 @@ def add_settlements(result,cfg):
     eligible=habitats[species_ids[0]]
     jitter=[rng.uniform(0,.06) for _ in points];selected=[];outposts=[]
     def fits(i):
-        return i not in selected and all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[i],vectors[j])))))>=cfg.settlement_spacing for j in selected)
+        return i not in {ruin['node'] for ruin in result.get('ruins',[])} and i not in selected and all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[i],vectors[j])))))>=cfg.settlement_spacing for j in selected)
     wanted_outposts=round(human_count*cfg.stubbornness)
     for i in sorted(eligible,key=lambda i:(scores[i]+jitter[i],-i),reverse=True):
         if len(selected)>=human_count-wanted_outposts:break
@@ -809,6 +809,14 @@ def add_settlements(result,cfg):
         for i in sorted(habitats[species],key=lambda i:(-score_sets[species][i]-jitter[i],i)):
             if added>=quotas[species]:break
             if fits(i):selected.append(i);peoples.append(species);added+=1
+    if cfg.world_recipe==2 and '_survivors' in result:
+        survivors=result['_survivors']
+        chosen=[s['node'] for s in survivors];chosen_peoples=[s['population_profile'] for s in survivors]
+        for node,people in zip(selected,peoples):
+            if node in chosen or chosen_peoples.count(people)>=quotas[people]:continue
+            if all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[node],vectors[j])))))>=cfg.settlement_spacing for j in chosen):
+                if len(chosen)<cfg.settlement_count:chosen.append(node);chosen_peoples.append(people)
+        selected,peoples=chosen,chosen_peoples
     if inferred:
         result['population_budget']={'version':3,'world_cap':cap,'allowances':allowances,
             'shares':{p:allowances[p]/cap if cap else 0 for p in profiles},
@@ -856,6 +864,13 @@ def add_settlements(result,cfg):
                 'biome':p['biome_preferences'].get(str(layers['biome'][z][x]),0), 'magic':-p['magic_penalty']*risk,
                 'coastal_support':layers['coastal_support'][z][x]*(.35 if peoples[k]=='tidekin' else .15),
                 'gnome_metal_affinity':.15*resource[i] if peoples[k]=='gnome' else 0.}
+    if cfg.world_recipe==2:
+        previous={s['node']:s for s in result.get('_survivors',result.get('settlements',{}).get('sites',[]))}
+        for site in sites:
+            old=previous.get(site['node'])
+            if old and old['population_profile']==site['population_profile']:
+                for key in ('uid','source_culture','founded_age','name'):
+                    if key in old:site[key]=old[key]
     if 'population_budget' in result:
         budget=result['population_budget']
         if cfg.world_recipe:

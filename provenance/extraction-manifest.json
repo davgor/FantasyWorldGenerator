@@ -110,10 +110,11 @@
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "8d6223661f796e610d83a6dae29f37cec2f16ed60f77d0f77ee38c0207a1efbe",
+      "destination_sha256": "a53b28577ca5d05a18bd1795ce336154d16c4e0da6b3ce74b527594ac895651d",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation."
     },
     {
       "source": "Sim/icarus_sim/terrain_magic.py",
@@ -197,10 +198,11 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "aa157544488077045569b66597093d304fb0a8f5ffc0fb972dc2e1a67e8b045c",
+      "destination_sha256": "1d50f192a0ee2d46c79e683c350706cf887ba618a99fba15b4502b9f3fac0ce4",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds."
     },
     {
       "source": "Sim/icarus_sim/terrain_society.py",
@@ -232,9 +234,11 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "b8458216d2aa8da1558c577334bac34677770cdf511b6e3b60045725deab0eeb",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Add explicit recipe 2 defaults, registry, and eight-school option validation while preserving recipe 1 defaults."
     },
     {
       "source": "Sim/tests/test_terrain_area.py",
@@ -365,9 +369,11 @@
       "source": "Sim/tests/test_terrain_world_layers.py",
       "source_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
       "destination": "Sim/tests/test_terrain_world_layers.py",
-      "destination_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "cb71cde10548e65b85a89dbf63e65fcf97c627d2ae5dd5f521111e15f93b77b7",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Recipe 2 is now supported; the unsupported-version regression uses recipe 3. Recipe 1 behavior assertions remain unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_world_size.py",
@@ -592,18 +598,21 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "9e76d226f6ff4603e6a32240ddc249fa04291eea35bee4db7c9b7f350204b425",
+      "destination_sha256": "3f8698b25623af5b52b311c5f9be708228f5c27ce729a8125dca08450b24f8b6",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation. Initial destination checksum corrected to the committed standalone document, including its documented immutable source-link rewrites and LF line endings."
+      "modification": "Point the lab default to recipe 2 while retaining historical method documentation.",
+      "revision": "revisions/recipe-2-history.json"
     },
     {
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
-      "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "destination_sha256": "a35e00a49ad6cde8202fda4182517c196dea97d64a58efeef82feb78c5a4e451",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Canonical recipe 2 phases, magic competition, biome variants, age transitions, compatibility and limitations."
     },
     {
       "source": "docs/reviews/LAB-005.md",
@@ -641,27 +650,31 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "cf0abced6c365b5fe86fe38a5a205296192adae94af4f1ad12aacdf7e4cca89d",
+      "destination_sha256": "79a1ca408b6632990616805279ffa0f8ad7e9bb9c857c7dfabd43635b7816ff3",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers."
     },
     {
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "31171a00e700712852062761e50226cb49e2f3f2a71cff3f309d70480d72c81f",
+      "destination_sha256": "b2e6944b86b0e23201ccb0496c47dbd30f6871d7e6f71e32c36d55cf36b9f390",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Launch recipe 2 by default and preserve explicit legacy phase defaults."
     },
     {
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
-      "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "destination_sha256": "de7a3e738f368454da3bdea2bdecce23eebb13afef8c19d256ea24080fd4407f",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "revision": "revisions/recipe-2-history.json",
+      "modification": "Show recipe 2 stage-aware atlas, eight networks, variant inspection and cultural ruin cards."
     }
   ]
 }

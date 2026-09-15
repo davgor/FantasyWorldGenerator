@@ -14,6 +14,10 @@ Follow with ML-01/02 and the small ML-03 native-runtime/plugin proof. Ordinary r
 
 The working tree contains an ML-00 extraction candidate and an export-only Python/JSON packaging candidate. Local reference tests and browser/export checks must pass, and clean-checkout CI must supply the final isolation evidence before ML-00 closes. No native kernel, Unreal plugin, cooked consumer, or immutable runtime package has been validated.
 
+## Staged world lab
+
+Run `python3 tools/terrain_lab.py --serve` for the sixteen-stage recipe 2 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. [Behavior and replay contract](docs/terrain-world-layers.md).
+
 ## Local validation
 
 Python 3.9+ and the standard library are sufficient for the reference tests. Packaging uses `setuptools`.

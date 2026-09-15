@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/age-advance-request.schema.json",
+  "title": "Advance an existing recipe 2 world",
+  "type": "object",
+  "required": ["api_version", "world"],
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"const": 1},
+    "world": {"type": "object", "required": ["config", "effective_config", "layers", "magic", "history", "settlements", "ruins"]},
+    "steps": {"type": "integer", "minimum": 1, "maximum": 10, "default": 1},
+    "leyline_edits": {
+      "type": "array", "maxItems": 128,
+      "items": {
+        "type": "object", "required": ["school"], "additionalProperties": false,
+        "properties": {
+          "school": {"enum": ["weave", "umbral", "infernal", "radiant", "fire", "water", "earth", "air"]},
+          "node_id": {"type": "string", "minLength": 1},
+          "line_id": {"type": "string", "minLength": 1},
+          "intensity": {"type": "number", "minimum": 0, "maximum": 4},
+          "new_node": {
+            "type": "object", "required": ["id", "direction", "intensity"], "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "direction": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+              "intensity": {"type": "number", "minimum": 0, "maximum": 4}
+            }
+          }
+        },
+        "oneOf": [
+          {"required": ["node_id", "intensity"], "not": {"anyOf": [{"required": ["line_id"]}, {"required": ["new_node"]}]}},
+          {"required": ["line_id", "intensity"], "not": {"anyOf": [{"required": ["node_id"]}, {"required": ["new_node"]}]}},
+          {"required": ["new_node"], "not": {"anyOf": [{"required": ["node_id"]}, {"required": ["line_id"]}, {"required": ["intensity"]}]}}
+        ]
+      }
+    }
+  }
+}

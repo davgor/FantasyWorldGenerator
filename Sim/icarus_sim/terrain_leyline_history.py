@@ -42,7 +42,7 @@ def generate_networks(result, cfg):
         networks[name] = {'name': name, 'group': group, 'descriptors': descriptors, 'color': color,
                           'seed': seed, 'strength': o[name + '_strength'], 'width_m': o[name + '_width'],
                           'instability': o[name + '_instability'], 'nodes': nodes, 'edges': edges}
-    result['magic'] = {'version': 3, 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
+    result['magic'] = {'version': 3, 'school_order': list(SCHOOLS), 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
                        'networks': networks, 'colleges': [], 'enabled': bool(cfg.magic_enabled),
                        'mutation_threshold': .35, 'dominance_margin': .08,
                        'method': 'Eight independently seeded networks. Node and line intensities are editable; '

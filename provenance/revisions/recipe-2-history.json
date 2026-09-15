@@ -1,0 +1,61 @@
+{
+  "id": "recipe-2-history",
+  "source_commit": "d551767cb1c3bd259bb00f56be1e52c2182c5ec3",
+  "review": "Behavioral regression tests and canonical documentation accompany these intentional edits. Original source paths/hashes remain unchanged. No manifest rebuild against another source revision.",
+  "files": [
+    {
+      "destination": "Sim/icarus_sim/terrain_lab.py",
+      "previous_destination_sha256": "8d6223661f796e610d83a6dae29f37cec2f16ed60f77d0f77ee38c0207a1efbe",
+      "destination_sha256": "a53b28577ca5d05a18bd1795ce336154d16c4e0da6b3ce74b527594ac895651d",
+      "reason": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation."
+    },
+    {
+      "destination": "Sim/icarus_sim/terrain_settlements.py",
+      "previous_destination_sha256": "aa157544488077045569b66597093d304fb0a8f5ffc0fb972dc2e1a67e8b045c",
+      "destination_sha256": "1d50f192a0ee2d46c79e683c350706cf887ba618a99fba15b4502b9f3fac0ce4",
+      "reason": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds."
+    },
+    {
+      "destination": "Sim/icarus_sim/terrain_world.py",
+      "previous_destination_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
+      "destination_sha256": "b8458216d2aa8da1558c577334bac34677770cdf511b6e3b60045725deab0eeb",
+      "reason": "Add explicit recipe 2 defaults, registry, and eight-school option validation while preserving recipe 1 defaults."
+    },
+    {
+      "destination": "Sim/tests/test_terrain_world_layers.py",
+      "previous_destination_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
+      "reason": "Recipe 2 is now supported; the unsupported-version regression uses recipe 3. Recipe 1 behavior assertions remain unchanged.",
+      "destination_sha256": "cb71cde10548e65b85a89dbf63e65fcf97c627d2ae5dd5f521111e15f93b77b7"
+    },
+    {
+      "destination": "docs/terrain-math-lab.md",
+      "previous_destination_sha256": "9e76d226f6ff4603e6a32240ddc249fa04291eea35bee4db7c9b7f350204b425",
+      "destination_sha256": "3f8698b25623af5b52b311c5f9be708228f5c27ce729a8125dca08450b24f8b6",
+      "reason": "Point the lab default to recipe 2 while retaining historical method documentation."
+    },
+    {
+      "destination": "docs/terrain-world-layers.md",
+      "previous_destination_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
+      "destination_sha256": "a35e00a49ad6cde8202fda4182517c196dea97d64a58efeef82feb78c5a4e451",
+      "reason": "Canonical recipe 2 phases, magic competition, biome variants, age transitions, compatibility and limitations."
+    },
+    {
+      "destination": "tools/terrain_lab.html",
+      "previous_destination_sha256": "cf0abced6c365b5fe86fe38a5a205296192adae94af4f1ad12aacdf7e4cca89d",
+      "destination_sha256": "79a1ca408b6632990616805279ffa0f8ad7e9bb9c857c7dfabd43635b7816ff3",
+      "reason": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers."
+    },
+    {
+      "destination": "tools/terrain_lab.py",
+      "previous_destination_sha256": "31171a00e700712852062761e50226cb49e2f3f2a71cff3f309d70480d72c81f",
+      "destination_sha256": "b2e6944b86b0e23201ccb0496c47dbd30f6871d7e6f71e32c36d55cf36b9f390",
+      "reason": "Launch recipe 2 by default and preserve explicit legacy phase defaults."
+    },
+    {
+      "destination": "tools/terrain_world.js",
+      "previous_destination_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
+      "destination_sha256": "de7a3e738f368454da3bdea2bdecce23eebb13afef8c19d256ea24080fd4407f",
+      "reason": "Show recipe 2 stage-aware atlas, eight networks, variant inspection and cultural ruin cards."
+    }
+  ]
+}

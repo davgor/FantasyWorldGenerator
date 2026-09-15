@@ -45,10 +45,10 @@ def main():
                 manifest['source_files'][path.relative_to(source).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     payloads = {}
     for slug, title, seed, overrides, description in WORLDS:
-        world = omit_timings(generate_request({'seed': seed, 'overrides': {'size': 65, **overrides}}))
+        world = omit_timings(generate_request({'recipe_version': 2, 'seed': seed, 'overrides': {'size': 65, **overrides}}))
         html = terrain_lab.report(world, live=False)
         html += '''<style>
-        #world-mode,#world-generate,#world-params,#local-lab,.local-lab{display:none!important}
+        #world-mode,#world-generate,#world-advance-age,#world-params,#local-lab,.local-lab{display:none!important}
         .layout{display:block}aside{margin-bottom:20px}body{padding:16px}select{max-width:100%}
         </style><script>
         document.getElementById('world-status').textContent='Seed '+data.config.seed+' · Saved world showcase. Explore layers and lairs; generation runs in GitHub Actions. Timings omitted.';

@@ -1,4 +1,76 @@
-# Layered-world recipe 1
+# Layered world and history recipes
+
+## Recipe 2: staged construction and two ages
+
+The lab now defaults to recipe **2**, generation algorithm **7**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
+
+1. Plate layout
+2. Tectonic relief
+3. Surface detail
+4. Erosion and sediment
+5. Connected water
+6. Second tectonic relief
+7. Valleys and gorges
+8. Wind and rain
+9. Leylines, over natural biomes
+10. Cities, after magical biome classification
+11. Roads
+12. Populated regions, supporting hamlets and supply
+13. Beasties and animals
+14. Age transition 1
+15. Age transition 2
+16. Simulation complete
+
+`POST /world/generate` selects this contract with `{"recipe_version":2,"seed":42,"overrides":{"size":33,"phase":16}}`. The registry returns a 1–16 phase range for this recipe. Explicit recipe 1, requests omitting `recipe_version`, and the publishing CLI's existing convenience command retain recipe 1. `python3 tools/terrain_lab.py --world_recipe 1 --serve` opens the previous nine-stage lab. Recipe 0 remains available. Existing recipe 0/1 seed streams and biome IDs are unchanged; a recipe 2 seed deliberately produces a different world. Replay recipe 2 through its exported `Config`, including `world_options`.
+
+`build_stages` contains ordered content deltas: `layers` replaces named arrays, `removed_layers` deletes obsolete arrays, and `state` replaces named report sections (`null` deletes a section). Begin from empty layers and no stage-dependent sections. Apply deltas through the chosen stage. `materialize_stage` provides the Python counterpart of the browser reconstruction. Snapshots contain no timing values and never expose future cities, nests, magic, or ruins. Export downloads the complete generated history regardless of the stage being viewed. Content deltas avoid repeating every grid at every step; later society/economy reports still make full-history exports larger than recipe 1.
+
+### Deep-time geography
+
+The second tectonic pass represents a **50-million-year artistic epoch**. It rotates the original plate centers using their original angular velocity axes, backtraces each destination cell's crust, blends transported relief with the existing terrain, and applies uplift/subsidence from the shifted boundaries. Original plate identities and geometry remain inspectable alongside moved plates and elevation deltas. All resulting heights, slopes, land area, and hydrology use physical metres. The duration is narrative calibration; angular velocities are dimensionless, not Earth-calibrated rates.
+
+Water is rerouted after this deformation. Previously active river cells that become dry and lose their river are gorge candidates. Former water footprints that become dry are valley candidates. The generator incises these beds and shoulders, then reroutes water again. `gorge` and `dry_valley` mark surviving dry abandoned features; `relic_gorge`, `relic_valley`, and `relic_incision` preserve provenance even if a cut refills. This is grid-scale geomorphology, not a water-volume/evaporation simulation or a sediment-conserving second erosion pass. Rainfall and rain-fed drainage are calculated afterward.
+
+### Eight independent leylines in three groups (magic schema 3)
+
+- **Raw magic:** Weave — chaos, creation, creativity; Umbral — necrotic, entropy, death, order.
+- **Holy / unholy:** Infernal — demons, hellscapes, corruption, evil; Radiant — holy, healing, order, peace, righteousness.
+- **Primordial:** Fire — fire, heat, renewal, chaos; Water — water, ice, currents, order; Earth — nature, ground, stone, roots, order; Air — wind, storms, chaos, force.
+
+Every school has an independent seed/variation, occurrence, node count, width, strength and instability. Every key point and line also has an independent seeded intensity in 0.35–1.65. Network records retain stable node/line IDs, positions, connectivity, descriptor/group metadata and these intensities. Key-point Gaussian influence and line Gaussian influence contribute to local potency; endpoint intensity weights each line, and network strength scales its field. Overlapping raw school fields are preserved. Aggregate density, instability and opposing influences remain separate diagnostics.
+
+A magical biome requires strongest local potency **at least 0.35**, and a lead of **at least 0.08** over the next strongest school, including schools from other groups. Ties, close contests, and weak magic retain the natural biome. Overlap itself does not force a mutation. `dominant_magic` indexes the exported school order, with −1 for weak/contested cells. The initial Leylines stage shows the unmodified natural biome; classification first appears at Cities.
+
+`terrain_leyline_history.edit_network` validates copy-on-write changes to a node or line intensity (0–4), or adds a uniquely identified unit-vector key point. `evaluate_networks` rebuilds fields without rerolling any network geometry. Zero weakens a source to nothing. A new standalone point has local influence without fabricated connecting lines. This provides the simulation boundary for future player actions; no player editing UI or persistence/save importer is supplied. Callers must reclassify biomes and rebuild affected society after edits. Generated age changes and their nodes are already part of deterministic replay.
+
+The `ley_holy` and `ley_primordial` grids are compatibility projections for existing habitat profiles: Radiant, and the maximum of the four elemental fields, respectively. They are not additional networks and are hidden from the normal leyline menus. Future profile revisions can specialize elemental creature requirements without changing the eight-network contract.
+
+### Natural and magical biomes (terrain schema 5)
+
+`natural_biome` carries the existing climate/hydrology classification, including the 13 supported natural surface categories: ocean, tundra, desert, grassland, forest, exposed rock, snow, rainforest, lake, marsh, boreal forest, cold tundra and persistent land ice. These are game-scale Earth-like categories, not an exhaustive scientific biome taxonomy.
+
+`terrain.natural_biomes` and `terrain.magical_biomes` are separate catalogues. Every natural category has a named mutation for **all eight schools: 104 potential variants**. Each variant exports its natural `core`, `core_biome_id`, `magic_school`, group, descriptors, display color and asset ID. For example, **Haunted tombs** has `core: desert`, `magic_school: umbral`, necrotic descriptors and dark-brown RGB `[72,49,35]`. Examples elsewhere include Rootreef seas, Phoenix woods, Singing glaciers and Hallowed heights.
+
+`biome_variant` is the magical catalogue index or −1. The atlas and globe show the underlying natural color where there is no winning mutation. Atlas hover explains the natural core and magical source. The older `biome` grid remains a calibrated food/habitat phenotype using existing IDs; it is not the authoritative magical display catalogue. Mutation gating applies before that compatibility phenotype, so close contests do not silently change food-biome categories. Regional influence overlays remain independently inspectable suitability/opportunity fields.
+
+### Civilization ages (history schema 1)
+
+Each age evaluates all existing **surface cities** against the same pre-age world. A seeded city/age lottery combines dominant local leyline potency, nearby eligible fantasy threats, and a small chance of magical self-destruction. Threats currently include named dragons and demonic, undead or aberrant families; their proximity influence decays over a bounded local reach. Species occurrence is not a guarantee of a city attack. A magic-disabled world has no magical self-destruction. This is an explicit artistic threat rule, not a general biological hostility inference.
+
+Ruins retain a stable city UID, founding age, destruction age, source culture, population profile, location, reason, cause, lottery probability/draw and local evidence (school/potency or nest/distance/reach). Source culture records the city's founding society; later road/culture regrouping cannot erase it. The lab renders Ruins markers and reason cards. Existing survivors retain their identity/name/location. Ruined city cells cannot immediately be chosen as new cities.
+
+After all fates are decided, line and key-point intensities evolve independently by seeded factors 0.65–1.35, bounded at 4. Magical self-destruction leaves an intensity-2.5 Weave key point at the ruin. Then natural/environmental reports and magical variants are recalculated, civilization placement runs again against updated habitat, and roads, supporting hamlets, forts, colleges, fisheries and food budgets are rebuilt using active cities only. New eligible cities may appear within each people's remaining habitat capacity after survivors are counted; none are forced. Existing survivors persist, while current population/support estimates are recalculated. This is not a conserved population migration model.
+
+Nests are reevaluated before city fates and after each age so all ages see current habitat and settlement clearance. Independent sky settlements are refreshed through the existing support model; surface-city ruin history does not yet simulate sky-city mortality or displaced populations. `history.ages` records losses, survivor UIDs and new city UIDs. Simulation complete freezes the second age's state.
+
+### Verification and boundaries
+
+Behavioral coverage checks partial-stage equivalence, replay, finite JSON, seams/poles, all eight network streams, competition thresholds, intensity edit validation, abandoned waterway classification, ruin culture retention, new key points, and active-city ownership of rebuilt hamlets/fishing ports. The exhaustive asset compiler includes all 104 variants and the city-ruins marker, regardless of which a seed realizes. Asset definitions do not imply built Unreal content. Review stage snapshots in the lab before downstream integration; metre-to-Unreal-centimetre conversion remains the future adapter's responsibility.
+
+## Recipe 1 reference
+
+The following sections document the preserved nine-stage recipe 1 contract. The lab's default and recipe 2 behavior are specified above.
+
 
 Launch from the repository root with `python tools/terrain_lab.py --serve`, then open http://127.0.0.1:8765. Python 3.12 and the standard library are sufficient. This remains a standalone mathlab; it does not mutate Unreal assets.
 
@@ -72,3 +144,27 @@ The Beast nests parameter group exposes the global ceiling (120), per-species ce
 Generation uses at most 2,048 area-weighted draws of unique spherical surface nodes, plus sky candidates. Each species gets an independent occurrence and placement seed. Land/water, temperature and required influence checks precede weighted suitability; accepted anchors avoid settled cities, coastal hamlets and sky settlements on their own layer. Same-species spacing uses great-circle distances, including across the longitude seam. A seeded shared ceiling and one-anchor-per-cell rule resolve proposals; different species can have overlapping territories. Diagnostics distinguish disabled, occurrence lottery, missing sampled habitat/clearance, and shared-budget rejection. Absence is not proof no habitat exists: narrow rivers and tiny refuges may be missed at coarse resolution.
 
 The atlas has a nest toggle, species filter (including absent species), location selector and clickable colored ring markers. Inspection shows profile requirements and actual weighted contributions. Species profiles, reasons, layer-qualified IDs and diagnostics are included in JSON exports. Nests do not change terrain, settlements, fisheries or food budgets. There is no prey accounting, hostility inference, creature count, cave validation, migration, monster asset or Unreal spawning integration. Underground-associated creatures use surface entrance/lair proxies; the Underdark is not generated.
+
+## Advancing a live world through the age API
+
+`POST /world/advance-age` accepts age API **1** and returns the updated world. The same engine-independent entry point is `terrain_history.advance_age_request(body)`. The lab also has an **Advance age** button once creature generation is complete.
+
+```json
+{
+  "api_version": 1,
+  "world": "replace this string with the existing exported world object",
+  "steps": 1,
+  "leyline_edits": [
+    {"school":"fire","new_node":{"id":"player-volcano","direction":[1,0,0],"intensity":2.5}},
+    {"school":"weave","node_id":"weave-node-0","intensity":0.2}
+  ]
+}
+```
+
+`world` must be the actual object, not a filename or the placeholder string shown above. Both `steps` and `leyline_edits` are optional. Steps are bounded to 1–10 per call; age numbering continues beyond the two genesis ages. Pass the returned world to the next call. Retries against the same original input reproduce the same output; this stateless endpoint does not persist or advance a server-owned world. The caller's Python object is not mutated.
+
+The API validates recipe 2 through stage 13 or later, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
+
+Player leyline edits are applied before environmental/biome refresh. **Creature nests are recalculated before each age's city-fate decisions and again after the age's biome/civilization rebuild**, and export `evaluated_age`. Thus time skips and significant player changes do not reuse an obsolete creature distribution. The surface geography is preserved through these civilization ages. Terrain-changing player systems must supply coherent rebuilt hydrology/climate before using this boundary.
+
+`history.operations` records API steps and leyline edits. `history.ages` records each outcome. When supplied, saved build history gains an inspectable step for each additional age. Genesis `config.phase` remains within its 1–16 recipe range; `phases.completed` can exceed 16 in an advanced world. Config-only replay reconstructs genesis; persist the returned runtime state and operation record to preserve player actions. There is no database, authentication service, multiplayer arbitration, or Unreal save importer in this loopback lab.

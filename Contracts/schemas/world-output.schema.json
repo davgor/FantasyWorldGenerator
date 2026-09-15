@@ -21,7 +21,7 @@
       "type": "object",
       "required": ["version", "seed", "resolved", "provenance"],
       "properties": {
-        "version": { "const": 1 },
+        "version": { "enum": [1, 2] },
         "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
         "resolved": { "type": "object" },
         "provenance": { "type": "object" }

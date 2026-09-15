@@ -42,6 +42,7 @@ class ShowcaseTests(unittest.TestCase):
                 self.assertIn('timing_ms', html)
                 self.assertNotIn(str(SOURCE.resolve()), html)
                 self.assertEqual(world['recipe']['overrides']['size'], 65)
+                self.assertEqual(world['recipe']['version'], 2)
             for relative, digest in manifest['source_files'].items():
                 self.assertEqual(hashlib.sha256((SOURCE / relative).read_bytes()).hexdigest(), digest)
 
