@@ -6,6 +6,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: reference-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -26,6 +30,8 @@ jobs:
         run: python tools/validate_repo.py
       - name: Build Python distributions
         run: python -m build
+      - name: Regenerate portfolio samples
+        run: python tools/export_showcase.py
       - name: Assemble publish payload
         run: |
           mkdir -p publish/python publish/contracts
@@ -41,3 +47,52 @@ jobs:
           path: publish/
           if-no-files-found: error
           retention-days: 90
+
+      - name: Upload static sample bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: fantasy-world-showcase
+          path: Artifacts/showcase/
+          if-no-files-found: error
+
+      - name: Check publishing credential
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          DEPLOY_KEY: ${{ secrets.PORTFOLIO_DEPLOY_KEY }}
+        run: |
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::Set PORTFOLIO_DEPLOY_KEY to the dedicated davgor.github.io write deploy key."
+            exit 1
+          fi
+
+      - name: Checkout portfolio
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          repository: davgor/davgor.github.io
+          ref: main
+          path: Artifacts/portfolio
+          ssh-key: ${{ secrets.PORTFOLIO_DEPLOY_KEY }}
+
+      - name: Publish regenerated samples
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          set -eu
+          latest=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [ "$latest" != "$SOURCE_REVISION" ]; then
+            echo "Source revision has been superseded; the newer main run will publish."
+            exit 0
+          fi
+          cp Artifacts/showcase/* Artifacts/portfolio/public/mathlab/
+          cd Artifacts/portfolio
+          git config user.name "Fantasy World Generator publishing"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- public/mathlab
+          if git diff --cached --quiet; then
+            echo "Samples are already current."
+            exit 0
+          fi
+          git commit -m "Regenerate fantasy world samples from $SOURCE_REVISION"
+          git push origin HEAD:main
