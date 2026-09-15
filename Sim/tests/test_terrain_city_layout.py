@@ -38,7 +38,7 @@ class CityLayoutTests(unittest.TestCase):
         first = generate(config)
         second = generate(config)
         self.assertEqual(first['settlements'], second['settlements'])
-        self.assertEqual(first['settlements']['version'], 8)
+        self.assertEqual(first['settlements']['version'], 9)
         self.assertTrue(first['settlements']['sites'])
 
         points, _, graph = sphere_grid(config.size, first['effective_config']['globe_radius'])

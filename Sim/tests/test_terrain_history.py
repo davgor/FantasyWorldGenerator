@@ -8,7 +8,7 @@ class HistoryTests(unittest.TestCase):
     def test_versioned_pipeline_and_replay(self):
         from icarus_sim.terrain_history import STAGES, materialize_stage
         from icarus_sim.terrain_lab import Config, generate
-        world = generate_request({'recipe_version': 2, 'seed': 42, 'overrides': {'size': 17}})
+        world = generate_request({'recipe_version': 3, 'seed': 42, 'overrides': {'size': 17}})
         self.assertEqual(len(STAGES), 16)
         self.assertEqual(world['phases']['completed'], 16)
         self.assertEqual(len(world['history']['ages']), 2)
@@ -93,7 +93,7 @@ class LeylineTests(unittest.TestCase):
         from icarus_sim.terrain_history import materialize_stage
         from icarus_sim.terrain_leyline_history import SCHOOLS, evaluate_networks, edit_network
         from icarus_sim.terrain_lab import Config
-        body={'recipe_version':2,'seed':42,'overrides':{'size':17,'phase':9}}
+        body={'recipe_version':3,'seed':42,'overrides':{'size':17,'phase':9}}
         a=generate_request(body)
         b=generate_request({**body,'overrides':{**body['overrides'],'fire_strength':0.}})
         self.assertEqual(set(a['magic']['networks']),set(SCHOOLS))
@@ -116,7 +116,7 @@ class LeylineTests(unittest.TestCase):
         from unittest.mock import patch
         from icarus_sim.terrain_history import age_transition
         from icarus_sim.terrain_lab import Config
-        w=generate_request({'recipe_version':2,'seed':42,'overrides':{'size':33,'phase':13}})
+        w=generate_request({'recipe_version':3,'seed':42,'overrides':{'size':33,'phase':13}})
         self.assertTrue(w['settlements']['sites'], 'Fixture must contain cities')
         old=copy.deepcopy(w['settlements']['sites'])
         node_count=len(w['magic']['networks']['weave']['nodes'])
@@ -136,7 +136,7 @@ class LeylineTests(unittest.TestCase):
 class AgeApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.world=generate_request({'recipe_version':2,'seed':12,'overrides':{'size':17}})
+        cls.world=generate_request({'recipe_version':3,'seed':12,'overrides':{'size':17}})
 
     def test_advance_existing_world_and_recalculate_nests(self):
         from icarus_sim.terrain_history import advance_age_request

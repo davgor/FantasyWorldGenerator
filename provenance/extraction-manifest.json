@@ -9,9 +9,19 @@
       "source": "docs/catalogue/world-assets/manifest.json",
       "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
       "destination": "Contracts/catalogues/world-assets.json",
-      "destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
-      "status": "exact",
-      "reason": "Pinned semantic asset-requirement input; Unreal assets and bindings remain game-owned"
+      "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+      "status": "modified",
+      "reason": "Pinned semantic asset-requirement input; Unreal assets and bindings remain game-owned",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+          "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/README.md",
@@ -34,25 +44,55 @@
       "source": "Sim/icarus_sim/terrain_area.py",
       "source_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
       "destination": "Sim/icarus_sim/terrain_area.py",
-      "destination_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "104aa13368f706cae63b0663534fec4333602edfba258356d4a93b6a20a4b453",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
+          "destination_sha256": "104aa13368f706cae63b0663534fec4333602edfba258356d4a93b6a20a4b453",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_biomes.py",
       "source_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
       "destination": "Sim/icarus_sim/terrain_biomes.py",
-      "destination_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "ce7379f0d9218b6b02e9554d23d82f1018ecf6225be40d658aa3045bf4d6570d",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
+          "destination_sha256": "ce7379f0d9218b6b02e9554d23d82f1018ecf6225be40d658aa3045bf4d6570d",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_city_building_packs.json",
       "source_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
       "destination": "Sim/icarus_sim/terrain_city_building_packs.json",
-      "destination_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
+          "destination_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_city_layout_profiles.json",
@@ -74,9 +114,19 @@
       "source": "Sim/icarus_sim/terrain_ecology.py",
       "source_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
       "destination": "Sim/icarus_sim/terrain_ecology.py",
-      "destination_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "d64ca3046d7232eed6dec39dc9c953a2c1f90060abf9c6fface6e6e8146e82e3",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
+          "destination_sha256": "d64ca3046d7232eed6dec39dc9c953a2c1f90060abf9c6fface6e6e8146e82e3",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_erosion.py",
@@ -98,28 +148,56 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "7bf22304c5d477398d50861a053b8d3840e4414d36dc7c98bf69fd4ef2fa96f4",
+      "destination_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged."
+      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7bf22304c5d477398d50861a053b8d3840e4414d36dc7c98bf69fd4ef2fa96f4",
+          "destination_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "a53b28577ca5d05a18bd1795ce336154d16c4e0da6b3ce74b527594ac895651d",
+      "destination_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation."
+      "modification": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a53b28577ca5d05a18bd1795ce336154d16c4e0da6b3ce74b527594ac895651d",
+          "destination_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
+          "destination_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
@@ -149,17 +227,37 @@
       "source": "Sim/icarus_sim/terrain_profiles.json",
       "source_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
       "destination": "Sim/icarus_sim/terrain_profiles.json",
-      "destination_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
+          "destination_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_profiles.py",
       "source_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
       "destination": "Sim/icarus_sim/terrain_profiles.py",
-      "destination_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
+          "destination_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_recipes.py",
@@ -189,11 +287,20 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "1d50f192a0ee2d46c79e683c350706cf887ba618a99fba15b4502b9f3fac0ce4",
+      "destination_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds."
+      "modification": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "1d50f192a0ee2d46c79e683c350706cf887ba618a99fba15b4502b9f3fac0ce4",
+          "destination_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_society.py",
@@ -223,11 +330,20 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "b8458216d2aa8da1558c577334bac34677770cdf511b6e3b60045725deab0eeb",
+      "destination_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Add explicit recipe 2 defaults, registry, and eight-school option validation while preserving recipe 1 defaults."
+      "modification": "Add explicit recipe 2 defaults, registry, and eight-school option validation while preserving recipe 1 defaults. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "b8458216d2aa8da1558c577334bac34677770cdf511b6e3b60045725deab0eeb",
+          "destination_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "Sim/tests/test_terrain_area.py",
@@ -249,9 +365,19 @@
       "source": "Sim/tests/test_terrain_city_layout.py",
       "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
       "destination": "Sim/tests/test_terrain_city_layout.py",
-      "destination_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
+          "destination_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_climate_sites.py",
@@ -289,17 +415,37 @@
       "source": "Sim/tests/test_terrain_magic.py",
       "source_sha256": "6df72b47ce7d5b7f80b42ffa6186a507aaa0690ff240910472e7bdfa08890576",
       "destination": "Sim/tests/test_terrain_magic.py",
-      "destination_sha256": "6df72b47ce7d5b7f80b42ffa6186a507aaa0690ff240910472e7bdfa08890576",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "d1ff85fb79485ee49bf05f6d3359011825b56b6fd4eaaaf605e6514311a379c3",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "6df72b47ce7d5b7f80b42ffa6186a507aaa0690ff240910472e7bdfa08890576",
+          "destination_sha256": "d1ff85fb79485ee49bf05f6d3359011825b56b6fd4eaaaf605e6514311a379c3",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "407362beab7d16c14e6d70724f7ca82876489b19de89d279797989a678cfac42",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
+          "destination_sha256": "407362beab7d16c14e6d70724f7ca82876489b19de89d279797989a678cfac42",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_patch.py",
@@ -313,17 +459,37 @@
       "source": "Sim/tests/test_terrain_peoples.py",
       "source_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
       "destination": "Sim/tests/test_terrain_peoples.py",
-      "destination_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
+          "destination_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_recipes.py",
       "source_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
       "destination": "Sim/tests/test_terrain_recipes.py",
-      "destination_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
+          "destination_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_seasons.py",
@@ -353,11 +519,20 @@
       "source": "Sim/tests/test_terrain_world_layers.py",
       "source_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
       "destination": "Sim/tests/test_terrain_world_layers.py",
-      "destination_sha256": "cb71cde10548e65b85a89dbf63e65fcf97c627d2ae5dd5f521111e15f93b77b7",
+      "destination_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Recipe 2 is now supported; the unsupported-version regression uses recipe 3. Recipe 1 behavior assertions remain unchanged."
+      "modification": "Recipe 2 is now supported; the unsupported-version regression uses recipe 3. Recipe 1 behavior assertions remain unchanged. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "cb71cde10548e65b85a89dbf63e65fcf97c627d2ae5dd5f521111e15f93b77b7",
+          "destination_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "Sim/tests/test_terrain_world_size.py",
@@ -428,17 +603,37 @@
       "source": "docs/catalogue/world-assets/COVERAGE.md",
       "source_sha256": "797436f02eb007f5c654f1e8879609678bb209b45539b259e693b5d7fd3f6685",
       "destination": "docs/catalogue/world-assets/COVERAGE.md",
-      "destination_sha256": "797436f02eb007f5c654f1e8879609678bb209b45539b259e693b5d7fd3f6685",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "fa581935d2d41c83fac82be68ee7c8d00383211110539b281e56751d156cf811",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "797436f02eb007f5c654f1e8879609678bb209b45539b259e693b5d7fd3f6685",
+          "destination_sha256": "fa581935d2d41c83fac82be68ee7c8d00383211110539b281e56751d156cf811",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/README.md",
       "source_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
       "destination": "docs/catalogue/world-assets/README.md",
-      "destination_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
+          "destination_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/anim.md",
@@ -468,41 +663,91 @@
       "source": "docs/catalogue/world-assets/fung.md",
       "source_sha256": "7b7335f06a14e7dc86c60ecc68998ebbeea33119591296f287259c73c9d38e48",
       "destination": "docs/catalogue/world-assets/fung.md",
-      "destination_sha256": "7b7335f06a14e7dc86c60ecc68998ebbeea33119591296f287259c73c9d38e48",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "d1ba76f79e20a679bb15f00c7af3177e543b268112618055b04202d609996583",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7b7335f06a14e7dc86c60ecc68998ebbeea33119591296f287259c73c9d38e48",
+          "destination_sha256": "d1ba76f79e20a679bb15f00c7af3177e543b268112618055b04202d609996583",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/fx.md",
       "source_sha256": "8d4f2b008b16d62791d78002f668d43ff103325a89e8d4da6ebec3851c04e094",
       "destination": "docs/catalogue/world-assets/fx.md",
-      "destination_sha256": "8d4f2b008b16d62791d78002f668d43ff103325a89e8d4da6ebec3851c04e094",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "320646e344e8217ff20c01d37387ae1ef3ef96e9fd54d570e322b542520671de",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "8d4f2b008b16d62791d78002f668d43ff103325a89e8d4da6ebec3851c04e094",
+          "destination_sha256": "320646e344e8217ff20c01d37387ae1ef3ef96e9fd54d570e322b542520671de",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/geo.md",
       "source_sha256": "61b83ed5b4846d2295304b1a8549002ecc62c22bc86defe1d3a0b59243c14ab0",
       "destination": "docs/catalogue/world-assets/geo.md",
-      "destination_sha256": "61b83ed5b4846d2295304b1a8549002ecc62c22bc86defe1d3a0b59243c14ab0",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "6ecb6de037b19188c24e883ca11ec24dfd4e9ad72e73a162d5887b4ed71761c0",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "61b83ed5b4846d2295304b1a8549002ecc62c22bc86defe1d3a0b59243c14ab0",
+          "destination_sha256": "6ecb6de037b19188c24e883ca11ec24dfd4e9ad72e73a162d5887b4ed71761c0",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/manifest.json",
       "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
       "destination": "docs/catalogue/world-assets/manifest.json",
-      "destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+          "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/mat.md",
       "source_sha256": "97d725c305636fd2a102f467c063ea016d094841148b36bd0664b68967289bf1",
       "destination": "docs/catalogue/world-assets/mat.md",
-      "destination_sha256": "97d725c305636fd2a102f467c063ea016d094841148b36bd0664b68967289bf1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "c31b954f69028be5958549b49cabff43bfb501682af65c3d546452de203de7eb",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "97d725c305636fd2a102f467c063ea016d094841148b36bd0664b68967289bf1",
+          "destination_sha256": "c31b954f69028be5958549b49cabff43bfb501682af65c3d546452de203de7eb",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/ppl.md",
@@ -532,33 +777,73 @@
       "source": "docs/catalogue/world-assets/snd.md",
       "source_sha256": "3be63448bbc4ff413af1cdcd527a6c5799a6034c33c7861093fcccda5be0d043",
       "destination": "docs/catalogue/world-assets/snd.md",
-      "destination_sha256": "3be63448bbc4ff413af1cdcd527a6c5799a6034c33c7861093fcccda5be0d043",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "fbaa132f87c6cd802b478e8d2ec871370c8d461226cb57b3083c5a193c1e7d50",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "3be63448bbc4ff413af1cdcd527a6c5799a6034c33c7861093fcccda5be0d043",
+          "destination_sha256": "fbaa132f87c6cd802b478e8d2ec871370c8d461226cb57b3083c5a193c1e7d50",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/tree.md",
       "source_sha256": "a7a74aa410d9fbfd9db34d3455ce8adf676d3aa733cb912e0a8e15eee8896a81",
       "destination": "docs/catalogue/world-assets/tree.md",
-      "destination_sha256": "a7a74aa410d9fbfd9db34d3455ce8adf676d3aa733cb912e0a8e15eee8896a81",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "a79c6a006c3b04bae7db753706df6658617dfd72415b88789cc7bfe44224fc58",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a7a74aa410d9fbfd9db34d3455ce8adf676d3aa733cb912e0a8e15eee8896a81",
+          "destination_sha256": "a79c6a006c3b04bae7db753706df6658617dfd72415b88789cc7bfe44224fc58",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/veg.md",
       "source_sha256": "e9a571e4d7273f0c0fe61e18b1264ef0d0369cc533119f5f3bdf9d514a0a58a3",
       "destination": "docs/catalogue/world-assets/veg.md",
-      "destination_sha256": "e9a571e4d7273f0c0fe61e18b1264ef0d0369cc533119f5f3bdf9d514a0a58a3",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "0f69b750f1eef51dc9f60cbd089f89913a9fe61d22e39ddd6aa5d6f28e1d34fc",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "e9a571e4d7273f0c0fe61e18b1264ef0d0369cc533119f5f3bdf9d514a0a58a3",
+          "destination_sha256": "0f69b750f1eef51dc9f60cbd089f89913a9fe61d22e39ddd6aa5d6f28e1d34fc",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/catalogue/world-assets/water.md",
       "source_sha256": "9537416a2a9f82ec51656450fab8dc35d432436ee10bedab81fd78e93a3795c5",
       "destination": "docs/catalogue/world-assets/water.md",
-      "destination_sha256": "9537416a2a9f82ec51656450fab8dc35d432436ee10bedab81fd78e93a3795c5",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "b02aa64f39ab274e0260506399d7f423d340751b2524dc011c24fb5574d15a60",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "9537416a2a9f82ec51656450fab8dc35d432436ee10bedab81fd78e93a3795c5",
+          "destination_sha256": "b02aa64f39ab274e0260506399d7f423d340751b2524dc011c24fb5574d15a60",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ],
+      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
     },
     {
       "source": "docs/decisions/014-mathlab-biome-gate.md",
@@ -581,21 +866,39 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "3f8698b25623af5b52b311c5f9be708228f5c27ce729a8125dca08450b24f8b6",
+      "destination_sha256": "71a182f41ff3ecda949b0b791ea7213f695d7106b8d180ed56c50a31ae64e341",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Point the lab default to recipe 2 while retaining historical method documentation.",
-      "revision": "revisions/recipe-2-history.json"
+      "modification": "Point the lab default to recipe 2 while retaining historical method documentation. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revision": "revisions/recipe-2-history.json",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "3f8698b25623af5b52b311c5f9be708228f5c27ce729a8125dca08450b24f8b6",
+          "destination_sha256": "71a182f41ff3ecda949b0b791ea7213f695d7106b8d180ed56c50a31ae64e341",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "a35e00a49ad6cde8202fda4182517c196dea97d64a58efeef82feb78c5a4e451",
+      "destination_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Canonical recipe 2 phases, magic competition, biome variants, age transitions, compatibility and limitations."
+      "modification": "Canonical recipe 2 phases, magic competition, biome variants, age transitions, compatibility and limitations. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a35e00a49ad6cde8202fda4182517c196dea97d64a58efeef82feb78c5a4e451",
+          "destination_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "docs/reviews/LAB-005.md",
@@ -633,31 +936,58 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "79a1ca408b6632990616805279ffa0f8ad7e9bb9c857c7dfabd43635b7816ff3",
+      "destination_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers."
+      "modification": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "79a1ca408b6632990616805279ffa0f8ad7e9bb9c857c7dfabd43635b7816ff3",
+          "destination_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "b2e6944b86b0e23201ccb0496c47dbd30f6871d7e6f71e32c36d55cf36b9f390",
+      "destination_sha256": "bc16372007929596011602df11f9e78edb044c684c5c8c85f111a504b6c681c9",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Launch recipe 2 by default and preserve explicit legacy phase defaults."
+      "modification": "Launch recipe 2 by default and preserve explicit legacy phase defaults. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "b2e6944b86b0e23201ccb0496c47dbd30f6871d7e6f71e32c36d55cf36b9f390",
+          "destination_sha256": "bc16372007929596011602df11f9e78edb044c684c5c8c85f111a504b6c681c9",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     },
     {
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "de7a3e738f368454da3bdea2bdecce23eebb13afef8c19d256ea24080fd4407f",
+      "destination_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Show recipe 2 stage-aware atlas, eight networks, variant inspection and cultural ruin cards."
+      "modification": "Show recipe 2 stage-aware atlas, eight networks, variant inspection and cultural ruin cards. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "de7a3e738f368454da3bdea2bdecce23eebb13afef8c19d256ea24080fd4407f",
+          "destination_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
+          "decision": "docs/decisions/015-explicit-biome-states.md",
+          "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        }
+      ]
     }
   ]
 }

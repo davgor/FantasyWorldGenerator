@@ -28,7 +28,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Low readable fog without hiding navigation
 
-**Use:** Rainforest, Marsh, Haunted marsh; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Rainforest, Marsh, Haunted marsh (`marsh.umbral`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -43,7 +43,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Wind-driven thin dust
 
-**Use:** Desert, Desolation; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Desert, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -73,7 +73,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Cool ash particles; no automatic fire
 
-**Use:** Desolation; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Slow small drifting motes
 
-**Use:** Fungal forest; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -103,7 +103,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Restrained distance-limited glints
 
-**Use:** Crystalline desert; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -118,7 +118,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Warm stable-magic accents
 
-**Use:** Enchanted forest; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -133,7 +133,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Original spectral lights; non-NPC effect
 
-**Use:** Haunted marsh; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Haunted marsh (`marsh.umbral`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -148,7 +148,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Subtle node manifestation controlled by density/hazard
 
-**Use:** Tundra, Desert, Grassland, Forest, Exposed rock, Snow, Rainforest, Lake, Desolation, Fungal forest, Crystalline desert, Enchanted forest, Marsh, Haunted marsh; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Tundra, Desert, Grassland, Forest, Exposed rock, Snow, Rainforest, Lake, Marsh, Ironbark taiga (`boreal_forest.earth`), Charred blackwoods (`boreal_forest.infernal`), Aurora woods (`boreal_forest.weave`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`), Demon spires (`exposed_rock.infernal`), Ancient rootwoods (`forest.earth`), Thornhell woods (`forest.infernal`), Living storywoods (`forest.weave`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Haunted marsh (`marsh.umbral`), Colossal jungle (`rainforest.earth`), Devouring jungle (`rainforest.infernal`), Everchanging canopy (`rainforest.weave`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -163,7 +163,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Vent-linked plume only with volcanic context
 
-**Use:** Desolation; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -178,7 +178,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Sparse leaves in wind
 
-**Use:** Forest, Enchanted forest; Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Explicit weather/magic/volcanic context required; future runtime hook where not yet simulated.
 
 **Dependencies:** Shared contract and approved category prototype.
 

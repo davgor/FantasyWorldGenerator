@@ -16,7 +16,7 @@ The working tree contains an ML-00 extraction candidate and an export-only Pytho
 
 ## Staged world lab
 
-Run `python3 tools/terrain_lab.py --serve` for the sixteen-stage recipe 2 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. [Behavior and replay contract](docs/terrain-world-layers.md).
+Run `python3 tools/terrain_lab.py --serve` for the sixteen-stage recipe 3 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. Old recipe/save compatibility is retired: regenerate worlds for the natural-core and explicit magical-state contract. [Behavior and replay contract](docs/terrain-world-layers.md).
 
 ## Local validation
 

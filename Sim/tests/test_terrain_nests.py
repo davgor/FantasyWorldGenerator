@@ -19,14 +19,14 @@ class NestWorldTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from icarus_sim.terrain_world import generate_request
-        cls.world=generate_request({'seed':42,'overrides':{'size':33}})
+        cls.world=generate_request({'seed':42,'overrides':{'size':33,'phase':13}})
 
     def test_replay_and_isolation(self):
         from icarus_sim.terrain_world import generate_request
         from icarus_sim.terrain_lab import generate,Config
         a=self.world
         self.assertEqual(a['beast_nests'],generate(Config(**a['config']))['beast_nests'])
-        b=generate_request({'seed':42,'overrides':{'size':33,'nest_variation':8}})
+        b=generate_request({'seed':42,'overrides':{'size':33,'phase':13,'nest_variation':8}})
         self.assertNotEqual(a['beast_nests']['sites'],b['beast_nests']['sites'])
         for k in ['layers','sky','settlements','world_economy']:self.assertEqual(a[k],b[k])
 

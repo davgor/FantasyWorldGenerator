@@ -8,16 +8,11 @@ from importlib.resources import files
 import json
 from typing import Any
 
-from icarus_sim.terrain_biomes import BIOMES
+from icarus_sim.terrain_biome_catalogue import natural_catalogue, biome_catalogue
 
 
 SCHEMA = "fantasy-world-generator.asset-list"
-SCHEMA_VERSION = 1
-COLD_BIOMES = [
-    ("Boreal forest", [56, 104, 95]),
-    ("Cold tundra", [152, 164, 136]),
-    ("Persistent land ice", [223, 240, 245]),
-]
+SCHEMA_VERSION = 2
 
 
 def _load(package: str, name: str) -> Any:
@@ -27,15 +22,15 @@ def _load(package: str, name: str) -> Any:
 def _terrain_assets() -> list[dict[str, Any]]:
     return [
         {
-            "id": f"terrain.biome.{index:03d}",
+            "id": biome["asset_id"],
             "kind": "terrain_surface",
-            "name": name,
+            "name": biome["name"],
             "source": "simulation.biomes",
             "status": "supported",
-            "selectors": {"biome_ids": [index]},
-            "metadata": {"display_color_rgb": color},
+            "selectors": {"biome_ids": [biome["id"]]},
+            "metadata": {"display_color_rgb": biome["color"]},
         }
-        for index, (name, color) in enumerate(BIOMES + COLD_BIOMES)
+        for biome in natural_catalogue()
     ]
 
 
@@ -46,12 +41,12 @@ def _history_assets() -> list[dict[str, Any]]:
         'id': biome['asset_id'], 'kind': 'terrain_surface', 'name': biome['name'],
         'source': 'simulation.biome_mutations', 'status': 'supported',
         'selectors': {'core_biome_id': biome['core_biome_id'], 'core': biome['core'], 'magic_school': biome['magic_school']},
-        'metadata': {'display_color_rgb': biome['color'], 'group': biome['group'], 'recipe_version': 2},
+        'metadata': {'display_color_rgb': biome['color'], 'group': biome['group'], 'recipe_version': 3},
     } for biome in biome_catalogue()]
     result.append({'id': 'marker.city_ruins', 'kind': 'marker', 'name': 'City ruins',
                    'source': 'simulation.history', 'status': 'supported',
                    'selectors': {'settlement_role': 'ruins'},
-                   'metadata': {'source_culture': 'carried by each generated ruin', 'recipe_version': 2}})
+                   'metadata': {'source_culture': 'carried by each generated ruin', 'recipe_version': 3}})
     return result
 
 def _creature_assets() -> list[dict[str, Any]]:
@@ -104,11 +99,19 @@ def _building_assets() -> list[dict[str, Any]]:
 
 def _production_assets() -> list[dict[str, Any]]:
     result = []
-    for item in _load(__package__, "world_asset_requirements.json")["assets"]:
-        metadata = {key: value for key, value in item.items() if key not in {"id", "name", "kind", "status", "biome_ids", "people", "settlement_role"}}
+    catalogue = _load(__package__, "world_asset_requirements.json")
+    if catalogue.get("schema_version") != 2:
+        raise ValueError("Production catalogue requires schema 2")
+    natural_ids = {b["id"] for b in natural_catalogue()}
+    variant_ids = {b["id"] for b in biome_catalogue()}
+    for item in catalogue["assets"]:
+        for field, allowed, kind in (("biome_ids", natural_ids, int), ("biome_variant_ids", variant_ids, str)):
+            if field in item and (not isinstance(item[field], list) or any(type(v) is not kind or v not in allowed for v in item[field])):
+                raise ValueError("Invalid production biome selector: " + item["id"] + "." + field)
+        metadata = {key: value for key, value in item.items() if key not in {"id", "name", "kind", "status", "biome_ids", "biome_variant_ids", "people", "settlement_role"}}
         selectors = {
             key: item[key]
-            for key in ("biome_ids", "people", "settlement_role")
+            for key in ("biome_ids", "biome_variant_ids", "people", "settlement_role")
             if item.get(key) is not None
         }
         result.append(
@@ -137,7 +140,8 @@ def compile_asset_list() -> dict[str, Any]:
     return {
         "schema": SCHEMA,
         "schema_version": SCHEMA_VERSION,
-        "scope": "All assets reachable from supported potential generator states; not a single generated world.",
+        "recipe_version": 3,
+        "scope": "All assets reachable from potential recipe 3 generator states; not a single generated world.",
         "content_sha256": hashlib.sha256(canonical).hexdigest(),
         "summary": {
             "total": len(assets),

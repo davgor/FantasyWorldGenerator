@@ -9,6 +9,8 @@ from .terrain_erosion import sphere_grid
 from .terrain_globe import direction,perlin3
 from .terrain_tectonics import child_seed
 from .terrain_climate import node_grid
+from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue, cell_variant
+from .terrain_profiles import biome_preference, biome_food_multiplier
 
 
 _CITY_BUILDING_PACKS = None
@@ -25,10 +27,6 @@ def _coerce_optional_number(value, default, field):
     if value is None:
         return default
     return _coerce_finite_number(value, field)
-
-
-def _coerce_biome_list(values):
-    return {int(v) for v in values}
 
 
 def _coerce_int(value, field):
@@ -406,8 +404,8 @@ def _pick_city_layout_profile(pack_entry, layout_profiles, river_distance_m):
 def _validate_building_packs(value):
     if not isinstance(value, dict):
         raise ValueError('City building packs must be a dictionary')
-    if not isinstance(value.get('schema_version'), int):
-        raise ValueError('City building packs schema_version must be integer')
+    if value.get('schema_version') != 2:
+        raise ValueError('City building packs require schema 2')
     if not isinstance(value.get('fallback_pack_id'), str) or not value['fallback_pack_id']:
         raise ValueError('City building packs must define fallback_pack_id')
     packs = value.get('packs')
@@ -426,6 +424,13 @@ def _validate_building_packs(value):
         criteria = raw.get('criteria')
         if not isinstance(criteria, dict):
             raise ValueError(f'Pack {raw["id"]} is missing criteria')
+        biome_ids=criteria.get('biomes')
+        variant_ids=criteria.get('biome_variants', [])
+        valid_variants={b['id'] for b in biome_catalogue()}
+        if 'biomes' in criteria and (not isinstance(biome_ids,list) or any(type(b) is not int or b not in NATURAL_BIOMES for b in biome_ids)):
+            raise ValueError('Unknown natural biome in building pack')
+        if not isinstance(variant_ids,list) or any(not isinstance(v,str) or v not in valid_variants for v in variant_ids):
+            raise ValueError('Unknown magical biome in building pack')
         def as_population_profiles(v):
             if v is None:
                 return None
@@ -437,7 +442,8 @@ def _validate_building_packs(value):
             'name': str(raw.get('name', raw['id'])),
             'profiles': as_population_profiles(criteria.get('population_profiles')),
             'layout_profile_id': str(raw['layout_profile_id']) if raw.get('layout_profile_id') is not None else None,
-            'biomes': _coerce_biome_list(criteria['biomes']) if criteria.get('biomes') else None,
+            'biomes': set(biome_ids or []) if 'biomes' in criteria or 'biome_variants' in criteria else None,
+            'biome_variants': set(variant_ids),
             'height_min': _coerce_optional_number(criteria.get('height_min_m'), -1e6, 'height_min_m'),
             'height_max': _coerce_optional_number(criteria.get('height_max_m'), 1e6, 'height_max_m'),
             'resource_min': _coerce_optional_number(criteria.get('resource_min'), 0., 'resource_min'),
@@ -593,12 +599,12 @@ def _city_building_packs():
     return _CITY_BUILDING_PACKS
 
 
-def _pick_city_building_pack(city_seed, profile_id, biome, height_m, slope_deg, resource, freshwater_m, pack_catalog):
+def _pick_city_building_pack(city_seed, profile_id, biome, height_m, slope_deg, resource, freshwater_m, pack_catalog, variant_id=None):
     candidates = []
     for pack in pack_catalog['packs']:
         if pack['profiles'] is not None and profile_id not in pack['profiles']:
             continue
-        if pack['biomes'] is not None and biome not in pack['biomes']:
+        if (pack['biomes'] is not None or pack['biome_variants']) and biome not in (pack['biomes'] or set()) and variant_id not in pack['biome_variants']:
             continue
         if not (pack['height_min'] <= height_m <= pack['height_max']):
             continue
@@ -719,7 +725,7 @@ def add_settlements(result,cfg):
                +profile['climate_weight']*math.exp(-((temp[i]-profile['temperature_ideal'])/profile['temperature_tolerance'])**2)
                +profile['moisture_weight']*max(0,1-abs(wet[i]-profile['moisture_ideal']))
                +profile['resource_weight']*resource[i]-profile['flood_penalty']*flood[i]
-               +profile['biome_preferences'].get(str(layers['biome'][points[i][1]][points[i][0]]),0))
+               +biome_preference(profile,layers['biome'][points[i][1]][points[i][0]],cell_variant(result,*points[i])))
         scores.append(max(0,min(1,score-profile['magic_penalty']*hazard[i])) if water[i]==0 else 0)
     eligible=[i for i in range(len(points)) if water[i]==0 and slope[i]<profile['site_slope_limit'] and hazard[i]<=cfg.human_magic_limit]
     species_ids=('human','dwarf','elf') if cfg.population_profile=='mixed' else (cfg.population_profile,)
@@ -736,16 +742,16 @@ def add_settlements(result,cfg):
                 +p['climate_weight']*math.exp(-((temp[i]-p['temperature_ideal'])/p['temperature_tolerance'])**2)
                 +p['moisture_weight']*max(0,1-abs(wet[i]-p['moisture_ideal']))
                 +p['resource_weight']*resource[i]-p['flood_penalty']*flood[i]
-                +p['biome_preferences'].get(str(biome),0)-p['magic_penalty']*species_hazard[i])
+                +biome_preference(p,biome,cell_variant(result,x,z))-p['magic_penalty']*species_hazard[i])
             if cfg.world_recipe:
                 score+=layers['coastal_support'][z][x]*(.35 if species=='tidekin' else .15)
                 if species=='gnome':score+=.15*resource[i]
             field.append(max(0,min(1,score)) if not water[i] else 0)
             habitat=True
-            if species=='dwarf':habitat=resource[i]>=.5 and (biome in (5,11) or layers['tpi'][z][x]>6 or (slope[i]>10 and height[i]>15))
-            if species=='elf':habitat=biome in (4,7,10,12) and wet[i]>=.55
+            if species=='dwarf':habitat=resource[i]>=.5 and ((biome==5 or cell_variant(result,x,z) in ('desert.weave','desert.infernal','desert.water')) or layers['tpi'][z][x]>6 or (slope[i]>10 and height[i]>15))
+            if species=='elf':habitat=biome in (4,7,15) and wet[i]>=.55
             if cfg.world_recipe:
-                if species=='elf':habitat=biome in (4,7,10,12,15) and wet[i]>=.4
+                if species=='elf':habitat=biome in (4,7,15) and wet[i]>=.4
                 if species=='gnome':habitat=resource[i]>.45
                 if species=='tidekin':habitat=layers['maritime'][z][x]>.3 and layers['coastal_support'][z][x]>.1
                 if biome==17:habitat=False
@@ -755,7 +761,7 @@ def add_settlements(result,cfg):
             if suitable:candidates.append(i)
             fresh=distances[i] if math.isfinite(distances[i]) else -1
             _,food=farming_potential(slope[i],temp[i],wet[i],flood[i],fresh,p['irrigation'],p)
-            food*=p['food_biome_multipliers'].get(str(biome),1)*(1-species_hazard[i])
+            food*=biome_food_multiplier(p,biome,cell_variant(result,x,z))*(1-species_hazard[i])
             if cfg.world_recipe and biome==17:food=0.
             potential.append(food if safe and slope[i]<p['work_slope_limit'] and (suitable or species=='dwarf') else 0.)
         if species=='dwarf':
@@ -809,7 +815,7 @@ def add_settlements(result,cfg):
         for i in sorted(habitats[species],key=lambda i:(-score_sets[species][i]-jitter[i],i)):
             if added>=quotas[species]:break
             if fits(i):selected.append(i);peoples.append(species);added+=1
-    if cfg.world_recipe==2 and '_survivors' in result:
+    if cfg.world_recipe==3 and '_survivors' in result:
         survivors=result['_survivors']
         chosen=[s['node'] for s in survivors];chosen_peoples=[s['population_profile'] for s in survivors]
         for node,people in zip(selected,peoples):
@@ -836,7 +842,7 @@ def add_settlements(result,cfg):
         x,z=points[i];outpost=i in outposts
         city_seed=child_seed(seed,f'building-pack-{i}-{k}-{x}-{z}-{peoples[k]}')
         building_pack_id=_pick_city_building_pack(city_seed,peoples[k],layers['biome'][z][x],height[i],slope[i],resource[i],
-                                                 distances[i] if math.isfinite(distances[i]) else -1,building_packs)
+                                                 distances[i] if math.isfinite(distances[i]) else -1,building_packs,cell_variant(result,x,z))
         pack_entry=building_packs['pack_index'].get(building_pack_id)
         if pack_entry is None:
             pack_entry = building_packs['pack_index'][building_packs['fallback_pack_id']]
@@ -861,10 +867,10 @@ def add_settlements(result,cfg):
                 'temperature':p['climate_weight']*math.exp(-((temp[i]-p['temperature_ideal'])/p['temperature_tolerance'])**2),
                 'moisture':p['moisture_weight']*max(0,1-abs(wet[i]-p['moisture_ideal'])),
                 'resources':p['resource_weight']*resource[i], 'flood':-p['flood_penalty']*flood[i],
-                'biome':p['biome_preferences'].get(str(layers['biome'][z][x]),0), 'magic':-p['magic_penalty']*risk,
+                'biome':biome_preference(p,layers['biome'][z][x],cell_variant(result,x,z)), 'magic':-p['magic_penalty']*risk,
                 'coastal_support':layers['coastal_support'][z][x]*(.35 if peoples[k]=='tidekin' else .15),
                 'gnome_metal_affinity':.15*resource[i] if peoples[k]=='gnome' else 0.}
-    if cfg.world_recipe==2:
+    if cfg.world_recipe==3:
         previous={s['node']:s for s in result.get('_survivors',result.get('settlements',{}).get('sites',[]))}
         for site in sites:
             old=previous.get(site['node'])
@@ -896,7 +902,7 @@ def add_settlements(result,cfg):
     layers.update({'suitability' :node_grid(scores,points,n),'flood_risk':node_grid(flood,points,n),
                    'resource_potential':node_grid(resource,points,n),
                    'freshwater_distance':node_grid([v if math.isfinite(v) else -1 for v in distances],points,n)})
-    result['settlements']={'version':8,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
+    result['settlements']={'version':9,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
         'method':'Candidate sites, not built cities or population simulation. Resources are seeded potential, flood risk a proximity/height proxy. Outposts can accept poor conditions; water cells and slopes beyond the selected population limit remain excluded. City assets are selected from deterministic data-driven building packs.'}
     site_end=perf_counter();result['timing_ms']['settlements']=(site_end-started)*1000
     if cfg.phase>=8:

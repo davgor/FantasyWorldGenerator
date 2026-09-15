@@ -13,7 +13,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like sapling; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -28,7 +28,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like mature A; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -43,7 +43,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like mature B; distinct second silhouette, not a recolour. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -58,7 +58,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like dead standing; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -73,7 +73,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like stump; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Spreading oak-like fallen trunk; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Forest, Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1003,7 +1003,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted sapling; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1018,7 +1018,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted mature A; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1033,7 +1033,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted mature B; distinct second silhouette, not a recolour. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1048,7 +1048,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted dead standing; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1063,7 +1063,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted stump; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1078,7 +1078,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Ancient enchanted fallen trunk; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Enchanted forest; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-033.
 
@@ -1093,7 +1093,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted sapling; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 
@@ -1108,7 +1108,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted mature A; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 
@@ -1123,7 +1123,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted mature B; distinct second silhouette, not a recolour. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 
@@ -1138,7 +1138,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted dead standing; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 
@@ -1153,7 +1153,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted stump; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 
@@ -1168,7 +1168,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Gnarled haunted fallen trunk; believable roots and readable original silhouette. Match family bark and human walking scale.
 
-**Use:** Haunted marsh; Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
+**Use:** Haunted marsh (`marsh.umbral`); Biome and climate match; water proximity required for oasis/wetland forms; rooted ground or explicit fallen-log placement; clear roads/buildings.
 
 **Dependencies:** MAT-037.
 

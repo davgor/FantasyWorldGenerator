@@ -12,19 +12,19 @@ from icarus_sim.terrain_erosion import sphere_grid
 class LayeredWorldTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.world=generate_request({'seed':42,'overrides':{'size':33}})
+        cls.world=generate_request({'seed':42,'overrides':{'size':33,'phase':13}})
 
     def test_reproduction_and_partial_override(self):
         a=self.world;b=generate(Config(**a['config']))
         for key in ('layers','sky','fisheries','world_economy'):self.assertEqual(a[key],b[key])
-        changed=generate_request({'seed':42,'overrides':{'size':33,'temperature_offset':-8}})
+        changed=generate_request({'seed':42,'overrides':{'size':33,'phase':13,'temperature_offset':-8}})
         self.assertEqual(changed['config']['temperature_offset'],-8)
         self.assertEqual(changed['layers']['height'],a['layers']['height'])
         self.assertNotEqual(changed['layers']['temperature'],a['layers']['temperature'])
         self.assertEqual(changed['recipe']['provenance']['temperature_offset'],'override')
 
     def test_network_independence_and_overlap(self):
-        a=self.world;b=generate_request({'seed':42,'overrides':{'size':33,'infernal_strength':0.}})
+        a=self.world;b=generate_request({'seed':42,'overrides':{'size':33,'phase':13,'infernal_strength':0.}})
         for key in ('height','rainfall','ley_weave','ley_umbral','ley_holy','ley_primordial'):
             self.assertEqual(a['layers'][key],b['layers'][key])
         self.assertTrue(all(v==0 for row in b['layers']['ley_infernal'] for v in row))
@@ -102,8 +102,8 @@ class LayeredWorldTests(unittest.TestCase):
             self.assertLessEqual(site['population_estimate'],site['freshwater_capacity'])
 
     def test_population_does_not_reroll_sky_geometry(self):
-        human=generate_request({'seed':42,'overrides':{'size':17,'phase':6,'population_profile':'human'}})
-        mixed=generate_request({'seed':42,'overrides':{'size':17,'phase':6}})
+        human=generate_request({'seed':42,'overrides':{'size':17,'phase':12,'population_profile':'human'}})
+        mixed=generate_request({'seed':42,'overrides':{'size':17,'phase':12}})
         self.assertEqual(human['sky']['islands'],mixed['sky']['islands'])
         self.assertEqual(human['layers']['height'],mixed['layers']['height'])
 
@@ -126,7 +126,7 @@ class LayeredWorldTests(unittest.TestCase):
             json.dumps(w,allow_nan=False)
 
     def test_invalid_requests(self):
-        for body in ({'recipe_version':3},{'seed':True},{'overrides':{'made_up':1}},
+        for body in ({'recipe_version':2},{'seed':True},{'overrides':{'made_up':1}},
                      {'overrides':{'infernal_strength':float('nan')}},{'overrides':{'size':True}},
                      {'overrides':{'sky_clusters':2.5}},{'overrides':{'population_profile':'unknown'}},
                      {'overrides':{'temperature_offset':'cold'}}):

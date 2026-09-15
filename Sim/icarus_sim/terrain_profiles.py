@@ -3,8 +3,11 @@ import json
 import hashlib
 import math
 from pathlib import Path
+from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue
 
-FIELDS=set('name description temperature_ideal temperature_tolerance slope_comfort site_slope_limit work_slope_limit road_grade_limit water_reach moisture_ideal water_weight slope_weight climate_weight moisture_weight resource_weight flood_penalty magic_penalty mutation_limit difficult_fraction food_temperature_tolerance food_slope_comfort food_moisture_ideal irrigation food_demand land_per_city_km2 support_multiplier college_slope_limit college_temperature_min college_temperature_max college_water_reach college_flood_limit college_suitability_min biome_preferences food_biome_multipliers'.split())
+VARIANT_IDS = frozenset(b['id'] for b in biome_catalogue())
+
+FIELDS=set('name description temperature_ideal temperature_tolerance slope_comfort site_slope_limit work_slope_limit road_grade_limit water_reach moisture_ideal water_weight slope_weight climate_weight moisture_weight resource_weight flood_penalty magic_penalty mutation_limit difficult_fraction food_temperature_tolerance food_slope_comfort food_moisture_ideal irrigation food_demand land_per_city_km2 support_multiplier college_slope_limit college_temperature_min college_temperature_max college_water_reach college_flood_limit college_suitability_min biome_preferences food_biome_multipliers magic_biome_preferences food_magic_biome_multipliers'.split())
 
 
 def profiles():
@@ -22,11 +25,12 @@ def get_profile(profile_id):
     for k,v in result.items():
         if k in ('name','description','id'):
             if not isinstance(v,str) or not v:raise ValueError('Invalid profile text')
-        elif k in ('biome_preferences','food_biome_multipliers'):
+        elif k in ('biome_preferences','food_biome_multipliers','magic_biome_preferences','food_magic_biome_multipliers'):
             if not isinstance(v,dict):raise ValueError('Invalid biome mapping')
             for biome,value in v.items():
-                if not biome.isdigit() or not 0<=int(biome)<=17 or type(value) not in (int,float) or not math.isfinite(value):raise ValueError('Invalid biome trait')
-                if not (-1<=value<=1 if k=='biome_preferences' else 0<=value<=2):raise ValueError('Invalid biome multiplier')
+                valid=isinstance(biome,str) and biome in VARIANT_IDS if 'magic_biome' in k else isinstance(biome,str) and biome.isdigit() and int(biome) in NATURAL_BIOMES
+                if not valid or type(value) not in (int,float) or not math.isfinite(value):raise ValueError('Invalid biome trait')
+                if not (-1<=value<=1 if k.endswith('preferences') else 0<=value<=2):raise ValueError('Invalid biome multiplier')
         elif type(v) not in (int,float) or not math.isfinite(v):raise ValueError('Invalid numeric profile trait')
     for k in ('temperature_tolerance','slope_comfort','site_slope_limit','work_slope_limit','water_reach',
               'food_temperature_tolerance','food_slope_comfort','land_per_city_km2','support_multiplier','college_water_reach'):
@@ -41,9 +45,19 @@ def get_profile(profile_id):
         if not 0<result[k]<90:raise ValueError(f'{k} must be between 0 and 90 degrees')
     if not 0<=result['food_demand']<=10000:raise ValueError('Food demand out of range')
     if not .01<=result['land_per_city_km2']<=1000 or not 0<result['support_multiplier']<=10:raise ValueError('Population footprint out of range')
-    result['schema_version']=1
+    result['schema_version']=2
     result['definition_hash']=hashlib.sha256(json.dumps(result,sort_keys=True).encode()).hexdigest()
     return result
 
 
 def profile_options():return [{'id':key,'name':value['name']} for key,value in profiles().items()]
+
+
+def biome_preference(profile, core_id, variant_id=None):
+    """An exact magical state overrides its natural-core preference."""
+    return profile['magic_biome_preferences'].get(variant_id, profile['biome_preferences'].get(str(core_id), 0))
+
+
+def biome_food_multiplier(profile, core_id, variant_id=None):
+    """Exact state food factor, before independent school-specific hazard losses."""
+    return profile['food_magic_biome_multipliers'].get(variant_id, profile['food_biome_multipliers'].get(str(core_id), 1))

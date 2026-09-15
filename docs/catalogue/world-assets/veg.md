@@ -148,7 +148,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Layered arching fronds
 
-**Use:** Forest, Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -193,7 +193,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Low soft mound on soil or rock
 
-**Use:** Tundra, Forest, Rainforest, Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Tundra, Forest, Rainforest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -373,7 +373,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Upright reed stems for shallow margins
 
-**Use:** Lake, Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Lake, Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -448,7 +448,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Desaturated sparse reed variant
 
-**Use:** Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -463,14 +463,14 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Draped moss with supported attachment edge
 
-**Use:** Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
 **Outputs and checks:** `plant` contract. Record source, licence, preview and validation evidence against this ID. **Destination:** `SourceArt/World/VEG/VEG-031/`.
 
 
-## VEG-032 - Desolation dead scrub
+## VEG-032 - Infernal dead scrub
 
 - [ ] Produce and verify `010.VEG-032`.
 
@@ -478,7 +478,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Brittle charred low growth
 
-**Use:** Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -493,7 +493,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Small original blooms, sparse emission mask
 
-**Use:** Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -508,7 +508,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Sparse pale drought shrub without crystal body mutation
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -523,7 +523,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Sparse underwater blades in lit marine shallows
 
-**Use:** Submerged; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ocean; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -538,7 +538,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Long underwater frond for marine shallows
 
-**Use:** Submerged; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ocean; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -553,7 +553,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Three small caps, no franchise imitation
 
-**Use:** Forest, Rainforest, Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Rainforest, Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -568,7 +568,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Attached layered caps with bark contact
 
-**Use:** Forest, Rainforest, Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Rainforest, Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -583,7 +583,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Soft gill emission separated from base colour
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 

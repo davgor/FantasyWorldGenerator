@@ -27,16 +27,6 @@ def distance_to_frame(p,frame):
 def arc_distance(p,a,b):return distance_to_frame(p,arc_frame(a,b))
 
 
-def magic_biome(base,density,hazard,growth,wet,temp):
-    if base in (0,8):return base
-    if base==13:return 14 if density>.3 and growth<.5 else 13
-    if density>.4 and hazard>.3 and growth<.5:return 9
-    if density>.35 and hazard<.3 and wet<.4 and temp>5 and base!=5:return 11
-    if density>.6 and growth>.55 and wet>.65 and 0<temp<35 and base!=5:return 10
-    if density>.3 and growth>.55 and wet>.4 and 0<temp<35 and base!=5:return 12
-    return base
-
-
 def college_eligible(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile=None):
     if profile is None:
         from .terrain_profiles import get_profile

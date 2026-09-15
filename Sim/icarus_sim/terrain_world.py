@@ -4,7 +4,7 @@ import math
 from dataclasses import asdict
 from functools import lru_cache
 
-NETWORKS = ('weave', 'umbral', 'infernal', 'holy', 'primordial')
+NETWORKS = ('weave', 'umbral', 'infernal', 'radiant', 'fire', 'water', 'earth', 'air')
 ZONES = ('demonic', 'draconic', 'pirate', 'steampunk', 'witch_huts', 'red_sands',
          'dead_sea', 'starlight_lakes', 'haunted_sands', 'enchanted', 'fungal', 'crystal', 'haunted_marsh')
 
@@ -56,7 +56,7 @@ for name in NETWORKS:
         'occurrence': spec(1., 0., 1., name.title(), 'Probability this magical network manifests'),
         'nodes': spec(8, 3, 24, name.title(), 'Independent ley node count', 'nodes'),
         'width': spec(110., 10., 2000., name.title(), 'Gaussian influence reach', 'm'),
-        'strength': spec(.7 if name == 'weave' else .45, 0., 2., name.title(), 'Magical influence amplitude'),
+        'strength': spec(.45 if name in ('umbral','infernal') else .7, 0., 2., name.title(), 'Magical influence amplitude'),
         'instability': spec(.65 if name == 'infernal' else .2, 0., 1., name.title(), 'Instability independent of density'),
         'variation': spec(0, 0, 4294967295, name.title(), 'Independent network seed variation', 'seed'),
     }.items():
@@ -67,19 +67,10 @@ for name in ZONES:
     OPTIONS[name+'_intensity'] = spec(.8, 0., 1., 'Regions', name.replace('_',' ')+' intensity')
 
 
-# The previous recipe keeps its original registry and seed streams.
-V2_OPTIONS = dict(OPTIONS)
-for name in ('radiant', 'fire', 'water', 'earth', 'air'):
-    for suffix in ('occurrence','nodes','width','strength','instability','variation'):
-        V2_OPTIONS[name+'_'+suffix] = dict(OPTIONS['weave_'+suffix], group=name.title())
-for name in ('holy','primordial'):
-    for suffix in ('occurrence','nodes','width','strength','instability','variation'):
-        V2_OPTIONS.pop(name+'_'+suffix)
-
-
 @lru_cache(maxsize=64)
-def validate_options(raw, version=1):
-    definitions = V2_OPTIONS if version == 2 else OPTIONS
+def validate_options(raw, version=3):
+    if type(version) is not int or version not in (0,3):raise ValueError('Retired world options version')
+    definitions = OPTIONS
     try:
         values = json.loads(raw)
     except (TypeError, ValueError) as exc:
@@ -103,14 +94,15 @@ def options(cfg):
     return validate_options(cfg.world_options, cfg.world_recipe)
 
 
-def default_config(version=1):
+def default_config(version=3):
+    if type(version) is not int or version != 3:raise ValueError('Retired recipe; regenerate with recipe_version 3')
     from .terrain_lab import Config
-    return Config(world_recipe=version, phase=16 if version==2 else 9, shape='globe', tectonics=1, auto_parameters=0,
+    return Config(world_recipe=version, phase=16 if version==3 else 9, shape='globe', tectonics=1, auto_parameters=0,
                   population_profile='mixed', amplitude=1100., wavelength=4300.,
                   magic_instability=.45, belt_width=.08, settlement_count=24)
 
 
-def registry(version=1):
+def registry(version=3):
     cfg=asdict(default_config(version))
     inactive={'world_recipe','world_options','auto_parameters','ley_nodes','ley_width','magic_instability',
               'extent','depth','width','meander','urban_food_demand','human_adaptation'}
@@ -120,7 +112,7 @@ def registry(version=1):
     for key,choices in {'world_size':['small','medium','large'], 'shape':['globe'],
                         'population_profile':['mixed','human','dwarf','elf','gnome','tidekin']}.items():
         result[key]['choices']=choices
-    bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,16 if version==2 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
+    bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,16 if version==3 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
             'plate_count':(3,48),'layout_variation':(0,4294967295),'detail_variation':(0,4294967295),
             'crust_bias':(-1,1),'belt_width':(.01,.3),'mountain_detail':(0,1),'temperature_offset':(-40,40),
             'moisture_bias':(-1,1),'wind_bearing':(0,360),'rain_passes':(1,128),'rain_strength':(0,3),
@@ -142,7 +134,7 @@ def registry(version=1):
                        'Communities':'population_profile human_magic_limit college_count hamlets_per_core fortress_count support_reach culture_link_cost settlement_count settlement_spacing stubbornness road_max_grade bridge_cost'}.items():
         for key in keys.split():result[key]['group']=group
     result['settlement_count']['description']='Maximum surface cities; actual counts require habitat and productive capacity'
-    result.update(V2_OPTIONS if version==2 else OPTIONS)
+    result.update(OPTIONS)
     return result
 
 
@@ -150,10 +142,10 @@ def generate_request(body):
     from .terrain_lab import Config, generate
     if not isinstance(body,dict) or set(body)-{'seed','recipe_version','overrides'}:
         raise ValueError('Expected seed, recipe_version and optional overrides')
-    if type(body.get('recipe_version',1)) is not int or body.get('recipe_version',1) not in (1,2):
-        raise ValueError('Unsupported recipe_version')
-    version=body.get('recipe_version',1)
-    option_defs=V2_OPTIONS if version==2 else OPTIONS
+    if type(body.get('recipe_version',3)) is not int or body.get('recipe_version',3) != 3:
+        raise ValueError('Retired or unsupported recipe_version; regenerate with recipe_version 3')
+    version=body.get('recipe_version',3)
+    option_defs=OPTIONS
     seed=body.get('seed',42)
     if type(seed) is not int or not 0<=seed<2**32:raise ValueError('Invalid uint32 seed')
     overrides=body.get('overrides',{})

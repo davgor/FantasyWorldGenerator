@@ -15,7 +15,7 @@ class PeoplesTests(unittest.TestCase):
         self.assertEqual(len({s['node'] for s in sites}),len(sites))
         for s in sites:
             self.assertEqual(s['population_estimate'],s['urban_population_estimate']+s['rural_population_estimate'])
-            if s['population_profile']=='elf':self.assertIn(a['layers']['biome'][s['z']][s['x']],(4,7,10,12))
+            if s['population_profile']=='elf':self.assertIn(a['layers']['biome'][s['z']][s['x']],(4,7,15))
             if s['population_profile']=='dwarf':self.assertGreaterEqual(s['resource_potential'],.5)
         for core in a['humans']['cores']:
             self.assertEqual(core['population_profile'],sites[core['site_id']]['population_profile'])

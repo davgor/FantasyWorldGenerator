@@ -63,46 +63,6 @@ def shape_islands(layers,cfg):
     return clusters
 
 
-def add_networks(result,cfg):
-    if not cfg.magic_enabled:return
-    from .terrain_magic import add_magic
-    o=options(cfg);networks={};n=cfg.size;points,_,_=sphere_grid(n,result['effective_config']['globe_radius'])
-    for name in NETWORKS:
-        seed=child_seed(cfg.seed,'magic-'+name+'-v1',o[name+'_variation'])
-        enabled=random.Random(seed).random()<o[name+'_occurrence'] and o[name+'_strength']>0
-        temporary={'climate':True,'layers':{},'effective_config':result['effective_config'],'warnings':[],
-                   'timing_ms':{'total':0}}
-        if enabled:
-            add_magic(temporary,replace(cfg,seed=seed,ley_nodes=o[name+'_nodes'],ley_width=o[name+'_width'],magic_instability=o[name+'_instability']))
-            network=temporary['magic'];network['seed']=seed;network['name']=name
-            density=[[clamp(v*o[name+'_strength']) for v in row] for row in temporary['layers']['magic_density']]
-            hazard=[[v*o[name+'_instability'] for v in row] for row in density]
-        else:
-            network={'nodes':[],'edges':[],'seed':seed,'name':name};density=[[0.]*n for _ in range(n)];hazard=[[0.]*n for _ in range(n)]
-        networks[name]=network
-        result['layers']['ley_'+name]=density;result['layers']['instability_'+name]=hazard
-    l=result['layers'];power=[];hazard=[];growth=[];opposition=[]
-    for x,z in points:
-        v={name:l['ley_'+name][z][x] for name in NETWORKS};total=sum(v.values())
-        conflict=min(v['holy'],v['infernal']);opposition.append(conflict)
-        power.append(1-math.exp(-total));hazard.append(clamp(sum(l['instability_'+name][z][x] for name in NETWORKS)*.4+conflict*.35))
-        growth.append((v['primordial']+v['weave']*.5+v['holy']*.4)/max(total,1e-12))
-    for key,values in [('magic_density',power),('magic_hazard',hazard),('magic_growth',growth),('magic_opposition',opposition)]:l[key]=node_grid(values,points,n)
-    for species,weights in {'human':(1.,1.,1.,1.,1.),'dwarf':(.8,.9,.9,1.,.7),
-                            'elf':(.7,.8,1.3,.8,.65),'gnome':(.6,1.,1.,.9,.9),
-                            'tidekin':(.7,.9,1.2,.8,.65)}.items():
-        risk=[]
-        for i,(x,z) in enumerate(points):
-            risk.append(clamp(sum(l['instability_'+name][z][x]*weight for name,weight in zip(NETWORKS,weights))*.4+opposition[i]*.35))
-        l['magic_risk_'+species]=node_grid(risk,points,n)
-    nodes=[];edges=[]
-    for name,net in networks.items():
-        offset=len(nodes);nodes.extend(net['nodes'])
-        edges.extend({**edge,'from':edge['from']+offset,'to':edge['to']+offset,'network':name} for edge in net['edges'])
-    result['magic']={'version':2,'networks':networks,'nodes':nodes,'edges':edges,'colleges':[],
-                     'method':'Independent named networks; raw fields are preserved. Opposition and aggregate hazard are separate diagnostics.'}
-
-
 def monthly_temperatures(mean,latitude,wet,seasonality=1.):
     amplitude=20*math.sin(math.radians(latitude))*(1-.4*wet)*seasonality
     return [mean+amplitude*math.cos(2*math.pi*(month-6)/12) for month in range(12)]
@@ -129,8 +89,6 @@ def add_environment(result,cfg):
                            'reef','lagoon','estuary','sheltered_bay','rocky_coast','kelp','fjord','open_ocean',
                            'maritime','boreal','tundra','ice_cap','coastal_support')}
     months=[{'temperature':[],'snow':[],'water_ice':[]} for _ in range(12)]
-    new_biomes=[('Boreal forest',[56,104,95]),('Cold tundra',[152,164,136]),('Persistent land ice',[223,240,245])]
-    result['terrain']['biomes'].extend({'id':15+i,'name':name,'color':color} for i,(name,color) in enumerate(new_biomes))
     for i,(x,z) in enumerate(points):
         p=vectors[i];near=[j for j,d in graph[i]];adj=sum(water[j]==1 for j in near)/max(1,len(near))
         coast=not water[i] and distance[i]<=max(result['spacing_m'],120)
@@ -175,6 +133,7 @@ def add_environment(result,cfg):
     for z in range(n):
         if z in (0,n-1):l['biome'][z]=[l['biome'][z][0]]*n
         else:l['biome'][z][-1]=l['biome'][z][0]
+    l['natural_biome']=[row[:] for row in l['biome']]
     result['seasonal_environment']={'months':[{k:node_grid(v,points,n) for k,v in m.items()} for m in months],
                                     'method':'Monthly latitude/elevation temperature proxy; snow and water ice do not modify bedrock.'}
     def magic(name,i):

@@ -44,7 +44,7 @@ class RecipeTests(unittest.TestCase):
     def test_profile_definition_validation_and_woodland_food(self):
         from unittest.mock import patch
         from icarus_sim.terrain_profiles import profiles
-        self.assertGreater(get_profile('woodland')['food_biome_multipliers']['10'],get_profile('human')['food_biome_multipliers']['10'])
+        self.assertGreater(get_profile('woodland')['food_magic_biome_multipliers']['forest.earth'],get_profile('human')['food_magic_biome_multipliers']['forest.earth'])
         data=profiles();data['human']['mutation_limit']=2
         with patch('icarus_sim.terrain_profiles.profiles',return_value=data):
             with self.assertRaises(ValueError):get_profile('human')
