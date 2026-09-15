@@ -1,2 +1,22 @@
-# Keep extracted text bytes stable across checkout platforms.
-* text=auto eol=lf
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Preserve provenance-pinned source bytes, including mixed CRLF/LF files.
+Sim/icarus_sim/__init__.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_area.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_biomes.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_humans.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_magic.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_nest_profiles.json -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_nests.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_profiles.json -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_recipes.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_seasons.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_tectonics.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_water.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_drainage.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_humans.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_nests.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_peoples.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_seasons.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_world_size.py -text whitespace=cr-at-eol

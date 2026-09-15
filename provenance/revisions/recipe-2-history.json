@@ -5,13 +5,13 @@
   "files": [
     {
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "previous_destination_sha256": "8d6223661f796e610d83a6dae29f37cec2f16ed60f77d0f77ee38c0207a1efbe",
+      "previous_destination_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination_sha256": "a53b28577ca5d05a18bd1795ce336154d16c4e0da6b3ce74b527594ac895651d",
       "reason": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation."
     },
     {
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "previous_destination_sha256": "aa157544488077045569b66597093d304fb0a8f5ffc0fb972dc2e1a67e8b045c",
+      "previous_destination_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination_sha256": "1d50f192a0ee2d46c79e683c350706cf887ba618a99fba15b4502b9f3fac0ce4",
       "reason": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds."
     },
@@ -29,7 +29,7 @@
     },
     {
       "destination": "docs/terrain-math-lab.md",
-      "previous_destination_sha256": "9e76d226f6ff4603e6a32240ddc249fa04291eea35bee4db7c9b7f350204b425",
+      "previous_destination_sha256": "7863d608700d2edad220cb216bd55af2f4ff3a94b6e1e2c993b4b43cc3e943ed",
       "destination_sha256": "3f8698b25623af5b52b311c5f9be708228f5c27ce729a8125dca08450b24f8b6",
       "reason": "Point the lab default to recipe 2 while retaining historical method documentation."
     },
@@ -41,13 +41,13 @@
     },
     {
       "destination": "tools/terrain_lab.html",
-      "previous_destination_sha256": "cf0abced6c365b5fe86fe38a5a205296192adae94af4f1ad12aacdf7e4cca89d",
+      "previous_destination_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination_sha256": "79a1ca408b6632990616805279ffa0f8ad7e9bb9c857c7dfabd43635b7816ff3",
       "reason": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers."
     },
     {
       "destination": "tools/terrain_lab.py",
-      "previous_destination_sha256": "31171a00e700712852062761e50226cb49e2f3f2a71cff3f309d70480d72c81f",
+      "previous_destination_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination_sha256": "b2e6944b86b0e23201ccb0496c47dbd30f6871d7e6f71e32c36d55cf36b9f390",
       "reason": "Launch recipe 2 by default and preserve explicit legacy phase defaults."
     },
