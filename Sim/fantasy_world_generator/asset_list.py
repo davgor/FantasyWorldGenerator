@@ -39,6 +39,21 @@ def _terrain_assets() -> list[dict[str, Any]]:
     ]
 
 
+
+def _history_assets() -> list[dict[str, Any]]:
+    from icarus_sim.terrain_history import biome_catalogue
+    result = [{
+        'id': biome['asset_id'], 'kind': 'terrain_surface', 'name': biome['name'],
+        'source': 'simulation.biome_mutations', 'status': 'supported',
+        'selectors': {'core_biome_id': biome['core_biome_id'], 'core': biome['core'], 'magic_school': biome['magic_school']},
+        'metadata': {'display_color_rgb': biome['color'], 'group': biome['group'], 'recipe_version': 2},
+    } for biome in biome_catalogue()]
+    result.append({'id': 'marker.city_ruins', 'kind': 'marker', 'name': 'City ruins',
+                   'source': 'simulation.history', 'status': 'supported',
+                   'selectors': {'settlement_role': 'ruins'},
+                   'metadata': {'source_culture': 'carried by each generated ruin', 'recipe_version': 2}})
+    return result
+
 def _creature_assets() -> list[dict[str, Any]]:
     result = []
     for profile in _load("icarus_sim", "terrain_nest_profiles.json")["profiles"]:
@@ -112,7 +127,7 @@ def _production_assets() -> list[dict[str, Any]]:
 
 def compile_asset_list() -> dict[str, Any]:
     """Return a deterministic, normalized potential-state asset catalogue."""
-    assets = _terrain_assets() + _creature_assets() + _building_assets() + _production_assets()
+    assets = _terrain_assets() + _creature_assets() + _building_assets() + _production_assets() + _history_assets()
     assets.sort(key=lambda item: item["id"])
     ids = [item["id"] for item in assets]
     if len(ids) != len(set(ids)):

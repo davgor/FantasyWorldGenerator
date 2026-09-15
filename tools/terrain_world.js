@@ -1,5 +1,5 @@
 /* New recipe UI; old snapshots retain the original controls and renderer. */
-if (data.config.world_recipe === 1) {
+if (data.config.world_recipe >= 1) {
   const title = s => s.replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
   const make = (tag, text, parent) => { const e=document.createElement(tag); if(text!==undefined)e.textContent=text; if(parent)parent.append(e); return e; };
   const style=make('style', '#world-params label{display:block;font-size:12px}#world-params input,#world-params select{width:100%}.world-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.world-card{padding:14px;background:#20313c;border-radius:8px}.world-controls{display:flex;flex-wrap:wrap;gap:12px}.world-controls label{margin:4px}.world-controls input[type=checkbox]{width:auto}#world-atlas{aspect-ratio:2;image-rendering:pixelated}#world-layers{max-height:250px;overflow:auto}#world-layers label{display:inline-flex;align-items:center;gap:5px;margin:4px 10px 4px 0}#world-layers input[type=range]{width:65px}#world-viewer{margin:24px 0;padding:18px;border:1px solid #405d68;border-radius:12px}');
@@ -29,7 +29,8 @@ if (data.config.world_recipe === 1) {
       if(key==='world_size'&&!Object.hasOwn(explicit,'globe_radius'))inputs.globe_radius.value=10000*({small:1,medium:2,large:3}[input.value]);
     };
   }
-  const status=make('p',`Seed ${data.config.seed} · recipe 1. Every random generation starts from defaults.`,head);status.id='world-status';status.setAttribute('role','status');
+  const status=make('p',`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Every random generation starts from defaults.`,head);status.id='world-status';status.setAttribute('role','status');
+  const advanceButton=make('button','Advance age',head);advanceButton.id='world-advance-age';advanceButton.hidden=data.config.world_recipe!==2;advanceButton.disabled=!live||!data.beast_nests;
   const exportButton=make('button','Export world JSON',head);exportButton.onclick=()=>$('download').click();
   mode.onchange=()=>{parameters.hidden=mode.value==='random';generateButton.textContent=mode.value==='random'?'Generate random world':'Generate with parameters';};
   reset.onclick=()=>{explicit={};for(const [k,e] of Object.entries(inputs))e.value=schema[k].default;};
@@ -54,11 +55,11 @@ if (data.config.world_recipe === 1) {
     const nest=(data.beast_nests?.sites||[]).find(s=>s.id===nestSelect.value);
     const profile=(data.beast_nests?.profiles||[]).find(p=>p.id===(nest?.species_id||speciesSelect.value));
     const diagnostic=(data.beast_nests?.diagnostics||[]).find(d=>d.species_id===profile?.id);
-    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy; purple: elevated anchors. Proposals carry no assumed hostility or simulated population.';
+    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy; purple: elevated anchors. No simulated creature population; recipe 2 age transitions apply explicit local fantasy-threat rules.';
   }
   function rebuildNests(){
     const nests=data.beast_nests;
-    nestSummary.textContent=nests?`${nests.sites.length} anchors / ${nests.catalogue_count} candidate species; ${nests.sample_count} sampled surface cells. ${nests.limits}`:'Nests appear from settlement stage 7 onward.';
+    nestSummary.textContent=nests?`${nests.sites.length} anchors / ${nests.catalogue_count} candidate species; ${nests.sample_count} sampled surface cells. ${nests.limits}`:data.build_stages?'Beasties and animals appear at stage 13.':'Nests appear from settlement stage 7 onward.';
     const old=speciesSelect.value;speciesSelect.replaceChildren();make('option','All species',speciesSelect).value='';
     for(const d of nests?.diagnostics||[])make('option',`${d.name} (${d.placed})`,speciesSelect).value=d.species_id;
     if([...speciesSelect.options].some(o=>o.value===old))speciesSelect.value=old;
@@ -78,17 +79,19 @@ if (data.config.world_recipe === 1) {
   const skyInfo=make('p','',viewer);const summary=make('p','',viewer);summary.id='world-summary';
   const cards=make('div',undefined,viewer);cards.className='world-cards';
   const regions=make('details',undefined,viewer);make('summary','Regional presence and limiting conditions',regions);const regionText=make('div',undefined,regions);
-  const colors={weave:[180,143,247],umbral:[109,103,176],infernal:[243,83,59],holy:[255,220,126],primordial:[98,213,137],reef:[83,214,204],lagoon:[94,204,231],estuary:[118,160,101],kelp:[71,147,107],fjord:[92,160,189],boreal:[71,129,103],tundra:[178,188,149],ice_cap:[227,245,255],snow:[242,245,250],water_ice:[178,227,250]};
+  const historyCards=make('div',undefined,viewer);historyCards.id='world-history';historyCards.className='world-cards';
+  const colors={weave:[180,143,247],umbral:[109,103,176],infernal:[243,83,59],radiant:[255,220,126],fire:[207,86,37],water:[65,156,202],earth:[67,120,51],air:[176,210,213],holy:[255,220,126],primordial:[98,213,137],reef:[83,214,204],lagoon:[94,204,231],estuary:[118,160,101],kelp:[71,147,107],fjord:[92,160,189],boreal:[71,129,103],tundra:[178,188,149],ice_cap:[227,245,255],snow:[242,245,250],water_ice:[178,227,250]};
   let overlays={},nodePoints=[];
   const rgbFor=key=>colors[key.replace('ley_','').replace('zone_','')]||[216,166,110];
   function rebuild(){
+    advanceButton.disabled=busy||!live||!completeWorld.beast_nests;
     nodePoints=[];for(let z=0;z<data.config.size;z++)for(let x=0;x<(z===0||z===data.config.size-1?1:data.config.size-1);x++)nodePoints.push([x,z]);
     for(const key of Object.keys(data.layers))if(!layerInfo[key])layerInfo[key]=[title(key),'relative'];
     const old=field.value;field.replaceChildren();
-    for(const key of [...Object.keys(data.layers),'snow','water_ice']){const opt=make('option',title(key),field);opt.value=key;}
-    field.value=old&&[...field.options].some(o=>o.value===old)?old:data.layers.biome?'biome':'height';
+    for(const key of [...Object.keys(data.layers).filter(k=>!data.build_stages||!['ley_holy','ley_primordial'].includes(k)),'snow','water_ice']){const opt=make('option',title(key),field);opt.value=key;}
+    field.value=old&&[...field.options].some(o=>o.value===old)?old:data.layers.biome_variant?'biome_variant':data.layers.natural_biome?'natural_biome':data.layers.biome?'biome':'height';
     layers.replaceChildren();overlays={};
-    for(const key of [...Object.keys(data.layers).filter(k=>k.startsWith('ley_')||k.startsWith('zone_')||(data.habitats?.aquatic||[]).includes(k)||['boreal','tundra','ice_cap'].includes(k)),'snow','water_ice']){
+    for(const key of [...Object.keys(data.layers).filter(k=>(k.startsWith('ley_')&&(!data.build_stages||!['ley_holy','ley_primordial'].includes(k)))||k.startsWith('zone_')||(data.habitats?.aquatic||[]).includes(k)||['boreal','tundra','ice_cap'].includes(k)),'snow','water_ice']){
       const label=make('label',undefined,layers),check=make('input',undefined,label);check.type='checkbox';label.append(title(key));
       const alpha=make('input',undefined,label);alpha.type='range';alpha.min=0;alpha.max=1;alpha.step=.05;alpha.value=.55;alpha.setAttribute('aria-label',title(key)+' opacity');
       overlays[key]={check,alpha};check.onchange=alpha.oninput=drawAtlas;
@@ -104,6 +107,8 @@ if (data.config.world_recipe === 1) {
       const ports=(data.fisheries?.ports||[]).filter(p=>p.core_id===s.site_id);
       for(const p of ports)make('p',`${p.id}: ${p.role}; harbor ${p.harbor_quality.toFixed(2)}, ${p.worked_area_km2.toFixed(2)} km² exclusive fishing grounds, ${p.delivered_food.toFixed(2)} annual food units.`,card);
     }
+    historyCards.replaceChildren();
+    if(data.build_stages){make('h3',data.phases.titles[stage-1],historyCards);make('p',`${data.settlements?.sites.length||0} active cities · ${data.ruins?.length||0} ruins.`,historyCards);for(const ruin of data.ruins||[]){const card=make('article',undefined,historyCards);card.className='world-card';make('strong',ruin.name+' — Ruins',card);make('p',`Age ${ruin.destroyed_age} · Source culture: ${ruin.source_culture}`,card);make('p',ruin.reason,card);if(ruin.new_node_school)make('p','Now a '+ruin.new_node_school+' leyline key point.',card);}}
     regionText.replaceChildren();for(const region of data.regions?.influences||[])make('p',`${title(region.id)}: ${region.reason} · ${region.area_km2.toFixed(2)} km² influence above display threshold`,regionText);
     const routes=data.transport?.routes||[];
     summary.textContent=`${data.sky?.islands.length||0} floating islands · ${data.sky?.settlements.length||0} sky settlements · ${data.fisheries?.ports.length||0} coastal hamlets · ${routes.filter(r=>r.mode==='sea').length} sea routes · ${routes.filter(r=>r.mode==='air').length} air routes. Surface and sky food are budgeted separately. Fishing delivery ${(data.fisheries?.delivered_annual_food||0).toFixed(2)} / ${(data.fisheries?.potential_annual_food||0).toFixed(2)} potential units. Seed ${data.config.seed}.`;
@@ -115,7 +120,7 @@ if (data.config.world_recipe === 1) {
     const small=document.createElement('canvas');small.width=n;small.height=n;const c=small.getContext('2d'),im=c.createImageData(n,n);
     let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){lo=Math.min(lo,v);hi=Math.max(hi,v);}
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){
-      const v=grid[z][x];let color=key==='biome'?data.terrain.biomes[v].color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
+      const v=grid[z][x];let color=key==='biome_variant'?(v>=0?data.terrain.magical_biomes[v].color:data.terrain.biomes[data.layers.natural_biome[z][x]].color):['biome','natural_biome'].includes(key)?data.terrain.biomes[v].color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
       for(const [name,{check,alpha}] of Object.entries(overlays))if(check.checked){const value=values(name)?.[z]?.[x]||0,a=Math.min(1,Math.max(0,value))*Number(alpha.value),t=rgbFor(name);color=color.map((v,i)=>v*(1-a)+t[i]*a);}
       const at=(z*n+x)*4;im.data.set([...color.map(Math.round),255],at);
     }
@@ -126,6 +131,7 @@ if (data.config.world_recipe === 1) {
       for(let i=1;i<path.length;i++){const a=project(path[i-1]),b=project(path[i]);if(Math.abs(a[0]-b[0])<atlas.width/2){ctx.moveTo(...a);ctx.lineTo(...b);}}ctx.stroke();
     }ctx.globalAlpha=1;
     for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]);ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-3,p[1]-3,6,6);}
+    for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);ctx.strokeStyle='#e7a177';ctx.strokeRect(x-5,y-5,10,10);ctx.fillStyle='#e7a177';ctx.fillText('R',x+7,y+4);}
     for(const p of data.fisheries?.ports||[]){const [x,y]=project([p.x,p.z]);ctx.strokeStyle='#8ff6ed';ctx.strokeRect(x-4,y-4,8,8);}
     for(const landmark of data.regions?.landmarks||[]){const [x,y]=project([landmark.x,landmark.z]);ctx.fillStyle=landmark.kind==='witch_hut'?'#e2a7f1':'#edc17e';ctx.fillText(landmark.kind==='witch_hut'?'W':'T',x,y);}
     if(showNests.checked)for(const nest of visibleNests()){
@@ -142,7 +148,8 @@ if (data.config.world_recipe === 1) {
   }
   atlas.onmousemove=e=>{const rect=atlas.getBoundingClientRect(),n=data.config.size,x=Math.min(n-1,Math.max(0,Math.round((e.clientX-rect.left)/rect.width*(n-1)))),z=Math.min(n-1,Math.max(0,Math.round((e.clientY-rect.top)/rect.height*(n-1))));
     const active=Object.keys(overlays).map(k=>[k,values(k)?.[z]?.[x]||0]).filter(([k,v])=>v>.05).sort((a,b)=>b[1]-a[1]);
-    inspect.textContent=`${(-180+360*x/(n-1)).toFixed(1)}°, ${(90-180*z/(n-1)).toFixed(1)}° · ${title(field.value)}: ${(values(field.value)?.[z]?.[x]||0).toFixed(3)} · ${active.map(([k,v])=>title(k)+' '+v.toFixed(2)).join(' · ')||'No strong overlay'}`;
+    const variant=data.layers.biome_variant?.[z]?.[x];const core=data.terrain?.natural_biomes?.find(b=>b.id===data.layers.natural_biome?.[z]?.[x]);const mutation=variant>=0?data.terrain.magical_biomes[variant]:null;
+    inspect.textContent=(core?`Natural: ${core.name} · ${mutation?mutation.name+' / '+mutation.magic_school:'No dominant magical mutation'} · `:'')+`${(-180+360*x/(n-1)).toFixed(1)}°, ${(90-180*z/(n-1)).toFixed(1)}° · ${title(field.value)}: ${(values(field.value)?.[z]?.[x]||0).toFixed(3)} · ${active.map(([k,v])=>title(k)+' '+v.toFixed(2)).join(' · ')||'No strong overlay'}`;
   };
   atlas.onclick=e=>{const rect=atlas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*(data.config.size-1),z=(e.clientY-rect.top)/rect.height*(data.config.size-1);const nest=showNests.checked?[...visibleNests()].sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z))[0]:null;if(nest&&Math.hypot(nest.x-x,nest.z-z)<data.config.size*.018){speciesSelect.value=nest.species_id;rebuildNestLocations();nestSelect.value=nest.id;inspectNest();drawAtlas();return;}const island=[...(data.sky?.islands||[])].sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z))[0];if(island&&Math.hypot(island.x-x,island.z-z)<data.config.size*.035){skySelect.value=island.id;drawSky();}};
   month.onchange=()=>{drawAtlas();drawSky();draw();};field.onchange=showRoutes.onchange=drawAtlas;showSky.onchange=()=>{drawAtlas();draw();};skySelect.onchange=drawSky;
@@ -164,9 +171,11 @@ if (data.config.world_recipe === 1) {
     for(const triangle of triangles){ctx.beginPath();triangle.p.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=triangle.snow>.5?'#e3edf4':'#a0bfa3';ctx.fill();ctx.strokeStyle='#81729b';ctx.lineWidth=.35;ctx.stroke();}
   };
   const legacyDraw=draw;
+  let shownStage=null;
   draw=()=>{
     legacyDraw();
-    if(data.magic?.networks)$('magic-summary').textContent='Five independent magical networks: Weave, Umbral, Infernal, Holy and Primordial. Use the layered atlas to inspect their separate fields and overlaps. Settlement and route access use population-specific magical tolerance.';
+    if(data.build_stages&&shownStage!==data){shownStage=data;rebuild();}
+    if(data.magic?.networks)$('magic-summary').textContent=data.magic.version===3?data.magic.groups.join(' · ')+'. '+data.magic.method:'Five independent magical networks: Weave, Umbral, Infernal, Holy and Primordial.';
     if(data.population?.id==='mixed')$('profile-note').textContent='Mixed humans, dwarves, elves, gnomes and Tidekin sea elves.';
     if(data.config.world_recipe&&$('legend').textContent.includes('magical ecology'))$('legend').textContent='Underlying terrain and climate. Fantasy regions remain independent overlays in the layered atlas.';
   };
@@ -176,13 +185,23 @@ if (data.config.world_recipe === 1) {
     try{
       const randomMode=mode.value==='random';const seed=randomMode?crypto.getRandomValues(new Uint32Array(1))[0]:Number(inputs.seed.value);const overrides={};
       if(!randomMode)for(const k of Object.keys(explicit)){if(!inputs[k])continue;overrides[k]=schema[k].type==='string'?inputs[k].value:Number(inputs[k].value);}
-      const response=await fetch('/world/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seed,recipe_version:1,overrides})});const result=await response.json();if(!response.ok)throw Error(result.error||'Generation failed');
+      const response=await fetch('/world/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seed,recipe_version:completeWorld.config.world_recipe,overrides})});const result=await response.json();if(!response.ok)throw Error(result.error||'Generation failed');
       data=result;explicit={...data.recipe.overrides};for(const [k,input] of Object.entries(inputs))input.value=data.recipe.resolved[k]??schema[k].default;
       for(const [k,v] of Object.entries(data.config))if($('controls').elements[k])$('controls').elements[k].value=v;
       patchData=null;patchRequest++;$('patch-canvas').hidden=true;$('patch-download').disabled=true;
       selectedRow=Math.floor(data.config.size/2);rebuild();refreshLayers();draw();
-      status.textContent=`Generated seed ${seed} · recipe 1 · ${Object.keys(overrides).length} explicit overrides. Switch to Parameters to reproduce or tweak it.`;
+      status.textContent=`Generated seed ${seed} · recipe ${data.config.world_recipe} · ${Object.keys(overrides).length} explicit overrides. Switch to Parameters to reproduce or tweak it.`;
     }catch(error){status.textContent=error.message;}finally{busy=false;generateButton.disabled=false;}
+  };
+  advanceButton.onclick=async()=>{
+    if(busy||!live)return;
+    busy=true;advanceButton.disabled=true;generateButton.disabled=true;status.textContent='Advancing age: creatures, city fates, leylines, biomes and civilization…';
+    try{
+      const response=await fetch('/world/advance-age',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_version:1,world:completeWorld,steps:1})});
+      const result=await response.json();if(!response.ok)throw Error(result.error||'Age advancement failed');
+      data=result;patchData=null;patchRequest++;$('patch-canvas').hidden=true;$('patch-download').disabled=true;
+      refreshLayers();rebuild();draw();status.textContent=`Age ${data.history.ages.length} complete. Creature nests, cities and their supporting regions were recalculated.`;
+    }catch(error){status.textContent=error.message;}finally{busy=false;generateButton.disabled=false;advanceButton.disabled=!completeWorld.beast_nests;}
   };
   rebuild();draw();
 }

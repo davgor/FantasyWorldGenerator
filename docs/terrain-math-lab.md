@@ -1,5 +1,7 @@
 # Terrain math lab
 
+Current lab default: [recipe 2 staged history](terrain-world-layers.md) adds sixteen inspectable stages, deep-time tectonic deformation, eight independent leylines, natural/magical biome catalogues, and two civilization ages. Recipe 0/1 behavior below remains available explicitly.
+
 Current extension: [layered-world recipe 1](terrain-world-layers.md) adds independent magical networks, aquatic and cold habitats, coastal hamlets, floating archipelagos and multimodal food supply. Launch with `python tools/terrain_lab.py --serve`. Its fixed defaults and partial overrides supersede the historical derived-mode description below for the default browser experience. Legacy generation remains available with `--world_recipe 0 --auto_parameters 1`.
 
 Unreal port note: the Python/browser lab was originally copied from IcarusAI and is now extended by the layered-world recipe. The

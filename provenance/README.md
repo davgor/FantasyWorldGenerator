@@ -10,3 +10,5 @@ Ordinary validation uses `tools/verify_provenance.py` and does not require the s
 
 The source repository contains no standalone license file. This extraction is maintained by the same repository owner, but public redistribution remains blocked until an explicit license is selected. Game-owned Unreal assets and object-path bindings are not included here.
 
+
+`.gitattributes` disables text normalization for inherited files whose recorded bytes contain CRLF or mixed line endings. Their original bytes are stored in Git so clean checkouts pass the same provenance checks as the development workspace. This changes neither Python behavior nor source hashes.

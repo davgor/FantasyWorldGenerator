@@ -39,17 +39,21 @@ def benchmark(cfg, repeats):
 def serve(cfg, port):
     class Handler(BaseHTTPRequestHandler):
         def do_POST(self):
-            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate'):
+            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate', '/world/advance-age'):
                 self.send_error(404)
                 return
             try:
                 length = int(self.headers.get('Content-Length','0'))
-                if not 0 < length <= 65536:
-                    raise ValueError('JSON body must be 1..65536 bytes')
+                limit=256*1024*1024 if self.path=='/world/advance-age' else 65536
+                if not 0 < length <= limit:
+                    raise ValueError(f'JSON body must be 1..{limit} bytes')
                 body = json.loads(self.rfile.read(length))
                 if self.path == '/world/generate':
                     from icarus_sim.terrain_world import generate_request
                     result=generate_request(body)
+                elif self.path == '/world/advance-age':
+                    from icarus_sim.terrain_history import advance_age_request
+                    result=advance_age_request(body)
                 elif self.path == '/patch':
                     result=patch_request(body)
                 else:
@@ -104,7 +108,7 @@ def serve(cfg, port):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     from icarus_sim.terrain_world import default_config
-    defaults=default_config()
+    defaults=default_config(2)
     for f in fields(Config):
         parser.add_argument('--'+f.name, type=f.type, default=getattr(defaults,f.name))
     parser.add_argument('--output', type=Path, default=Path('Artifacts/terrain-lab'))
@@ -114,6 +118,8 @@ def main():
     parser.add_argument('--repeats', type=int, default=3)
     parser.add_argument('--prompt', help='Hash text to a seed; overrides --seed without interpreting terrain intent')
     args = parser.parse_args()
+    if args.world_recipe != 2 and not any(a=="--phase" or a.startswith("--phase=") for a in sys.argv[1:]):
+        args.phase=9
     try:
         if args.prompt is not None:
             args.seed = prompt_seed(args.prompt)['seed']

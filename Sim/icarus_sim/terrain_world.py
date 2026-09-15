@@ -67,17 +67,28 @@ for name in ZONES:
     OPTIONS[name+'_intensity'] = spec(.8, 0., 1., 'Regions', name.replace('_',' ')+' intensity')
 
 
+# The previous recipe keeps its original registry and seed streams.
+V2_OPTIONS = dict(OPTIONS)
+for name in ('radiant', 'fire', 'water', 'earth', 'air'):
+    for suffix in ('occurrence','nodes','width','strength','instability','variation'):
+        V2_OPTIONS[name+'_'+suffix] = dict(OPTIONS['weave_'+suffix], group=name.title())
+for name in ('holy','primordial'):
+    for suffix in ('occurrence','nodes','width','strength','instability','variation'):
+        V2_OPTIONS.pop(name+'_'+suffix)
+
+
 @lru_cache(maxsize=64)
-def validate_options(raw):
+def validate_options(raw, version=1):
+    definitions = V2_OPTIONS if version == 2 else OPTIONS
     try:
         values = json.loads(raw)
     except (TypeError, ValueError) as exc:
         raise ValueError('world_options must be a JSON object') from exc
-    if not isinstance(values, dict) or set(values)-set(OPTIONS):
+    if not isinstance(values, dict) or set(values)-set(definitions):
         raise ValueError('Unknown world option')
-    result = {key: item['default'] for key,item in OPTIONS.items()}
+    result = {key: item['default'] for key,item in definitions.items()}
     for key,value in values.items():
-        s=OPTIONS[key]
+        s=definitions[key]
         if type(value) not in (int,float) or not math.isfinite(value) or not s['min']<=value<=s['max']:
             raise ValueError(f'{key} must be {s["min"]}..{s["max"]}')
         if s['type']=='integer' and type(value) is not int:
@@ -89,18 +100,18 @@ def validate_options(raw):
 
 
 def options(cfg):
-    return validate_options(cfg.world_options)
+    return validate_options(cfg.world_options, cfg.world_recipe)
 
 
-def default_config():
+def default_config(version=1):
     from .terrain_lab import Config
-    return Config(world_recipe=1, shape='globe', tectonics=1, auto_parameters=0,
+    return Config(world_recipe=version, phase=16 if version==2 else 9, shape='globe', tectonics=1, auto_parameters=0,
                   population_profile='mixed', amplitude=1100., wavelength=4300.,
                   magic_instability=.45, belt_width=.08, settlement_count=24)
 
 
-def registry():
-    cfg=asdict(default_config())
+def registry(version=1):
+    cfg=asdict(default_config(version))
     inactive={'world_recipe','world_options','auto_parameters','ley_nodes','ley_width','magic_instability',
               'extent','depth','width','meander','urban_food_demand','human_adaptation'}
     result={k:dict(default=v,group='World',description=k.replace('_',' '),
@@ -109,7 +120,7 @@ def registry():
     for key,choices in {'world_size':['small','medium','large'], 'shape':['globe'],
                         'population_profile':['mixed','human','dwarf','elf','gnome','tidekin']}.items():
         result[key]['choices']=choices
-    bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,9),'tectonics':(1,1),'magic_enabled':(0,1),
+    bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,16 if version==2 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
             'plate_count':(3,48),'layout_variation':(0,4294967295),'detail_variation':(0,4294967295),
             'crust_bias':(-1,1),'belt_width':(.01,.3),'mountain_detail':(0,1),'temperature_offset':(-40,40),
             'moisture_bias':(-1,1),'wind_bearing':(0,360),'rain_passes':(1,128),'rain_strength':(0,3),
@@ -131,7 +142,7 @@ def registry():
                        'Communities':'population_profile human_magic_limit college_count hamlets_per_core fortress_count support_reach culture_link_cost settlement_count settlement_spacing stubbornness road_max_grade bridge_cost'}.items():
         for key in keys.split():result[key]['group']=group
     result['settlement_count']['description']='Maximum surface cities; actual counts require habitat and productive capacity'
-    result.update(OPTIONS)
+    result.update(V2_OPTIONS if version==2 else OPTIONS)
     return result
 
 
@@ -139,14 +150,16 @@ def generate_request(body):
     from .terrain_lab import Config, generate
     if not isinstance(body,dict) or set(body)-{'seed','recipe_version','overrides'}:
         raise ValueError('Expected seed, recipe_version and optional overrides')
-    if type(body.get('recipe_version',1)) is not int or body.get('recipe_version',1)!=1:
+    if type(body.get('recipe_version',1)) is not int or body.get('recipe_version',1) not in (1,2):
         raise ValueError('Unsupported recipe_version')
+    version=body.get('recipe_version',1)
+    option_defs=V2_OPTIONS if version==2 else OPTIONS
     seed=body.get('seed',42)
     if type(seed) is not int or not 0<=seed<2**32:raise ValueError('Invalid uint32 seed')
     overrides=body.get('overrides',{})
-    if not isinstance(overrides,dict) or set(overrides)-set(registry()):raise ValueError('Unknown override')
+    if not isinstance(overrides,dict) or set(overrides)-set(registry(version)):raise ValueError('Unknown override')
     if 'seed' in overrides:raise ValueError('Supply seed at the top level, not inside overrides')
-    raw=asdict(default_config()); extra={}; definitions=registry()
+    raw=asdict(default_config(version)); extra={}; definitions=registry(version)
     for key,value in overrides.items():
         definition=definitions[key]
         kind=definition['type']
@@ -157,7 +170,7 @@ def generate_request(body):
             if type(value) not in (int,float) or not math.isfinite(value):raise ValueError(f'{key} must be finite numeric')
             if kind=='integer' and type(value) is not int:raise ValueError(f'{key} must be an integer')
             if not definition.get('min',-math.inf)<=value<=definition.get('max',math.inf):raise ValueError(f'{key} outside allowed range')
-        if key in OPTIONS:extra[key]=value
+        if key in option_defs:extra[key]=value
         else:raw[key]=value
     raw['seed']=seed
     if 'globe_radius' not in overrides:raw['globe_radius']=10000*{'small':1,'medium':2,'large':3}.get(raw['world_size'],1)
@@ -172,7 +185,7 @@ def generate_request(body):
         delta=max([float(overrides[k])-OPTIONS[k]['default'] for k in (zone+'_occurrence',zone+'_intensity') if k in overrides]+[0.])
         if delta>0 and target not in overrides:
             s=definitions[target];value=max(s['min'],min(s['max'],s['default']+delta*gain))
-            if target in OPTIONS:extra[target]=value
+            if target in option_defs:extra[target]=value
             else:raw[target]=value
             biases[target]={'value':value,'source':zone+' request biases suitable conditions; placement remains conditional'}
     if raw['shape']!='globe' or raw['tectonics']!=1:raise ValueError('World recipe requires a tectonic globe')
@@ -180,9 +193,9 @@ def generate_request(body):
     raw['world_options']=json.dumps(extra,sort_keys=True)
     cfg=Config(**raw)
     result=generate(cfg)
-    result['recipe']={'version':1,'seed':seed,'overrides':overrides,
-                      'resolved':{**asdict(cfg),**options(cfg)},'parameters':registry(),
-                      'provenance':{k:'override' if k in overrides else 'default' for k in registry()}}
+    result['recipe']={'version':version,'seed':seed,'overrides':overrides,
+                      'resolved':{**asdict(cfg),**options(cfg)},'parameters':registry(version),
+                      'provenance':{k:'override' if k in overrides else 'default' for k in registry(version)}}
     result['recipe']['biases']=biases
     for key,item in biases.items():result['recipe']['provenance'][key]=item['source']
     if 'globe_radius' not in overrides and raw['world_size']!='small':result['recipe']['provenance']['globe_radius']='world_size preset'

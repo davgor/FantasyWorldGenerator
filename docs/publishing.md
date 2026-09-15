@@ -4,7 +4,8 @@ Every push to `main` produces one export-only workflow artifact named `fantasy-w
 
 The asset list is a capability catalogue, not a generated-world inventory. Its normalized `assets` array is the union of:
 
-- every terrain/biome surface the simulator can emit;
+- every terrain/biome surface the simulator can emit, including every natural-core × magic-school combination (104 recipe 2 variants);
+- the city-ruins marker, whose generated instance retains its source culture and destruction cause;
 - every real or fantasy creature profile eligible for a habitat anchor;
 - every building asset choice reachable through any settlement building pack;
 - every inherited environment production item, including materials, plants, trees, fungi, water, effects, structures, props, people, animation, and audio.

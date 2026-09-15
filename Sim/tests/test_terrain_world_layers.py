@@ -126,7 +126,7 @@ class LayeredWorldTests(unittest.TestCase):
             json.dumps(w,allow_nan=False)
 
     def test_invalid_requests(self):
-        for body in ({'recipe_version':2},{'seed':True},{'overrides':{'made_up':1}},
+        for body in ({'recipe_version':3},{'seed':True},{'overrides':{'made_up':1}},
                      {'overrides':{'infernal_strength':float('nan')}},{'overrides':{'size':True}},
                      {'overrides':{'sky_clusters':2.5}},{'overrides':{'population_profile':'unknown'}},
                      {'overrides':{'temperature_offset':'cold'}}):
