@@ -26,25 +26,28 @@
       "source": "Sim/icarus_sim/__init__.py",
       "source_sha256": "c87f7e51e806af2dfa52141629861cc315694240c01430721e6ee8aa8bb178f9",
       "destination": "Sim/icarus_sim/__init__.py",
-      "destination_sha256": "c87f7e51e806af2dfa52141629861cc315694240c01430721e6ee8aa8bb178f9",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "be1ae72cf462cb2250f787301581488eb7202254eac5afba8362cd0508e7ae9b",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_area.py",
       "source_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
       "destination": "Sim/icarus_sim/terrain_area.py",
-      "destination_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "c31cf80f734c79e4b759b4e039e4613933c4b14b9111011ca153c1c2e6abe806",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_biomes.py",
       "source_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
       "destination": "Sim/icarus_sim/terrain_biomes.py",
-      "destination_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "a702df217c6759cd4828ad7e6b2605dd55ff4faede345193092bfdd62081858b",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_city_building_packs.json",
@@ -98,42 +101,46 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "7bf22304c5d477398d50861a053b8d3840e4414d36dc7c98bf69fd4ef2fa96f4",
+      "destination_sha256": "ef7a5f88d8100e9275bb0a37c0445e134a86bc157535a9c4ca7126f31b91a1fb",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged."
+      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged. Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "8d6223661f796e610d83a6dae29f37cec2f16ed60f77d0f77ee38c0207a1efbe",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "9377ce7f834b2c3c092bd7aba115aeeea004e1361cd1a3979c4b6baf235d8ffb",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
       "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
       "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
-      "destination_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "323c7597299d4a14ac815d492531bf0b5e0427a4e38c941aa22c3f935599b789",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_nests.py",
       "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
       "destination": "Sim/icarus_sim/terrain_nests.py",
-      "destination_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "b20b313db07d84c3fdb0428f5577ef4457c909e4f66c9bb2a7da44f372c74953",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_patch.py",
@@ -147,9 +154,10 @@
       "source": "Sim/icarus_sim/terrain_profiles.json",
       "source_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
       "destination": "Sim/icarus_sim/terrain_profiles.json",
-      "destination_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "299493145f31a0266d473876e814281875e2e0dde00372be6d14f8aa65a88212",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_profiles.py",
@@ -163,17 +171,19 @@
       "source": "Sim/icarus_sim/terrain_recipes.py",
       "source_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
       "destination": "Sim/icarus_sim/terrain_recipes.py",
-      "destination_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "330feca8d7cc5a6d78e4d751b6210188b6d49656eef458e5ba37b73cf534aa25",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_seasons.py",
       "source_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
       "destination": "Sim/icarus_sim/terrain_seasons.py",
-      "destination_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "b65c0916c77ca43ace5823abd3e7a11085a9874c80a44e6c68d2f7d414de579d",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_seed.py",
@@ -187,9 +197,10 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "aa157544488077045569b66597093d304fb0a8f5ffc0fb972dc2e1a67e8b045c",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_society.py",
@@ -203,17 +214,19 @@
       "source": "Sim/icarus_sim/terrain_tectonics.py",
       "source_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
       "destination": "Sim/icarus_sim/terrain_tectonics.py",
-      "destination_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "d415f83c05c954aeba2943ded62e01fd52803cdc696ba30d6a138641f2046b9c",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_water.py",
       "source_sha256": "1e89409f0aaac596f6ba66f48d30a78df6d55566ad41b5f6d64587c3cb00a6cc",
       "destination": "Sim/icarus_sim/terrain_water.py",
-      "destination_sha256": "1e89409f0aaac596f6ba66f48d30a78df6d55566ad41b5f6d64587c3cb00a6cc",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "dddc4cec3fd9e2e68206e775e4dbc5e5d9afa035c7da462c13c2dff734ba9522",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/icarus_sim/terrain_world.py",
@@ -259,17 +272,19 @@
       "source": "Sim/tests/test_terrain_drainage.py",
       "source_sha256": "f54e691549d0d5f6632699d71a9b9edf0c88e1c134949100941ae2823d7ec054",
       "destination": "Sim/tests/test_terrain_drainage.py",
-      "destination_sha256": "f54e691549d0d5f6632699d71a9b9edf0c88e1c134949100941ae2823d7ec054",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "954d7fd9825fd4125f623f3ad9b8105d4222779897a16148488ebdf420b809d7",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_humans.py",
       "source_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
       "destination": "Sim/tests/test_terrain_humans.py",
-      "destination_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "7164a6b1d6ff7fe7f1ed0341b221391b3ea5cad2118ca41f92062ab24ba1cd70",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_lab.py",
@@ -291,9 +306,10 @@
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "024e0fe66304161e956f4068dfa6a2e71b678a2e64ee2281156767325d75f836",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_patch.py",
@@ -307,9 +323,10 @@
       "source": "Sim/tests/test_terrain_peoples.py",
       "source_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
       "destination": "Sim/tests/test_terrain_peoples.py",
-      "destination_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "7da3e394782988fa1698820f08c08115700b765e65bb707c23364c9bd307ae0c",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_recipes.py",
@@ -323,9 +340,10 @@
       "source": "Sim/tests/test_terrain_seasons.py",
       "source_sha256": "d160028f06cf9a73fc9e15aa45ce18e2950f9a8c7baa4e934b9786724aed72fb",
       "destination": "Sim/tests/test_terrain_seasons.py",
-      "destination_sha256": "d160028f06cf9a73fc9e15aa45ce18e2950f9a8c7baa4e934b9786724aed72fb",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "bd37ba9b97d4963056272db97707dbd3d56d2d6a21a88ced1f709bdeb351441b",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "Sim/tests/test_terrain_tectonics.py",
@@ -355,9 +373,10 @@
       "source": "Sim/tests/test_terrain_world_size.py",
       "source_sha256": "63b17ce76e250b822a21b1098c30551a7521831c269e3cb11b0893b1067d886c",
       "destination": "Sim/tests/test_terrain_world_size.py",
-      "destination_sha256": "63b17ce76e250b822a21b1098c30551a7521831c269e3cb11b0893b1067d886c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "dd74dc89f4ccaf0a42f94cf964845994204292818a9d63714ce6f5698f9a71b6",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "board/done/LAB-005.md",
@@ -573,10 +592,10 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "7863d608700d2edad220cb216bd55af2f4ff3a94b6e1e2c993b4b43cc3e943ed",
+      "destination_sha256": "9e76d226f6ff4603e6a32240ddc249fa04291eea35bee4db7c9b7f350204b425",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation. Initial destination checksum corrected to the committed standalone document, including its documented immutable source-link rewrites and LF line endings."
     },
     {
       "source": "docs/terrain-world-layers.md",
@@ -622,17 +641,19 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
-      "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "destination_sha256": "cf0abced6c365b5fe86fe38a5a205296192adae94af4f1ad12aacdf7e4cca89d",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
-      "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "destination_sha256": "31171a00e700712852062761e50226cb49e2f3f2a71cff3f309d70480d72c81f",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "modification": "Git text normalization changed CRLF (including mixed line endings) to LF; content verified unchanged."
     },
     {
       "source": "tools/terrain_world.js",

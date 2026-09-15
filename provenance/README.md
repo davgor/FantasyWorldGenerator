@@ -10,3 +10,14 @@ Ordinary validation uses `tools/verify_provenance.py` and does not require the s
 
 The source repository contains no standalone license file. This extraction is maintained by the same repository owner, but public redistribution remains blocked until an explicit license is selected. Game-owned Unreal assets and object-path bindings are not included here.
 
+
+## Initial checkout checksum correction
+
+The initial manifest measured working-tree line endings before `* text=auto` stored LF blobs in Git.
+The publishing change verifies 22 original destination hashes against retained original bytes or an
+exact LF-to-CRLF conversion and records the committed LF destination hashes. The initial standalone
+MathLab document checksum is also reconciled to its committed document, retaining the existing
+source-link rewrite explanation. Each correction has an explicit modification record; original
+source hashes remain unchanged. No simulator bytes or algorithms are changed by this correction.
+
+`.gitattributes` now pins LF on checkout as well as in Git, keeping these byte hashes stable on Windows.
