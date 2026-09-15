@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "ticket": "board/done/LAB-018.md",
+  "authorization": "User requested layered-world implementation (LAB-005), catalogue-driven beast nests (LAB-006), inclusion of the profile-driven city-layout work (LAB-017), and cleanup of the resulting MathLab test regressions (LAB-018). Original source/archive hashes are retained.",
+  "files": [
+    {
+      "path": "Sim/README.md",
+      "previous_sha256": "f376934814652310b6a4be3ea20ab38270d67f679b10b33445e9be483d401b9c",
+      "sha256": "90fc2015017127ff207bc55e1a1ea00f07864f0efb743cb99da1ea98eabf693f"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_area.py",
+      "previous_sha256": "3c0aa63f826372792bd326709377424ecff6040e0b0cf90efb327c15605e4c13",
+      "sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_ecology.py",
+      "previous_sha256": null,
+      "sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_humans.py",
+      "previous_sha256": "eb8c4f78f5ba7c8fab1f6862294019bf5967447af671e878b36b7bd782d0e9b0",
+      "sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_lab.py",
+      "previous_sha256": "cdadd098b6557a4b22204b8b2213a0635246cb35b551785a4ee6a90dd5a733df",
+      "sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_magic.py",
+      "previous_sha256": "283d23466b60f2d88e7a1e2a48f09fcd5c355e3ebda1da7f532f83f1d804f20c",
+      "sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_profiles.json",
+      "previous_sha256": "718a6e42e557d823c7fd91c9e1d8a606caca689a1e8490425ec720f8a385e199",
+      "sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_profiles.py",
+      "previous_sha256": "7062aab98c6ab814a255eda8edf26e3ea282d5dd3d1621b908571fc251fdc1dc",
+      "sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_seasons.py",
+      "previous_sha256": "b15d7f63ffd6ba0e942b816b339a265fe2fe9ce6fd3cad2485cbad9071575e4b",
+      "sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_settlements.py",
+      "previous_sha256": "661753875cb80800a859cd9855cc0f474ba9050851917b0363492ec40367563e",
+      "sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_city_building_packs.json",
+      "previous_sha256": null,
+      "sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_city_layout_profiles.json",
+      "previous_sha256": null,
+      "sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_society.py",
+      "previous_sha256": null,
+      "sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_tectonics.py",
+      "previous_sha256": "417ad99dd353f6fbd1db9deb6b2648547f3d23a8f26542de8f4b3827fe2948b0",
+      "sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_world.py",
+      "previous_sha256": null,
+      "sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787"
+    },
+    {
+      "path": "Sim/tests/test_terrain_world_layers.py",
+      "previous_sha256": null,
+      "sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b"
+    },
+    {
+      "path": "Sim/tests/test_terrain_city_layout.py",
+      "previous_sha256": null,
+      "sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc"
+    },
+    {
+      "path": "docs/terrain-math-lab.md",
+      "previous_sha256": "e58e8cce2d39376ca46b3e4ab48eefd08975bd6fc52cebd4cae7d68633a39ed9",
+      "sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987"
+    },
+    {
+      "path": "docs/terrain-world-layers.md",
+      "previous_sha256": null,
+      "sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028"
+    },
+    {
+      "path": "tools/terrain_lab.py",
+      "previous_sha256": "8a1ada5e8cf58596b7994a60710297384013f40d6758fcaea353d0ab840975cb",
+      "sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e"
+    },
+    {
+      "path": "tools/terrain_world.js",
+      "previous_sha256": null,
+      "sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_nests.py",
+      "previous_sha256": null,
+      "sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c"
+    },
+    {
+      "path": "Sim/icarus_sim/terrain_nest_profiles.json",
+      "previous_sha256": null,
+      "sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6"
+    },
+    {
+      "path": "Sim/tests/test_terrain_nests.py",
+      "previous_sha256": null,
+      "sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1"
+    }
+  ]
+}

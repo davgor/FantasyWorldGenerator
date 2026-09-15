@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fantasy-world-generator"
+version = "0.1.0"
+description = "Engine-independent procedural fantasy world simulation and Unreal interchange exports"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "David Gorden" }]
+dependencies = []
+
+[project.scripts]
+fantasy-world = "fantasy_world_generator.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "Sim" }
+
+[tool.setuptools.packages.find]
+where = ["Sim"]
+include = ["fantasy_world_generator*", "icarus_sim*"]
+
+[tool.setuptools.package-data]
+fantasy_world_generator = ["*.json"]
+icarus_sim = ["*.json"]

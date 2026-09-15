@@ -1,0 +1,59 @@
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+from fantasy_world_generator.asset_list import compile_asset_list
+from fantasy_world_generator.cli import main, world_document
+from fantasy_world_generator.asset_list import COLD_BIOMES
+from icarus_sim.terrain_biomes import BIOMES
+
+
+class AssetListTests(unittest.TestCase):
+    def test_all_potential_state_sources_are_included(self):
+        document = compile_asset_list()
+        assets = {item["id"]: item for item in document["assets"]}
+        self.assertEqual(document["summary"]["by_source"]["simulation.biomes"], len(BIOMES + COLD_BIOMES))
+        self.assertEqual(document["summary"]["by_source"]["simulation.creature_profiles"], 381)
+        self.assertEqual(document["summary"]["by_source"]["simulation.building_packs"], 84)
+        self.assertEqual(document["summary"]["by_source"]["production.world_asset_catalogue"], 492)
+        self.assertIn("creature.kraken", assets)
+        self.assertIn("terrain.biome.017", assets)
+        self.assertIn("building.building_market_stall_generic", assets)
+        self.assertTrue(any(item["kind"] == "plant" for item in assets.values()))
+
+    def test_output_is_deterministic_and_ids_are_unique(self):
+        first = compile_asset_list()
+        second = compile_asset_list()
+        self.assertEqual(first, second)
+        ids = [item["id"] for item in first["assets"]]
+        self.assertEqual(ids, sorted(ids))
+        self.assertEqual(len(ids), len(set(ids)))
+        json.dumps(first, allow_nan=False)
+
+    def test_cli_writes_asset_list(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "assets.json"
+            self.assertEqual(main(["asset-list", "--output", str(output)]), 0)
+            self.assertEqual(json.loads(output.read_text(encoding="utf-8")), compile_asset_list())
+
+    def test_world_document_has_versioned_envelope(self):
+        world = world_document({"seed": 42, "overrides": {"size": 17, "phase": 1}})
+        self.assertEqual(world["schema"], "fantasy-world-generator.world")
+        self.assertEqual(world["schema_version"], 1)
+        self.assertEqual(world["recipe"]["version"], 1)
+        json.dumps(world, allow_nan=False)
+
+    def test_published_biomes_match_a_generated_layered_world(self):
+        world = world_document({"seed": 42, "overrides": {"size": 17, "phase": 6}})
+        expected = {
+            (item["selectors"]["biome_ids"][0], item["name"], tuple(item["metadata"]["display_color_rgb"]))
+            for item in compile_asset_list()["assets"]
+            if item["source"] == "simulation.biomes"
+        }
+        actual = {(item["id"], item["name"], tuple(item["color"])) for item in world["terrain"]["biomes"]}
+        self.assertEqual(actual, expected)
+
+
+if __name__ == "__main__":
+    unittest.main()

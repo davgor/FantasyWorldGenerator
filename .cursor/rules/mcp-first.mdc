@@ -1,0 +1,7 @@
+---
+description: Use connected Unreal tooling for downstream editor and asset work
+alwaysApply: true
+---
+
+The simulation repository is engine-independent. For future Unreal adapter or asset work, follow `AGENTS.md` and `docs/unreal-integration.md`: verify the connected editor/project, prefer supported Unreal tool interfaces, and do not claim engine success from source or configuration files alone.
+

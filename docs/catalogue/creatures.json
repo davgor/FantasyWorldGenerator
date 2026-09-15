@@ -1,0 +1,1909 @@
+{
+  "creatures": [
+    {
+      "name": "Red deer",
+      "real": true,
+      "desc": "A large woodland deer that grazes in clearings, browses vegetation and gathers in herds."
+    },
+    {
+      "name": "Roe deer",
+      "real": true,
+      "desc": "A small deer that browses woodland edges and shelters in dense cover."
+    },
+    {
+      "name": "Moose",
+      "real": true,
+      "desc": "A large deer that browses forest vegetation and feeds in shallow wetlands."
+    },
+    {
+      "name": "Wild boar",
+      "real": true,
+      "desc": "A social omnivore that roots through forest soil and shelters in dense vegetation."
+    },
+    {
+      "name": "Gray wolf",
+      "real": true,
+      "desc": "A social predator that hunts in packs and uses sheltered dens to raise pups."
+    },
+    {
+      "name": "Red fox",
+      "real": true,
+      "desc": "An adaptable predator that hunts small animals and raises young in burrows."
+    },
+    {
+      "name": "Brown bear",
+      "real": true,
+      "desc": "A large omnivore that forages across forests and uplands and uses winter dens."
+    },
+    {
+      "name": "Eurasian lynx",
+      "real": true,
+      "desc": "A solitary woodland cat that ambushes prey and shelters in secluded cover."
+    },
+    {
+      "name": "European badger",
+      "real": true,
+      "desc": "A woodland omnivore that lives in communal underground setts."
+    },
+    {
+      "name": "Pine marten",
+      "real": true,
+      "desc": "An agile woodland predator that uses tree cavities and hunts small animals."
+    },
+    {
+      "name": "Red squirrel",
+      "real": true,
+      "desc": "A tree-dwelling rodent that caches seeds and builds leafy nests."
+    },
+    {
+      "name": "Wood mouse",
+      "real": true,
+      "desc": "A small woodland rodent that eats seeds and invertebrates and shelters in burrows."
+    },
+    {
+      "name": "European hedgehog",
+      "real": true,
+      "desc": "A nocturnal insect-eating mammal that nests in sheltered vegetation."
+    },
+    {
+      "name": "Tawny owl",
+      "real": true,
+      "desc": "A nocturnal woodland hunter that nests in tree cavities."
+    },
+    {
+      "name": "Great spotted woodpecker",
+      "real": true,
+      "desc": "A woodland bird that excavates nesting cavities and forages on trunks."
+    },
+    {
+      "name": "Capercaillie",
+      "real": true,
+      "desc": "A large forest grouse that feeds on vegetation and nests on the ground."
+    },
+    {
+      "name": "Stag beetle",
+      "real": true,
+      "desc": "A woodland beetle whose larvae develop in decaying wood."
+    },
+    {
+      "name": "American bison",
+      "real": true,
+      "desc": "A large grazing mammal that travels in herds across grassland."
+    },
+    {
+      "name": "Przewalski's horse",
+      "real": true,
+      "desc": "A wild horse that grazes open steppe and forms social herds."
+    },
+    {
+      "name": "Saiga antelope",
+      "real": true,
+      "desc": "A herd-forming antelope adapted to open steppe and seasonal movement."
+    },
+    {
+      "name": "Pronghorn",
+      "real": true,
+      "desc": "A fast herbivore that grazes and browses open grassland and shrubland."
+    },
+    {
+      "name": "European rabbit",
+      "real": true,
+      "desc": "A social herbivore that grazes near communal burrow systems called warrens."
+    },
+    {
+      "name": "European hare",
+      "real": true,
+      "desc": "An open-country herbivore that rests in shallow ground forms rather than warrens."
+    },
+    {
+      "name": "Black-tailed prairie dog",
+      "real": true,
+      "desc": "A social grassland rodent that constructs extensive burrow colonies."
+    },
+    {
+      "name": "Ground squirrel",
+      "real": true,
+      "desc": "A burrowing rodent candidate group that feeds in open country and shelters underground."
+    },
+    {
+      "name": "Coyote",
+      "real": true,
+      "desc": "An adaptable open-country predator that hunts small animals and uses breeding dens."
+    },
+    {
+      "name": "Steppe eagle",
+      "real": true,
+      "desc": "A large bird of prey that hunts open steppe and often nests on the ground."
+    },
+    {
+      "name": "Burrowing owl",
+      "real": true,
+      "desc": "A small grassland owl that shelters and breeds in underground burrows."
+    },
+    {
+      "name": "Plains zebra",
+      "real": true,
+      "desc": "A herd-forming grazer that moves across warm grassland in search of forage and water."
+    },
+    {
+      "name": "Blue wildebeest",
+      "real": true,
+      "desc": "A social savanna grazer that can form large migrating herds."
+    },
+    {
+      "name": "Impala",
+      "real": true,
+      "desc": "A social antelope that grazes and browses savanna and woodland edges."
+    },
+    {
+      "name": "African buffalo",
+      "real": true,
+      "desc": "A large herd-forming herbivore dependent on grazing grounds and access to water."
+    },
+    {
+      "name": "Lion",
+      "real": true,
+      "desc": "A social large cat that hunts grazing animals across savanna and open woodland."
+    },
+    {
+      "name": "Spotted hyena",
+      "real": true,
+      "desc": "A social predator and scavenger that raises young around communal dens."
+    },
+    {
+      "name": "Cheetah",
+      "real": true,
+      "desc": "A fast predator that pursues prey in open habitats and uses secluded cover for cubs."
+    },
+    {
+      "name": "Ostrich",
+      "real": true,
+      "desc": "A large flightless bird that forages in open country and uses ground nests."
+    },
+    {
+      "name": "Secretary bird",
+      "real": true,
+      "desc": "A long-legged savanna bird that hunts on foot and nests in trees."
+    },
+    {
+      "name": "Fennec fox",
+      "real": true,
+      "desc": "A small nocturnal desert fox that shelters in burrows and hunts small prey."
+    },
+    {
+      "name": "Sand cat",
+      "real": true,
+      "desc": "A small desert predator that uses burrows and shaded refuges."
+    },
+    {
+      "name": "Caracal",
+      "real": true,
+      "desc": "A solitary cat that hunts birds and mammals in dry scrub and open woodland."
+    },
+    {
+      "name": "Addax",
+      "real": true,
+      "desc": "A desert antelope adapted to sparse vegetation and long periods without drinking."
+    },
+    {
+      "name": "Arabian oryx",
+      "real": true,
+      "desc": "A desert herbivore that moves between sparse grazing areas."
+    },
+    {
+      "name": "Wild Bactrian camel",
+      "real": true,
+      "desc": "A wild camel adapted to cold, arid deserts and scarce water."
+    },
+    {
+      "name": "Lesser Egyptian jerboa",
+      "real": true,
+      "desc": "A small nocturnal desert rodent that moves by hopping and shelters in burrows."
+    },
+    {
+      "name": "Desert hedgehog",
+      "real": true,
+      "desc": "A nocturnal desert mammal that hunts invertebrates and uses sheltered resting sites."
+    },
+    {
+      "name": "Black-tailed jackrabbit",
+      "real": true,
+      "desc": "A large hare that feeds in dry grassland and scrub and rests above ground."
+    },
+    {
+      "name": "Desert tortoise",
+      "real": true,
+      "desc": "A desert herbivore that uses burrows to escape temperature extremes."
+    },
+    {
+      "name": "Gila monster",
+      "real": true,
+      "desc": "A venomous desert lizard that spends much of its time in underground shelters."
+    },
+    {
+      "name": "Sidewinder",
+      "real": true,
+      "desc": "A venomous snake that hunts small prey across sandy desert terrain."
+    },
+    {
+      "name": "Desert locust",
+      "real": true,
+      "desc": "A dry-country grasshopper that can form vegetation-consuming swarms."
+    },
+    {
+      "name": "Darkling beetle",
+      "real": true,
+      "desc": "A beetle candidate group including desert scavengers that shelter beneath debris or sand."
+    },
+    {
+      "name": "Desert hairy scorpion",
+      "real": true,
+      "desc": "A large desert scorpion that hunts at night and shelters in burrows."
+    },
+    {
+      "name": "Reindeer (caribou)",
+      "real": true,
+      "desc": "A cold-adapted deer that forms herds and moves between tundra or boreal feeding grounds."
+    },
+    {
+      "name": "Muskox",
+      "real": true,
+      "desc": "A large tundra grazer that lives in herds and defends young collectively."
+    },
+    {
+      "name": "Arctic fox",
+      "real": true,
+      "desc": "A small tundra predator and scavenger that raises young in established dens."
+    },
+    {
+      "name": "Wolverine",
+      "real": true,
+      "desc": "A wide-ranging cold-region predator and scavenger that uses secluded breeding dens."
+    },
+    {
+      "name": "Arctic hare",
+      "real": true,
+      "desc": "A tundra herbivore that feeds on low vegetation and shelters among terrain features."
+    },
+    {
+      "name": "Collared lemming",
+      "real": true,
+      "desc": "A small Arctic rodent that feeds on tundra vegetation and shelters in burrows and snow tunnels."
+    },
+    {
+      "name": "Tundra vole",
+      "real": true,
+      "desc": "A small northern rodent that feeds on vegetation and uses dense ground cover."
+    },
+    {
+      "name": "Snowy owl",
+      "real": true,
+      "desc": "An open-tundra owl that hunts small mammals and nests on the ground."
+    },
+    {
+      "name": "Rock ptarmigan",
+      "real": true,
+      "desc": "A cold-adapted ground bird that feeds on low vegetation in tundra and alpine terrain."
+    },
+    {
+      "name": "Snow goose",
+      "real": true,
+      "desc": "A migratory goose that breeds in northern colonies and feeds on vegetation."
+    },
+    {
+      "name": "Long-tailed jaeger",
+      "real": true,
+      "desc": "A tundra-breeding seabird that hunts small prey and migrates over the ocean."
+    },
+    {
+      "name": "Alpine ibex",
+      "real": true,
+      "desc": "A mountain herbivore that grazes near steep rocky escape terrain."
+    },
+    {
+      "name": "Bighorn sheep",
+      "real": true,
+      "desc": "A grazing sheep that uses rocky slopes and cliffs to evade predators."
+    },
+    {
+      "name": "Mountain goat",
+      "real": true,
+      "desc": "A mountain herbivore adapted to steep cliffs and rocky alpine terrain."
+    },
+    {
+      "name": "Chamois",
+      "real": true,
+      "desc": "An agile mountain herbivore that feeds near rocky slopes and upland woodland."
+    },
+    {
+      "name": "American pika",
+      "real": true,
+      "desc": "A small alpine mammal that shelters in talus and caches vegetation."
+    },
+    {
+      "name": "Alpine marmot",
+      "real": true,
+      "desc": "A social mountain rodent that grazes alpine meadows and hibernates in burrows."
+    },
+    {
+      "name": "Rock hyrax",
+      "real": true,
+      "desc": "A social warm-region herbivore that shelters in rock crevices."
+    },
+    {
+      "name": "Golden eagle",
+      "real": true,
+      "desc": "A large raptor that hunts open terrain and nests on cliffs or tall trees."
+    },
+    {
+      "name": "Peregrine falcon",
+      "real": true,
+      "desc": "A fast bird-hunting raptor that commonly nests on cliff ledges."
+    },
+    {
+      "name": "Common raven",
+      "real": true,
+      "desc": "An adaptable omnivorous bird that scavenges and nests on cliffs or trees."
+    },
+    {
+      "name": "Griffon vulture",
+      "real": true,
+      "desc": "A large carrion-feeding bird that breeds in cliff colonies."
+    },
+    {
+      "name": "Snow leopard",
+      "real": true,
+      "desc": "A solitary mountain cat that hunts ungulates across rocky uplands and uses secluded shelters."
+    },
+    {
+      "name": "Mountain hare",
+      "real": true,
+      "desc": "A cold-adapted hare that feeds in uplands and rests in sheltered ground forms."
+    },
+    {
+      "name": "Wild yak",
+      "real": true,
+      "desc": "A large herd-forming grazer of cold high-altitude grasslands."
+    },
+    {
+      "name": "Himalayan tahr",
+      "real": true,
+      "desc": "An agile mountain herbivore that feeds on steep slopes near rocky refuge."
+    },
+    {
+      "name": "Polar bear",
+      "real": true,
+      "desc": "A large Arctic predator associated with coasts and sea ice; inland snow alone is insufficient habitat."
+    },
+    {
+      "name": "Jaguar",
+      "real": true,
+      "desc": "A powerful solitary cat that hunts in tropical forest and near water."
+    },
+    {
+      "name": "Ocelot",
+      "real": true,
+      "desc": "A nocturnal spotted cat that hunts small animals in forests and dense cover."
+    },
+    {
+      "name": "Baird's tapir",
+      "real": true,
+      "desc": "A large forest herbivore that browses vegetation and uses water and dense cover."
+    },
+    {
+      "name": "Collared peccary",
+      "real": true,
+      "desc": "A social omnivore that forages on the ground in forest, scrub and dry habitats."
+    },
+    {
+      "name": "Lowland paca",
+      "real": true,
+      "desc": "A nocturnal tropical rodent that eats fallen fruit and shelters near water."
+    },
+    {
+      "name": "Central American agouti",
+      "real": true,
+      "desc": "A tropical forest rodent that eats and caches seeds and fallen fruit."
+    },
+    {
+      "name": "Mantled howler monkey",
+      "real": true,
+      "desc": "A social canopy primate that feeds heavily on leaves and advertises territory through calls."
+    },
+    {
+      "name": "Geoffroy's spider monkey",
+      "real": true,
+      "desc": "A social canopy primate that travels through forest trees and feeds largely on fruit."
+    },
+    {
+      "name": "Brown-throated sloth",
+      "real": true,
+      "desc": "A slow-moving arboreal mammal that feeds on leaves in tropical forests."
+    },
+    {
+      "name": "Scarlet macaw",
+      "real": true,
+      "desc": "A large tropical parrot that eats seeds and fruit and nests in tree cavities."
+    },
+    {
+      "name": "Keel-billed toucan",
+      "real": true,
+      "desc": "A tropical canopy bird that feeds largely on fruit and nests in cavities."
+    },
+    {
+      "name": "Harpy eagle",
+      "real": true,
+      "desc": "A large tropical forest raptor that nests in emergent trees and hunts canopy animals."
+    },
+    {
+      "name": "Boa constrictor",
+      "real": true,
+      "desc": "A tropical snake that ambushes prey on the ground and in vegetation."
+    },
+    {
+      "name": "Green iguana",
+      "real": true,
+      "desc": "A largely herbivorous tropical lizard that climbs trees and lays eggs in excavated nests."
+    },
+    {
+      "name": "Strawberry poison frog",
+      "real": true,
+      "desc": "A small tropical forest frog that breeds in moist habitats and transports tadpoles to water pockets."
+    },
+    {
+      "name": "Leafcutter ant",
+      "real": true,
+      "desc": "A social tropical ant that cultivates fungus using harvested plant material in underground colonies."
+    },
+    {
+      "name": "Rhinoceros beetle",
+      "real": true,
+      "desc": "A beetle candidate group whose larvae commonly develop in decaying organic material."
+    },
+    {
+      "name": "Morpho butterfly",
+      "real": true,
+      "desc": "A tropical butterfly candidate group associated with forest vegetation and fruit resources."
+    },
+    {
+      "name": "Tiger",
+      "real": true,
+      "desc": "A solitary large cat that hunts substantial prey in Asian forests and other well-covered habitats."
+    },
+    {
+      "name": "Orangutan",
+      "real": true,
+      "desc": "An Asian rainforest ape candidate group that feeds largely on fruit and builds tree nests."
+    },
+    {
+      "name": "Eurasian beaver",
+      "real": true,
+      "desc": "A semiaquatic herbivore that builds lodges or bank burrows and can alter waterways with dams."
+    },
+    {
+      "name": "Eurasian otter",
+      "real": true,
+      "desc": "A semiaquatic predator that hunts fish and other aquatic prey and shelters along banks."
+    },
+    {
+      "name": "American mink",
+      "real": true,
+      "desc": "A small semiaquatic predator that hunts along freshwater banks and wetlands."
+    },
+    {
+      "name": "Mallard",
+      "real": true,
+      "desc": "A dabbling duck that feeds in shallow water and nests in sheltered vegetation."
+    },
+    {
+      "name": "Great crested grebe",
+      "real": true,
+      "desc": "A diving waterbird that hunts aquatic prey and builds floating nests among vegetation."
+    },
+    {
+      "name": "Mute swan",
+      "real": true,
+      "desc": "A large waterbird that feeds on aquatic vegetation and defends waterside nesting territories."
+    },
+    {
+      "name": "Common kingfisher",
+      "real": true,
+      "desc": "A small fish-hunting bird that excavates nesting tunnels in suitable banks."
+    },
+    {
+      "name": "Osprey",
+      "real": true,
+      "desc": "A fish-eating raptor that builds large nests near productive water."
+    },
+    {
+      "name": "Northern pike",
+      "real": true,
+      "desc": "A freshwater ambush predator that uses submerged cover and shallow vegetated spawning areas."
+    },
+    {
+      "name": "European perch",
+      "real": true,
+      "desc": "A freshwater fish that hunts invertebrates and smaller fish around submerged structure."
+    },
+    {
+      "name": "Common roach",
+      "real": true,
+      "desc": "A social freshwater fish that feeds on aquatic plants and small organisms."
+    },
+    {
+      "name": "Tench",
+      "real": true,
+      "desc": "A freshwater fish associated with slow, vegetated waters and bottom feeding."
+    },
+    {
+      "name": "European eel",
+      "real": true,
+      "desc": "A migratory fish that uses freshwater and coastal habitats but reproduces at sea."
+    },
+    {
+      "name": "European pond turtle",
+      "real": true,
+      "desc": "A freshwater turtle that basks near sheltered water and nests on land."
+    },
+    {
+      "name": "Common frog",
+      "real": true,
+      "desc": "An amphibian that breeds in freshwater and forages in damp terrestrial habitats."
+    },
+    {
+      "name": "Great crested newt",
+      "real": true,
+      "desc": "An amphibian that breeds in vegetated ponds and shelters on land outside the breeding season."
+    },
+    {
+      "name": "Noble crayfish",
+      "real": true,
+      "desc": "A freshwater crustacean that shelters beneath stones or in banks and feeds opportunistically."
+    },
+    {
+      "name": "Muskrat",
+      "real": true,
+      "desc": "A semiaquatic rodent that eats wetland plants and builds lodges or bank burrows."
+    },
+    {
+      "name": "European water vole",
+      "real": true,
+      "desc": "A semiaquatic herbivore that feeds along vegetated banks and digs burrows."
+    },
+    {
+      "name": "Gray heron",
+      "real": true,
+      "desc": "A large wading bird that hunts shallow water and commonly nests in tree colonies."
+    },
+    {
+      "name": "Eurasian bittern",
+      "real": true,
+      "desc": "A secretive reed-bed bird that hunts aquatic prey and nests in dense wetland vegetation."
+    },
+    {
+      "name": "Common crane",
+      "real": true,
+      "desc": "A large wetland-breeding bird that forages in marshes and open country."
+    },
+    {
+      "name": "Water rail",
+      "real": true,
+      "desc": "A secretive wetland bird that moves and nests among dense reeds and bank vegetation."
+    },
+    {
+      "name": "Marsh harrier",
+      "real": true,
+      "desc": "A wetland raptor that hunts over reeds and open marsh and nests near ground level."
+    },
+    {
+      "name": "Common toad",
+      "real": true,
+      "desc": "An amphibian that breeds in freshwater and hunts invertebrates on land."
+    },
+    {
+      "name": "Grass snake",
+      "real": true,
+      "desc": "A nonvenomous snake that commonly hunts amphibians near water."
+    },
+    {
+      "name": "Medicinal leech",
+      "real": true,
+      "desc": "A freshwater blood-feeding annelid associated with suitable ponds and wetlands."
+    },
+    {
+      "name": "Emperor dragonfly",
+      "real": true,
+      "desc": "A large dragonfly whose predatory larvae develop in freshwater."
+    },
+    {
+      "name": "Great diving beetle",
+      "real": true,
+      "desc": "An aquatic beetle whose adults and larvae hunt in freshwater."
+    },
+    {
+      "name": "Great pond snail",
+      "real": true,
+      "desc": "A freshwater snail that grazes aquatic vegetation and organic films."
+    },
+    {
+      "name": "Capybara",
+      "real": true,
+      "desc": "A large social rodent that grazes near warm-region wetlands and uses water as refuge."
+    },
+    {
+      "name": "Nutria",
+      "real": true,
+      "desc": "A semiaquatic rodent that feeds on wetland plants and excavates bank burrows."
+    },
+    {
+      "name": "American alligator",
+      "real": true,
+      "desc": "A large warm-region wetland predator that builds vegetation nests and modifies local pools."
+    },
+    {
+      "name": "Roseate spoonbill",
+      "real": true,
+      "desc": "A colonial wading bird that sweeps its bill through shallow water for small aquatic prey."
+    },
+    {
+      "name": "Harbor seal",
+      "real": true,
+      "desc": "A coastal marine predator that feeds at sea and rests or breeds at haul-out sites."
+    },
+    {
+      "name": "Gray seal",
+      "real": true,
+      "desc": "A large coastal seal that feeds at sea and gathers at terrestrial breeding sites."
+    },
+    {
+      "name": "European lobster",
+      "real": true,
+      "desc": "A marine crustacean that shelters in rocky seabed crevices and hunts or scavenges."
+    },
+    {
+      "name": "Edible crab",
+      "real": true,
+      "desc": "A marine crab that feeds along the seabed and uses rocky or sedimentary shelter."
+    },
+    {
+      "name": "Common octopus",
+      "real": true,
+      "desc": "A marine predator that uses seabed dens and manipulates objects with its arms."
+    },
+    {
+      "name": "Atlantic herring",
+      "real": true,
+      "desc": "A schooling marine fish that links plankton production to larger predators."
+    },
+    {
+      "name": "Atlantic cod",
+      "real": true,
+      "desc": "A marine predator that feeds on fish and invertebrates near the seabed."
+    },
+    {
+      "name": "European sea bass",
+      "real": true,
+      "desc": "A coastal predatory fish that hunts in estuaries and marine shallows."
+    },
+    {
+      "name": "European flounder",
+      "real": true,
+      "desc": "A bottom-dwelling fish that feeds in coastal waters and estuaries."
+    },
+    {
+      "name": "Conger eel",
+      "real": true,
+      "desc": "A large marine eel that shelters in rocky crevices and hunts nearby prey."
+    },
+    {
+      "name": "Common cuttlefish",
+      "real": true,
+      "desc": "A marine predator that uses camouflage and lays eggs on underwater structures."
+    },
+    {
+      "name": "Blue mussel",
+      "real": true,
+      "desc": "A marine filter-feeding bivalve that forms attached beds in coastal waters."
+    },
+    {
+      "name": "Common starfish",
+      "real": true,
+      "desc": "A seabed predator that feeds on bivalves and other benthic animals."
+    },
+    {
+      "name": "European sea urchin",
+      "real": true,
+      "desc": "A marine grazer that feeds on algae and other material along the seabed."
+    },
+    {
+      "name": "Bottlenose dolphin",
+      "real": true,
+      "desc": "A social marine predator that hunts fish and other aquatic prey."
+    },
+    {
+      "name": "Harbor porpoise",
+      "real": true,
+      "desc": "A small marine mammal that hunts fish in coastal and shelf waters."
+    },
+    {
+      "name": "Basking shark",
+      "real": true,
+      "desc": "A large marine filter feeder that follows plankton-rich waters."
+    },
+    {
+      "name": "Atlantic puffin",
+      "real": true,
+      "desc": "A seabird that catches fish at sea and breeds in coastal burrows or crevices."
+    },
+    {
+      "name": "Northern gannet",
+      "real": true,
+      "desc": "A large plunge-diving seabird that breeds in dense coastal colonies."
+    },
+    {
+      "name": "European shag",
+      "real": true,
+      "desc": "A coastal diving bird that hunts fish and nests on rocky ledges or in crevices."
+    },
+    {
+      "name": "Slug",
+      "real": true,
+      "desc": "A soft-bodied land mollusk candidate group that feeds in moist ground habitats."
+    },
+    {
+      "name": "Land snail",
+      "real": true,
+      "desc": "A shelled land mollusk candidate group associated with vegetation and suitable moisture."
+    },
+    {
+      "name": "Woodlouse",
+      "real": true,
+      "desc": "A terrestrial crustacean candidate group that shelters in damp places and consumes decaying matter."
+    },
+    {
+      "name": "Millipede",
+      "real": true,
+      "desc": "A many-legged arthropod candidate group that commonly feeds on decaying vegetation."
+    },
+    {
+      "name": "Fungus beetle",
+      "real": true,
+      "desc": "A beetle candidate group associated with fungal fruiting bodies and decaying material."
+    },
+    {
+      "name": "Fungus gnat",
+      "real": true,
+      "desc": "A small fly candidate group whose larvae commonly develop in moist organic material and fungi."
+    },
+    {
+      "name": "Grave mites",
+      "real": false,
+      "desc": "Tiny undead creature. Animate bone fragments into crawling scavengers around burial sites."
+    },
+    {
+      "name": "Corpse moths",
+      "real": false,
+      "desc": "Tiny undead creature. Carry necromantic contamination between dead bodies."
+    },
+    {
+      "name": "Severed crawlers",
+      "real": false,
+      "desc": "Small undead creature. Animated hands and other remains gather into larger assemblages."
+    },
+    {
+      "name": "Skeletal hounds",
+      "real": false,
+      "desc": "Small undead creature. Patrol burial boundaries in packs."
+    },
+    {
+      "name": "Skeletons",
+      "real": false,
+      "desc": "Medium undead creature. Serve as enduring guards and laborers around an animating source."
+    },
+    {
+      "name": "Zombies",
+      "real": false,
+      "desc": "Medium undead creature. Accumulate around settlements with unmanaged dead."
+    },
+    {
+      "name": "Ghouls",
+      "real": false,
+      "desc": "Medium undead creature. Raid graves and compete over flesh."
+    },
+    {
+      "name": "Drowned dead",
+      "real": false,
+      "desc": "Medium undead creature. Emerge from wrecks, lakes and flooded ruins."
+    },
+    {
+      "name": "Revenants",
+      "real": false,
+      "desc": "Medium undead creature. Pursue particular people, bloodlines or unfinished obligations."
+    },
+    {
+      "name": "Wights",
+      "real": false,
+      "desc": "Medium undead creature. Maintain territorial control over ancient burial grounds."
+    },
+    {
+      "name": "Wraiths",
+      "real": false,
+      "desc": "Medium undead creature. Drain living activity from occupied corridors."
+    },
+    {
+      "name": "Banshees",
+      "real": false,
+      "desc": "Medium undead creature. Turn ancestral sites into zones of lethal lamentation."
+    },
+    {
+      "name": "Vampires",
+      "real": false,
+      "desc": "Medium undead creature. Cultivate living populations as a renewable food supply."
+    },
+    {
+      "name": "Liches",
+      "real": false,
+      "desc": "Medium undead creature. Organize deliberate expansion around hidden soul anchors."
+    },
+    {
+      "name": "Ossuary spiders",
+      "real": false,
+      "desc": "Large undead creature. Build webs and bodies from collected bones."
+    },
+    {
+      "name": "Corpse bears",
+      "real": false,
+      "desc": "Large undead creature. Carry disease and scavenging undead through forests."
+    },
+    {
+      "name": "Funeral knights",
+      "real": false,
+      "desc": "Large undead creature. Mounted guardians follow forgotten processional roads."
+    },
+    {
+      "name": "Bone amalgams",
+      "real": false,
+      "desc": "Huge undead creature. Consume battlefield remains to repair and enlarge themselves."
+    },
+    {
+      "name": "Grave leviathans",
+      "real": false,
+      "desc": "Huge undead creature. Marine undead predators sustained by wreck fields."
+    },
+    {
+      "name": "Walking necropolis",
+      "real": false,
+      "desc": "Colossal undead creature. A moving burial complex carries many subordinate nests."
+    },
+    {
+      "name": "Cinder lice",
+      "real": false,
+      "desc": "Tiny infernal creature. Infest fuel stores and kindle fires."
+    },
+    {
+      "name": "Ember imps",
+      "real": false,
+      "desc": "Small infernal creature. Steal tools and sabotage settlements."
+    },
+    {
+      "name": "Soot vermin",
+      "real": false,
+      "desc": "Small infernal creature. Spread through chimneys and furnace networks."
+    },
+    {
+      "name": "Hellhounds",
+      "real": false,
+      "desc": "Large infernal creature. Hunt escapees and patrol infernal borders."
+    },
+    {
+      "name": "Ash scavengers",
+      "real": false,
+      "desc": "Medium infernal creature. Collect useful remains after fires."
+    },
+    {
+      "name": "Contract devils",
+      "real": false,
+      "desc": "Medium infernal creature. Expand influence through binding bargains."
+    },
+    {
+      "name": "Chain jailers",
+      "real": false,
+      "desc": "Medium infernal creature. Capture inhabitants to populate prison colonies."
+    },
+    {
+      "name": "Brimstone raiders",
+      "real": false,
+      "desc": "Medium infernal creature. Seize livestock, ore and fuel."
+    },
+    {
+      "name": "Furnace smiths",
+      "real": false,
+      "desc": "Medium infernal creature. Establish workshops that support stronger infernal troops."
+    },
+    {
+      "name": "Tempting shades",
+      "real": false,
+      "desc": "Medium infernal creature. Infiltrate communities through dreams and promises."
+    },
+    {
+      "name": "Hook-wing harriers",
+      "real": false,
+      "desc": "Large infernal creature. Attack caravans and carry prisoners away."
+    },
+    {
+      "name": "Ironhide fiends",
+      "real": false,
+      "desc": "Large infernal creature. Break defensive lines and guard industrial sites."
+    },
+    {
+      "name": "Cinder centaurs",
+      "real": false,
+      "desc": "Large infernal creature. Conduct fast raids across open country."
+    },
+    {
+      "name": "War boars",
+      "real": false,
+      "desc": "Large infernal creature. Bulldoze woodland into military roads."
+    },
+    {
+      "name": "Furnace toads",
+      "real": false,
+      "desc": "Large infernal creature. Occupy hot pools and foul nearby water."
+    },
+    {
+      "name": "Chain hydras",
+      "real": false,
+      "desc": "Huge infernal creature. Restrain multiple targets around gates and prisons."
+    },
+    {
+      "name": "Siege devils",
+      "real": false,
+      "desc": "Huge infernal creature. Serve as living artillery against settlements."
+    },
+    {
+      "name": "Foundry mothers",
+      "real": false,
+      "desc": "Huge infernal creature. Manufacture lesser fiends from supplied materials."
+    },
+    {
+      "name": "Infernal dreadworms",
+      "real": false,
+      "desc": "Huge infernal creature. Excavate routes between underground strongholds."
+    },
+    {
+      "name": "Walking hellgate",
+      "real": false,
+      "desc": "Colossal infernal creature. Transports a breach and its invasion infrastructure."
+    },
+    {
+      "name": "Halo motes",
+      "real": false,
+      "desc": "Tiny holy creature. Reveal intruders and concealed corruption."
+    },
+    {
+      "name": "Censer scarabs",
+      "real": false,
+      "desc": "Small holy creature. Carry purifying smoke through sacred complexes."
+    },
+    {
+      "name": "Reliquary doves",
+      "real": false,
+      "desc": "Small holy creature. Connect shrines through messages and warnings."
+    },
+    {
+      "name": "Scripture serpents",
+      "real": false,
+      "desc": "Small holy creature. Guard texts and punish prohibited knowledge theft."
+    },
+    {
+      "name": "Lantern attendants",
+      "real": false,
+      "desc": "Medium holy creature. Escort approved travelers through dangerous territory."
+    },
+    {
+      "name": "Winged wardens",
+      "real": false,
+      "desc": "Medium holy creature. Enforce sanctuary boundaries."
+    },
+    {
+      "name": "Oath judges",
+      "real": false,
+      "desc": "Medium holy creature. Pursue those who violate locally binding vows."
+    },
+    {
+      "name": "Relic knights",
+      "real": false,
+      "desc": "Medium holy creature. Defend a particular object regardless of its current owner."
+    },
+    {
+      "name": "Mercy keepers",
+      "real": false,
+      "desc": "Medium holy creature. Prevent killing, including an attempted execution."
+    },
+    {
+      "name": "Dawn heralds",
+      "real": false,
+      "desc": "Medium holy creature. Awaken dormant holy defenses."
+    },
+    {
+      "name": "Seraphic executioners",
+      "real": false,
+      "desc": "Large holy creature. Deliver overwhelming punishment after judgment."
+    },
+    {
+      "name": "Many-faced guardians",
+      "real": false,
+      "desc": "Large holy creature. Protect gates with several simultaneous senses."
+    },
+    {
+      "name": "Sanctuary lions",
+      "real": false,
+      "desc": "Large holy creature. Exclude armed or corrupted visitors."
+    },
+    {
+      "name": "Votive stags",
+      "real": false,
+      "desc": "Large holy creature. Establish protected grazing grounds and sacred groves."
+    },
+    {
+      "name": "Wheel sentinels",
+      "real": false,
+      "desc": "Large holy creature. Patrol fixed geometric circuits."
+    },
+    {
+      "name": "Choir constructs",
+      "real": false,
+      "desc": "Huge holy creature. Coordinate nearby defenders through resonant commands."
+    },
+    {
+      "name": "Gate colossi",
+      "real": false,
+      "desc": "Huge holy creature. Physically seal forbidden passages."
+    },
+    {
+      "name": "Pilgrim tortoises",
+      "real": false,
+      "desc": "Huge holy creature. Carry mobile shrines and their followers."
+    },
+    {
+      "name": "Solar rocs",
+      "real": false,
+      "desc": "Huge holy creature. Defend broad territories from aerial threats."
+    },
+    {
+      "name": "Judgment titan",
+      "real": false,
+      "desc": "Colossal holy creature. Imposes a regional divine decree that inhabitants must navigate."
+    },
+    {
+      "name": "Curse ticks",
+      "real": false,
+      "desc": "Tiny unholy creature. Move afflictions between hosts."
+    },
+    {
+      "name": "Blight flies",
+      "real": false,
+      "desc": "Tiny unholy creature. Spread contamination from ritual waste."
+    },
+    {
+      "name": "Wax crawlers",
+      "real": false,
+      "desc": "Small unholy creature. Form from offerings at profaned shrines."
+    },
+    {
+      "name": "Relic gnawers",
+      "real": false,
+      "desc": "Small unholy creature. Destroy protective objects before larger creatures arrive."
+    },
+    {
+      "name": "Effigy stalkers",
+      "real": false,
+      "desc": "Medium unholy creature. Hunt people represented by stolen likenesses."
+    },
+    {
+      "name": "Hollow pilgrims",
+      "real": false,
+      "desc": "Medium unholy creature. Lure travelers along corrupted sacred routes."
+    },
+    {
+      "name": "Hexbound penitents",
+      "real": false,
+      "desc": "Medium unholy creature. Transfer their suffering to nearby victims."
+    },
+    {
+      "name": "Mirror confessors",
+      "real": false,
+      "desc": "Medium unholy creature. Extract secrets and use them to manipulate communities."
+    },
+    {
+      "name": "Profaned idols",
+      "real": false,
+      "desc": "Medium unholy creature. Demand escalating offerings from their keepers."
+    },
+    {
+      "name": "Hunger saints",
+      "real": false,
+      "desc": "Medium unholy creature. Concentrate food around themselves while followers starve."
+    },
+    {
+      "name": "False angels",
+      "real": false,
+      "desc": "Large unholy creature. Imitate rescue signals and sanctuary guardians."
+    },
+    {
+      "name": "Plague shepherds",
+      "real": false,
+      "desc": "Large unholy creature. Drive infected animal herds toward settlements."
+    },
+    {
+      "name": "Black-antlered rams",
+      "real": false,
+      "desc": "Large unholy creature. Spoil fertility around their breeding grounds."
+    },
+    {
+      "name": "Altar beasts",
+      "real": false,
+      "desc": "Large unholy creature. Grow stronger as sacrifices accumulate."
+    },
+    {
+      "name": "Bell-mouthed mourners",
+      "real": false,
+      "desc": "Large unholy creature. Summon cursed creatures through their calls."
+    },
+    {
+      "name": "Processional horrors",
+      "real": false,
+      "desc": "Huge unholy creature. Assembled ritual objects follow abandoned routes."
+    },
+    {
+      "name": "Reliquary wombs",
+      "real": false,
+      "desc": "Huge unholy creature. Produce creatures from corrupted offerings."
+    },
+    {
+      "name": "Cathedral spiders",
+      "real": false,
+      "desc": "Huge unholy creature. Turn ruins into elaborate traps resembling sanctuaries."
+    },
+    {
+      "name": "Inverted seraphs",
+      "real": false,
+      "desc": "Huge unholy creature. Unravel nearby protective enchantments."
+    },
+    {
+      "name": "Walking desecration",
+      "real": false,
+      "desc": "Colossal unholy creature. Transforms sacred sites into new sources of corruption."
+    },
+    {
+      "name": "Thought lice",
+      "real": false,
+      "desc": "Tiny aberrant creature. Interfere with attention and coordination."
+    },
+    {
+      "name": "Glass larvae",
+      "real": false,
+      "desc": "Tiny aberrant creature. Transparent parasites are detectable through disturbed light."
+    },
+    {
+      "name": "Nerve leeches",
+      "real": false,
+      "desc": "Small aberrant creature. Hijack the movement of larger hosts."
+    },
+    {
+      "name": "Eyebud clusters",
+      "real": false,
+      "desc": "Small aberrant creature. Serve as distributed surveillance organs."
+    },
+    {
+      "name": "Maw mimics",
+      "real": false,
+      "desc": "Small aberrant creature. Imitate containers, food caches or useful tools."
+    },
+    {
+      "name": "Skin borrowers",
+      "real": false,
+      "desc": "Medium aberrant creature. Wear stolen appearances to enter communities."
+    },
+    {
+      "name": "Echo hunters",
+      "real": false,
+      "desc": "Medium aberrant creature. Reproduce voices to separate prey."
+    },
+    {
+      "name": "Jointless stalkers",
+      "real": false,
+      "desc": "Medium aberrant creature. Pass through narrow openings and ducts."
+    },
+    {
+      "name": "Memory grazers",
+      "real": false,
+      "desc": "Medium aberrant creature. Erase knowledge of routes and past encounters."
+    },
+    {
+      "name": "Many-handed burrowers",
+      "real": false,
+      "desc": "Large aberrant creature. Excavate branching ambush tunnels."
+    },
+    {
+      "name": "Lantern anglers",
+      "real": false,
+      "desc": "Large aberrant creature. Lure prey using convincing lights and silhouettes."
+    },
+    {
+      "name": "Brood surgeons",
+      "real": false,
+      "desc": "Large aberrant creature. Modify captured animals into specialized servants."
+    },
+    {
+      "name": "Phase eels",
+      "real": false,
+      "desc": "Large aberrant creature. Cross thin barriers and destabilize secure shelters."
+    },
+    {
+      "name": "Inverted walkers",
+      "real": false,
+      "desc": "Large aberrant creature. Occupy ceilings, overhangs and inaccessible surfaces."
+    },
+    {
+      "name": "Dream medusae",
+      "real": false,
+      "desc": "Large aberrant creature. Coordinate sleeping hosts around a central nest."
+    },
+    {
+      "name": "Choir brains",
+      "real": false,
+      "desc": "Huge aberrant creature. Link smaller organisms into a regional intelligence."
+    },
+    {
+      "name": "Flesh reefs",
+      "real": false,
+      "desc": "Huge aberrant creature. Turn shallow water into a growing predator colony."
+    },
+    {
+      "name": "Folded leviathans",
+      "real": false,
+      "desc": "Huge aberrant creature. Connect distant hunting grounds through anomalous passages."
+    },
+    {
+      "name": "Womb mountains",
+      "real": false,
+      "desc": "Colossal aberrant creature. Living landforms continually birth specialized organisms."
+    },
+    {
+      "name": "Horizon eyes",
+      "real": false,
+      "desc": "Colossal aberrant creature. Influence creatures across everything within their sight."
+    },
+    {
+      "name": "Spark beetles",
+      "real": false,
+      "desc": "Tiny fantastic beast. Discharge stored energy when their colonies are disturbed."
+    },
+    {
+      "name": "Glasswing moths",
+      "real": false,
+      "desc": "Tiny fantastic beast. Conceal themselves and their eggs through refraction."
+    },
+    {
+      "name": "Antlered hares",
+      "real": false,
+      "desc": "Small fantastic beast. Defend communal burrows with coordinated charges."
+    },
+    {
+      "name": "Basilisks",
+      "real": false,
+      "desc": "Small fantastic beast. Make watering holes dangerous through their gaze."
+    },
+    {
+      "name": "Cockatrices",
+      "real": false,
+      "desc": "Medium fantastic beast. Rooster-like monsters occupy farm edges and rocky roosts."
+    },
+    {
+      "name": "Giant spiders",
+      "real": false,
+      "desc": "Large fantastic beast. Intercept movement through woodland and cave entrances."
+    },
+    {
+      "name": "Giant scorpions",
+      "real": false,
+      "desc": "Large fantastic beast. Establish ambush territories around desert refuges."
+    },
+    {
+      "name": "Dire wolves",
+      "real": false,
+      "desc": "Large fantastic beast. Oversized fantasy wolves force ordinary predators away from productive hunting grounds."
+    },
+    {
+      "name": "Griffons",
+      "real": false,
+      "desc": "Large fantastic beast. Eagle-and-lion beasts nest on cliffs and hunt large grazing animals."
+    },
+    {
+      "name": "Hippogryphs",
+      "real": false,
+      "desc": "Large fantastic beast. Eagle-and-horse beasts defend upland nesting and grazing grounds."
+    },
+    {
+      "name": "Pegasi",
+      "real": false,
+      "desc": "Large fantastic beast. Winged horses use inaccessible plateaus as breeding refuges."
+    },
+    {
+      "name": "Unicorns",
+      "real": false,
+      "desc": "Large fantastic beast. Single-horned equine beasts aggressively defend particular springs or groves."
+    },
+    {
+      "name": "Manticores",
+      "real": false,
+      "desc": "Large fantastic beast. Lion-bodied monsters with dangerous tails prey on isolated travelers from rocky lairs."
+    },
+    {
+      "name": "Chimeras",
+      "real": false,
+      "desc": "Large fantastic beast. Composite beasts exploit several food sources and defend mixed habitats."
+    },
+    {
+      "name": "Thunder boars",
+      "real": false,
+      "desc": "Large fantastic beast. Uproot vegetation and discharge electricity when threatened."
+    },
+    {
+      "name": "Armored river crabs",
+      "real": false,
+      "desc": "Large fantastic beast. Dominate crossings and shallow channels."
+    },
+    {
+      "name": "Rocs",
+      "real": false,
+      "desc": "Huge fantastic beast. Enormous birds transport large prey to mountain eyries."
+    },
+    {
+      "name": "Hydras",
+      "real": false,
+      "desc": "Huge fantastic beast. Many-headed serpentine beasts control productive marshes and interconnected pools."
+    },
+    {
+      "name": "Siege tortoises",
+      "real": false,
+      "desc": "Huge fantastic beast. Create paths and clearings through repeated movement."
+    },
+    {
+      "name": "Islandback grazers",
+      "real": false,
+      "desc": "Colossal fantastic beast. Carry vegetation and smaller animal communities on their backs."
+    },
+    {
+      "name": "Needle drakes",
+      "real": false,
+      "desc": "Tiny draconic creature. Colony hunters strip small prey."
+    },
+    {
+      "name": "Lantern dragonets",
+      "real": false,
+      "desc": "Small draconic creature. Gather around magically active vegetation."
+    },
+    {
+      "name": "Burrow drakes",
+      "real": false,
+      "desc": "Small draconic creature. Occupy warrens and undermine shallow structures."
+    },
+    {
+      "name": "Reed drakes",
+      "real": false,
+      "desc": "Small draconic creature. Ambush fish and amphibians along wetland edges."
+    },
+    {
+      "name": "Pack drakes",
+      "real": false,
+      "desc": "Medium draconic creature. Cooperative terrestrial hunters establish shared hunting territories."
+    },
+    {
+      "name": "Sailback drakes",
+      "real": false,
+      "desc": "Large draconic creature. Defend sunny banks and watering grounds."
+    },
+    {
+      "name": "Basilisk drakes",
+      "real": false,
+      "desc": "Large draconic creature. Establish mineralized kill zones around their lairs."
+    },
+    {
+      "name": "Wyverns",
+      "real": false,
+      "desc": "Large draconic creature. Winged, two-legged dragons compete with griffons for cliffs and flying prey."
+    },
+    {
+      "name": "Lindworms",
+      "real": false,
+      "desc": "Large draconic creature. Serpentine dragons control underground passages and hillside dens."
+    },
+    {
+      "name": "Amphipteres",
+      "real": false,
+      "desc": "Large draconic creature. Winged serpents hunt through canopy and open air."
+    },
+    {
+      "name": "Forest dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Cultivate cover and ambush routes around their domains."
+    },
+    {
+      "name": "Marsh dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Manipulate channels and conceal their breeding pools."
+    },
+    {
+      "name": "Dune wyrms",
+      "real": false,
+      "desc": "Huge draconic creature. Travel beneath sand and contest oasis access."
+    },
+    {
+      "name": "Glacier dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Occupy cold refuges and freeze approaches."
+    },
+    {
+      "name": "Cinder dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Depend on geothermal nesting grounds."
+    },
+    {
+      "name": "Storm dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Claim exposed ridges and disrupt flight corridors."
+    },
+    {
+      "name": "Crystal dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Accumulate magically active minerals around their clutches."
+    },
+    {
+      "name": "Deep-sea dragons",
+      "real": false,
+      "desc": "Huge draconic creature. Patrol trenches and submerged cavern systems."
+    },
+    {
+      "name": "Mountain wyrms",
+      "real": false,
+      "desc": "Colossal draconic creature. Excavate passages that become regional terrain features."
+    },
+    {
+      "name": "Elder sky serpents",
+      "real": false,
+      "desc": "Colossal draconic creature. Migrate between major magical concentrations."
+    },
+    {
+      "name": "Emberlings",
+      "real": false,
+      "desc": "Tiny primordial creature. Gather wherever persistent heat is available."
+    },
+    {
+      "name": "Rill spirits",
+      "real": false,
+      "desc": "Tiny primordial creature. Inhabit trickles, springs and irrigation channels."
+    },
+    {
+      "name": "Pebble swarms",
+      "real": false,
+      "desc": "Small primordial creature. Assemble loose stone into mobile colonies."
+    },
+    {
+      "name": "Dust imps",
+      "real": false,
+      "desc": "Small primordial creature. Concentrate around dry, exposed ground."
+    },
+    {
+      "name": "Flame elementals",
+      "real": false,
+      "desc": "Medium primordial creature. Spread through connected combustible material."
+    },
+    {
+      "name": "Water elementals",
+      "real": false,
+      "desc": "Medium primordial creature. Defend or redirect local water flows."
+    },
+    {
+      "name": "Gale elementals",
+      "real": false,
+      "desc": "Medium primordial creature. Make exposed travel corridors hazardous."
+    },
+    {
+      "name": "Clay elementals",
+      "real": false,
+      "desc": "Medium primordial creature. Occupy wet soil and obstruct drainage."
+    },
+    {
+      "name": "Basalt guardians",
+      "real": false,
+      "desc": "Large primordial creature. Defend volcanic formations and mineral sites."
+    },
+    {
+      "name": "Frost hulks",
+      "real": false,
+      "desc": "Large primordial creature. Preserve cold pockets around their resting grounds."
+    },
+    {
+      "name": "Magma salamanders",
+      "real": false,
+      "desc": "Large primordial creature. Move heat between underground vents."
+    },
+    {
+      "name": "Living dunes",
+      "real": false,
+      "desc": "Large primordial creature. Bury shelters and expose older ruins."
+    },
+    {
+      "name": "Thunderhead beasts",
+      "real": false,
+      "desc": "Huge primordial creature. Carry localized storms between regions."
+    },
+    {
+      "name": "River serpents",
+      "real": false,
+      "desc": "Huge primordial creature. Embody and defend connected waterways."
+    },
+    {
+      "name": "Avalanche giants",
+      "real": false,
+      "desc": "Huge primordial creature. Destabilize slopes through their movement."
+    },
+    {
+      "name": "Root titans",
+      "real": false,
+      "desc": "Huge primordial creature. Spread root systems that obstruct settlement expansion."
+    },
+    {
+      "name": "Salt colossi",
+      "real": false,
+      "desc": "Huge primordial creature. Concentrate salts and reduce nearby freshwater usability."
+    },
+    {
+      "name": "Glacier walkers",
+      "real": false,
+      "desc": "Colossal primordial creature. Move ice and alter downstream water supply."
+    },
+    {
+      "name": "Volcano hearts",
+      "real": false,
+      "desc": "Colossal primordial creature. Live beneath volcanic regions as sources of heat."
+    },
+    {
+      "name": "Tidal leviathans",
+      "real": false,
+      "desc": "Colossal primordial creature. Change coastal flooding and navigable routes."
+    },
+    {
+      "name": "Biting pixies",
+      "real": false,
+      "desc": "Tiny fey creature. Defend flowering patches through coordinated harassment."
+    },
+    {
+      "name": "Thorn sprites",
+      "real": false,
+      "desc": "Tiny fey creature. Cultivate tangled barriers around forbidden ground."
+    },
+    {
+      "name": "Glimmer thieves",
+      "real": false,
+      "desc": "Small fey creature. Steal lights, keys and other useful possessions."
+    },
+    {
+      "name": "Briar goblins",
+      "real": false,
+      "desc": "Small fey creature. Build hidden settlements inside dense vegetation."
+    },
+    {
+      "name": "Redcaps",
+      "real": false,
+      "desc": "Small fey creature. Occupy violent places and perpetuate conflict."
+    },
+    {
+      "name": "Púca",
+      "real": false,
+      "desc": "Medium fey creature. Mislead travelers through shapeshifting and false guidance."
+    },
+    {
+      "name": "Boggarts",
+      "real": false,
+      "desc": "Medium fey creature. Claim homes and sabotage their occupants."
+    },
+    {
+      "name": "Briar duelists",
+      "real": false,
+      "desc": "Medium fey creature. Enforce crossing rights through ritual challenges."
+    },
+    {
+      "name": "Dryads",
+      "real": false,
+      "desc": "Medium fey creature. Defend particular trees and their associated woodland."
+    },
+    {
+      "name": "Nixies",
+      "real": false,
+      "desc": "Medium fey creature. Bargain over access to pools and river passages."
+    },
+    {
+      "name": "Hags",
+      "real": false,
+      "desc": "Medium fey creature. Build influence through curses, trades and local dependencies."
+    },
+    {
+      "name": "Wild Hunt riders",
+      "real": false,
+      "desc": "Large fey creature. Turn particular nights into dangerous pursuit events."
+    },
+    {
+      "name": "Kelpies",
+      "real": false,
+      "desc": "Large fey creature. Water-horse shapeshifters ambush travelers near water."
+    },
+    {
+      "name": "Barghests",
+      "real": false,
+      "desc": "Large fey creature. Stalk roads and settlement margins as supernatural hounds."
+    },
+    {
+      "name": "Briar trolls",
+      "real": false,
+      "desc": "Large fey creature. Regenerate within dense, actively growing cover."
+    },
+    {
+      "name": "Moss bears",
+      "real": false,
+      "desc": "Large fey creature. Shelter smaller fey while defending forest interiors."
+    },
+    {
+      "name": "Thorn giants",
+      "real": false,
+      "desc": "Huge fey creature. Grow living fortifications around court boundaries."
+    },
+    {
+      "name": "Elder tree wardens",
+      "real": false,
+      "desc": "Huge fey creature. Physically relocate the defenses of ancient groves."
+    },
+    {
+      "name": "Court spiders",
+      "real": false,
+      "desc": "Huge fey creature. Weave paths connecting hidden fey territories."
+    },
+    {
+      "name": "Wandering hollow hills",
+      "real": false,
+      "desc": "Colossal fey creature. Mobile court domains carry inhabitants and entrances."
+    },
+    {
+      "name": "Great white shark",
+      "real": true,
+      "desc": "A large marine predator that ranges through temperate and subtropical waters and hunts fish and marine mammals."
+    },
+    {
+      "name": "Tiger shark",
+      "real": true,
+      "desc": "A large warm-water shark that feeds opportunistically in coastal and offshore habitats."
+    },
+    {
+      "name": "Bull shark",
+      "real": true,
+      "desc": "A large coastal shark that tolerates freshwater and can travel into rivers."
+    },
+    {
+      "name": "Great hammerhead shark",
+      "real": true,
+      "desc": "A large warm-water shark that hunts fish and rays across coastal and offshore habitats."
+    },
+    {
+      "name": "Whale shark",
+      "real": true,
+      "desc": "A very large marine filter feeder that follows plankton-rich warm waters."
+    },
+    {
+      "name": "Blue shark",
+      "real": true,
+      "desc": "A wide-ranging open-ocean shark that hunts fish and squid."
+    },
+    {
+      "name": "Shortfin mako shark",
+      "real": true,
+      "desc": "A fast open-water shark that pursues fish and squid."
+    },
+    {
+      "name": "Nurse shark",
+      "real": true,
+      "desc": "A warm-water bottom-feeding shark that often rests near reefs and sheltered seabed."
+    },
+    {
+      "name": "Greenland shark",
+      "real": true,
+      "desc": "A large cold-water shark that hunts and scavenges in northern marine habitats."
+    },
+    {
+      "name": "Oceanic whitetip shark",
+      "real": true,
+      "desc": "A large tropical open-ocean shark that hunts fish and squid."
+    },
+    {
+      "name": "Atlantic salmon",
+      "real": true,
+      "desc": "A migratory fish that grows at sea and returns to freshwater rivers to spawn."
+    },
+    {
+      "name": "Rainbow trout",
+      "real": true,
+      "desc": "A cold-water fish of rivers and lakes; some populations migrate to sea before returning to spawn."
+    },
+    {
+      "name": "Brown trout",
+      "real": true,
+      "desc": "A fish of cool rivers and lakes, with some populations migrating between freshwater and the sea."
+    },
+    {
+      "name": "Wels catfish",
+      "real": true,
+      "desc": "A large freshwater predator that uses deep pools and submerged cover in rivers and lakes."
+    },
+    {
+      "name": "Common carp",
+      "real": true,
+      "desc": "A freshwater omnivore that feeds near the bottom in slow rivers and lakes."
+    },
+    {
+      "name": "Atlantic bluefin tuna",
+      "real": true,
+      "desc": "A large, fast marine predator that migrates widely and hunts schooling fish."
+    },
+    {
+      "name": "Swordfish",
+      "real": true,
+      "desc": "A large oceanic predator that uses its long bill while hunting fish and squid."
+    },
+    {
+      "name": "Atlantic mackerel",
+      "real": true,
+      "desc": "A schooling marine fish that feeds on plankton and small prey in temperate waters."
+    },
+    {
+      "name": "Giant moray",
+      "real": true,
+      "desc": "A large tropical marine eel that shelters in reef crevices and ambushes prey."
+    },
+    {
+      "name": "Giant grouper",
+      "real": true,
+      "desc": "A large marine ambush predator associated with reefs, caves and other underwater shelter."
+    },
+    {
+      "name": "Red lionfish",
+      "real": true,
+      "desc": "A venomous-spined marine predator that hunts small fish around reefs and submerged structure."
+    },
+    {
+      "name": "Anglerfish",
+      "real": true,
+      "desc": "A fish candidate group including deep-sea ambush predators that lure prey toward their mouths."
+    },
+    {
+      "name": "Giant oceanic manta ray",
+      "real": true,
+      "desc": "A large marine ray that filters plankton from productive tropical and subtropical waters."
+    },
+    {
+      "name": "Spotted eagle ray",
+      "real": true,
+      "desc": "A warm-water marine ray that feeds on bottom-dwelling prey around coasts and reefs."
+    },
+    {
+      "name": "Giant squid",
+      "real": true,
+      "desc": "A large deep-water cephalopod that captures fish and other squid with long feeding tentacles."
+    },
+    {
+      "name": "Colossal squid",
+      "real": true,
+      "desc": "A large Southern Ocean cephalopod with hooked limbs used to capture prey in deep water."
+    },
+    {
+      "name": "Sperm whale",
+      "real": true,
+      "desc": "A large toothed whale that makes deep dives to hunt squid and other marine prey."
+    },
+    {
+      "name": "Blue whale",
+      "real": true,
+      "desc": "An enormous marine mammal that filter-feeds primarily on krill and moves between feeding regions."
+    },
+    {
+      "name": "Orca",
+      "real": true,
+      "desc": "A social marine predator whose populations specialize in different prey, including fish or marine mammals."
+    },
+    {
+      "name": "Leatherback sea turtle",
+      "real": true,
+      "desc": "A large ocean-going turtle that feeds mainly on gelatinous prey and nests on beaches."
+    },
+    {
+      "name": "Kraken",
+      "real": false,
+      "desc": "Colossal fantastic beast. A many-armed sea monster that seizes vessels and large prey above deep lairs, making nearby shipping routes hazardous."
+    },
+    {
+      "name": "Leviathan",
+      "real": false,
+      "desc": "Colossal fantastic beast. An immense armored sea serpent whose feeding migrations displace marine predators and force coastal traffic to reroute."
+    },
+    {
+      "name": "Sea serpents",
+      "real": false,
+      "desc": "Huge fantastic beast. Long-bodied marine hunters patrol channels and straits, using submerged caves as refuges."
+    },
+    {
+      "name": "Dragon turtles",
+      "real": false,
+      "desc": "Huge draconic creature. Armored aquatic dragons defend coastal breeding grounds and attack intruders with scalding breath."
+    },
+    {
+      "name": "Abyssal krakens",
+      "real": false,
+      "desc": "Colossal fantastic beast. Deep-trench cephalopod monsters drag prey into darkness and defend vast tentacled hunting grounds."
+    },
+    {
+      "name": "Reefback leviathans",
+      "real": false,
+      "desc": "Colossal fantastic beast. Slow marine giants carry living reefs and move entire small-animal communities between coastal feeding grounds."
+    },
+    {
+      "name": "Gulper leviathans",
+      "real": false,
+      "desc": "Colossal fantastic beast. Vast-mouthed deep-water hunters consume dense shoals and draw other predators toward their feeding grounds."
+    },
+    {
+      "name": "Shipbreaker crabs",
+      "real": false,
+      "desc": "Huge fantastic beast. Armored coastal crustaceans gather wreckage around their dens and seize vessels crossing shallow channels."
+    },
+    {
+      "name": "Whirlpool elementals",
+      "real": false,
+      "desc": "Huge primordial creature. Living rotating water masses defend confluences and straits, disrupting navigation with powerful currents."
+    },
+    {
+      "name": "Abyssal choir worms",
+      "real": false,
+      "desc": "Huge aberrant creature. Colonial marine worms coordinate through resonant calls and turn submerged caverns into linked predatory nests."
+    },
+    {
+      "name": "Brine revenants",
+      "real": false,
+      "desc": "Medium undead creature. Salt-encrusted drowned sailors haunt wrecks and attack salvagers who disturb their remains."
+    },
+    {
+      "name": "Drowned titans",
+      "real": false,
+      "desc": "Colossal undead creature. Reanimated giants stride along the seabed and disturb coastal waters as they approach flooded ruins."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/asset-list.schema.json",
+  "title": "FantasyWorldGenerator exhaustive asset list",
+  "type": "object",
+  "required": ["schema", "schema_version", "scope", "content_sha256", "summary", "assets"],
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.asset-list" },
+    "schema_version": { "const": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "content_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "summary": {
+      "type": "object",
+      "required": ["total", "by_kind", "by_source"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 1 },
+        "by_kind": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+        "by_source": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "name", "source", "status", "selectors", "metadata"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$" },
+          "kind": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "minLength": 1 },
+          "selectors": { "type": "object" },
+          "metadata": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
+

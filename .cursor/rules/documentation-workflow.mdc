@@ -1,0 +1,7 @@
+---
+description: Keep implementation grounded in canonical documentation and maintain it with behavior changes
+alwaysApply: true
+---
+
+Follow the task-start, documentation maintenance, validation, and handoff workflow in root `AGENTS.md` and `docs/agent-workflow.md`. Read `docs/README.md` to locate the relevant source of truth. Do not maintain a separate editor-specific copy of product requirements.
+

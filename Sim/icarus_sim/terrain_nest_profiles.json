@@ -1,0 +1,8256 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "red-deer",
+      "name": "Red deer",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "roe-deer",
+      "name": "Roe deer",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "moose",
+      "name": "Moose",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "wild-boar",
+      "name": "Wild boar",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "gray-wolf",
+      "name": "Gray wolf",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "red-fox",
+      "name": "Red fox",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "brown-bear",
+      "name": "Brown bear",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "eurasian-lynx",
+      "name": "Eurasian lynx",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-badger",
+      "name": "European badger",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "pine-marten",
+      "name": "Pine marten",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "red-squirrel",
+      "name": "Red squirrel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "wood-mouse",
+      "name": "Wood mouse",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-hedgehog",
+      "name": "European hedgehog",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "tawny-owl",
+      "name": "Tawny owl",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "great-spotted-woodpecker",
+      "name": "Great spotted woodpecker",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "capercaillie",
+      "name": "Capercaillie",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "stag-beetle",
+      "name": "Stag beetle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "american-bison",
+      "name": "American bison",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "przewalski-s-horse",
+      "name": "Przewalski's horse",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "saiga-antelope",
+      "name": "Saiga antelope",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "pronghorn",
+      "name": "Pronghorn",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-rabbit",
+      "name": "European rabbit",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-hare",
+      "name": "European hare",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "black-tailed-prairie-dog",
+      "name": "Black-tailed prairie dog",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "ground-squirrel",
+      "name": "Ground squirrel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "coyote",
+      "name": "Coyote",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "steppe-eagle",
+      "name": "Steppe eagle",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "burrowing-owl",
+      "name": "Burrowing owl",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "plains-zebra",
+      "name": "Plains zebra",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "blue-wildebeest",
+      "name": "Blue wildebeest",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "impala",
+      "name": "Impala",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "african-buffalo",
+      "name": "African buffalo",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "spotted-hyena",
+      "name": "Spotted hyena",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "cheetah",
+      "name": "Cheetah",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "ostrich",
+      "name": "Ostrich",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "secretary-bird",
+      "name": "Secretary bird",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "fennec-fox",
+      "name": "Fennec fox",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "sand-cat",
+      "name": "Sand cat",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "caracal",
+      "name": "Caracal",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "addax",
+      "name": "Addax",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "arabian-oryx",
+      "name": "Arabian oryx",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "wild-bactrian-camel",
+      "name": "Wild Bactrian camel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "lesser-egyptian-jerboa",
+      "name": "Lesser Egyptian jerboa",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "desert-hedgehog",
+      "name": "Desert hedgehog",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "black-tailed-jackrabbit",
+      "name": "Black-tailed jackrabbit",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "desert-tortoise",
+      "name": "Desert tortoise",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "gila-monster",
+      "name": "Gila monster",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "sidewinder",
+      "name": "Sidewinder",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "desert-locust",
+      "name": "Desert locust",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "darkling-beetle",
+      "name": "Darkling beetle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "desert-hairy-scorpion",
+      "name": "Desert hairy scorpion",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "reindeer-caribou",
+      "name": "Reindeer (caribou)",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "muskox",
+      "name": "Muskox",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "arctic-fox",
+      "name": "Arctic fox",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "wolverine",
+      "name": "Wolverine",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "arctic-hare",
+      "name": "Arctic hare",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "collared-lemming",
+      "name": "Collared lemming",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "tundra-vole",
+      "name": "Tundra vole",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "snowy-owl",
+      "name": "Snowy owl",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "rock-ptarmigan",
+      "name": "Rock ptarmigan",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "snow-goose",
+      "name": "Snow goose",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "long-tailed-jaeger",
+      "name": "Long-tailed jaeger",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "shore",
+      "kind": "roost",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "alpine-ibex",
+      "name": "Alpine ibex",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "bighorn-sheep",
+      "name": "Bighorn sheep",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "mountain-goat",
+      "name": "Mountain goat",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "chamois",
+      "name": "Chamois",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "american-pika",
+      "name": "American pika",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "alpine-marmot",
+      "name": "Alpine marmot",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "rock-hyrax",
+      "name": "Rock hyrax",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "golden-eagle",
+      "name": "Golden eagle",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "peregrine-falcon",
+      "name": "Peregrine falcon",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-raven",
+      "name": "Common raven",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "griffon-vulture",
+      "name": "Griffon vulture",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "snow-leopard",
+      "name": "Snow leopard",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "mountain-hare",
+      "name": "Mountain hare",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "wild-yak",
+      "name": "Wild yak",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "himalayan-tahr",
+      "name": "Himalayan tahr",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "polar-bear",
+      "name": "Polar bear",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "shore",
+      "kind": "den",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {
+        "coast": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "jaguar",
+      "name": "Jaguar",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "ocelot",
+      "name": "Ocelot",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "baird-s-tapir",
+      "name": "Baird's tapir",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "collared-peccary",
+      "name": "Collared peccary",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "lowland-paca",
+      "name": "Lowland paca",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "central-american-agouti",
+      "name": "Central American agouti",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "mantled-howler-monkey",
+      "name": "Mantled howler monkey",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "geoffroy-s-spider-monkey",
+      "name": "Geoffroy's spider monkey",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "brown-throated-sloth",
+      "name": "Brown-throated sloth",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "scarlet-macaw",
+      "name": "Scarlet macaw",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "keel-billed-toucan",
+      "name": "Keel-billed toucan",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "harpy-eagle",
+      "name": "Harpy eagle",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "boa-constrictor",
+      "name": "Boa constrictor",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "green-iguana",
+      "name": "Green iguana",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "strawberry-poison-frog",
+      "name": "Strawberry poison frog",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "leafcutter-ant",
+      "name": "Leafcutter ant",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "rhinoceros-beetle",
+      "name": "Rhinoceros beetle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "morpho-butterfly",
+      "name": "Morpho butterfly",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "tiger",
+      "name": "Tiger",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "orangutan",
+      "name": "Orangutan",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "eurasian-beaver",
+      "name": "Eurasian beaver",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "eurasian-otter",
+      "name": "Eurasian otter",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "american-mink",
+      "name": "American mink",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "mallard",
+      "name": "Mallard",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "great-crested-grebe",
+      "name": "Great crested grebe",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "mute-swan",
+      "name": "Mute swan",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "common-kingfisher",
+      "name": "Common kingfisher",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "osprey",
+      "name": "Osprey",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "northern-pike",
+      "name": "Northern pike",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-perch",
+      "name": "European perch",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-roach",
+      "name": "Common roach",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "tench",
+      "name": "Tench",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-eel",
+      "name": "European eel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-pond-turtle",
+      "name": "European pond turtle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-frog",
+      "name": "Common frog",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "great-crested-newt",
+      "name": "Great crested newt",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "noble-crayfish",
+      "name": "Noble crayfish",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "muskrat",
+      "name": "Muskrat",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-water-vole",
+      "name": "European water vole",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "gray-heron",
+      "name": "Gray heron",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "eurasian-bittern",
+      "name": "Eurasian bittern",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-crane",
+      "name": "Common crane",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "water-rail",
+      "name": "Water rail",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "marsh-harrier",
+      "name": "Marsh harrier",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-toad",
+      "name": "Common toad",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "grass-snake",
+      "name": "Grass snake",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "medicinal-leech",
+      "name": "Medicinal leech",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "emperor-dragonfly",
+      "name": "Emperor dragonfly",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "great-diving-beetle",
+      "name": "Great diving beetle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "great-pond-snail",
+      "name": "Great pond snail",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "capybara",
+      "name": "Capybara",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "nutria",
+      "name": "Nutria",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "american-alligator",
+      "name": "American alligator",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "roseate-spoonbill",
+      "name": "Roseate spoonbill",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "harbor-seal",
+      "name": "Harbor seal",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "shore",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "gray-seal",
+      "name": "Gray seal",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "shore",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "european-lobster",
+      "name": "European lobster",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "edible-crab",
+      "name": "Edible crab",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-octopus",
+      "name": "Common octopus",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "atlantic-herring",
+      "name": "Atlantic herring",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "atlantic-cod",
+      "name": "Atlantic cod",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-sea-bass",
+      "name": "European sea bass",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-flounder",
+      "name": "European flounder",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "conger-eel",
+      "name": "Conger eel",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "common-cuttlefish",
+      "name": "Common cuttlefish",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "blue-mussel",
+      "name": "Blue mussel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "common-starfish",
+      "name": "Common starfish",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "european-sea-urchin",
+      "name": "European sea urchin",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "bottlenose-dolphin",
+      "name": "Bottlenose dolphin",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "harbor-porpoise",
+      "name": "Harbor porpoise",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "basking-shark",
+      "name": "Basking shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "atlantic-puffin",
+      "name": "Atlantic puffin",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "shore",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "northern-gannet",
+      "name": "Northern gannet",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "shore",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "european-shag",
+      "name": "European shag",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "shore",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "slug",
+      "name": "Slug",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "land-snail",
+      "name": "Land snail",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "woodlouse",
+      "name": "Woodlouse",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "millipede",
+      "name": "Millipede",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "fungus-beetle",
+      "name": "Fungus beetle",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "fungus-gnat",
+      "name": "Fungus gnat",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "land",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "grave-mites",
+      "name": "Grave mites",
+      "real": false,
+      "family": "undead",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "corpse-moths",
+      "name": "Corpse moths",
+      "real": false,
+      "family": "undead",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "severed-crawlers",
+      "name": "Severed crawlers",
+      "real": false,
+      "family": "undead",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "skeletal-hounds",
+      "name": "Skeletal hounds",
+      "real": false,
+      "family": "undead",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "skeletons",
+      "name": "Skeletons",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "zombies",
+      "name": "Zombies",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "ghouls",
+      "name": "Ghouls",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "drowned-dead",
+      "name": "Drowned dead",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "revenants",
+      "name": "Revenants",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "wights",
+      "name": "Wights",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "wraiths",
+      "name": "Wraiths",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "banshees",
+      "name": "Banshees",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "vampires",
+      "name": "Vampires",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "liches",
+      "name": "Liches",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "ossuary-spiders",
+      "name": "Ossuary spiders",
+      "real": false,
+      "family": "undead",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "corpse-bears",
+      "name": "Corpse bears",
+      "real": false,
+      "family": "undead",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "funeral-knights",
+      "name": "Funeral knights",
+      "real": false,
+      "family": "undead",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "bone-amalgams",
+      "name": "Bone amalgams",
+      "real": false,
+      "family": "undead",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "grave-leviathans",
+      "name": "Grave leviathans",
+      "real": false,
+      "family": "undead",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "walking-necropolis",
+      "name": "Walking necropolis",
+      "real": false,
+      "family": "undead",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2,
+        "zone_haunted_sands": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "cinder-lice",
+      "name": "Cinder lice",
+      "real": false,
+      "family": "infernal",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2,
+        "volcanic": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "ember-imps",
+      "name": "Ember imps",
+      "real": false,
+      "family": "infernal",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "soot-vermin",
+      "name": "Soot vermin",
+      "real": false,
+      "family": "infernal",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "hellhounds",
+      "name": "Hellhounds",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "ash-scavengers",
+      "name": "Ash scavengers",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "contract-devils",
+      "name": "Contract devils",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "chain-jailers",
+      "name": "Chain jailers",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "brimstone-raiders",
+      "name": "Brimstone raiders",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "furnace-smiths",
+      "name": "Furnace smiths",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "tempting-shades",
+      "name": "Tempting shades",
+      "real": false,
+      "family": "infernal",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "hook-wing-harriers",
+      "name": "Hook-wing harriers",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "ironhide-fiends",
+      "name": "Ironhide fiends",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "cinder-centaurs",
+      "name": "Cinder centaurs",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2,
+        "volcanic": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "war-boars",
+      "name": "War boars",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "furnace-toads",
+      "name": "Furnace toads",
+      "real": false,
+      "family": "infernal",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025,
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "chain-hydras",
+      "name": "Chain hydras",
+      "real": false,
+      "family": "infernal",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "siege-devils",
+      "name": "Siege devils",
+      "real": false,
+      "family": "infernal",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "foundry-mothers",
+      "name": "Foundry mothers",
+      "real": false,
+      "family": "infernal",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "infernal-dreadworms",
+      "name": "Infernal dreadworms",
+      "real": false,
+      "family": "infernal",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "walking-hellgate",
+      "name": "Walking hellgate",
+      "real": false,
+      "family": "infernal",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_infernal": 2
+      },
+      "requires": {
+        "ley_infernal": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "halo-motes",
+      "name": "Halo motes",
+      "real": false,
+      "family": "holy",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "censer-scarabs",
+      "name": "Censer scarabs",
+      "real": false,
+      "family": "holy",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "reliquary-doves",
+      "name": "Reliquary doves",
+      "real": false,
+      "family": "holy",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "scripture-serpents",
+      "name": "Scripture serpents",
+      "real": false,
+      "family": "holy",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "lantern-attendants",
+      "name": "Lantern attendants",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "winged-wardens",
+      "name": "Winged wardens",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "oath-judges",
+      "name": "Oath judges",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "relic-knights",
+      "name": "Relic knights",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "mercy-keepers",
+      "name": "Mercy keepers",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "dawn-heralds",
+      "name": "Dawn heralds",
+      "real": false,
+      "family": "holy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "seraphic-executioners",
+      "name": "Seraphic executioners",
+      "real": false,
+      "family": "holy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "many-faced-guardians",
+      "name": "Many-faced guardians",
+      "real": false,
+      "family": "holy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "sanctuary-lions",
+      "name": "Sanctuary lions",
+      "real": false,
+      "family": "holy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "votive-stags",
+      "name": "Votive stags",
+      "real": false,
+      "family": "holy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "plains": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "wheel-sentinels",
+      "name": "Wheel sentinels",
+      "real": false,
+      "family": "holy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "choir-constructs",
+      "name": "Choir constructs",
+      "real": false,
+      "family": "holy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "gate-colossi",
+      "name": "Gate colossi",
+      "real": false,
+      "family": "holy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "pilgrim-tortoises",
+      "name": "Pilgrim tortoises",
+      "real": false,
+      "family": "holy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "solar-rocs",
+      "name": "Solar rocs",
+      "real": false,
+      "family": "holy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "judgment-titan",
+      "name": "Judgment titan",
+      "real": false,
+      "family": "holy",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_holy": 2
+      },
+      "requires": {
+        "ley_holy": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "curse-ticks",
+      "name": "Curse ticks",
+      "real": false,
+      "family": "unholy",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "blight-flies",
+      "name": "Blight flies",
+      "real": false,
+      "family": "unholy",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "wax-crawlers",
+      "name": "Wax crawlers",
+      "real": false,
+      "family": "unholy",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "relic-gnawers",
+      "name": "Relic gnawers",
+      "real": false,
+      "family": "unholy",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "effigy-stalkers",
+      "name": "Effigy stalkers",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "hollow-pilgrims",
+      "name": "Hollow pilgrims",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "hexbound-penitents",
+      "name": "Hexbound penitents",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "mirror-confessors",
+      "name": "Mirror confessors",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "profaned-idols",
+      "name": "Profaned idols",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "hunger-saints",
+      "name": "Hunger saints",
+      "real": false,
+      "family": "unholy",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "false-angels",
+      "name": "False angels",
+      "real": false,
+      "family": "unholy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "plague-shepherds",
+      "name": "Plague shepherds",
+      "real": false,
+      "family": "unholy",
+      "size": "large",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "black-antlered-rams",
+      "name": "Black-antlered rams",
+      "real": false,
+      "family": "unholy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025,
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "altar-beasts",
+      "name": "Altar beasts",
+      "real": false,
+      "family": "unholy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "bell-mouthed-mourners",
+      "name": "Bell-mouthed mourners",
+      "real": false,
+      "family": "unholy",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "processional-horrors",
+      "name": "Processional horrors",
+      "real": false,
+      "family": "unholy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "reliquary-wombs",
+      "name": "Reliquary wombs",
+      "real": false,
+      "family": "unholy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "cathedral-spiders",
+      "name": "Cathedral spiders",
+      "real": false,
+      "family": "unholy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "inverted-seraphs",
+      "name": "Inverted seraphs",
+      "real": false,
+      "family": "unholy",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "walking-desecration",
+      "name": "Walking desecration",
+      "real": false,
+      "family": "unholy",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "thought-lice",
+      "name": "Thought lice",
+      "real": false,
+      "family": "aberrant",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "glass-larvae",
+      "name": "Glass larvae",
+      "real": false,
+      "family": "aberrant",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "nerve-leeches",
+      "name": "Nerve leeches",
+      "real": false,
+      "family": "aberrant",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "eyebud-clusters",
+      "name": "Eyebud clusters",
+      "real": false,
+      "family": "aberrant",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "maw-mimics",
+      "name": "Maw mimics",
+      "real": false,
+      "family": "aberrant",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "skin-borrowers",
+      "name": "Skin borrowers",
+      "real": false,
+      "family": "aberrant",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "echo-hunters",
+      "name": "Echo hunters",
+      "real": false,
+      "family": "aberrant",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "jointless-stalkers",
+      "name": "Jointless stalkers",
+      "real": false,
+      "family": "aberrant",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "memory-grazers",
+      "name": "Memory grazers",
+      "real": false,
+      "family": "aberrant",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "many-handed-burrowers",
+      "name": "Many-handed burrowers",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "lantern-anglers",
+      "name": "Lantern anglers",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "brood-surgeons",
+      "name": "Brood surgeons",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "phase-eels",
+      "name": "Phase eels",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "inverted-walkers",
+      "name": "Inverted walkers",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "dream-medusae",
+      "name": "Dream medusae",
+      "real": false,
+      "family": "aberrant",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "choir-brains",
+      "name": "Choir brains",
+      "real": false,
+      "family": "aberrant",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "flesh-reefs",
+      "name": "Flesh reefs",
+      "real": false,
+      "family": "aberrant",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_weave": 2,
+        "reef": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "folded-leviathans",
+      "name": "Folded leviathans",
+      "real": false,
+      "family": "aberrant",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "womb-mountains",
+      "name": "Womb mountains",
+      "real": false,
+      "family": "aberrant",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "horizon-eyes",
+      "name": "Horizon eyes",
+      "real": false,
+      "family": "aberrant",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "spark-beetles",
+      "name": "Spark beetles",
+      "real": false,
+      "family": "fantastic",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "glasswing-moths",
+      "name": "Glasswing moths",
+      "real": false,
+      "family": "fantastic",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": true
+    },
+    {
+      "id": "antlered-hares",
+      "name": "Antlered hares",
+      "real": false,
+      "family": "fantastic",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "basilisks",
+      "name": "Basilisks",
+      "real": false,
+      "family": "fantastic",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "cockatrices",
+      "name": "Cockatrices",
+      "real": false,
+      "family": "fantastic",
+      "size": "medium",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "giant-spiders",
+      "name": "Giant spiders",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "giant-scorpions",
+      "name": "Giant scorpions",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "dire-wolves",
+      "name": "Dire wolves",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "griffons",
+      "name": "Griffons",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {
+        "mountain": 0.2
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": true
+    },
+    {
+      "id": "hippogryphs",
+      "name": "Hippogryphs",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": true
+    },
+    {
+      "id": "pegasi",
+      "name": "Pegasi",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": true
+    },
+    {
+      "id": "unicorns",
+      "name": "Unicorns",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "manticores",
+      "name": "Manticores",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "chimeras",
+      "name": "Chimeras",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "thunder-boars",
+      "name": "Thunder boars",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "armored-river-crabs",
+      "name": "Armored river crabs",
+      "real": false,
+      "family": "fantastic",
+      "size": "large",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "rocs",
+      "name": "Rocs",
+      "real": false,
+      "family": "fantastic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2
+      },
+      "requires": {
+        "mountain": 0.2
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": true
+    },
+    {
+      "id": "hydras",
+      "name": "Hydras",
+      "real": false,
+      "family": "fantastic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.15
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "siege-tortoises",
+      "name": "Siege tortoises",
+      "real": false,
+      "family": "fantastic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "islandback-grazers",
+      "name": "Islandback grazers",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2
+      },
+      "requires": {},
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "needle-drakes",
+      "name": "Needle drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "lantern-dragonets",
+      "name": "Lantern dragonets",
+      "real": false,
+      "family": "draconic",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": true
+    },
+    {
+      "id": "burrow-drakes",
+      "name": "Burrow drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "reed-drakes",
+      "name": "Reed drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.15
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "pack-drakes",
+      "name": "Pack drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "sailback-drakes",
+      "name": "Sailback drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.15
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "basilisk-drakes",
+      "name": "Basilisk drakes",
+      "real": false,
+      "family": "draconic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "metal_richness": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "wyverns",
+      "name": "Wyverns",
+      "real": false,
+      "family": "draconic",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "mountain": 0.2
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": true
+    },
+    {
+      "id": "lindworms",
+      "name": "Lindworms",
+      "real": false,
+      "family": "draconic",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "amphipteres",
+      "name": "Amphipteres",
+      "real": false,
+      "family": "draconic",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "forest-dragons",
+      "name": "Forest dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "marsh-dragons",
+      "name": "Marsh dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.15
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "dune-wyrms",
+      "name": "Dune wyrms",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "glacier-dragons",
+      "name": "Glacier dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "cold": 0.4
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "cinder-dragons",
+      "name": "Cinder dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "volcanic": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "volcanic": 0.04
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "storm-dragons",
+      "name": "Storm dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "mountain": 0.2
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": true
+    },
+    {
+      "id": "crystal-dragons",
+      "name": "Crystal dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "metal_richness": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "deep-sea-dragons",
+      "name": "Deep-sea dragons",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "depth": 30
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "mountain-wyrms",
+      "name": "Mountain wyrms",
+      "real": false,
+      "family": "draconic",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "mountain": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "mountain": 0.2
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "elder-sky-serpents",
+      "name": "Elder sky serpents",
+      "real": false,
+      "family": "draconic",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "emberlings",
+      "name": "Emberlings",
+      "real": false,
+      "family": "primordial",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "rill-spirits",
+      "name": "Rill spirits",
+      "real": false,
+      "family": "primordial",
+      "size": "tiny",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.1
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "pebble-swarms",
+      "name": "Pebble swarms",
+      "real": false,
+      "family": "primordial",
+      "size": "small",
+      "medium": "land",
+      "kind": "colony",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "dust-imps",
+      "name": "Dust imps",
+      "real": false,
+      "family": "primordial",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "flame-elementals",
+      "name": "Flame elementals",
+      "real": false,
+      "family": "primordial",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "water-elementals",
+      "name": "Water elementals",
+      "real": false,
+      "family": "primordial",
+      "size": "medium",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.1
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "gale-elementals",
+      "name": "Gale elementals",
+      "real": false,
+      "family": "primordial",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "clay-elementals",
+      "name": "Clay elementals",
+      "real": false,
+      "family": "primordial",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "basalt-guardians",
+      "name": "Basalt guardians",
+      "real": false,
+      "family": "primordial",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "metal_richness": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "frost-hulks",
+      "name": "Frost hulks",
+      "real": false,
+      "family": "primordial",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "magma-salamanders",
+      "name": "Magma salamanders",
+      "real": false,
+      "family": "primordial",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "volcanic": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "volcanic": 0.04
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "living-dunes",
+      "name": "Living dunes",
+      "real": false,
+      "family": "primordial",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "thunderhead-beasts",
+      "name": "Thunderhead beasts",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "river-serpents",
+      "name": "River serpents",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "wetland": 0.1
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "avalanche-giants",
+      "name": "Avalanche giants",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "root-titans",
+      "name": "Root titans",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "salt-colossi",
+      "name": "Salt colossi",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "dryness": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "glacier-walkers",
+      "name": "Glacier walkers",
+      "real": false,
+      "family": "primordial",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "volcano-hearts",
+      "name": "Volcano hearts",
+      "real": false,
+      "family": "primordial",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_primordial": 2,
+        "volcanic": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025,
+        "volcanic": 0.04
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "tidal-leviathans",
+      "name": "Tidal leviathans",
+      "real": false,
+      "family": "primordial",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "biting-pixies",
+      "name": "Biting pixies",
+      "real": false,
+      "family": "fey",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "thorn-sprites",
+      "name": "Thorn sprites",
+      "real": false,
+      "family": "fey",
+      "size": "tiny",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 100,
+      "occurrence": 0.7,
+      "sky": false
+    },
+    {
+      "id": "glimmer-thieves",
+      "name": "Glimmer thieves",
+      "real": false,
+      "family": "fey",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "briar-goblins",
+      "name": "Briar goblins",
+      "real": false,
+      "family": "fey",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "redcaps",
+      "name": "Redcaps",
+      "real": false,
+      "family": "fey",
+      "size": "small",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "p-ca",
+      "name": "Púca",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "boggarts",
+      "name": "Boggarts",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "briar-duelists",
+      "name": "Briar duelists",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "dryads",
+      "name": "Dryads",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "nixies",
+      "name": "Nixies",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025,
+        "wetland": 0.1
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "hags",
+      "name": "Hags",
+      "real": false,
+      "family": "fey",
+      "size": "medium",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "wild-hunt-riders",
+      "name": "Wild Hunt riders",
+      "real": false,
+      "family": "fey",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "kelpies",
+      "name": "Kelpies",
+      "real": false,
+      "family": "fey",
+      "size": "large",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025,
+        "wetland": 0.1
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "barghests",
+      "name": "Barghests",
+      "real": false,
+      "family": "fey",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "briar-trolls",
+      "name": "Briar trolls",
+      "real": false,
+      "family": "fey",
+      "size": "large",
+      "medium": "land",
+      "kind": "roost",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "moss-bears",
+      "name": "Moss bears",
+      "real": false,
+      "family": "fey",
+      "size": "large",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "thorn-giants",
+      "name": "Thorn giants",
+      "real": false,
+      "family": "fey",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "elder-tree-wardens",
+      "name": "Elder tree wardens",
+      "real": false,
+      "family": "fey",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "court-spiders",
+      "name": "Court spiders",
+      "real": false,
+      "family": "fey",
+      "size": "huge",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "wandering-hollow-hills",
+      "name": "Wandering hollow hills",
+      "real": false,
+      "family": "fey",
+      "size": "colossal",
+      "medium": "land",
+      "kind": "lair",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "moisture": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "great-white-shark",
+      "name": "Great white shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "tiger-shark",
+      "name": "Tiger shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "bull-shark",
+      "name": "Bull shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "great-hammerhead-shark",
+      "name": "Great hammerhead shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "whale-shark",
+      "name": "Whale shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "blue-shark",
+      "name": "Blue shark",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "shortfin-mako-shark",
+      "name": "Shortfin mako shark",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "nurse-shark",
+      "name": "Nurse shark",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "greenland-shark",
+      "name": "Greenland shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "oceanic-whitetip-shark",
+      "name": "Oceanic whitetip shark",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "atlantic-salmon",
+      "name": "Atlantic salmon",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "rainbow-trout",
+      "name": "Rainbow trout",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "brown-trout",
+      "name": "Brown trout",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "wels-catfish",
+      "name": "Wels catfish",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "common-carp",
+      "name": "Common carp",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "freshwater",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "wetland": 2
+      },
+      "requires": {
+        "wetland": 0.1
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "atlantic-bluefin-tuna",
+      "name": "Atlantic bluefin tuna",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "swordfish",
+      "name": "Swordfish",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "atlantic-mackerel",
+      "name": "Atlantic mackerel",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "giant-moray",
+      "name": "Giant moray",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "giant-grouper",
+      "name": "Giant grouper",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "red-lionfish",
+      "name": "Red lionfish",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "anglerfish",
+      "name": "Anglerfish",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "giant-oceanic-manta-ray",
+      "name": "Giant oceanic manta ray",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "spotted-eagle-ray",
+      "name": "Spotted eagle ray",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        14,
+        42
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "giant-squid",
+      "name": "Giant squid",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "colossal-squid",
+      "name": "Colossal squid",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -35,
+        12
+      ],
+      "weights": {
+        "cold": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "sperm-whale",
+      "name": "Sperm whale",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "blue-whale",
+      "name": "Blue whale",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "orca",
+      "name": "Orca",
+      "real": true,
+      "family": "animal",
+      "size": "small",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 200,
+      "occurrence": 0.65,
+      "sky": false
+    },
+    {
+      "id": "leatherback-sea-turtle",
+      "name": "Leatherback sea turtle",
+      "real": true,
+      "family": "animal",
+      "size": "large",
+      "medium": "shore",
+      "kind": "den",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "coast": 2
+      },
+      "requires": {},
+      "spacing_m": 750,
+      "occurrence": 0.45,
+      "sky": false
+    },
+    {
+      "id": "kraken",
+      "name": "Kraken",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "leviathan",
+      "name": "Leviathan",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "sea-serpents",
+      "name": "Sea serpents",
+      "real": false,
+      "family": "fantastic",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "dragon-turtles",
+      "name": "Dragon turtles",
+      "real": false,
+      "family": "draconic",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "abyssal-krakens",
+      "name": "Abyssal krakens",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "reefback-leviathans",
+      "name": "Reefback leviathans",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "reef": 2
+      },
+      "requires": {},
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "gulper-leviathans",
+      "name": "Gulper leviathans",
+      "real": false,
+      "family": "fantastic",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {
+        "depth": 30
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    },
+    {
+      "id": "shipbreaker-crabs",
+      "name": "Shipbreaker crabs",
+      "real": false,
+      "family": "fantastic",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2
+      },
+      "requires": {},
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "whirlpool-elementals",
+      "name": "Whirlpool elementals",
+      "real": false,
+      "family": "primordial",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_primordial": 2
+      },
+      "requires": {
+        "ley_primordial": 0.025
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "abyssal-choir-worms",
+      "name": "Abyssal choir worms",
+      "real": false,
+      "family": "aberrant",
+      "size": "huge",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_weave": 2
+      },
+      "requires": {
+        "ley_weave": 0.025,
+        "depth": 30
+      },
+      "spacing_m": 1600,
+      "occurrence": 0.28,
+      "sky": false
+    },
+    {
+      "id": "brine-revenants",
+      "name": "Brine revenants",
+      "real": false,
+      "family": "undead",
+      "size": "medium",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 400,
+      "occurrence": 0.55,
+      "sky": false
+    },
+    {
+      "id": "drowned-titans",
+      "name": "Drowned titans",
+      "real": false,
+      "family": "undead",
+      "size": "colossal",
+      "medium": "marine",
+      "kind": "aquatic territory",
+      "temperature": [
+        -15,
+        36
+      ],
+      "weights": {
+        "fishing_productivity": 2,
+        "ley_umbral": 2
+      },
+      "requires": {
+        "ley_umbral": 0.025
+      },
+      "spacing_m": 3500,
+      "occurrence": 0.12,
+      "sky": false
+    }
+  ]
+}

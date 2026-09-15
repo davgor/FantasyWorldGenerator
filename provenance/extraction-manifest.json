@@ -1,0 +1,646 @@
+{
+  "schema_version": 1,
+  "source_repository": "https://github.com/davgor/icarusUnreal.git",
+  "source_commit": "d551767cb1c3bd259bb00f56be1e52c2182c5ec3",
+  "destination_repository": "https://github.com/davgor/FantasyWorldGenerator.git",
+  "license_review": "No standalone source-repository license file was found. Repository ownership permits this private extraction, but public redistribution requires an explicit license decision.",
+  "files": [
+    {
+      "source": "docs/catalogue/world-assets/manifest.json",
+      "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+      "destination": "Contracts/catalogues/world-assets.json",
+      "destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+      "status": "exact",
+      "reason": "Pinned semantic asset-requirement input; Unreal assets and bindings remain game-owned"
+    },
+    {
+      "source": "Sim/README.md",
+      "source_sha256": "90fc2015017127ff207bc55e1a1ea00f07864f0efb743cb99da1ea98eabf693f",
+      "destination": "Sim/README.md",
+      "destination_sha256": "0a32f4b0388625260cd476479645d0d37ad00c484f4a0e93242a29d70b5c3bfc",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "modification": "Standalone commands, supported Python baseline, and future-ticket references replace source-monorepo instructions."
+    },
+    {
+      "source": "Sim/icarus_sim/__init__.py",
+      "source_sha256": "c87f7e51e806af2dfa52141629861cc315694240c01430721e6ee8aa8bb178f9",
+      "destination": "Sim/icarus_sim/__init__.py",
+      "destination_sha256": "c87f7e51e806af2dfa52141629861cc315694240c01430721e6ee8aa8bb178f9",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_area.py",
+      "source_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
+      "destination": "Sim/icarus_sim/terrain_area.py",
+      "destination_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_biomes.py",
+      "source_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
+      "destination": "Sim/icarus_sim/terrain_biomes.py",
+      "destination_sha256": "31addcb83aec4f3360764b05c5654f5885477a3668e53c8b9b93a84880c0f192",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_city_building_packs.json",
+      "source_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
+      "destination": "Sim/icarus_sim/terrain_city_building_packs.json",
+      "destination_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_city_layout_profiles.json",
+      "source_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
+      "destination": "Sim/icarus_sim/terrain_city_layout_profiles.json",
+      "destination_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_climate.py",
+      "source_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
+      "destination": "Sim/icarus_sim/terrain_climate.py",
+      "destination_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_ecology.py",
+      "source_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
+      "destination": "Sim/icarus_sim/terrain_ecology.py",
+      "destination_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_erosion.py",
+      "source_sha256": "27ea45c648ba1d5102888b611ce3a6c7711c117be109c1a17fac8f369b4f5469",
+      "destination": "Sim/icarus_sim/terrain_erosion.py",
+      "destination_sha256": "27ea45c648ba1d5102888b611ce3a6c7711c117be109c1a17fac8f369b4f5469",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_globe.py",
+      "source_sha256": "bf807be788d39e769c9feaafd967713099dd7a54521bbeb7a0eb7a79b22c1af1",
+      "destination": "Sim/icarus_sim/terrain_globe.py",
+      "destination_sha256": "bf807be788d39e769c9feaafd967713099dd7a54521bbeb7a0eb7a79b22c1af1",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_humans.py",
+      "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
+      "destination": "Sim/icarus_sim/terrain_humans.py",
+      "destination_sha256": "7bf22304c5d477398d50861a053b8d3840e4414d36dc7c98bf69fd4ef2fa96f4",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged."
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_lab.py",
+      "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
+      "destination": "Sim/icarus_sim/terrain_lab.py",
+      "destination_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_magic.py",
+      "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
+      "destination": "Sim/icarus_sim/terrain_magic.py",
+      "destination_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_nest_profiles.json",
+      "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
+      "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
+      "destination_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_nests.py",
+      "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
+      "destination": "Sim/icarus_sim/terrain_nests.py",
+      "destination_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_patch.py",
+      "source_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
+      "destination": "Sim/icarus_sim/terrain_patch.py",
+      "destination_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_profiles.json",
+      "source_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
+      "destination": "Sim/icarus_sim/terrain_profiles.json",
+      "destination_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_profiles.py",
+      "source_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
+      "destination": "Sim/icarus_sim/terrain_profiles.py",
+      "destination_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_recipes.py",
+      "source_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
+      "destination": "Sim/icarus_sim/terrain_recipes.py",
+      "destination_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_seasons.py",
+      "source_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
+      "destination": "Sim/icarus_sim/terrain_seasons.py",
+      "destination_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_seed.py",
+      "source_sha256": "87fedc0ac502ddb9b20ecf9f01ae47d1acc32a7813168256a59b9cbff4d9d502",
+      "destination": "Sim/icarus_sim/terrain_seed.py",
+      "destination_sha256": "87fedc0ac502ddb9b20ecf9f01ae47d1acc32a7813168256a59b9cbff4d9d502",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_settlements.py",
+      "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
+      "destination": "Sim/icarus_sim/terrain_settlements.py",
+      "destination_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_society.py",
+      "source_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
+      "destination": "Sim/icarus_sim/terrain_society.py",
+      "destination_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_tectonics.py",
+      "source_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
+      "destination": "Sim/icarus_sim/terrain_tectonics.py",
+      "destination_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_water.py",
+      "source_sha256": "1e89409f0aaac596f6ba66f48d30a78df6d55566ad41b5f6d64587c3cb00a6cc",
+      "destination": "Sim/icarus_sim/terrain_water.py",
+      "destination_sha256": "1e89409f0aaac596f6ba66f48d30a78df6d55566ad41b5f6d64587c3cb00a6cc",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/icarus_sim/terrain_world.py",
+      "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
+      "destination": "Sim/icarus_sim/terrain_world.py",
+      "destination_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_area.py",
+      "source_sha256": "4174b1c7c246851d6d9662a758de9b4bb98e1893484feb5136ff8c702aa9617e",
+      "destination": "Sim/tests/test_terrain_area.py",
+      "destination_sha256": "4174b1c7c246851d6d9662a758de9b4bb98e1893484feb5136ff8c702aa9617e",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_biomes.py",
+      "source_sha256": "3b810883425e6dfff0c44913e907628a7f545d133d4f4d9b5181128666e6ee58",
+      "destination": "Sim/tests/test_terrain_biomes.py",
+      "destination_sha256": "3b810883425e6dfff0c44913e907628a7f545d133d4f4d9b5181128666e6ee58",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_city_layout.py",
+      "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
+      "destination": "Sim/tests/test_terrain_city_layout.py",
+      "destination_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_climate_sites.py",
+      "source_sha256": "93ba2170d01a3de95f3d03dabb8c485c850faa97ea916b268899aa61ed5d719c",
+      "destination": "Sim/tests/test_terrain_climate_sites.py",
+      "destination_sha256": "93ba2170d01a3de95f3d03dabb8c485c850faa97ea916b268899aa61ed5d719c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_drainage.py",
+      "source_sha256": "f54e691549d0d5f6632699d71a9b9edf0c88e1c134949100941ae2823d7ec054",
+      "destination": "Sim/tests/test_terrain_drainage.py",
+      "destination_sha256": "f54e691549d0d5f6632699d71a9b9edf0c88e1c134949100941ae2823d7ec054",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_humans.py",
+      "source_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
+      "destination": "Sim/tests/test_terrain_humans.py",
+      "destination_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_lab.py",
+      "source_sha256": "e6f06bd8747d64833793c7de8f9002a9e90ab617eb9fdf69641685363573308c",
+      "destination": "Sim/tests/test_terrain_lab.py",
+      "destination_sha256": "e6f06bd8747d64833793c7de8f9002a9e90ab617eb9fdf69641685363573308c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_magic.py",
+      "source_sha256": "6df72b47ce7d5b7f80b42ffa6186a507aaa0690ff240910472e7bdfa08890576",
+      "destination": "Sim/tests/test_terrain_magic.py",
+      "destination_sha256": "6df72b47ce7d5b7f80b42ffa6186a507aaa0690ff240910472e7bdfa08890576",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_nests.py",
+      "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
+      "destination": "Sim/tests/test_terrain_nests.py",
+      "destination_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_patch.py",
+      "source_sha256": "bdc5d457d5d21ef5f8ecd169c762b707872660b0480a87f4fe9c11845036e8d4",
+      "destination": "Sim/tests/test_terrain_patch.py",
+      "destination_sha256": "bdc5d457d5d21ef5f8ecd169c762b707872660b0480a87f4fe9c11845036e8d4",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_peoples.py",
+      "source_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
+      "destination": "Sim/tests/test_terrain_peoples.py",
+      "destination_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_recipes.py",
+      "source_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
+      "destination": "Sim/tests/test_terrain_recipes.py",
+      "destination_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_seasons.py",
+      "source_sha256": "d160028f06cf9a73fc9e15aa45ce18e2950f9a8c7baa4e934b9786724aed72fb",
+      "destination": "Sim/tests/test_terrain_seasons.py",
+      "destination_sha256": "d160028f06cf9a73fc9e15aa45ce18e2950f9a8c7baa4e934b9786724aed72fb",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_tectonics.py",
+      "source_sha256": "298127b0df0e3e9f35185bb8f322e9546ccede515d6203db8e6b9c22ea66602d",
+      "destination": "Sim/tests/test_terrain_tectonics.py",
+      "destination_sha256": "298127b0df0e3e9f35185bb8f322e9546ccede515d6203db8e6b9c22ea66602d",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_water.py",
+      "source_sha256": "398c3782a1c28d04bea1f4fb462beedef979130bfb6e8ae63135a8278484a1c6",
+      "destination": "Sim/tests/test_terrain_water.py",
+      "destination_sha256": "398c3782a1c28d04bea1f4fb462beedef979130bfb6e8ae63135a8278484a1c6",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_world_layers.py",
+      "source_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
+      "destination": "Sim/tests/test_terrain_world_layers.py",
+      "destination_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "Sim/tests/test_terrain_world_size.py",
+      "source_sha256": "63b17ce76e250b822a21b1098c30551a7521831c269e3cb11b0893b1067d886c",
+      "destination": "Sim/tests/test_terrain_world_size.py",
+      "destination_sha256": "63b17ce76e250b822a21b1098c30551a7521831c269e3cb11b0893b1067d886c",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "board/done/LAB-005.md",
+      "source_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
+      "destination": "board/done/LAB-005.md",
+      "destination_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "board/done/LAB-006.md",
+      "source_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
+      "destination": "board/done/LAB-006.md",
+      "destination_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "board/done/LAB-017.md",
+      "source_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
+      "destination": "board/done/LAB-017.md",
+      "destination_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "board/done/LAB-018.md",
+      "source_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
+      "destination": "board/done/LAB-018.md",
+      "destination_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "docs/catalogue/creatures.json",
+      "source_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
+      "destination": "docs/catalogue/creatures.json",
+      "destination_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "docs/catalogue/world-assets/AUDIT.md",
+      "source_sha256": "5547a492ea22007d38a7ffdc898745233a593df24f93f97d786bca970f9909a5",
+      "destination": "docs/catalogue/world-assets/AUDIT.md",
+      "destination_sha256": "5547a492ea22007d38a7ffdc898745233a593df24f93f97d786bca970f9909a5",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/BUILD-ORDER.md",
+      "source_sha256": "b39cc19cc068dee5cc981cf0a9089d49692f5d26f342e744ef4fc1325b794f0b",
+      "destination": "docs/catalogue/world-assets/BUILD-ORDER.md",
+      "destination_sha256": "903f21914469d14b1429b297f354c9e6b302a27a71521970d110bda4286ecc26",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+    },
+    {
+      "source": "docs/catalogue/world-assets/COVERAGE.md",
+      "source_sha256": "797436f02eb007f5c654f1e8879609678bb209b45539b259e693b5d7fd3f6685",
+      "destination": "docs/catalogue/world-assets/COVERAGE.md",
+      "destination_sha256": "797436f02eb007f5c654f1e8879609678bb209b45539b259e693b5d7fd3f6685",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/README.md",
+      "source_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
+      "destination": "docs/catalogue/world-assets/README.md",
+      "destination_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/anim.md",
+      "source_sha256": "3f9e1ba4dfcddc7d2c5b92211079003cc20d3fa11b2a5643ca69bfb669b19193",
+      "destination": "docs/catalogue/world-assets/anim.md",
+      "destination_sha256": "3f9e1ba4dfcddc7d2c5b92211079003cc20d3fa11b2a5643ca69bfb669b19193",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/arch.md",
+      "source_sha256": "c9251e783e6e2b56a560e3c6d2bbd6a2f04b45949fe19f267e4db43f43935d28",
+      "destination": "docs/catalogue/world-assets/arch.md",
+      "destination_sha256": "c9251e783e6e2b56a560e3c6d2bbd6a2f04b45949fe19f267e4db43f43935d28",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/bld.md",
+      "source_sha256": "89f0bf0281062501190c50137a5db2548069e304271dd019fc9de65aa39e6ab5",
+      "destination": "docs/catalogue/world-assets/bld.md",
+      "destination_sha256": "89f0bf0281062501190c50137a5db2548069e304271dd019fc9de65aa39e6ab5",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/fung.md",
+      "source_sha256": "7b7335f06a14e7dc86c60ecc68998ebbeea33119591296f287259c73c9d38e48",
+      "destination": "docs/catalogue/world-assets/fung.md",
+      "destination_sha256": "7b7335f06a14e7dc86c60ecc68998ebbeea33119591296f287259c73c9d38e48",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/fx.md",
+      "source_sha256": "8d4f2b008b16d62791d78002f668d43ff103325a89e8d4da6ebec3851c04e094",
+      "destination": "docs/catalogue/world-assets/fx.md",
+      "destination_sha256": "8d4f2b008b16d62791d78002f668d43ff103325a89e8d4da6ebec3851c04e094",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/geo.md",
+      "source_sha256": "61b83ed5b4846d2295304b1a8549002ecc62c22bc86defe1d3a0b59243c14ab0",
+      "destination": "docs/catalogue/world-assets/geo.md",
+      "destination_sha256": "61b83ed5b4846d2295304b1a8549002ecc62c22bc86defe1d3a0b59243c14ab0",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/manifest.json",
+      "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+      "destination": "docs/catalogue/world-assets/manifest.json",
+      "destination_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/mat.md",
+      "source_sha256": "97d725c305636fd2a102f467c063ea016d094841148b36bd0664b68967289bf1",
+      "destination": "docs/catalogue/world-assets/mat.md",
+      "destination_sha256": "97d725c305636fd2a102f467c063ea016d094841148b36bd0664b68967289bf1",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/ppl.md",
+      "source_sha256": "af53105e31fceecdaf219d4bf453c3e11a06a11d92bf8af83e10c351153e3264",
+      "destination": "docs/catalogue/world-assets/ppl.md",
+      "destination_sha256": "af53105e31fceecdaf219d4bf453c3e11a06a11d92bf8af83e10c351153e3264",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/prop.md",
+      "source_sha256": "d64f901f6d93b25a4887264b3c76900be2aeeb89e6ce4929895ab618348a0337",
+      "destination": "docs/catalogue/world-assets/prop.md",
+      "destination_sha256": "d64f901f6d93b25a4887264b3c76900be2aeeb89e6ce4929895ab618348a0337",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/role.md",
+      "source_sha256": "a37e6747c6da40f9830ebb29caf8c6c95c40f208c8fc1be2eedd9cdb5cafce62",
+      "destination": "docs/catalogue/world-assets/role.md",
+      "destination_sha256": "a37e6747c6da40f9830ebb29caf8c6c95c40f208c8fc1be2eedd9cdb5cafce62",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/snd.md",
+      "source_sha256": "3be63448bbc4ff413af1cdcd527a6c5799a6034c33c7861093fcccda5be0d043",
+      "destination": "docs/catalogue/world-assets/snd.md",
+      "destination_sha256": "3be63448bbc4ff413af1cdcd527a6c5799a6034c33c7861093fcccda5be0d043",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/tree.md",
+      "source_sha256": "a7a74aa410d9fbfd9db34d3455ce8adf676d3aa733cb912e0a8e15eee8896a81",
+      "destination": "docs/catalogue/world-assets/tree.md",
+      "destination_sha256": "a7a74aa410d9fbfd9db34d3455ce8adf676d3aa733cb912e0a8e15eee8896a81",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/veg.md",
+      "source_sha256": "e9a571e4d7273f0c0fe61e18b1264ef0d0369cc533119f5f3bdf9d514a0a58a3",
+      "destination": "docs/catalogue/world-assets/veg.md",
+      "destination_sha256": "e9a571e4d7273f0c0fe61e18b1264ef0d0369cc533119f5f3bdf9d514a0a58a3",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/catalogue/world-assets/water.md",
+      "source_sha256": "9537416a2a9f82ec51656450fab8dc35d432436ee10bedab81fd78e93a3795c5",
+      "destination": "docs/catalogue/world-assets/water.md",
+      "destination_sha256": "9537416a2a9f82ec51656450fab8dc35d432436ee10bedab81fd78e93a3795c5",
+      "status": "exact",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+    },
+    {
+      "source": "docs/decisions/014-mathlab-biome-gate.md",
+      "source_sha256": "54348d5258fa71784c2c1860023923b1d23d254d2be34c1725f5be3146012990",
+      "destination": "docs/decisions/014-mathlab-biome-gate.md",
+      "destination_sha256": "59aa69d89d4f5e7dc2b783b031f0f70ac784f7bf8ec61376133e59851cfd314a",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+    },
+    {
+      "source": "docs/mathlab-revisions.json",
+      "source_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
+      "destination": "docs/mathlab-revisions.json",
+      "destination_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "docs/terrain-math-lab.md",
+      "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
+      "destination": "docs/terrain-math-lab.md",
+      "destination_sha256": "7863d608700d2edad220cb216bd55af2f4ff3a94b6e1e2c993b4b43cc3e943ed",
+      "status": "modified",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+    },
+    {
+      "source": "docs/terrain-world-layers.md",
+      "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
+      "destination": "docs/terrain-world-layers.md",
+      "destination_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "docs/reviews/LAB-005.md",
+      "source_sha256": "b996b08f416abb5b22a54e000ab9c402ae83c5c64de22eefc524a62526dc6a15",
+      "destination": "provenance/source-reviews/LAB-005.md",
+      "destination_sha256": "b996b08f416abb5b22a54e000ab9c402ae83c5c64de22eefc524a62526dc6a15",
+      "status": "exact",
+      "reason": "Historical source review retained outside the active review namespace"
+    },
+    {
+      "source": "docs/reviews/LAB-006.md",
+      "source_sha256": "143a41b71c8f9e5ba610d7aac875051d1007d22dc474364defd604d7cab1dd7a",
+      "destination": "provenance/source-reviews/LAB-006.md",
+      "destination_sha256": "143a41b71c8f9e5ba610d7aac875051d1007d22dc474364defd604d7cab1dd7a",
+      "status": "exact",
+      "reason": "Historical source review retained outside the active review namespace"
+    },
+    {
+      "source": "docs/reviews/LAB-017.md",
+      "source_sha256": "34c2172eb9cbee168695d282457b9f0f03842e9548828bdaab5878e82daee1b7",
+      "destination": "provenance/source-reviews/LAB-017.md",
+      "destination_sha256": "34c2172eb9cbee168695d282457b9f0f03842e9548828bdaab5878e82daee1b7",
+      "status": "exact",
+      "reason": "Historical source review retained outside the active review namespace"
+    },
+    {
+      "source": "docs/reviews/LAB-018.md",
+      "source_sha256": "ce3a519a240e8873580226d295e055be912cce385c5b87c3536d360ae71a6fb8",
+      "destination": "provenance/source-reviews/LAB-018.md",
+      "destination_sha256": "ce3a519a240e8873580226d295e055be912cce385c5b87c3536d360ae71a6fb8",
+      "status": "exact",
+      "reason": "Historical source review retained outside the active review namespace"
+    },
+    {
+      "source": "tools/terrain_lab.html",
+      "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
+      "destination": "tools/terrain_lab.html",
+      "destination_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "tools/terrain_lab.py",
+      "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
+      "destination": "tools/terrain_lab.py",
+      "destination_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    },
+    {
+      "source": "tools/terrain_world.js",
+      "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
+      "destination": "tools/terrain_world.js",
+      "destination_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
+      "status": "exact",
+      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+    }
+  ]
+}
