@@ -73,7 +73,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dry fissures with plausible shallow depth
 
-**Use:** Desert, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Desert, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dark fibrous decomposed forest floor
 
-**Use:** Forest, Rainforest, Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Rainforest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -103,7 +103,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Small overlapping fallen leaves with earthy gaps
 
-**Use:** Forest, Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -133,7 +133,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dark fibrous saturated organic ground
 
-**Use:** Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -163,7 +163,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Saturated mud with shallow irregular depressions
 
-**Use:** Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -193,7 +193,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Soft fine sand with subtle wind ripples
 
-**Use:** Desert, Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Desert, Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -208,7 +208,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Coarser grains and faint washed surface variation
 
-**Use:** Submerged, Desert, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ocean, Desert, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -223,7 +223,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Rounded mixed small stones with silt in gaps
 
-**Use:** Submerged, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ocean, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -238,7 +238,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Small sharp rock fragments on dusty substrate
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -283,7 +283,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dark fine-grain cooled igneous rock
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -313,7 +313,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Fine grey ash with sparse black fragments
 
-**Use:** Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -328,7 +328,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Charred dry earth with restrained cracking
 
-**Use:** Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -343,7 +343,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Pale hard crust with crystalline inclusions
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -358,7 +358,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Damp organic earth with fine original fungal fibres
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -373,7 +373,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Natural moss base with a sparse separate emission mask
 
-**Use:** Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -388,7 +388,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Desaturated peat; uncanny colour without painted ghosts
 
-**Use:** Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -463,7 +463,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Patchy film overlay, not an opaque replacement for water
 
-**Use:** Lake, Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Lake, Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -478,7 +478,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Pale faceted mineral with restrained optional emission
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -493,7 +493,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Deep irregular bark ridges at trunk scale
 
-**Use:** Forest, Enchanted forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Forest, Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -553,7 +553,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Wet fissured dark bark
 
-**Use:** Marsh, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Marsh, Haunted marsh (`marsh.umbral`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -568,7 +568,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Blackened brittle bark with no active fire
 
-**Use:** Desolation, Haunted marsh; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Haunted marsh (`marsh.umbral`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -583,7 +583,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Original fibrous stem, soft cap and gill textures
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** Shared contract and approved category prototype.
 

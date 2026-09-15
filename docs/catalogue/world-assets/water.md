@@ -13,7 +13,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Depth-aware water with restrained wind waves
 
-**Use:** Submerged; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Ocean; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Depth/bank constrained foam strip
 
-**Use:** Submerged, Lake; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Ocean, Lake; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -148,7 +148,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Small ground depression water overlay
 
-**Use:** Marsh, Haunted marsh; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Marsh, Haunted marsh (`marsh.umbral`); Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -163,7 +163,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Subtle desaturated spectral surface accents
 
-**Use:** Haunted marsh; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Haunted marsh (`marsh.umbral`); Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -178,7 +178,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Runtime rain impacts on existing water
 
-**Use:** Submerged, Lake, Marsh; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Ocean, Lake, Marsh; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -193,7 +193,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Depth fog and colour absorption
 
-**Use:** Submerged, Lake; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
+**Use:** Ocean, Lake; Requires mapped water/flow and Unreal water-placement hook; never creates hydrology.
 
 **Dependencies:** Shared contract and approved category prototype.
 

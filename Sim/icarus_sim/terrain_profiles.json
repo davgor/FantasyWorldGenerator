@@ -34,11 +34,27 @@
     "college_suitability_min": 0.55,
     "biome_preferences": {},
     "food_biome_multipliers": {
-      "9": 0.05,
-      "10": 0.5,
-      "11": 0.15,
-      "13": 0.35,
-      "14": 0.35
+      "13": 0.35
+    },
+    "magic_biome_preferences": {},
+    "food_magic_biome_multipliers": {
+      "tundra.infernal": 0.05,
+      "desert.infernal": 0.15,
+      "grassland.infernal": 0.05,
+      "forest.infernal": 0.05,
+      "exposed_rock.infernal": 0.05,
+      "snow.infernal": 0.05,
+      "rainforest.infernal": 0.05,
+      "marsh.infernal": 0.05,
+      "boreal_forest.infernal": 0.05,
+      "cold_tundra.infernal": 0.05,
+      "land_ice.infernal": 0.05,
+      "forest.earth": 0.5,
+      "rainforest.earth": 0.5,
+      "boreal_forest.earth": 0.5,
+      "desert.weave": 0.15,
+      "desert.water": 0.15,
+      "marsh.umbral": 0.35
     }
   },
   "highland": {
@@ -60,14 +76,18 @@
     "college_temperature_min": -15,
     "biome_preferences": {
       "5": 0.12,
-      "6": 0.05,
-      "11": 0.08
+      "6": 0.05
+    },
+    "magic_biome_preferences": {
+      "desert.weave": 0.08,
+      "desert.infernal": 0.08,
+      "desert.water": 0.08
     }
   },
   "woodland": {
     "extends": "human",
     "name": "Woodland folk (example)",
-    "description": "Forest-oriented communities able to use fungal foods, with higher magical tolerance.",
+    "description": "Forest-oriented communities able to use Earth-altered woodland foods, with higher magical tolerance.",
     "mutation_limit": 0.6,
     "magic_penalty": 0.1,
     "moisture_ideal": 0.75,
@@ -77,16 +97,37 @@
     "biome_preferences": {
       "4": 0.12,
       "7": 0.12,
-      "10": 0.16,
-      "12": 0.18,
       "2": -0.12
     },
     "food_biome_multipliers": {
-      "9": 0.05,
-      "10": 1,
-      "11": 0.15,
-      "13": 0.6,
-      "14": 0.5
+      "13": 0.6
+    },
+    "magic_biome_preferences": {
+      "forest.earth": 0.16,
+      "rainforest.earth": 0.16,
+      "boreal_forest.earth": 0.16,
+      "forest.weave": 0.18,
+      "rainforest.weave": 0.18,
+      "boreal_forest.weave": 0.18
+    },
+    "food_magic_biome_multipliers": {
+      "tundra.infernal": 0.05,
+      "desert.infernal": 0.15,
+      "grassland.infernal": 0.05,
+      "forest.infernal": 0.05,
+      "exposed_rock.infernal": 0.05,
+      "snow.infernal": 0.05,
+      "rainforest.infernal": 0.05,
+      "marsh.infernal": 0.05,
+      "boreal_forest.infernal": 0.05,
+      "cold_tundra.infernal": 0.05,
+      "land_ice.infernal": 0.05,
+      "forest.earth": 1,
+      "rainforest.earth": 1,
+      "boreal_forest.earth": 1,
+      "desert.weave": 0.15,
+      "desert.water": 0.15,
+      "marsh.umbral": 0.5
     }
   },
   "dwarf": {
@@ -108,12 +149,16 @@
     "college_temperature_min": -15,
     "biome_preferences": {
       "5": 0.12,
-      "6": 0.05,
-      "11": 0.08
+      "6": 0.05
     },
     "land_per_city_km2": 1.0,
     "water_reach": 600,
-    "food_moisture_ideal": 0.55
+    "food_moisture_ideal": 0.55,
+    "magic_biome_preferences": {
+      "desert.weave": 0.08,
+      "desert.infernal": 0.08,
+      "desert.water": 0.08
+    }
   },
   "elf": {
     "extends": "human",
@@ -128,18 +173,39 @@
     "biome_preferences": {
       "4": 0.12,
       "7": 0.12,
-      "10": 0.16,
-      "12": 0.18,
       "2": -0.12
     },
     "food_biome_multipliers": {
-      "9": 0.05,
-      "10": 1,
-      "11": 0.15,
-      "13": 0.6,
-      "14": 0.5
+      "13": 0.6
     },
-    "land_per_city_km2": 1.2
+    "land_per_city_km2": 1.2,
+    "magic_biome_preferences": {
+      "forest.earth": 0.16,
+      "rainforest.earth": 0.16,
+      "boreal_forest.earth": 0.16,
+      "forest.weave": 0.18,
+      "rainforest.weave": 0.18,
+      "boreal_forest.weave": 0.18
+    },
+    "food_magic_biome_multipliers": {
+      "tundra.infernal": 0.05,
+      "desert.infernal": 0.15,
+      "grassland.infernal": 0.05,
+      "forest.infernal": 0.05,
+      "exposed_rock.infernal": 0.05,
+      "snow.infernal": 0.05,
+      "rainforest.infernal": 0.05,
+      "marsh.infernal": 0.05,
+      "boreal_forest.infernal": 0.05,
+      "cold_tundra.infernal": 0.05,
+      "land_ice.infernal": 0.05,
+      "forest.earth": 1,
+      "rainforest.earth": 1,
+      "boreal_forest.earth": 1,
+      "desert.weave": 0.15,
+      "desert.water": 0.15,
+      "marsh.umbral": 0.5
+    }
   },
   "gnome": {
     "extends": "human",
@@ -151,7 +217,11 @@
     "mutation_limit": 0.55,
     "land_per_city_km2": 0.35,
     "food_demand": 8,
-    "biome_preferences": {"15": 0.05, "17": -0.5}
+    "biome_preferences": {
+      "15": 0.05,
+      "17": -0.5
+    },
+    "magic_biome_preferences": {}
   },
   "tidekin": {
     "extends": "human",
@@ -165,7 +235,12 @@
     "water_reach": 600,
     "land_per_city_km2": 0.25,
     "food_demand": 8,
-    "biome_preferences": {"13": 0.1, "15": 0.05, "17": -0.5}
+    "biome_preferences": {
+      "13": 0.1,
+      "15": 0.05,
+      "17": -0.5
+    },
+    "magic_biome_preferences": {}
   },
   "mixed": {
     "extends": "human",

@@ -4,7 +4,7 @@ Every push to `main` produces one export-only workflow artifact named `fantasy-w
 
 The asset list is a capability catalogue, not a generated-world inventory. Its normalized `assets` array is the union of:
 
-- every terrain/biome surface the simulator can emit, including every natural-core × magic-school combination (104 recipe 2 variants);
+- every terrain/biome surface the simulator can emit, including every natural-core × magic-school combination (104 recipe 3 variants);
 - the city-ruins marker, whose generated instance retains its source culture and destruction cause;
 - every real or fantasy creature profile eligible for a habitat anchor;
 - every building asset choice reachable through any settlement building pack;
@@ -12,14 +12,14 @@ The asset list is a capability catalogue, not a generated-world inventory. Its n
 
 Entries may be planned rather than runtime-ready. `status`, `source`, selectors, and metadata preserve that distinction. A downstream importer must handle missing/non-ready content explicitly and must not interpret catalogue membership as proof that an Unreal asset exists.
 
-The compiler sorts normalized identities, rejects collisions, and emits a SHA-256 content digest. Generated timestamps are omitted so the output is byte-reproducible for the same source revision. CI records the merge commit in workflow metadata rather than changing catalogue bytes.
+Asset-list schema 2 is scoped to recipe 3, includes 13 natural surfaces and all 104 mutations, and excludes retired phenotype surfaces. Natural IDs and exact variant IDs form an OR selector; missing biome selectors are unrestricted, empty selectors match nothing. The compiler sorts normalized identities, rejects collisions, and emits a SHA-256 content digest. Generated timestamps are omitted so the output is byte-reproducible for the same source revision. CI records the merge commit in workflow metadata rather than changing catalogue bytes.
 
 The workflow uploads mutable-retention build evidence to GitHub Actions; it does not publish an immutable Unreal package, publish to PyPI, or create a GitHub Release. It must never be labeled runtime- or cooked-validated. ML-03 will select the Unreal version, toolchain, consumer, immutable artifact channel, and compatibility manifest before runtime publication begins.
 
 ## Portfolio samples on GitHub Pages
 
 After each push/merge to this repository's `main`, the export workflow validates the repository,
-regenerates three recipe-2, 65-grid worlds (seeds 42, 73, 108), and pushes only `public/mathlab/` to
+regenerates three recipe-3, 65-grid worlds (seeds 42, 73, 108), and pushes only `public/mathlab/` to
 [davgor.github.io](https://github.com/davgor/davgor.github.io). That commit triggers the portfolio's
 normal Pages deployment, including browser tests. No cron or cross-repository personal token is used.
 Pull requests build and test the same samples but cannot publish. Manual workflow dispatch can retry
@@ -27,11 +27,10 @@ publication. No-change exports do not create empty commits. The showcase replace
 section at [/mathlab/](https://davgor.github.io/mathlab/) and links back here.
 
 `tools/export_showcase.py` owns the sample recipes and uses `tools/mathlab-showcase.html` for the selector.
-It requires a clean source checkout. Run `python tools/export_showcase.py` to build `Artifacts/showcase`.
-Manifest format 2 records the exact generator commit, source-file hashes, recipes/overrides and HTML
+Publication requires a clean source checkout. `--allow-dirty` is an explicit local-verification mode: its manifest records `source_dirty: true`, `publication_ready: false`, and the pages say “Uncommitted local preview.” The normal publication command still rejects uncommitted source. Run `python tools/export_showcase.py` to build `Artifacts/showcase`.
+Manifest format 3 records the exact generator commit, source-file hashes, recipes/overrides and HTML
 hashes. Wall-clock measurements are omitted as empty timing maps in these presentation exports for
-reproducibility on the same Python runtime. Simulation arrays, seeds and interchange versions remain
-unchanged; normal lab exports are unaffected. Generated snapshots are committed to the portfolio and
+reproducibility on the same Python runtime. Recipe 3 samples use the current biome contract and must be regenerated from earlier samples. Generated snapshots are committed to the portfolio and
 included in its Pages artifact, so its code and live site can be traced to the source revision.
 
 Pages cannot run Python. Inspection, layers and JSON export work from saved data; generation and local

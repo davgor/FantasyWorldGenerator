@@ -83,7 +83,8 @@ def exchange_food(cores,roads):
 
 def add_humans(result,cfg):
     if cfg.phase<9 or not result.get('roads'):return result
-    from .terrain_profiles import get_profile
+    from .terrain_profiles import get_profile, biome_food_multiplier
+    from .terrain_biome_catalogue import cell_variant
     profile=get_profile(cfg.population_profile)
     started=perf_counter();n=cfg.size;r=result['effective_config']['globe_radius']
     points,areas,graph=sphere_grid(n,r);layers=result['layers'];sites=result['settlements']['sites']
@@ -130,8 +131,8 @@ def add_humans(result,cfg):
     yields=[(0.,0.) if water[i] else farming_potential(slope[i],temp[i],wet[i],flood[i],fresh[i],node_profiles[i]['irrigation'] if cfg.population_profile=='mixed' else cfg.human_adaptation,node_profiles[i])
             for i in range(len(points))]
     biomes=values('biome')
-    yields=[(a*node_profiles[i]['food_biome_multipliers'].get(str(biomes[i]),1)*(1-hazard[i]),
-             b*node_profiles[i]['food_biome_multipliers'].get(str(biomes[i]),1)*(1-hazard[i])) for i,(a,b) in enumerate(yields)]
+    yields=[(a*biome_food_multiplier(node_profiles[i],biomes[i],cell_variant(result,*points[i]))*(1-hazard[i]),
+             b*biome_food_multiplier(node_profiles[i],biomes[i],cell_variant(result,*points[i]))*(1-hazard[i])) for i,(a,b) in enumerate(yields)]
     natural=[a for a,b in yields];food=[b for a,b in yields]
     vectors=[direction(x,z,n) for x,z in points];occupied=[s['node'] for s in sites]
     def separated(i,minimum):
@@ -205,7 +206,7 @@ def add_humans(result,cfg):
     layers.update({'food_potential':node_grid(food,points,n),'natural_food_potential':node_grid(natural,points,n),
                    'irrigation_benefit':node_grid([b-a for a,b in yields],points,n),'culture_region':node_grid(region,points,n),
                    'hamlet_catchment':node_grid(farm_owner,points,n)})
-    result['humans']={'version':4,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
+    result['humans']={'version':5,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
         'method':'All primary pins are cities. Rural sites share exclusive reachable catchments. Food/material values are relative exportable potential units, not historical yields or population capacity. Irrigation requires nearby mapped freshwater; water extraction capacity and groundwater are not simulated. Cities can buy finite surplus over roads using material potential, with transport loss; remaining shortages stay visible.',
         'culture_method':'Existing road links below a cost threshold form single-link interaction groups. Culture IDs are seed-local, not inferred ethnicities or political borders; styles remain unassigned. Territory stops at the support reach; wilderness remains unassigned.',
         'defence_method':'Fortresses are spaced route-defence proposals, not a siege or visibility simulation. Garrison demand is not yet budgeted.'}

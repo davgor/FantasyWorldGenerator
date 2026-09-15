@@ -19,11 +19,14 @@ class ShowcaseTests(unittest.TestCase):
             for name in ('first', 'second'):
                 output = Path(temporary) / name
                 subprocess.run([sys.executable, str(ROOT / 'tools/export_showcase.py'),
-                                '--source', str(SOURCE), '--output', str(output)], check=True)
+                                '--source', str(SOURCE), '--output', str(output), '--allow-dirty'], check=True)
                 bundles.append({p.name: p.read_bytes() for p in output.iterdir()})
             self.assertEqual(bundles[0], bundles[1])
             manifest = json.loads(bundles[0]['manifest.json'])
-            self.assertEqual(manifest['format'], 2)
+            self.assertEqual(manifest['format'], 3)
+            dirty=bool(subprocess.check_output(['git','-C',str(SOURCE),'status','--porcelain'],text=True).strip())
+            self.assertEqual(manifest['source_dirty'],dirty)
+            self.assertEqual(manifest['publication_ready'],not dirty)
             self.assertEqual(manifest['source_repository'], 'https://github.com/davgor/FantasyWorldGenerator')
             revision = subprocess.check_output(['git', '-C', str(SOURCE), 'rev-parse', 'HEAD'], text=True).strip()
             self.assertEqual(manifest['source_revision'], revision)
@@ -39,10 +42,11 @@ class ShowcaseTests(unittest.TestCase):
                 html = payload.decode()
                 self.assertTrue('constlive=false' in html.replace(' ', ''), 'snapshot must disable live generation')
                 self.assertIn('Saved world showcase', html)
+                if dirty:self.assertIn('Uncommitted local preview',html)
                 self.assertIn('timing_ms', html)
                 self.assertNotIn(str(SOURCE.resolve()), html)
                 self.assertEqual(world['recipe']['overrides']['size'], 65)
-                self.assertEqual(world['recipe']['version'], 2)
+                self.assertEqual(world['recipe']['version'], 3)
             for relative, digest in manifest['source_files'].items():
                 self.assertEqual(hashlib.sha256((SOURCE / relative).read_bytes()).hexdigest(), digest)
 

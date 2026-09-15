@@ -1,4 +1,4 @@
-"""Version 2 staged world history. Artistic deep-time and civilization proxies."""
+"""Version 3 staged world history. Artistic deep-time and civilization proxies."""
 import copy
 import math
 import json
@@ -12,27 +12,7 @@ STAGES = ['Plate layout', 'Tectonic relief', 'Surface detail', 'Erosion and sedi
           'Connected water', 'Second tectonic relief', 'Valleys and gorges', 'Wind and rain',
           'Leylines', 'Cities', 'Roads', 'Populated regions', 'Beasties and animals',
           'Age transition 1', 'Age transition 2', 'Simulation complete']
-NATURAL_BIOMES = {0:'ocean', 1:'tundra', 2:'desert', 3:'grassland', 4:'forest', 5:'exposed_rock',
-                  6:'snow', 7:'rainforest', 8:'lake', 13:'marsh', 15:'boreal_forest',
-                  16:'cold_tundra', 17:'land_ice'}
-VARIANT_NAMES = {
-    'weave': ['Prismatic seas','Dream tundra','Glass mirages','Possibility meadows','Living storywoods','Floating stonefields','Chromatic snow','Everchanging canopy','Starlight lakes','Spellmist marsh','Aurora woods','Shifting frostlands','Singing glaciers'],
-    'umbral': ['Silent seas','Grave tundra','Haunted tombs','Ashen meadows','Mourning woods','Ossuary crags','Funeral snow','Withering canopy','Stillwater tombs','Haunted marsh','Ghost pines','Deathfrost plains','Sepulchral ice'],
-    'infernal': ['Brimstone seas','Blighted tundra','Hellglass wastes','Cinder blight','Thornhell woods','Demon spires','Sootsnow fields','Devouring jungle','Bloodglass lakes','Corruption mire','Charred blackwoods','Torment barrens','Infernal glaciers'],
-    'radiant': ['Dawn seas','Blessed tundra','Golden sanctuaries','Healing meadows','Sanctuary woods','Hallowed heights','Luminous snow','Mercy gardens','Lustral lakes','Purifying marsh','Dawnlit pines','Peaceful frostlands','Cathedral ice'],
-    'fire': ['Steam seas','Ember tundra','Furnace dunes','Flamegrass plains','Phoenix woods','Molten crags','Smoldering snow','Emberbloom jungle','Boiling lakes','Cinder mire','Firecone woods','Ashfrost plains','Steamcut glaciers'],
-    'water': ['Crystal currents','Rime tundra','Frostglass dunes','Dew meadows','Rainveil woods','Springstone cliffs','Sapphire snow','Deluge jungle','Winterglass lakes','Tidal gardens','Mistbound pines','Bluefrost tundra','Everflow glaciers'],
-    'earth': ['Rootreef seas','Mossbound tundra','Blooming dunes','Titan meadows','Ancient rootwoods','Living monoliths','Mosswarm snow','Colossal jungle','Rootcradle lakes','Deep-root marsh','Ironbark taiga','Lichenstone plains','Rootsplit glaciers'],
-    'air': ['Storm seas','Gale tundra','Whistling dunes','Thundergrass plains','Skyreach woods','Windcarved spires','Dancing snow','Stormcrown jungle','Suspended mist lakes','Cloudveil marsh','Singing pines','Force-swept tundra','Howling glaciers'],
-}
-
-
-def biome_catalogue():
-    return [dict(id=f'{core}.{school}', core=core, core_biome_id=bid, magic_school=school,
-                 group=SCHOOLS[school][0], descriptors=SCHOOLS[school][1],
-                 name=VARIANT_NAMES[school][i], color=SCHOOLS[school][2],
-                 asset_id=f'terrain.mutation.{core}.{school}')
-            for i,(bid,core) in enumerate(NATURAL_BIOMES.items()) for school in SCHOOLS]
+from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue, natural_catalogue
 
 
 def add_biome_variants(result, cfg):
@@ -40,17 +20,12 @@ def add_biome_variants(result, cfg):
     l['biome_variant']=[[index[NATURAL_BIOMES[l['natural_biome'][z][x]]+'.'+school]
                          if (school:=dominant_school({s:l['ley_'+s][z][x] for s in SCHOOLS})) else -1
                          for x in range(cfg.size)] for z in range(cfg.size)]
-    result['terrain']['version']=5
-    result['terrain']['natural_biomes']=[{'id':k,'core':v,'name':result['terrain']['biomes'][k]['name'],
-                                        'color':result['terrain']['biomes'][k]['color']} for k,v in NATURAL_BIOMES.items()]
+    result['terrain']['version']=6
+    result['terrain']['natural_biomes']=natural_catalogue()
+    result['terrain']['biomes']=natural_catalogue()
     result['terrain']['magical_biomes']=catalogue
-    result['terrain']['biome_contract']='natural_biome is climate/hydrology only; biome_variant is a catalogue index or -1. biome retains the legacy food/habitat phenotype.'
-    # Existing food and habitat models consume their calibrated phenotype categories.
-    from .terrain_magic import magic_biome
-    l['biome']=[[magic_biome(l['natural_biome'][z][x],l['magic_density'][z][x],l['magic_hazard'][z][x],
-                            l['magic_growth'][z][x],l['moisture'][z][x],l['temperature'][z][x])
-                  if l['biome_variant'][z][x]>=0 else l['natural_biome'][z][x]
-                  for x in range(cfg.size)] for z in range(cfg.size)]
+    result['terrain']['biome_contract']='biome and natural_biome are natural catalogue IDs, never array offsets; biome_variant is a magical catalogue index or -1. Food and habitat rules use the natural core and explicit variant ID with independent school risk.'
+    l['biome']=copy.deepcopy(l['natural_biome'])
 
 
 
@@ -249,7 +224,7 @@ def materialize_stage(world,stage):
 
 
 def generate_history(cfg):
-    from .terrain_lab import generate
+    from .terrain_lab import generate_base
     from .terrain_world import registry,options
     from .terrain_water import add_water
     from .terrain_climate import add_climate
@@ -269,12 +244,10 @@ def generate_history(cfg):
         previous_layers=copy.deepcopy(result['layers']);previous_state={k:copy.deepcopy(result.get(k)) for k in STATE_KEYS}
     for stage in range(1,cfg.phase+1):
         if stage<=5:
-            from .terrain_world import OPTIONS
-            legacy_options=json.dumps({k:v for k,v in json.loads(cfg.world_options).items() if k in OPTIONS})
-            result=generate(replace(cfg,world_recipe=1,phase=stage,world_options=legacy_options))
+            result=generate_base(replace(cfg,phase=stage))
             # Climate/biome inspection belongs to stage 8 in this recipe.
             result.pop('terrain',None)
-            for key in ('temperature','moisture','biome','landform'):result['layers'].pop(key,None)
+            for key in ('temperature','moisture','biome','natural_biome','landform'):result['layers'].pop(key,None)
             result['history']={'version':1,'ages':[]};result['ruins']=[]
         elif stage==6:old_water=tectonic_transition(result,cfg)
         elif stage==7:carve_relics(result,cfg,old_water)
@@ -291,15 +264,15 @@ def generate_history(cfg):
         elif stage==13:add_nests(result,replace(cfg,phase=9))
         elif stage in (14,15):age_transition(result,cfg,stage-13)
         capture(stage)
-    result['generator_version']=7
-    result['config']=asdict(cfg);result['effective_config']['world_recipe']=2;result['effective_config']['phase']=cfg.phase
+    result['generator_version']=8
+    result['config']=asdict(cfg);result['effective_config']['world_recipe']=3;result['effective_config']['phase']=cfg.phase
     result['phases'].update(version=2,completed=cfg.phase,titles=STAGES)
     result['build_stages']=snapshots
-    definitions=registry(2);resolved={**asdict(cfg),**options(cfg)}
+    definitions=registry(3);resolved={**asdict(cfg),**options(cfg)}
     overrides={k:resolved[k] for k,v in definitions.items() if k!='seed' and resolved[k]!=v['default']}
-    result['recipe']={'version':2,'seed':cfg.seed,'overrides':overrides,'parameters':definitions,'resolved':resolved,
+    result['recipe']={'version':3,'seed':cfg.seed,'overrides':overrides,'parameters':definitions,'resolved':resolved,
                       'provenance':{k:'override' if k in overrides else 'default' for k in definitions}}
-    result['warnings'].append('Recipe 2 history is an artistic simulation: plate motion, city mortality and leyline changes are not calibrated physical or demographic predictions.')
+    result['warnings'].append('Recipe 3 history is an artistic simulation: plate motion, city mortality and leyline changes are not calibrated physical or demographic predictions.')
     result['timing_ms']['history_total']=(perf_counter()-started)*1000
     result['timing_ms']['total']=result['timing_ms']['history_total']
     return result
@@ -308,12 +281,14 @@ def generate_history(cfg):
 def validate_age_world(world):
     """Check the versioned state boundary before an externally requested age advance."""
     from .terrain_lab import Config
-    if not isinstance(world,dict):raise ValueError('world must be a generated recipe 2 object')
+    if not isinstance(world,dict):raise ValueError('world must be a generated recipe 3 object')
     try:
         json.dumps(world,allow_nan=False)
         cfg=Config(**world['config'])
-        if cfg.world_recipe!=2 or cfg.phase<13 or cfg.size>257:
-            raise ValueError('Age advancement requires recipe 2 through creatures (phase 13), grid <=257')
+        if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>257:
+            raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=257')
+        if world['terrain']['version']!=6 or world['generator_version']!=8 or world['recipe']['version']!=3:
+            raise ValueError('Retired world contract; regenerate with recipe_version 3')
         if world['magic']['version']!=3 or world['history']['version']!=1:
             raise ValueError('Unsupported magic or history state version')
         if set(world['magic']['networks'])!=set(SCHOOLS):raise ValueError('Expected exactly eight networks')
@@ -331,8 +306,18 @@ def validate_age_world(world):
                 raise ValueError('Nonfinite or nonnumeric grid: '+key)
             if any(row[0]!=row[-1] for row in grid) or any(len(set(row))!=1 for row in (grid[0],grid[-1])):
                 raise ValueError('Invalid sphere seam or pole: '+key)
-        if any(v not in NATURAL_BIOMES for row in world['layers']['natural_biome'] for v in row):
+        if any(type(v) is not int or v not in NATURAL_BIOMES for row in world['layers']['natural_biome'] for v in row):
             raise ValueError('Unknown natural biome')
+        catalogue=biome_catalogue()
+        if world['terrain']['natural_biomes']!=natural_catalogue() or world['terrain']['biomes']!=natural_catalogue() or world['terrain']['magical_biomes']!=catalogue:
+            raise ValueError('Unknown biome catalogue')
+        if world['layers']['biome']!=world['layers']['natural_biome']:
+            raise ValueError('biome must carry natural IDs; legacy phenotypes are retired')
+        for z,row in enumerate(world['layers']['biome_variant']):
+            for x,value in enumerate(row):
+                if type(value) is not int or not -1<=value<len(catalogue):raise ValueError('Invalid biome variant')
+                if value>=0 and catalogue[value]['core_biome_id']!=world['layers']['natural_biome'][z][x]:
+                    raise ValueError('Magical biome core disagrees with natural biome')
         physical=world['effective_config']
         for key in ('globe_radius','sea_level','radius'):
             if not math.isclose(physical[key],getattr(cfg,key)*cfg.world_scale,rel_tol=1e-10,abs_tol=1e-10):

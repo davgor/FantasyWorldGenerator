@@ -8,30 +8,53 @@
       "name": "Generic Settlements",
       "layout_profile_id": "standard_city_layout",
       "criteria": {
-        "population_profiles": ["human", "mixed", "elf", "dwarf", "gnome", "tidekin"]
+        "population_profiles": [
+          "human",
+          "mixed",
+          "elf",
+          "dwarf",
+          "gnome",
+          "tidekin"
+        ]
       },
       "weight": 1.0,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Leaders' Residences",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_house_generic", "weight": 1.0}
+            {
+              "asset_id": "building_leader_house_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Barracks",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_generic", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -43,10 +66,19 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "noble"],
+          "tags": [
+            "residential",
+            "noble"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_generic", "weight": 0.6},
-            {"asset_id": "building_noble_estate_generic", "weight": 0.4}
+            {
+              "asset_id": "building_noble_house_generic",
+              "weight": 0.6
+            },
+            {
+              "asset_id": "building_noble_estate_generic",
+              "weight": 0.4
+            }
           ]
         },
         {
@@ -58,9 +90,15 @@
             "max": 24
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_generic", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -72,20 +110,35 @@
             "max": 8
           },
           "placement": "anchored",
-          "tags": ["residential", "dense"],
+          "tags": [
+            "residential",
+            "dense"
+          ],
           "asset_choices": [
-            {"asset_id": "building_apartment_block_generic", "weight": 1.0}
+            {
+              "asset_id": "building_apartment_block_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "market_district",
           "name": "Market District",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "trade"],
+          "tags": [
+            "commerce",
+            "trade"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_stall_generic", "weight": 1.0}
+            {
+              "asset_id": "building_market_stall_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -93,63 +146,126 @@
           "name": "Religious Building",
           "count": {
             "base": 1,
-            "profiles": ["human", "elf", "gnome", "dwarf", "tidekin"],
+            "profiles": [
+              "human",
+              "elf",
+              "gnome",
+              "dwarf",
+              "tidekin"
+            ],
             "max": 2
           },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_generic", "weight": 1.0}
+            {
+              "asset_id": "building_temple_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_generic", "weight": 1.0}
+            {
+              "asset_id": "building_granary_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Workshop",
-          "count": { "base": 1, "per_100_residents": 0.04, "max": 4 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.04,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "commerce"],
+          "tags": [
+            "craft",
+            "industry",
+            "commerce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_generic", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_generic", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 4 },
+          "count": {
+            "base": 1,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_generic", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_generic", "weight": 1.0}
+            {
+              "asset_id": "building_temple_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -161,10 +277,19 @@
             "max": 24
           },
           "placement": "wall",
-          "tags": ["defensive", "perimeter"],
+          "tags": [
+            "defensive",
+            "perimeter"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_stone", "weight": 0.7},
-            {"asset_id": "building_city_wall_wood", "weight": 0.3}
+            {
+              "asset_id": "building_city_wall_stone",
+              "weight": 0.7
+            },
+            {
+              "asset_id": "building_city_wall_wood",
+              "weight": 0.3
+            }
           ]
         },
         {
@@ -175,9 +300,17 @@
             "max": 2
           },
           "placement": "river_gate",
-          "tags": ["trade", "riverfront", "shipping", "logistics"],
+          "tags": [
+            "trade",
+            "riverfront",
+            "shipping",
+            "logistics"
+          ],
           "asset_choices": [
-            {"asset_id": "building_river_dock_generic", "weight": 1.0}
+            {
+              "asset_id": "building_river_dock_generic",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -188,9 +321,15 @@
             "max": 3
           },
           "placement": "river_gate",
-          "tags": ["defensive", "entrance"],
+          "tags": [
+            "defensive",
+            "entrance"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_gate_generic", "weight": 1.0}
+            {
+              "asset_id": "building_city_gate_generic",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -200,32 +339,55 @@
       "name": "Rivergate Town",
       "layout_profile_id": "riverfront_city_layout",
       "criteria": {
-        "population_profiles": ["human", "mixed"],
-        "biomes": [13, 15],
-        "freshwater_distance_m_max": 2500
+        "population_profiles": [
+          "human",
+          "mixed"
+        ],
+        "biomes": [
+          13,
+          15
+        ],
+        "freshwater_distance_m_max": 2500,
+        "biome_variants": []
       },
       "weight": 1.2,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Leaders' Residences",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_house_human", "weight": 1.0}
+            {
+              "asset_id": "building_leader_house_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Barracks",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_human", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -237,10 +399,19 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "noble"],
+          "tags": [
+            "residential",
+            "noble"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_human", "weight": 0.7},
-            {"asset_id": "building_noble_estate_human", "weight": 0.3}
+            {
+              "asset_id": "building_noble_house_human",
+              "weight": 0.7
+            },
+            {
+              "asset_id": "building_noble_estate_human",
+              "weight": 0.3
+            }
           ]
         },
         {
@@ -252,9 +423,15 @@
             "max": 26
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_human", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -266,9 +443,15 @@
             "max": 9
           },
           "placement": "anchored",
-          "tags": ["residential", "dense"],
+          "tags": [
+            "residential",
+            "dense"
+          ],
           "asset_choices": [
-            {"asset_id": "building_apartment_block_human", "weight": 1.0}
+            {
+              "asset_id": "building_apartment_block_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -280,10 +463,19 @@
           },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "trade"],
+          "tags": [
+            "commerce",
+            "trade"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_stall_human", "weight": 0.8},
-            {"asset_id": "building_market_house_human", "weight": 0.2}
+            {
+              "asset_id": "building_market_stall_human",
+              "weight": 0.8
+            },
+            {
+              "asset_id": "building_market_house_human",
+              "weight": 0.2
+            }
           ]
         },
         {
@@ -291,64 +483,130 @@
           "name": "Religious Building",
           "count": {
             "base": 1,
-            "profiles": ["human", "elf", "gnome", "dwarf", "tidekin"],
+            "profiles": [
+              "human",
+              "elf",
+              "gnome",
+              "dwarf",
+              "tidekin"
+            ],
             "max": 2
           },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_human", "weight": 1.0}
+            {
+              "asset_id": "building_temple_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_human", "weight": 1.0}
+            {
+              "asset_id": "building_granary_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Workshop",
-          "count": { "base": 1, "per_100_residents": 0.04, "max": 5 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.04,
+            "max": 5
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "commerce"],
+          "tags": [
+            "craft",
+            "industry",
+            "commerce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_human", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_human", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 4 },
+          "count": {
+            "base": 1,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_human", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_human", "weight": 0.9},
-            {"asset_id": "building_cathedral_human", "weight": 0.1}
+            {
+              "asset_id": "building_temple_human",
+              "weight": 0.9
+            },
+            {
+              "asset_id": "building_cathedral_human",
+              "weight": 0.1
+            }
           ]
         },
         {
@@ -360,9 +618,15 @@
             "max": 26
           },
           "placement": "wall",
-          "tags": ["defensive", "perimeter"],
+          "tags": [
+            "defensive",
+            "perimeter"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_human", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -374,9 +638,16 @@
           },
           "placement": "river_gate",
           "requires_bridge": true,
-          "tags": ["trade", "riverfront", "bridge-ready"],
+          "tags": [
+            "trade",
+            "riverfront",
+            "bridge-ready"
+          ],
           "asset_choices": [
-            {"asset_id": "building_river_gate_human", "weight": 1.0}
+            {
+              "asset_id": "building_river_gate_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -387,9 +658,16 @@
             "max": 3
           },
           "placement": "river_gate",
-          "tags": ["trade", "riverfront", "shipping"],
+          "tags": [
+            "trade",
+            "riverfront",
+            "shipping"
+          ],
           "asset_choices": [
-            {"asset_id": "building_river_dock_human", "weight": 1.0}
+            {
+              "asset_id": "building_river_dock_human",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -399,43 +677,80 @@
       "name": "Highland Hold",
       "layout_profile_id": "standard_city_layout",
       "criteria": {
-        "population_profiles": ["human", "dwarf"],
-        "biomes": [5, 6, 11],
+        "population_profiles": [
+          "human",
+          "dwarf"
+        ],
+        "biomes": [
+          5,
+          6
+        ],
         "height_min_m": 20,
-        "slope_max_degrees": 40
+        "slope_max_degrees": 40,
+        "biome_variants": [
+          "desert.infernal",
+          "desert.water",
+          "desert.weave"
+        ]
       },
       "weight": 0.8,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Leaders' Residences",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_keep_human", "weight": 1.0}
+            {
+              "asset_id": "building_leader_keep_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Barracks",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_human", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "noble_homes",
           "name": "Noble Housing",
-          "count": { "base": 1, "per_100_residents": 0.05, "max": 4 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.05,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["residential", "noble"],
+          "tags": [
+            "residential",
+            "noble"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_human", "weight": 1.0}
+            {
+              "asset_id": "building_noble_house_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -447,70 +762,135 @@
             "max": 24
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_human", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "market_district",
           "name": "Market District",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "trade"],
+          "tags": [
+            "commerce",
+            "trade"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_house_human", "weight": 1.0}
+            {
+              "asset_id": "building_market_house_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_human", "weight": 1.0}
+            {
+              "asset_id": "building_granary_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Workshop",
-          "count": { "base": 1, "per_100_residents": 0.03, "max": 4 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.03,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "commerce"],
+          "tags": [
+            "craft",
+            "industry",
+            "commerce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_human", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 1 },
+          "count": {
+            "base": 1,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_human", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_human", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_human",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_human", "weight": 1.0}
+            {
+              "asset_id": "building_temple_human",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -522,9 +902,15 @@
           },
           "placement": "wall",
           "required": true,
-          "tags": ["defensive", "perimeter"],
+          "tags": [
+            "defensive",
+            "perimeter"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_stone", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_stone",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -534,21 +920,39 @@
       "name": "Dwarven Forgehold",
       "layout_profile_id": "standard_city_layout",
       "criteria": {
-        "population_profiles": ["dwarf"],
-        "biomes": [5, 6, 11],
-        "resource_min": 0.4
+        "population_profiles": [
+          "dwarf"
+        ],
+        "biomes": [
+          5,
+          6
+        ],
+        "resource_min": 0.4,
+        "biome_variants": [
+          "desert.infernal",
+          "desert.water",
+          "desert.weave"
+        ]
       },
       "weight": 1.5,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Clan Hall",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_clanhall_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_clanhall_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -560,9 +964,15 @@
           },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -574,9 +984,15 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "elite"],
+          "tags": [
+            "residential",
+            "elite"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_noble_house_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -588,9 +1004,15 @@
             "max": 28
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -602,59 +1024,115 @@
           },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "craft"],
+          "tags": [
+            "commerce",
+            "craft"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_hall_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_market_hall_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_granary_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "forge",
           "name": "Forge",
-          "count": { "base": 2, "per_100_residents": 0.04, "max": 5 },
+          "count": {
+            "base": 2,
+            "per_100_residents": 0.04,
+            "max": 5
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "metallurgy"],
+          "tags": [
+            "craft",
+            "industry",
+            "metallurgy"
+          ],
           "asset_choices": [
-            {"asset_id": "building_forge_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_forge_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 4 },
+          "count": {
+            "base": 1,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "civic"],
+          "tags": [
+            "ritual",
+            "faith",
+            "civic"
+          ],
           "asset_choices": [
-            {"asset_id": "building_temple_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_temple_dwarf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -667,9 +1145,15 @@
           },
           "placement": "wall",
           "required": true,
-          "tags": ["defensive", "perimeter"],
+          "tags": [
+            "defensive",
+            "perimeter"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_dwarf", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_dwarf",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -679,32 +1163,61 @@
       "name": "Sylvan Borough",
       "layout_profile_id": "standard_city_layout",
       "criteria": {
-        "population_profiles": ["elf"],
-        "biomes": [4, 7, 10, 12],
-        "resource_max": 0.9
+        "population_profiles": [
+          "elf"
+        ],
+        "biomes": [
+          4,
+          7
+        ],
+        "resource_max": 0.9,
+        "biome_variants": [
+          "boreal_forest.earth",
+          "boreal_forest.weave",
+          "forest.earth",
+          "forest.weave",
+          "rainforest.earth",
+          "rainforest.weave"
+        ]
       },
       "weight": 1.2,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Druidic Residence",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_house_elf", "weight": 1.0}
+            {
+              "asset_id": "building_leader_house_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Watchtower Barracks",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_elf", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -716,10 +1229,19 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "noble"],
+          "tags": [
+            "residential",
+            "noble"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_elf", "weight": 0.8},
-            {"asset_id": "building_noble_treehouse_elf", "weight": 0.2}
+            {
+              "asset_id": "building_noble_house_elf",
+              "weight": 0.8
+            },
+            {
+              "asset_id": "building_noble_treehouse_elf",
+              "weight": 0.2
+            }
           ]
         },
         {
@@ -731,9 +1253,15 @@
             "max": 24
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_elf", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -745,20 +1273,36 @@
             "max": 8
           },
           "placement": "anchored",
-          "tags": ["residential", "forest", "dense"],
+          "tags": [
+            "residential",
+            "forest",
+            "dense"
+          ],
           "asset_choices": [
-            {"asset_id": "building_apartment_tree_elf", "weight": 1.0}
+            {
+              "asset_id": "building_apartment_tree_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "market_district",
           "name": "Market Garden",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "trade"],
+          "tags": [
+            "commerce",
+            "trade"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_stall_elf", "weight": 1.0}
+            {
+              "asset_id": "building_market_stall_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -766,64 +1310,130 @@
           "name": "Shrine Grove",
           "count": {
             "base": 1,
-            "profiles": ["human", "elf", "gnome", "dwarf", "tidekin"],
+            "profiles": [
+              "human",
+              "elf",
+              "gnome",
+              "dwarf",
+              "tidekin"
+            ],
             "max": 2
           },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "forest"],
+          "tags": [
+            "ritual",
+            "faith",
+            "forest"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_elf", "weight": 1.0}
+            {
+              "asset_id": "building_shrine_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_elf", "weight": 1.0}
+            {
+              "asset_id": "building_granary_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Workshop",
-          "count": { "base": 1, "per_100_residents": 0.03, "max": 4 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.03,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "commerce"],
+          "tags": [
+            "craft",
+            "industry",
+            "commerce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_elf", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_elf", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 4 },
+          "count": {
+            "base": 1,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_elf", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_elf",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "forest"],
+          "tags": [
+            "ritual",
+            "faith",
+            "forest"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_elf", "weight": 0.8},
-            {"asset_id": "building_temple_elf", "weight": 0.2}
+            {
+              "asset_id": "building_shrine_elf",
+              "weight": 0.8
+            },
+            {
+              "asset_id": "building_temple_elf",
+              "weight": 0.2
+            }
           ]
         },
         {
@@ -835,9 +1445,16 @@
             "max": 24
           },
           "placement": "wall",
-          "tags": ["defensive", "perimeter", "forest"],
+          "tags": [
+            "defensive",
+            "perimeter",
+            "forest"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_elf", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_elf",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -847,33 +1464,56 @@
       "name": "Tideport Harbor",
       "layout_profile_id": "riverfront_city_layout",
       "criteria": {
-        "population_profiles": ["tidekin", "elf"],
-        "biomes": [13, 15],
+        "population_profiles": [
+          "tidekin",
+          "elf"
+        ],
+        "biomes": [
+          13,
+          15
+        ],
         "freshwater_distance_m_min": 100,
-        "freshwater_distance_m_max": 4500
+        "freshwater_distance_m_max": 4500,
+        "biome_variants": []
       },
       "weight": 1.3,
       "building_options": [
         {
           "id": "leader_homes",
           "name": "Harbor Councilhouse",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_house_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_leader_house_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Harbor Watch",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -885,9 +1525,15 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "noble"],
+          "tags": [
+            "residential",
+            "noble"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_noble_house_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -899,9 +1545,15 @@
             "max": 30
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -913,9 +1565,16 @@
           },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "trade", "port"],
+          "tags": [
+            "commerce",
+            "trade",
+            "port"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_house_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_market_house_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -923,64 +1582,132 @@
           "name": "Sea Shrine",
           "count": {
             "base": 1,
-            "profiles": ["human", "elf", "gnome", "dwarf", "tidekin"],
+            "profiles": [
+              "human",
+              "elf",
+              "gnome",
+              "dwarf",
+              "tidekin"
+            ],
             "max": 2
           },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "water"],
+          "tags": [
+            "ritual",
+            "faith",
+            "water"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_shrine_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_granary_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Shipwright's Workshop",
-          "count": { "base": 1, "per_100_residents": 0.04, "max": 4 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.04,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "maritime"],
+          "tags": [
+            "craft",
+            "industry",
+            "maritime"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice", "harbor"],
+          "tags": [
+            "civic",
+            "justice",
+            "harbor"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 4 },
+          "count": {
+            "base": 1,
+            "max": 4
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation", "coastal"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation",
+            "coastal"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "water"],
+          "tags": [
+            "ritual",
+            "faith",
+            "water"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_tidekin", "weight": 0.8},
-            {"asset_id": "building_temple_tidekin", "weight": 0.2}
+            {
+              "asset_id": "building_shrine_tidekin",
+              "weight": 0.8
+            },
+            {
+              "asset_id": "building_temple_tidekin",
+              "weight": 0.2
+            }
           ]
         },
         {
@@ -991,9 +1718,16 @@
             "max": 28
           },
           "placement": "wall",
-          "tags": ["defensive", "perimeter", "water"],
+          "tags": [
+            "defensive",
+            "perimeter",
+            "water"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_tidekin",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -1005,9 +1739,16 @@
           },
           "placement": "river_gate",
           "requires_bridge": false,
-          "tags": ["defensive", "riverfront", "harbor"],
+          "tags": [
+            "defensive",
+            "riverfront",
+            "harbor"
+          ],
           "asset_choices": [
-            {"asset_id": "building_harbor_gate_tidekin", "weight": 1.0}
+            {
+              "asset_id": "building_harbor_gate_tidekin",
+              "weight": 1.0
+            }
           ]
         }
       ]
@@ -1017,7 +1758,9 @@
       "name": "Foundry Quarter",
       "layout_profile_id": "standard_city_layout",
       "criteria": {
-        "population_profiles": ["gnome"],
+        "population_profiles": [
+          "gnome"
+        ],
         "resource_min": 0.5
       },
       "weight": 1.1,
@@ -1025,23 +1768,39 @@
         {
           "id": "leader_homes",
           "name": "Inventor's Hall",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["civic", "leaders"],
+          "tags": [
+            "civic",
+            "leaders"
+          ],
           "asset_choices": [
-            {"asset_id": "building_leader_house_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_leader_house_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "barracks",
           "name": "Watchhouse",
-          "count": { "base": 1 },
+          "count": {
+            "base": 1
+          },
           "required": true,
           "placement": "anchored",
-          "tags": ["military", "guards"],
+          "tags": [
+            "military",
+            "guards"
+          ],
           "asset_choices": [
-            {"asset_id": "building_barracks_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_barracks_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -1053,9 +1812,15 @@
             "max": 4
           },
           "placement": "anchored",
-          "tags": ["residential", "elite"],
+          "tags": [
+            "residential",
+            "elite"
+          ],
           "asset_choices": [
-            {"asset_id": "building_noble_house_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_noble_house_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -1067,9 +1832,15 @@
             "max": 26
           },
           "placement": "anchored",
-          "tags": ["residential", "workforce"],
+          "tags": [
+            "residential",
+            "workforce"
+          ],
           "asset_choices": [
-            {"asset_id": "building_worker_housing_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_worker_housing_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -1081,9 +1852,16 @@
           },
           "required": true,
           "placement": "anchored",
-          "tags": ["commerce", "craft", "gear"],
+          "tags": [
+            "commerce",
+            "craft",
+            "gear"
+          ],
           "asset_choices": [
-            {"asset_id": "building_market_hall_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_market_hall_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
@@ -1091,64 +1869,130 @@
           "name": "Workshop Shrine",
           "count": {
             "base": 1,
-            "profiles": ["human", "elf", "gnome", "dwarf", "tidekin"],
+            "profiles": [
+              "human",
+              "elf",
+              "gnome",
+              "dwarf",
+              "tidekin"
+            ],
             "max": 2
           },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "invention"],
+          "tags": [
+            "ritual",
+            "faith",
+            "invention"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_shrine_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "granary",
           "name": "Granary",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["logistics", "food", "storage"],
+          "tags": [
+            "logistics",
+            "food",
+            "storage"
+          ],
           "asset_choices": [
-            {"asset_id": "building_granary_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_granary_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "workshop",
           "name": "Workshop",
-          "count": { "base": 1, "per_100_residents": 0.04, "max": 5 },
+          "count": {
+            "base": 1,
+            "per_100_residents": 0.04,
+            "max": 5
+          },
           "placement": "anchored",
-          "tags": ["craft", "industry", "invention"],
+          "tags": [
+            "craft",
+            "industry",
+            "invention"
+          ],
           "asset_choices": [
-            {"asset_id": "building_workshop_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_workshop_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "courthouse",
           "name": "Courthouse",
-          "count": { "base": 1, "max": 2 },
+          "count": {
+            "base": 1,
+            "max": 2
+          },
           "placement": "anchored",
-          "tags": ["civic", "justice"],
+          "tags": [
+            "civic",
+            "justice"
+          ],
           "asset_choices": [
-            {"asset_id": "building_courthouse_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_courthouse_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "watchtower",
           "name": "Watchtower",
-          "count": { "base": 1, "max": 3 },
+          "count": {
+            "base": 1,
+            "max": 3
+          },
           "placement": "anchored",
-          "tags": ["military", "defensive", "observation"],
+          "tags": [
+            "military",
+            "defensive",
+            "observation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_watchtower_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_watchtower_gnome",
+              "weight": 1.0
+            }
           ]
         },
         {
           "id": "temple",
           "name": "Temple Complex",
-          "count": { "base": 0, "max": 1 },
+          "count": {
+            "base": 0,
+            "max": 1
+          },
           "placement": "anchored",
-          "tags": ["ritual", "faith", "innovation"],
+          "tags": [
+            "ritual",
+            "faith",
+            "innovation"
+          ],
           "asset_choices": [
-            {"asset_id": "building_shrine_gnome", "weight": 0.8},
-            {"asset_id": "building_temple_gnome", "weight": 0.2}
+            {
+              "asset_id": "building_shrine_gnome",
+              "weight": 0.8
+            },
+            {
+              "asset_id": "building_temple_gnome",
+              "weight": 0.2
+            }
           ]
         },
         {
@@ -1160,9 +2004,15 @@
           },
           "placement": "wall",
           "required": true,
-          "tags": ["defensive", "perimeter"],
+          "tags": [
+            "defensive",
+            "perimeter"
+          ],
           "asset_choices": [
-            {"asset_id": "building_city_wall_gnome", "weight": 1.0}
+            {
+              "asset_id": "building_city_wall_gnome",
+              "weight": 1.0
+            }
           ]
         }
       ]

@@ -93,7 +93,7 @@ Accept only after: No clipping or audible loop join; 3D attenuation and mix chec
 
 ## Parameter and state boundaries
 
-[Coverage and selector audit](COVERAGE.md) maps current generator outputs to these concrete IDs. Biome IDs are binding. Placement descriptions are design contracts for epic 009, not executable placement code. Unimplemented weather, geology, land-use and building-layout selectors remain explicit dependencies. Existing generated water/roads/population win over appearance decisions.
+[Coverage and selector audit](COVERAGE.md) maps current generator outputs to these concrete IDs. Recipe 3 natural IDs and exact `core.school` variant IDs are binding; retired phenotype IDs are invalid. The schema-2 manifest and coverage audit define the current selectors. Placement descriptions are design contracts for epic 009, not executable placement code. Unimplemented weather, geology, land-use and building-layout selectors remain explicit dependencies. Existing generated water/roads/population win over appearance decisions.
 
 No automatic asset selection may spawn extra inhabitants, create ore reserves, add a water source, infer active volcanoes, or declare food available. Culture IDs choose style; they are not real-world ethnic labels. The catalogue separates material/biome variants from people identity.
 

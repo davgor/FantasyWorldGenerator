@@ -13,7 +13,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Smooth water-worn stone with flat stable underside
 
-**Use:** Submerged, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ocean, Lake; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-017.
 
@@ -28,7 +28,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Sharp irregular fragment
 
-**Use:** Tundra, Desert, Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Tundra, Desert, Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-017.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dark angular cooled rock
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-019.
 
@@ -163,7 +163,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Blocky vertical cooled-rock face
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-019.
 
@@ -208,7 +208,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Low scattered angular stones, no terrain replacement
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-017.
 
@@ -283,7 +283,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Roped or fractured cooled surface, no active lava
 
-**Use:** Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-019.
 
@@ -298,7 +298,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Uneven grouped columns
 
-**Use:** Exposed rock, Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Exposed rock, Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-019.
 
@@ -313,7 +313,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Small rock vent, requires volcanic placement evidence
 
-**Use:** Desolation; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-019.
 
@@ -328,7 +328,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Single irregular faceted shard
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-032.
 
@@ -343,7 +343,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Five varied joined crystal growths
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-032.
 
@@ -358,7 +358,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Original asymmetric spire with broad base
 
-**Use:** Crystalline desert; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-032.
 

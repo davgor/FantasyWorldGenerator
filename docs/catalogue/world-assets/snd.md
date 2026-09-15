@@ -13,7 +13,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Soft waves with distant surf
 
-**Use:** Submerged; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Ocean; Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -148,7 +148,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Original restrained uncanny textures
 
-**Use:** Haunted marsh; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Haunted marsh (`marsh.umbral`); Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -163,7 +163,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Soft original organic rustle
 
-**Use:** Fungal forest; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -178,7 +178,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Sparse resonant crystalline tones
 
-**Use:** Crystalline desert; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Hellglass wastes (`desert.infernal`), Frostglass dunes (`desert.water`), Glass mirages (`desert.weave`); Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 
@@ -193,14 +193,14 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Forest base with restrained original magical accents
 
-**Use:** Enchanted forest; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Aurora woods (`boreal_forest.weave`), Living storywoods (`forest.weave`), Everchanging canopy (`rainforest.weave`); Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 
 **Outputs and checks:** `audio` contract. Record source, licence, preview and validation evidence against this ID. **Destination:** `SourceArt/World/SND/SND-013/`.
 
 
-## SND-014 - Desolation loop
+## SND-014 - Infernal loop
 
 - [ ] Produce and verify `010.SND-014`.
 
@@ -208,7 +208,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dry grit and barren wind
 
-**Use:** Desolation; Biome/material or explicit activity sound source; audio never spawns actors.
+**Use:** Charred blackwoods (`boreal_forest.infernal`), Torment barrens (`cold_tundra.infernal`), Hellglass wastes (`desert.infernal`), Demon spires (`exposed_rock.infernal`), Thornhell woods (`forest.infernal`), Cinder blight (`grassland.infernal`), Infernal glaciers (`land_ice.infernal`), Corruption mire (`marsh.infernal`), Devouring jungle (`rainforest.infernal`), Sootsnow fields (`snow.infernal`), Blighted tundra (`tundra.infernal`); Biome/material or explicit activity sound source; audio never spawns actors.
 
 **Dependencies:** Shared contract and approved category prototype.
 

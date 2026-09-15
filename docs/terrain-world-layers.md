@@ -1,8 +1,8 @@
 # Layered world and history recipes
 
-## Recipe 2: staged construction and two ages
+## Recipe 3: staged construction and two ages
 
-The lab now defaults to recipe **2**, generation algorithm **7**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
+The lab now defaults to recipe **3**, generation algorithm **8**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
 
 1. Plate layout
 2. Tectonic relief
@@ -21,7 +21,7 @@ The lab now defaults to recipe **2**, generation algorithm **7**, with sixteen s
 15. Age transition 2
 16. Simulation complete
 
-`POST /world/generate` selects this contract with `{"recipe_version":2,"seed":42,"overrides":{"size":33,"phase":16}}`. The registry returns a 1–16 phase range for this recipe. Explicit recipe 1, requests omitting `recipe_version`, and the publishing CLI's existing convenience command retain recipe 1. `python3 tools/terrain_lab.py --world_recipe 1 --serve` opens the previous nine-stage lab. Recipe 0 remains available. Existing recipe 0/1 seed streams and biome IDs are unchanged; a recipe 2 seed deliberately produces a different world. Replay recipe 2 through its exported `Config`, including `world_options`.
+`POST /world/generate` accepts recipe **3** only, e.g. `{"recipe_version":3,"seed":42,"overrides":{"size":33,"phase":16}}`. Omitted recipe versions, the publishing CLI and the lab all default to 3. Recipes 1 and 2 are retired and rejected: existing worlds must be regenerated. Seed compatibility with those recipes is intentionally broken by the clean-start biome migration. Recipe 3 replays deterministically from its exported `Config`, including `world_options`. The standalone `world_recipe=0` geometry experiment remains a development tool, uses the current biome rules, and does not promise historical seed/save compatibility.
 
 `build_stages` contains ordered content deltas: `layers` replaces named arrays, `removed_layers` deletes obsolete arrays, and `state` replaces named report sections (`null` deletes a section). Begin from empty layers and no stage-dependent sections. Apply deltas through the chosen stage. `materialize_stage` provides the Python counterpart of the browser reconstruction. Snapshots contain no timing values and never expose future cities, nests, magic, or ruins. Export downloads the complete generated history regardless of the stage being viewed. Content deltas avoid repeating every grid at every step; later society/economy reports still make full-history exports larger than recipe 1.
 
@@ -45,13 +45,23 @@ A magical biome requires strongest local potency **at least 0.35**, and a lead o
 
 The `ley_holy` and `ley_primordial` grids are compatibility projections for existing habitat profiles: Radiant, and the maximum of the four elemental fields, respectively. They are not additional networks and are hidden from the normal leyline menus. Future profile revisions can specialize elemental creature requirements without changing the eight-network contract.
 
-### Natural and magical biomes (terrain schema 5)
+### Natural and magical biomes (terrain schema 6)
 
 `natural_biome` carries the existing climate/hydrology classification, including the 13 supported natural surface categories: ocean, tundra, desert, grassland, forest, exposed rock, snow, rainforest, lake, marsh, boreal forest, cold tundra and persistent land ice. These are game-scale Earth-like categories, not an exhaustive scientific biome taxonomy.
 
 `terrain.natural_biomes` and `terrain.magical_biomes` are separate catalogues. Every natural category has a named mutation for **all eight schools: 104 potential variants**. Each variant exports its natural `core`, `core_biome_id`, `magic_school`, group, descriptors, display color and asset ID. For example, **Haunted tombs** has `core: desert`, `magic_school: umbral`, necrotic descriptors and dark-brown RGB `[72,49,35]`. Examples elsewhere include Rootreef seas, Phoenix woods, Singing glaciers and Hallowed heights.
 
-`biome_variant` is the magical catalogue index or −1. The atlas and globe show the underlying natural color where there is no winning mutation. Atlas hover explains the natural core and magical source. The older `biome` grid remains a calibrated food/habitat phenotype using existing IDs; it is not the authoritative magical display catalogue. Mutation gating applies before that compatibility phenotype, so close contests do not silently change food-biome categories. Regional influence overlays remain independently inspectable suitability/opportunity fields.
+`biome_variant` is the magical catalogue index or −1. `biome` and `natural_biome` both carry natural IDs only. Natural IDs are stable and sparse: 0–8, 13, 15–17. **An ID is not an array offset.** `terrain.biomes` and `terrain.natural_biomes` contain the same 13 records; look them up by `id`. Each record includes its `terrain.biome.<three-digit-id>` asset ID. `terrain.magical_biomes` contains all 104 variants, with stable `core.school` IDs and `terrain.mutation.<core>.<school>` asset IDs. The atlas and globe show natural color for cells without a winning mutation.
+
+The old standalone categories—Desolation (9), Fungal forest (10), Crystalline desert (11), Enchanted forest (12), and Haunted marsh (14)—are removed from generation, profiles, building criteria and production selectors. These numeric IDs are reserved and invalid, never recycled. Haunted marsh still exists as the explicitly defined `marsh.umbral` variant. There is no compatibility phenotype or automatic conversion of old saved worlds.
+
+Population profile schema **2** has natural-only `biome_preferences` and `food_biome_multipliers`, plus `magic_biome_preferences` and `food_magic_biome_multipliers` keyed by exact `core.school` IDs. A matching variant overrides the natural value; otherwise the natural value applies (default preference 0, food factor 1). Population capacity and rural food use the same lookup, then apply the existing local magic-risk reduction. Contested/weak magic gets natural rules. Elven habitat uses forest, rainforest and boreal forest cores. Mineral-rich dwarven habitat may also use Glass mirages, Hellglass wastes and Frostglass dunes; existing relief, water and safety gates still apply.
+
+The initial explicit food calibration carries harsh terrain penalties onto land Infernal variants, woodland food adaptation onto Earth woodland variants, dry crystal penalties onto the three named glass deserts, and haunted-wetland penalties onto `marsh.umbral`. This is provisional game balance, not a biological claim. Exact values are in `terrain_profiles.json`; adding a new state never inherits a retired numeric category.
+
+Building-pack schema **2** and production catalogue schema **2** match natural IDs or exact variant IDs. Core eligibility includes mutated versions of that core. Either selector list may match; all other criteria still apply. An omitted biome selector is unrestricted; an explicit empty selector matches nothing. Fungal art is eligible in Earth-altered woodland, enchanted woodland art in Weave woodland, glass/crystal desert art in the three glass deserts, scorched/desolate art in land Infernal variants, and haunted wetland art in `marsh.umbral`. These are candidate visual assets, never extra water, resources or population. The exhaustive asset compiler emits the full potential-state list, including states absent from a sampled seed.
+
+Regional influence overlays remain independently inspectable opportunity fields, not biome categories. The geometry, climate, magic and food remain artistic approximations.
 
 ### Civilization ages (history schema 1)
 
@@ -67,12 +77,9 @@ Nests are reevaluated before city fates and after each age so all ages see curre
 
 Behavioral coverage checks partial-stage equivalence, replay, finite JSON, seams/poles, all eight network streams, competition thresholds, intensity edit validation, abandoned waterway classification, ruin culture retention, new key points, and active-city ownership of rebuilt hamlets/fishing ports. The exhaustive asset compiler includes all 104 variants and the city-ruins marker, regardless of which a seed realizes. Asset definitions do not imply built Unreal content. Review stage snapshots in the lab before downstream integration; metre-to-Unreal-centimetre conversion remains the future adapter's responsibility.
 
-## Recipe 1 reference
+## Surface systems
 
-The following sections document the preserved nine-stage recipe 1 contract. The lab's default and recipe 2 behavior are specified above.
-
-
-Launch from the repository root with `python tools/terrain_lab.py --serve`, then open http://127.0.0.1:8765. Python 3.12 and the standard library are sufficient. This remains a standalone mathlab; it does not mutate Unreal assets.
+The sections below describe the surface systems used by recipe 3. The separate nine-stage world recipe is retired. Launch `python3 tools/terrain_lab.py --serve` and open the reported loopback URL.
 
 ## Generation and controls
 
@@ -82,7 +89,7 @@ The registry in `Sim/icarus_sim/terrain_world.py` defines public defaults, types
 
 ```json
 {
-  "recipe_version": 1,
+  "recipe_version": 3,
   "seed": 42,
   "overrides": {
     "size": 65,
@@ -97,7 +104,7 @@ Unknown keys, nonfinite numbers, invalid types and unsupported versions fail wit
 
 Stronger explicit regional requests can bias prerequisites: draconic requests widen mountain belts, demonic requests strengthen Infernal influence, haunted sands strengthen Umbral influence, steampunk raises metal richness, dead seas raise salinity, starlight raises Weave strength, pirates favor archipelagos, and red sands dry climate. Direct prerequisite overrides take precedence. Exported `biases` explain these choices. Habitat still constrains placement; there is no guarantee every region manifests.
 
-CLI defaults use the new recipe. Extension controls can be passed through the validated `--world_options` JSON object. `--world_recipe 0 --auto_parameters 1` retains the old seed-derived experiment; `--world_recipe 0 --auto_parameters 0` retains explicit legacy settings. The new recipe rejects automatic derivation to avoid silently replacing explicit settings. Prompt hashing remains hashing, not semantic prompt interpretation.
+CLI defaults use recipe 3. Extension controls can be passed through the validated `--world_options` JSON object. The world recipe rejects automatic parameter derivation; use explicit defaults and overrides. Prompt hashing remains hashing, not semantic prompt interpretation.
 
 ## Geography and independent layers
 
@@ -107,7 +114,7 @@ Aquatic fields distinguish reefs, lagoons, estuaries, bays, rocky coasts, kelp s
 
 Boreal forest, tundra and persistent land ice use monthly climate suitability. Seasonal snow and water ice overlay underlying terrain. Sea-water freezing thresholds depend on salinity. These are static monthly artistic proxies, not weather or glacier dynamics.
 
-Weave, Umbral, Infernal, Holy and Primordial have independent named seed streams, node geometry, density, width, strength, instability and occurrence. Raw network fields remain unchanged by overlap; aggregate opportunity, opposition and population-specific risk are separate fields. Changing one network never rerolls another or changes upstream terrain/climate.
+Weave, Umbral, Infernal, Radiant, Fire, Water, Earth and Air have independent named seed streams, node geometry, density, width, strength, instability and occurrence. Raw network fields remain unchanged by overlap; aggregate opportunity, opposition and population-specific risk are separate fields. Changing one network never rerolls another or changes upstream terrain/climate.
 
 Regional overlays include demonic and draconic territory, piracy, steampunk, witch-hut opportunity, red sands, dead seas, starlight lakes, haunted sands, enchanted/fungal/crystal ecology and haunted marsh. Normal grassland remains a base biome. Regions export manifestation reasons and sampled area above the diagnostic threshold. Witch huts are isolated low-conventional-suitability sites; necropolises are landmarks. Beast habitat anchors can now select compatible draconic and infernal candidates; these remain placement proposals, not spawned actors.
 
@@ -127,7 +134,7 @@ The old `seasonal_food`/annual trade results are retained as a labeled ground-on
 
 The layered atlas combines independently toggled fields with per-layer opacity. It shows cities, coastal hamlets, sea/air connections and elevated islands. Select a month for snow, ice, route access and island climate; select an island for its separate mesh. Community cards report authoritative food coverage, shortages and fishing allocations. Regional diagnostics explain absence rather than manufacturing every zone.
 
-Regression coverage includes legacy behavior, recipe reproduction, isolated overrides, independent networks, sphere seams/poles, finite exports, cold-climate distinctions, exclusive fisheries, freshwater rules, navigable routes, monthly conservation/throughput, sky budgets and phase isolation. Local tests run with `PYTHONPATH=Sim python -m unittest discover -s Sim/tests -q` (set the environment variable appropriately for your shell).
+Regression coverage includes retired-contract rejection, explicit variant food/asset rules, recipe reproduction, isolated overrides, independent networks, sphere seams/poles, finite exports, cold-climate distinctions, exclusive fisheries, freshwater rules, navigable routes, monthly conservation/throughput, sky budgets and phase isolation. Local tests run with `PYTHONPATH=Sim python -m unittest discover -s Sim/tests -q` (set the environment variable appropriately for your shell).
 
 A fixed seed 0–7 sweep at 33² through stage 6 produced 0–4 eligible ocean clusters and 4–7 manifested regional influences. Mean sampled mountain/ridge area increased from 1.647 km² at abundance 1.0 to 1.676 km² at the default 1.3. This is a modest coverage increase, not a guaranteed number of discrete mountain peaks; the abundance control remains available for stronger experiments.
 
@@ -137,7 +144,7 @@ Moving tribes/circuses, the Underdark, underwater settlements and engine integra
 
 ## Beast nests (anchor schema 1)
 
-From stage 7, `beast_nests` exports static dens, roosts, colonies, lairs and aquatic territories. All 381 catalogue entries have separate structured profiles in `Sim/icarus_sim/terrain_nest_profiles.json`; the candidate catalogue remains unchanged. Profiles are artistic first-pass parameters, not biological validation. Each has a stable species ID, habitat medium, temperature bounds, required fields, weighted preferences, size-based occurrence and spacing. Magical families require their associated ley field; glacier dragons require cold, deep aquatic species require depth, and marine/freshwater/shore anchors cannot substitute for each other. Migratory fish use freshwater spawning anchors; migrations are not simulated. Selected flying species may also anchor on independent sky layers using altitude climate and underlying ley influence.
+From stage 13, `beast_nests` exports static dens, roosts, colonies, lairs and aquatic territories. All 381 catalogue entries have separate structured profiles in `Sim/icarus_sim/terrain_nest_profiles.json`; the candidate catalogue remains unchanged. Profiles are artistic first-pass parameters, not biological validation. Each has a stable species ID, habitat medium, temperature bounds, required fields, weighted preferences, size-based occurrence and spacing. Magical families require their associated ley field; glacier dragons require cold, deep aquatic species require depth, and marine/freshwater/shore anchors cannot substitute for each other. Migratory fish use freshwater spawning anchors; migrations are not simulated. Selected flying species may also anchor on independent sky layers using altitude climate and underlying ley influence.
 
 The Beast nests parameter group exposes the global ceiling (120), per-species ceiling (2), density (1), fantasy occurrence (1), suitability floor (0.3), spacing multiplier (1), settlement clearance (250 m), and independent variation seed (0). Zero density or ceiling disables anchors; zero fantasy occurrence keeps real animals. Random mode resets these with all other defaults. Overrides and resolved values export through the existing recipe contract.
 
@@ -163,7 +170,7 @@ The atlas has a nest toggle, species filter (including absent species), location
 
 `world` must be the actual object, not a filename or the placeholder string shown above. Both `steps` and `leyline_edits` are optional. Steps are bounded to 1–10 per call; age numbering continues beyond the two genesis ages. Pass the returned world to the next call. Retries against the same original input reproduce the same output; this stateless endpoint does not persist or advance a server-owned world. The caller's Python object is not mutated.
 
-The API validates recipe 2 through stage 13 or later, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
+The API validates recipe 3 through stage 13 or later, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
 
 Player leyline edits are applied before environmental/biome refresh. **Creature nests are recalculated before each age's city-fate decisions and again after the age's biome/civilization rebuild**, and export `evaluated_age`. Thus time skips and significant player changes do not reuse an obsolete creature distribution. The surface geography is preserved through these civilization ages. Terrain-changing player systems must supply coherent rebuilt hydrology/climate before using this boundary.
 

@@ -1,7 +1,7 @@
 import unittest
 from dataclasses import replace
 from icarus_sim.terrain_lab import Config,generate
-from icarus_sim.terrain_magic import arc_distance,magic_biome,college_eligible
+from icarus_sim.terrain_magic import arc_distance,college_eligible
 from icarus_sim.terrain_biomes import marsh_suitable
 
 
@@ -11,14 +11,6 @@ class MagicTests(unittest.TestCase):
         a=(1,0,0);b=(0,1,0)
         self.assertAlmostEqual(arc_distance((2**-.5,2**-.5,0),a,b),0,places=7)
         self.assertAlmostEqual(arc_distance((0,0,1),a,b),math.pi/2)
-        self.assertEqual(magic_biome(4,.9,.9,.1,.8,20),9)
-        self.assertEqual(magic_biome(4,.9,.1,.9,.8,20),10)
-        self.assertEqual(magic_biome(8,1,1,1,1,20),8)
-        self.assertEqual(magic_biome(0,1,1,1,1,20),0)
-        self.assertEqual(magic_biome(2,.7,.1,.1,.15,25),11)
-        self.assertEqual(magic_biome(4,.5,.1,.9,.6,20),12)
-        self.assertEqual(magic_biome(13,.7,.05,.1,.8,20),14)
-        self.assertEqual(magic_biome(13,.1,.05,.1,.8,20),13)
         self.assertTrue(marsh_suitable(.8,20,2,70,1))
         for args in ((.1,20,2,70,1),(.8,-5,2,70,1),(.8,20,30,70,1),(.8,20,2,800,1),(.8,20,2,70,50)):
             self.assertFalse(marsh_suitable(*args))
@@ -37,7 +29,8 @@ class MagicTests(unittest.TestCase):
         self.assertEqual(a['magic'],c['magic'])
         self.assertTrue(a['magic']['edges'])
         self.assertTrue(a['magic']['colleges'])
-        self.assertNotIn('magic',b)
+        self.assertFalse(b['magic']['enabled'])
+        self.assertTrue(all(v == -1 for row in b['layers']['biome_variant'] for v in row))
         for key in ('magic_density','magic_hazard','magic_growth'):
             for row in a['layers'][key]:
                 self.assertEqual(row[0],row[-1]);self.assertTrue(all(0<=v<=1 for v in row))
@@ -54,9 +47,13 @@ class MagicTests(unittest.TestCase):
             self.assertTrue(college_eligible(l['magic_density'][z][x],l['magic_hazard'][z][x],cfg.human_magic_limit,
                 l['slope'][z][x],l['temperature'][z][x],l['freshwater_distance'][z][x],l['flood_risk'][z][x],l['suitability'][z][x],l['water_type'][z][x]))
             self.assertEqual(c['access_nodes'][-1],a['settlements']['sites'][c['core_id']]['node'])
-        stable=generate(replace(cfg,magic_instability=0))
+        import json
+        from icarus_sim.terrain_leyline_history import SCHOOLS
+        stable=generate(replace(cfg,world_options=json.dumps({school+'_instability':0 for school in SCHOOLS})))
         self.assertEqual(stable['layers']['magic_density'],a['layers']['magic_density'])
-        self.assertTrue(all(v==0 for row in stable['layers']['magic_hazard'] for v in row))
+        for school in SCHOOLS:
+            self.assertTrue(all(v==0 for row in stable['layers']['instability_'+school] for v in row))
+        self.assertTrue(all(b<=a for ar,br in zip(a['layers']['magic_hazard'],stable['layers']['magic_hazard']) for a,b in zip(ar,br)))
 
     def test_controls_validate(self):
         for change in ({'magic_enabled':2},{'ley_nodes':2},{'ley_width':0},{'human_magic_limit':2},{'college_count':20}):

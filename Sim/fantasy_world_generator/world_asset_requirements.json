@@ -1,11 +1,11 @@
 {
-  "schema_version": 1,
-  "catalogue_version": "1.0-draft-production-baseline",
+  "schema_version": 2,
+  "catalogue_version": "2.0-explicit-biome-states",
   "scope": "One initial production job per row; art not generated. LODs/import derivatives are included in the row, not extra primary jobs. Counts are a scoped starter library, not final game completeness.",
   "art_direction": "Provisional cohesive grounded stylized fantasy; original designs, legible human-scale silhouettes, restrained weathering and emission. Approve representative prototypes before bulk generation.",
   "unit": "metres",
   "biomes": {
-    "0": "Submerged",
+    "0": "Ocean",
     "1": "Tundra",
     "2": "Desert",
     "3": "Grassland",
@@ -14,12 +14,10 @@
     "6": "Snow",
     "7": "Rainforest",
     "8": "Lake",
-    "9": "Desolation",
-    "10": "Fungal forest",
-    "11": "Crystalline desert",
-    "12": "Enchanted forest",
     "13": "Marsh",
-    "14": "Haunted marsh"
+    "15": "Boreal forest",
+    "16": "Cold tundra",
+    "17": "Persistent land ice"
   },
   "contracts": {
     "material": {
@@ -146,7 +144,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-002",
@@ -180,7 +179,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-003",
@@ -214,7 +214,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-004",
@@ -248,7 +249,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-005",
@@ -259,8 +261,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        2,
-        9
+        2
       ],
       "people": null,
       "settlement_role": null,
@@ -282,7 +283,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-006",
@@ -294,8 +308,7 @@
       "quantity": 1,
       "biome_ids": [
         4,
-        7,
-        12
+        7
       ],
       "people": null,
       "settlement_role": null,
@@ -317,7 +330,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "MAT-007",
@@ -328,8 +346,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -351,7 +368,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "MAT-008",
@@ -386,7 +408,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-009",
@@ -397,8 +420,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -420,7 +442,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "MAT-010",
@@ -454,7 +479,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-011",
@@ -465,8 +491,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -488,7 +513,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "MAT-012",
@@ -523,7 +551,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-013",
@@ -534,8 +563,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        2,
-        11
+        2
       ],
       "people": null,
       "settlement_role": null,
@@ -557,7 +585,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "MAT-014",
@@ -592,7 +625,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-015",
@@ -626,7 +660,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-016",
@@ -637,8 +672,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -660,7 +694,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-017",
@@ -694,7 +741,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-018",
@@ -728,7 +776,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-019",
@@ -739,8 +788,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -762,7 +810,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-020",
@@ -796,7 +857,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-021",
@@ -806,9 +868,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -829,7 +889,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-022",
@@ -839,9 +912,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -862,7 +933,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-023",
@@ -872,9 +956,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -895,7 +977,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "MAT-024",
@@ -905,9 +992,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -928,7 +1013,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "MAT-025",
@@ -938,9 +1028,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -961,7 +1049,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "MAT-026",
@@ -971,9 +1064,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -994,7 +1085,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "MAT-027",
@@ -1027,7 +1121,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-028",
@@ -1060,7 +1155,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-029",
@@ -1094,7 +1190,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-030",
@@ -1127,7 +1224,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-031",
@@ -1139,8 +1237,7 @@
       "quantity": 1,
       "biome_ids": [
         8,
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -1162,7 +1259,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "MAT-032",
@@ -1172,9 +1272,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1195,7 +1293,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "MAT-033",
@@ -1206,8 +1309,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -1229,7 +1331,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "MAT-034",
@@ -1263,7 +1370,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-035",
@@ -1298,7 +1406,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-036",
@@ -1331,7 +1440,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "MAT-037",
@@ -1342,8 +1452,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -1365,7 +1474,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "MAT-038",
@@ -1375,10 +1487,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9,
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1399,7 +1508,21 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "marsh.umbral",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "MAT-039",
@@ -1409,9 +1532,7 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1432,7 +1553,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "MAT-040",
@@ -1442,7 +1568,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1473,7 +1598,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1504,7 +1628,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1535,7 +1658,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1566,7 +1688,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1597,7 +1718,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1628,7 +1748,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1659,7 +1778,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1690,7 +1808,6 @@
       "kind": "material",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m square reference swatch; adjustable tiling",
@@ -1747,7 +1864,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-002",
@@ -1760,8 +1878,7 @@
       "biome_ids": [
         1,
         2,
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -1785,7 +1902,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-003",
@@ -1821,7 +1951,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-004",
@@ -1857,7 +1988,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-005",
@@ -1893,7 +2025,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-006",
@@ -1904,8 +2037,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -1929,7 +2061,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-007",
@@ -1964,7 +2109,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-008",
@@ -1999,7 +2145,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-009",
@@ -2035,7 +2182,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-010",
@@ -2071,7 +2219,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-011",
@@ -2082,8 +2231,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -2107,7 +2255,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-012",
@@ -2142,7 +2303,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-013",
@@ -2177,7 +2339,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-014",
@@ -2188,8 +2351,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -2213,7 +2375,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-015",
@@ -2248,7 +2423,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-016",
@@ -2284,7 +2460,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-017",
@@ -2320,7 +2497,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-018",
@@ -2356,7 +2534,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-019",
@@ -2366,9 +2545,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3m diameter",
@@ -2391,7 +2568,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-020",
@@ -2402,8 +2592,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        5,
-        9
+        5
       ],
       "people": null,
       "settlement_role": null,
@@ -2427,7 +2616,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-021",
@@ -2437,9 +2639,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.5m diameter",
@@ -2462,7 +2662,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "GEO-022",
@@ -2472,9 +2685,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.4m high",
@@ -2497,7 +2708,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "GEO-023",
@@ -2507,9 +2723,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m high",
@@ -2532,7 +2746,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "GEO-024",
@@ -2542,9 +2761,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "7m high",
@@ -2567,7 +2784,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "GEO-025",
@@ -2602,7 +2824,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-026",
@@ -2637,7 +2860,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "GEO-027",
@@ -2672,7 +2896,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-001",
@@ -2705,7 +2930,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-002",
@@ -2738,7 +2964,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-003",
@@ -2772,7 +2999,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-004",
@@ -2805,7 +3033,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-005",
@@ -2838,7 +3067,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-006",
@@ -2871,7 +3101,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-007",
@@ -2904,7 +3135,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-008",
@@ -2937,7 +3169,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-009",
@@ -2970,7 +3203,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-010",
@@ -2981,8 +3215,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -3004,7 +3237,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "VEG-011",
@@ -3037,7 +3275,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-012",
@@ -3070,7 +3309,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-013",
@@ -3083,8 +3323,7 @@
       "biome_ids": [
         1,
         4,
-        7,
-        12
+        7
       ],
       "people": null,
       "settlement_role": null,
@@ -3106,7 +3345,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "VEG-014",
@@ -3140,7 +3384,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-015",
@@ -3174,7 +3419,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-016",
@@ -3207,7 +3453,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-017",
@@ -3240,7 +3487,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-018",
@@ -3273,7 +3521,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-019",
@@ -3307,7 +3556,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-020",
@@ -3341,7 +3591,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-021",
@@ -3374,7 +3625,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-022",
@@ -3407,7 +3659,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-023",
@@ -3440,7 +3693,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-024",
@@ -3473,7 +3727,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-025",
@@ -3485,8 +3740,7 @@
       "quantity": 1,
       "biome_ids": [
         8,
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -3508,7 +3762,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "VEG-026",
@@ -3542,7 +3799,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-027",
@@ -3575,7 +3833,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-028",
@@ -3609,7 +3868,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-029",
@@ -3643,7 +3903,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-030",
@@ -3653,9 +3914,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.4m",
@@ -3676,7 +3935,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "VEG-031",
@@ -3687,8 +3949,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -3710,19 +3971,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "VEG-032",
       "work_item": "010.VEG-032",
-      "name": "Desolation dead scrub",
+      "name": "Infernal dead scrub",
       "category": "VEG",
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.7m",
@@ -3743,7 +4005,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "VEG-033",
@@ -3753,9 +4028,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.35m",
@@ -3776,7 +4049,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "VEG-034",
@@ -3786,9 +4064,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.5m",
@@ -3809,7 +4085,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "VEG-035",
@@ -3842,7 +4123,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-036",
@@ -3875,7 +4157,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "VEG-037",
@@ -3887,8 +4170,7 @@
       "quantity": 1,
       "biome_ids": [
         4,
-        7,
-        10
+        7
       ],
       "people": null,
       "settlement_role": null,
@@ -3910,7 +4192,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "VEG-038",
@@ -3922,8 +4209,7 @@
       "quantity": 1,
       "biome_ids": [
         4,
-        7,
-        10
+        7
       ],
       "people": null,
       "settlement_role": null,
@@ -3945,7 +4231,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "VEG-039",
@@ -3955,9 +4246,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.45m",
@@ -3978,7 +4267,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "TREE-001",
@@ -3989,8 +4283,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4014,7 +4307,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-002",
@@ -4025,8 +4323,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4050,7 +4347,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-003",
@@ -4061,8 +4363,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4086,7 +4387,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-004",
@@ -4097,8 +4403,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4122,7 +4427,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-005",
@@ -4133,8 +4443,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4158,7 +4467,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-006",
@@ -4169,8 +4483,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -4194,7 +4507,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-007",
@@ -4230,7 +4548,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-008",
@@ -4266,7 +4585,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-009",
@@ -4302,7 +4622,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-010",
@@ -4338,7 +4659,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-011",
@@ -4374,7 +4696,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-012",
@@ -4410,7 +4733,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-013",
@@ -4446,7 +4770,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-014",
@@ -4482,7 +4807,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-015",
@@ -4518,7 +4844,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-016",
@@ -4554,7 +4881,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-017",
@@ -4590,7 +4918,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-018",
@@ -4626,7 +4955,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-019",
@@ -4663,7 +4993,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-020",
@@ -4700,7 +5031,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-021",
@@ -4737,7 +5069,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-022",
@@ -4774,7 +5107,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-023",
@@ -4811,7 +5145,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-024",
@@ -4848,7 +5183,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-025",
@@ -4885,7 +5221,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-026",
@@ -4922,7 +5259,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-027",
@@ -4959,7 +5297,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-028",
@@ -4996,7 +5335,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-029",
@@ -5033,7 +5373,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-030",
@@ -5070,7 +5411,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-031",
@@ -5105,7 +5447,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-032",
@@ -5140,7 +5483,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-033",
@@ -5175,7 +5519,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-034",
@@ -5210,7 +5555,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-035",
@@ -5245,7 +5591,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-036",
@@ -5280,7 +5627,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-037",
@@ -5315,7 +5663,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-038",
@@ -5350,7 +5699,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-039",
@@ -5385,7 +5735,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-040",
@@ -5420,7 +5771,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-041",
@@ -5455,7 +5807,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-042",
@@ -5490,7 +5843,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-043",
@@ -5526,7 +5880,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-044",
@@ -5562,7 +5917,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-045",
@@ -5598,7 +5954,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-046",
@@ -5634,7 +5991,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-047",
@@ -5670,7 +6028,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-048",
@@ -5706,7 +6065,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-049",
@@ -5741,7 +6101,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-050",
@@ -5776,7 +6137,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-051",
@@ -5811,7 +6173,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-052",
@@ -5846,7 +6209,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-053",
@@ -5881,7 +6245,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-054",
@@ -5916,7 +6281,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-055",
@@ -5951,7 +6317,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-056",
@@ -5986,7 +6353,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-057",
@@ -6021,7 +6389,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-058",
@@ -6056,7 +6425,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-059",
@@ -6091,7 +6461,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-060",
@@ -6126,7 +6497,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-061",
@@ -6161,7 +6533,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-062",
@@ -6196,7 +6569,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-063",
@@ -6231,7 +6605,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-064",
@@ -6266,7 +6641,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-065",
@@ -6301,7 +6677,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-066",
@@ -6336,7 +6713,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "TREE-067",
@@ -6346,9 +6724,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3.6m height",
@@ -6371,7 +6747,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-068",
@@ -6381,9 +6762,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "18m height",
@@ -6406,7 +6785,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-069",
@@ -6416,9 +6800,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "16.2m height",
@@ -6441,7 +6823,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-070",
@@ -6451,9 +6838,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "14.4m height",
@@ -6476,7 +6861,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-071",
@@ -6486,9 +6876,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.72m height",
@@ -6511,7 +6899,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-072",
@@ -6521,9 +6914,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "13.5m length",
@@ -6546,7 +6937,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "TREE-073",
@@ -6556,9 +6952,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2.0m height",
@@ -6581,7 +6975,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "TREE-074",
@@ -6591,9 +6988,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "10m height",
@@ -6616,7 +7011,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "TREE-075",
@@ -6626,9 +7024,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "9.0m height",
@@ -6651,7 +7047,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "TREE-076",
@@ -6661,9 +7060,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "8.0m height",
@@ -6686,7 +7083,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "TREE-077",
@@ -6696,9 +7096,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.4m height",
@@ -6721,7 +7119,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "TREE-078",
@@ -6731,9 +7132,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "7.5m length",
@@ -6756,7 +7155,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "FUNG-001",
@@ -6766,9 +7168,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "5m",
@@ -6791,7 +7191,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-002",
@@ -6801,9 +7206,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "7m",
@@ -6826,7 +7229,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-003",
@@ -6836,9 +7244,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m",
@@ -6861,7 +7267,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-004",
@@ -6871,9 +7282,7 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1m",
@@ -6896,7 +7305,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-005",
@@ -6906,9 +7320,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3m",
@@ -6931,7 +7343,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-006",
@@ -6941,9 +7358,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m diameter",
@@ -6966,7 +7381,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FUNG-007",
@@ -6976,9 +7396,7 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m",
@@ -7001,7 +7419,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "WATER-001",
@@ -7034,7 +7457,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-002",
@@ -7067,7 +7491,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-003",
@@ -7101,7 +7526,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-004",
@@ -7135,7 +7561,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-005",
@@ -7169,7 +7596,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-006",
@@ -7203,7 +7631,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-007",
@@ -7236,7 +7665,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-008",
@@ -7269,7 +7699,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-009",
@@ -7302,7 +7733,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-010",
@@ -7313,8 +7745,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -7336,7 +7767,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "WATER-011",
@@ -7346,9 +7780,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Adaptive to generated water mesh; 4m reference segment",
@@ -7369,7 +7801,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "WATER-012",
@@ -7404,7 +7839,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "WATER-013",
@@ -7438,7 +7874,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "FX-001",
@@ -7474,7 +7911,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "FX-002",
@@ -7486,8 +7924,7 @@
       "quantity": 1,
       "biome_ids": [
         7,
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -7509,7 +7946,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "FX-003",
@@ -7520,8 +7960,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        2,
-        9
+        2
       ],
       "people": null,
       "settlement_role": null,
@@ -7543,7 +7982,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "FX-004",
@@ -7577,7 +8029,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "FX-005",
@@ -7587,9 +8040,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7610,7 +8061,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "FX-006",
@@ -7620,9 +8084,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7643,7 +8105,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "FX-007",
@@ -7653,9 +8120,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7676,7 +8141,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "FX-008",
@@ -7686,9 +8156,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7709,7 +8177,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "FX-009",
@@ -7719,9 +8192,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7742,7 +8213,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "FX-010",
@@ -7761,12 +8235,7 @@
         6,
         7,
         8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14
+        13
       ],
       "people": null,
       "settlement_role": null,
@@ -7788,7 +8257,29 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "boreal_forest.infernal",
+        "boreal_forest.weave",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "desert.water",
+        "desert.weave",
+        "exposed_rock.infernal",
+        "forest.earth",
+        "forest.infernal",
+        "forest.weave",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "marsh.umbral",
+        "rainforest.earth",
+        "rainforest.infernal",
+        "rainforest.weave",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "FX-011",
@@ -7798,9 +8289,7 @@
       "kind": "vfx",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Local 4m reference volume; bounds scalable",
@@ -7821,7 +8310,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "FX-012",
@@ -7832,8 +8334,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        4,
-        12
+        4
       ],
       "people": null,
       "settlement_role": null,
@@ -7855,7 +8356,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "BLD-001",
@@ -7865,7 +8371,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -7898,7 +8403,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x4m; 1m rise",
@@ -7931,7 +8435,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -7964,7 +8467,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x3m; 1.1x2.2m opening",
@@ -7997,7 +8499,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -8030,7 +8531,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1x1x3m",
@@ -8063,7 +8563,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -8096,7 +8595,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -8129,7 +8627,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4m long",
@@ -8162,7 +8659,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -8195,7 +8691,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.1x2.2m",
@@ -8228,7 +8723,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1x1.2m",
@@ -8261,7 +8755,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.5x3m; 1.5m rise",
@@ -8294,7 +8787,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "2x4m; 1m rise",
@@ -8327,7 +8819,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "2x1m",
@@ -8360,7 +8851,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -8393,7 +8883,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "city",
       "target_scale": "6x8m footprint",
@@ -8434,7 +8923,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "city",
       "target_scale": "10x12m",
@@ -8473,7 +8961,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "city",
       "target_scale": "4x6m",
@@ -8512,7 +8999,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "city",
       "target_scale": "6x8m",
@@ -8553,7 +9039,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "city",
       "target_scale": "8x10m",
@@ -8594,7 +9079,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "hamlet",
       "target_scale": "5x6m",
@@ -8635,7 +9119,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "hamlet",
       "target_scale": "4x6m",
@@ -8674,7 +9157,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "hamlet",
       "target_scale": "6x8m",
@@ -8713,7 +9195,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "hamlet",
       "target_scale": "6x6m",
@@ -8752,7 +9233,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "fortress",
       "target_scale": "4x4m; 8m tall",
@@ -8791,7 +9271,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "fortress",
       "target_scale": "8x6m; 7m tall",
@@ -8830,7 +9309,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "fortress",
       "target_scale": "4m long; 4m tall",
@@ -8869,7 +9347,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "fortress",
       "target_scale": "5m diameter; 8m tall",
@@ -8908,7 +9385,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "fortress",
       "target_scale": "10x10m; 10m tall",
@@ -8947,7 +9423,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard_college",
       "target_scale": "8x10m",
@@ -8986,7 +9461,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -9028,7 +9502,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -9069,7 +9542,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -9110,7 +9582,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard_college",
       "target_scale": "6m diameter; 9m tall",
@@ -9150,7 +9621,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -9183,7 +9653,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m; 1m rise",
@@ -9216,7 +9685,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -9249,7 +9717,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x3m; 1.1x2.2m opening",
@@ -9282,7 +9749,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -9315,7 +9781,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1x1x3m",
@@ -9348,7 +9813,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -9381,7 +9845,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -9414,7 +9877,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4m long",
@@ -9447,7 +9909,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -9480,7 +9941,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.1x2.2m",
@@ -9513,7 +9973,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1x1.2m",
@@ -9546,7 +10005,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.5x3m; 1.5m rise",
@@ -9579,7 +10037,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "2x4m; 1m rise",
@@ -9612,7 +10069,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "2x1m",
@@ -9645,7 +10101,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -9678,7 +10133,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "city",
       "target_scale": "6x8m footprint",
@@ -9719,7 +10173,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "city",
       "target_scale": "10x12m",
@@ -9758,7 +10211,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "city",
       "target_scale": "4x6m",
@@ -9797,7 +10249,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "city",
       "target_scale": "6x8m",
@@ -9838,7 +10289,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "city",
       "target_scale": "8x10m",
@@ -9879,7 +10329,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "hamlet",
       "target_scale": "5x6m",
@@ -9920,7 +10369,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "hamlet",
       "target_scale": "4x6m",
@@ -9959,7 +10407,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "hamlet",
       "target_scale": "6x8m",
@@ -9998,7 +10445,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "hamlet",
       "target_scale": "6x6m",
@@ -10037,7 +10483,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "fortress",
       "target_scale": "4x4m; 8m tall",
@@ -10076,7 +10521,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "fortress",
       "target_scale": "8x6m; 7m tall",
@@ -10115,7 +10559,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "fortress",
       "target_scale": "4m long; 4m tall",
@@ -10154,7 +10597,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "fortress",
       "target_scale": "5m diameter; 8m tall",
@@ -10193,7 +10635,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "fortress",
       "target_scale": "10x10m; 10m tall",
@@ -10232,7 +10673,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard_college",
       "target_scale": "8x10m",
@@ -10271,7 +10711,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -10313,7 +10752,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -10354,7 +10792,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -10395,7 +10832,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard_college",
       "target_scale": "6m diameter; 9m tall",
@@ -10435,7 +10871,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -10468,7 +10903,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x4m; 1m rise",
@@ -10501,7 +10935,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -10534,7 +10967,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x3m; 1.1x2.2m opening",
@@ -10567,7 +10999,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x3m",
@@ -10600,7 +11031,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1x1x3m",
@@ -10633,7 +11063,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -10666,7 +11095,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -10699,7 +11127,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4m long",
@@ -10732,7 +11159,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -10765,7 +11191,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.1x2.2m",
@@ -10798,7 +11223,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1x1.2m",
@@ -10831,7 +11255,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.5x3m; 1.5m rise",
@@ -10864,7 +11287,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "2x4m; 1m rise",
@@ -10897,7 +11319,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "2x1m",
@@ -10930,7 +11351,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -10963,7 +11383,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "city",
       "target_scale": "6x8m footprint",
@@ -11004,7 +11423,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "city",
       "target_scale": "10x12m",
@@ -11043,7 +11461,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "city",
       "target_scale": "4x6m",
@@ -11082,7 +11499,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "city",
       "target_scale": "6x8m",
@@ -11123,7 +11539,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "city",
       "target_scale": "8x10m",
@@ -11164,7 +11579,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "hamlet",
       "target_scale": "5x6m",
@@ -11205,7 +11619,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "hamlet",
       "target_scale": "4x6m",
@@ -11244,7 +11657,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "hamlet",
       "target_scale": "6x8m",
@@ -11283,7 +11695,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "hamlet",
       "target_scale": "6x6m",
@@ -11322,7 +11733,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "fortress",
       "target_scale": "4x4m; 8m tall",
@@ -11361,7 +11771,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "fortress",
       "target_scale": "8x6m; 7m tall",
@@ -11400,7 +11809,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "fortress",
       "target_scale": "4m long; 4m tall",
@@ -11439,7 +11847,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "fortress",
       "target_scale": "5m diameter; 8m tall",
@@ -11478,7 +11885,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "fortress",
       "target_scale": "10x10m; 10m tall",
@@ -11517,7 +11923,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard_college",
       "target_scale": "8x10m",
@@ -11556,7 +11961,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -11598,7 +12002,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -11639,7 +12042,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard_college",
       "target_scale": "6x8m",
@@ -11680,7 +12082,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard_college",
       "target_scale": "6m diameter; 9m tall",
@@ -11720,7 +12121,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "6x8m",
@@ -11757,7 +12157,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -11792,7 +12191,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "5m diameter",
@@ -11828,7 +12226,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "6m span",
@@ -11863,7 +12260,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "6x8m",
@@ -11900,7 +12296,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -11931,7 +12326,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -11962,7 +12356,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4x2m",
@@ -11993,7 +12386,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "6x6m",
@@ -12024,7 +12416,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2x4m",
@@ -12055,7 +12446,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m span x 2m width",
@@ -12086,7 +12476,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "8m span x 2m width",
@@ -12117,7 +12506,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "8m span x 3m width",
@@ -12148,7 +12536,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m long",
@@ -12179,7 +12566,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4x6m",
@@ -12210,7 +12596,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m long",
@@ -12241,7 +12626,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.5m wide",
@@ -12272,7 +12656,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m long",
@@ -12303,7 +12686,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1m wide",
@@ -12334,7 +12716,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4x4m",
@@ -12365,7 +12746,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2x3m",
@@ -12396,7 +12776,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m footprint",
@@ -12427,7 +12806,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "6x6m",
@@ -12458,7 +12836,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m diameter",
@@ -12489,7 +12866,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3m diameter",
@@ -12520,7 +12896,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3m diameter",
@@ -12551,7 +12926,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1m diameter",
@@ -12582,7 +12956,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2m diameter",
@@ -12613,7 +12986,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "3x2m",
@@ -12644,7 +13016,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1m footprint",
@@ -12675,7 +13046,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x0.7m",
@@ -12706,7 +13076,6 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.9m high",
@@ -12737,7 +13106,6 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.8m high",
@@ -12768,7 +13136,6 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.3m high",
@@ -12799,7 +13166,6 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.5m high",
@@ -12830,7 +13196,6 @@
       "kind": "plant",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "4m high",
@@ -12861,7 +13226,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.8m cube",
@@ -12892,7 +13256,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.9m high",
@@ -12923,7 +13286,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x2m",
@@ -12954,7 +13316,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x2m",
@@ -12985,7 +13346,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.9m high",
@@ -13016,7 +13376,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.8m long",
@@ -13047,7 +13406,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x2m",
@@ -13078,7 +13436,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x2m",
@@ -13109,7 +13466,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.7m high",
@@ -13140,7 +13496,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2x2m",
@@ -13171,7 +13526,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.2x1.8m",
@@ -13202,7 +13556,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.8m long",
@@ -13233,7 +13586,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.35m long",
@@ -13264,7 +13616,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.2m long",
@@ -13295,7 +13646,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.7m long",
@@ -13326,7 +13676,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.1m long",
@@ -13357,7 +13706,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.35m high",
@@ -13388,7 +13736,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "2.5m high",
@@ -13419,7 +13766,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x0.6m",
@@ -13450,7 +13796,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.8x1.8m",
@@ -13481,7 +13826,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.4m high",
@@ -13512,7 +13856,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.4m wide",
@@ -13543,7 +13886,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1x1.5m",
@@ -13574,7 +13916,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "0.4m high",
@@ -13605,7 +13946,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1.5m high",
@@ -13636,7 +13976,6 @@
       "kind": "mesh",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "1m high",
@@ -13667,7 +14006,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13698,7 +14036,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13731,7 +14068,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13764,7 +14100,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13797,7 +14132,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13830,7 +14164,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13863,7 +14196,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13896,7 +14228,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13929,7 +14260,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13962,7 +14292,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": null,
       "target_scale": "1.8m reference; existing supported proportions",
@@ -13995,7 +14324,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "resident",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14031,7 +14359,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "farmer",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14069,7 +14396,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "gatherer",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14106,7 +14432,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "woodworker",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14144,7 +14469,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "miner",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14182,7 +14506,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "smith",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14220,7 +14543,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "merchant",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14257,7 +14579,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "carrier",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14295,7 +14616,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "guard",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14333,7 +14653,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "scholar",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14371,7 +14690,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "human",
       "settlement_role": "wizard",
       "target_scale": "1.8m reference; existing supported proportions",
@@ -14409,7 +14727,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14440,7 +14757,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14473,7 +14789,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14506,7 +14821,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14539,7 +14853,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14572,7 +14885,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14605,7 +14917,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14638,7 +14949,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14671,7 +14981,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14704,7 +15013,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": null,
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14737,7 +15045,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "resident",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14773,7 +15080,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "farmer",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14811,7 +15117,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "gatherer",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14848,7 +15153,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "woodworker",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14886,7 +15190,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "miner",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14924,7 +15227,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "smith",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14962,7 +15264,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "merchant",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -14999,7 +15300,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "carrier",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -15037,7 +15337,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "guard",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -15075,7 +15374,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "scholar",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -15113,7 +15411,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "dwarf",
       "settlement_role": "wizard",
       "target_scale": "1.35m reference; compact proportions, human-player door access",
@@ -15151,7 +15448,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15182,7 +15478,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15215,7 +15510,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15248,7 +15542,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15281,7 +15574,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15314,7 +15606,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15347,7 +15638,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15380,7 +15670,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15413,7 +15702,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15446,7 +15734,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": null,
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15479,7 +15766,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "resident",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15515,7 +15801,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "farmer",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15553,7 +15838,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "gatherer",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15590,7 +15874,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "woodworker",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15628,7 +15911,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "miner",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15666,7 +15948,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "smith",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15704,7 +15985,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "merchant",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15741,7 +16021,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "carrier",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15779,7 +16058,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "guard",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15817,7 +16095,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "scholar",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15855,7 +16132,6 @@
       "kind": "character",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": "elf",
       "settlement_role": "wizard",
       "target_scale": "1.85m reference; slender proportions within rig limits",
@@ -15893,7 +16169,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -15928,7 +16203,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -15963,7 +16237,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -15998,7 +16271,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16033,7 +16305,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16068,7 +16339,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16103,7 +16373,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16138,7 +16407,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16173,7 +16441,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16208,7 +16475,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16243,7 +16509,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16278,7 +16543,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16313,7 +16577,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16348,7 +16611,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16383,7 +16645,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16418,7 +16679,6 @@
       "kind": "animation",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Retarget to approved human/dwarf/elf proportions",
@@ -16476,7 +16736,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-002",
@@ -16509,7 +16770,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-003",
@@ -16542,7 +16804,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-004",
@@ -16575,7 +16838,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-005",
@@ -16608,7 +16872,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-006",
@@ -16641,7 +16906,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-007",
@@ -16675,7 +16941,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-008",
@@ -16708,7 +16975,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-009",
@@ -16741,7 +17009,8 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": []
     },
     {
       "id": "SND-010",
@@ -16751,9 +17020,7 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        14
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16774,7 +17041,10 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "marsh.umbral"
+      ]
     },
     {
       "id": "SND-011",
@@ -16784,9 +17054,7 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        10
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16807,7 +17075,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.earth",
+        "forest.earth",
+        "rainforest.earth"
+      ]
     },
     {
       "id": "SND-012",
@@ -16817,9 +17090,7 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        11
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16840,7 +17111,12 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "desert.infernal",
+        "desert.water",
+        "desert.weave"
+      ]
     },
     {
       "id": "SND-013",
@@ -16850,9 +17126,7 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        12
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16873,19 +17147,22 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.weave",
+        "forest.weave",
+        "rainforest.weave"
+      ]
     },
     {
       "id": "SND-014",
       "work_item": "010.SND-014",
-      "name": "Desolation loop",
+      "name": "Infernal loop",
       "category": "SND",
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [
-        9
-      ],
+      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16906,7 +17183,20 @@
         "preview": null,
         "unity_validation": null,
         "review_notes": null
-      }
+      },
+      "biome_variant_ids": [
+        "boreal_forest.infernal",
+        "cold_tundra.infernal",
+        "desert.infernal",
+        "exposed_rock.infernal",
+        "forest.infernal",
+        "grassland.infernal",
+        "land_ice.infernal",
+        "marsh.infernal",
+        "rainforest.infernal",
+        "snow.infernal",
+        "tundra.infernal"
+      ]
     },
     {
       "id": "SND-015",
@@ -16916,7 +17206,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16947,7 +17236,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -16978,7 +17266,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17009,7 +17296,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17040,7 +17326,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17071,7 +17356,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17102,7 +17386,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17133,7 +17416,6 @@
       "kind": "audio",
       "status": "not_started",
       "quantity": 1,
-      "biome_ids": [],
       "people": null,
       "settlement_role": null,
       "target_scale": "Loop 30-60s or 6 short variations for event-set entries",
@@ -17158,5 +17440,112 @@
     }
   ],
   "generation_instruction": "Read this record plus its output_contract. Create exactly its named primary asset/assembly, at target_scale, using the catalogue art direction and approved dependencies. Use an original design; record provenance. Do not regenerate dependencies or invent game state. Produce contract deliverables and verify acceptance before checking off this job.",
-  "population_rule": "Appearance jobs are reusable assets/configurations, not additional people. Counts come from authoritative population records."
+  "population_rule": "Appearance jobs are reusable assets/configurations, not additional people. Counts come from authoritative population records.",
+  "biome_selector_contract": "biome_ids match natural cores (including mutated cells); biome_variant_ids match exact core.school IDs. Either list may match. Omitted lists impose no biome restriction; present empty lists match nothing. All other placement gates still apply.",
+  "magical_biomes": {
+    "ocean.weave": "Prismatic seas",
+    "ocean.umbral": "Silent seas",
+    "ocean.infernal": "Brimstone seas",
+    "ocean.radiant": "Dawn seas",
+    "ocean.fire": "Steam seas",
+    "ocean.water": "Crystal currents",
+    "ocean.earth": "Rootreef seas",
+    "ocean.air": "Storm seas",
+    "tundra.weave": "Dream tundra",
+    "tundra.umbral": "Grave tundra",
+    "tundra.infernal": "Blighted tundra",
+    "tundra.radiant": "Blessed tundra",
+    "tundra.fire": "Ember tundra",
+    "tundra.water": "Rime tundra",
+    "tundra.earth": "Mossbound tundra",
+    "tundra.air": "Gale tundra",
+    "desert.weave": "Glass mirages",
+    "desert.umbral": "Haunted tombs",
+    "desert.infernal": "Hellglass wastes",
+    "desert.radiant": "Golden sanctuaries",
+    "desert.fire": "Furnace dunes",
+    "desert.water": "Frostglass dunes",
+    "desert.earth": "Blooming dunes",
+    "desert.air": "Whistling dunes",
+    "grassland.weave": "Possibility meadows",
+    "grassland.umbral": "Ashen meadows",
+    "grassland.infernal": "Cinder blight",
+    "grassland.radiant": "Healing meadows",
+    "grassland.fire": "Flamegrass plains",
+    "grassland.water": "Dew meadows",
+    "grassland.earth": "Titan meadows",
+    "grassland.air": "Thundergrass plains",
+    "forest.weave": "Living storywoods",
+    "forest.umbral": "Mourning woods",
+    "forest.infernal": "Thornhell woods",
+    "forest.radiant": "Sanctuary woods",
+    "forest.fire": "Phoenix woods",
+    "forest.water": "Rainveil woods",
+    "forest.earth": "Ancient rootwoods",
+    "forest.air": "Skyreach woods",
+    "exposed_rock.weave": "Floating stonefields",
+    "exposed_rock.umbral": "Ossuary crags",
+    "exposed_rock.infernal": "Demon spires",
+    "exposed_rock.radiant": "Hallowed heights",
+    "exposed_rock.fire": "Molten crags",
+    "exposed_rock.water": "Springstone cliffs",
+    "exposed_rock.earth": "Living monoliths",
+    "exposed_rock.air": "Windcarved spires",
+    "snow.weave": "Chromatic snow",
+    "snow.umbral": "Funeral snow",
+    "snow.infernal": "Sootsnow fields",
+    "snow.radiant": "Luminous snow",
+    "snow.fire": "Smoldering snow",
+    "snow.water": "Sapphire snow",
+    "snow.earth": "Mosswarm snow",
+    "snow.air": "Dancing snow",
+    "rainforest.weave": "Everchanging canopy",
+    "rainforest.umbral": "Withering canopy",
+    "rainforest.infernal": "Devouring jungle",
+    "rainforest.radiant": "Mercy gardens",
+    "rainforest.fire": "Emberbloom jungle",
+    "rainforest.water": "Deluge jungle",
+    "rainforest.earth": "Colossal jungle",
+    "rainforest.air": "Stormcrown jungle",
+    "lake.weave": "Starlight lakes",
+    "lake.umbral": "Stillwater tombs",
+    "lake.infernal": "Bloodglass lakes",
+    "lake.radiant": "Lustral lakes",
+    "lake.fire": "Boiling lakes",
+    "lake.water": "Winterglass lakes",
+    "lake.earth": "Rootcradle lakes",
+    "lake.air": "Suspended mist lakes",
+    "marsh.weave": "Spellmist marsh",
+    "marsh.umbral": "Haunted marsh",
+    "marsh.infernal": "Corruption mire",
+    "marsh.radiant": "Purifying marsh",
+    "marsh.fire": "Cinder mire",
+    "marsh.water": "Tidal gardens",
+    "marsh.earth": "Deep-root marsh",
+    "marsh.air": "Cloudveil marsh",
+    "boreal_forest.weave": "Aurora woods",
+    "boreal_forest.umbral": "Ghost pines",
+    "boreal_forest.infernal": "Charred blackwoods",
+    "boreal_forest.radiant": "Dawnlit pines",
+    "boreal_forest.fire": "Firecone woods",
+    "boreal_forest.water": "Mistbound pines",
+    "boreal_forest.earth": "Ironbark taiga",
+    "boreal_forest.air": "Singing pines",
+    "cold_tundra.weave": "Shifting frostlands",
+    "cold_tundra.umbral": "Deathfrost plains",
+    "cold_tundra.infernal": "Torment barrens",
+    "cold_tundra.radiant": "Peaceful frostlands",
+    "cold_tundra.fire": "Ashfrost plains",
+    "cold_tundra.water": "Bluefrost tundra",
+    "cold_tundra.earth": "Lichenstone plains",
+    "cold_tundra.air": "Force-swept tundra",
+    "land_ice.weave": "Singing glaciers",
+    "land_ice.umbral": "Sepulchral ice",
+    "land_ice.infernal": "Infernal glaciers",
+    "land_ice.radiant": "Cathedral ice",
+    "land_ice.fire": "Steamcut glaciers",
+    "land_ice.water": "Everflow glaciers",
+    "land_ice.earth": "Rootsplit glaciers",
+    "land_ice.air": "Howling glaciers"
+  }
 }

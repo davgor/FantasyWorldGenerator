@@ -12,23 +12,399 @@
     "recipe"
   ],
   "properties": {
-    "schema": { "const": "fantasy-world-generator.world" },
-    "schema_version": { "const": 1 },
-    "generator_version": { "type": "string", "minLength": 1 },
-    "config": { "type": "object" },
-    "layers": { "type": "object" },
+    "schema": {
+      "const": "fantasy-world-generator.world"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "generator_version": {
+      "const": 8
+    },
+    "config": {
+      "type": "object"
+    },
+    "layers": {
+      "type": "object",
+      "properties": {
+        "biome": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                13,
+                15,
+                16,
+                17
+              ]
+            }
+          }
+        },
+        "natural_biome": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                13,
+                15,
+                16,
+                17
+              ]
+            }
+          }
+        },
+        "biome_variant": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 103
+            }
+          }
+        }
+      }
+    },
     "recipe": {
       "type": "object",
-      "required": ["version", "seed", "resolved", "provenance"],
+      "required": [
+        "version",
+        "seed",
+        "resolved",
+        "provenance"
+      ],
       "properties": {
-        "version": { "enum": [1, 2] },
-        "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
-        "resolved": { "type": "object" },
-        "provenance": { "type": "object" }
+        "version": {
+          "const": 3
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "resolved": {
+          "type": "object"
+        },
+        "provenance": {
+          "type": "object"
+        }
       },
       "additionalProperties": true
+    },
+    "terrain": {
+      "type": "object",
+      "required": [
+        "version",
+        "biomes",
+        "natural_biomes"
+      ],
+      "properties": {
+        "version": {
+          "const": 6
+        },
+        "biomes": {
+          "type": "array",
+          "minItems": 13,
+          "maxItems": 13,
+          "items": {
+            "$ref": "#/$defs/naturalBiome"
+          }
+        },
+        "natural_biomes": {
+          "type": "array",
+          "minItems": 13,
+          "maxItems": 13,
+          "items": {
+            "$ref": "#/$defs/naturalBiome"
+          }
+        },
+        "magical_biomes": {
+          "type": "array",
+          "minItems": 104,
+          "maxItems": 104,
+          "items": {
+            "$ref": "#/$defs/magicalBiome"
+          }
+        }
+      }
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "$defs": {
+    "naturalBiome": {
+      "type": "object",
+      "required": [
+        "id",
+        "core",
+        "name",
+        "color",
+        "asset_id"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            13,
+            15,
+            16,
+            17
+          ]
+        },
+        "core": {
+          "enum": [
+            "ocean",
+            "tundra",
+            "desert",
+            "grassland",
+            "forest",
+            "exposed_rock",
+            "snow",
+            "rainforest",
+            "lake",
+            "marsh",
+            "boreal_forest",
+            "cold_tundra",
+            "land_ice"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "asset_id": {
+          "type": "string",
+          "pattern": "^terrain\\.biome\\.[0-9]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "color": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      }
+    },
+    "magicalBiome": {
+      "type": "object",
+      "required": [
+        "id",
+        "core",
+        "core_biome_id",
+        "magic_school",
+        "group",
+        "descriptors",
+        "name",
+        "color",
+        "asset_id"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "ocean.weave",
+            "ocean.umbral",
+            "ocean.infernal",
+            "ocean.radiant",
+            "ocean.fire",
+            "ocean.water",
+            "ocean.earth",
+            "ocean.air",
+            "tundra.weave",
+            "tundra.umbral",
+            "tundra.infernal",
+            "tundra.radiant",
+            "tundra.fire",
+            "tundra.water",
+            "tundra.earth",
+            "tundra.air",
+            "desert.weave",
+            "desert.umbral",
+            "desert.infernal",
+            "desert.radiant",
+            "desert.fire",
+            "desert.water",
+            "desert.earth",
+            "desert.air",
+            "grassland.weave",
+            "grassland.umbral",
+            "grassland.infernal",
+            "grassland.radiant",
+            "grassland.fire",
+            "grassland.water",
+            "grassland.earth",
+            "grassland.air",
+            "forest.weave",
+            "forest.umbral",
+            "forest.infernal",
+            "forest.radiant",
+            "forest.fire",
+            "forest.water",
+            "forest.earth",
+            "forest.air",
+            "exposed_rock.weave",
+            "exposed_rock.umbral",
+            "exposed_rock.infernal",
+            "exposed_rock.radiant",
+            "exposed_rock.fire",
+            "exposed_rock.water",
+            "exposed_rock.earth",
+            "exposed_rock.air",
+            "snow.weave",
+            "snow.umbral",
+            "snow.infernal",
+            "snow.radiant",
+            "snow.fire",
+            "snow.water",
+            "snow.earth",
+            "snow.air",
+            "rainforest.weave",
+            "rainforest.umbral",
+            "rainforest.infernal",
+            "rainforest.radiant",
+            "rainforest.fire",
+            "rainforest.water",
+            "rainforest.earth",
+            "rainforest.air",
+            "lake.weave",
+            "lake.umbral",
+            "lake.infernal",
+            "lake.radiant",
+            "lake.fire",
+            "lake.water",
+            "lake.earth",
+            "lake.air",
+            "marsh.weave",
+            "marsh.umbral",
+            "marsh.infernal",
+            "marsh.radiant",
+            "marsh.fire",
+            "marsh.water",
+            "marsh.earth",
+            "marsh.air",
+            "boreal_forest.weave",
+            "boreal_forest.umbral",
+            "boreal_forest.infernal",
+            "boreal_forest.radiant",
+            "boreal_forest.fire",
+            "boreal_forest.water",
+            "boreal_forest.earth",
+            "boreal_forest.air",
+            "cold_tundra.weave",
+            "cold_tundra.umbral",
+            "cold_tundra.infernal",
+            "cold_tundra.radiant",
+            "cold_tundra.fire",
+            "cold_tundra.water",
+            "cold_tundra.earth",
+            "cold_tundra.air",
+            "land_ice.weave",
+            "land_ice.umbral",
+            "land_ice.infernal",
+            "land_ice.radiant",
+            "land_ice.fire",
+            "land_ice.water",
+            "land_ice.earth",
+            "land_ice.air"
+          ]
+        },
+        "core": {
+          "enum": [
+            "ocean",
+            "tundra",
+            "desert",
+            "grassland",
+            "forest",
+            "exposed_rock",
+            "snow",
+            "rainforest",
+            "lake",
+            "marsh",
+            "boreal_forest",
+            "cold_tundra",
+            "land_ice"
+          ]
+        },
+        "core_biome_id": {
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            13,
+            15,
+            16,
+            17
+          ]
+        },
+        "magic_school": {
+          "enum": [
+            "weave",
+            "umbral",
+            "infernal",
+            "radiant",
+            "fire",
+            "water",
+            "earth",
+            "air"
+          ]
+        },
+        "group": {
+          "type": "string"
+        },
+        "descriptors": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "asset_id": {
+          "type": "string",
+          "pattern": "^terrain\\.mutation\\.[a-z_]+\\.[a-z]+$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }
-

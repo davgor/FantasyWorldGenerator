@@ -58,14 +58,16 @@ def apply_world_scale(result,cfg):
     from .terrain_climate import add_climate
     from .terrain_settlements import add_settlements
     result=add_climate(result,cfg)
-    from .terrain_magic import add_magic,add_colleges
-    if not cfg.world_recipe:result=add_magic(result,cfg)
+    from .terrain_magic import add_colleges
     result=add_terrain_labels(result,cfg)
-    if cfg.world_recipe and cfg.phase>=6:
+    if cfg.phase>=6 and result.get('climate'):
         extra_start=perf_counter()
-        from .terrain_ecology import add_networks,add_environment
-        add_networks(result,cfg)
+        from .terrain_leyline_history import generate_networks
+        from .terrain_ecology import add_environment
+        from .terrain_history import add_biome_variants
+        generate_networks(result,cfg)
         add_environment(result,cfg)
+        add_biome_variants(result,cfg)
         elapsed=(perf_counter()-extra_start)*1000
         result['timing_ms']['world_ecology']=elapsed;result['timing_ms']['total']+=elapsed
     cfg=derive_population(result,cfg)
@@ -85,6 +87,7 @@ def apply_world_scale(result,cfg):
         from .terrain_world import registry,options
         definitions=registry();resolved={**result['config'],**options(cfg)}
         overrides={k:resolved[k] for k,v in definitions.items() if k!='seed' and resolved[k]!=v['default']}
-        result.setdefault('recipe',{'version':1,'seed':cfg.seed,'overrides':overrides,'parameters':definitions,
+        result.setdefault('recipe',{'version':3,'seed':cfg.seed,'overrides':overrides,'parameters':definitions,
                                    'resolved':resolved,'provenance':{k:'override' if k in overrides else 'default' for k in definitions}})
+    result['generator_version']=8
     return result

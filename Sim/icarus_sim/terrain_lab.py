@@ -62,12 +62,12 @@ class Config:
     radius: float = 500.0
 
     def __post_init__(self):
-        if type(self.world_recipe) is not int or self.world_recipe not in (0,1,2):
-            raise ValueError('world_recipe must be 0, 1 or 2')
-        if self.world_recipe == 2 and (self.shape != 'globe' or self.tectonics != 1):
-            raise ValueError('World recipe 2 requires a tectonic globe')
+        if type(self.world_recipe) is not int or self.world_recipe not in (0,3):
+            raise ValueError('world_recipe must be 0 (geometry experiment) or 3; retired worlds must be regenerated')
+        if self.world_recipe == 3 and (self.shape != 'globe' or self.tectonics != 1):
+            raise ValueError('World recipe 3 requires a tectonic globe')
         if self.world_recipe and self.auto_parameters:
-            raise ValueError('World recipe 1 uses explicit defaults and overrides; auto_parameters requires world_recipe 0')
+            raise ValueError('World recipe 3 uses explicit defaults and overrides; auto_parameters requires world_recipe 0')
         from .terrain_world import validate_options
         validate_options(self.world_options, self.world_recipe)
         if self.world_size not in ("small","medium","large"):raise ValueError("world_size must be small, medium or large")
@@ -115,7 +115,7 @@ class Config:
                 raise ValueError(f'{name} must be an integer')
         if not 0 <= self.seed < 2**32:
             raise ValueError('seed must be 0..4294967295')
-        if self.tectonics not in (0,1) or self.phase not in range(1,17 if self.world_recipe==2 else 10) or not 3 <= self.plate_count <= 48:
+        if self.tectonics not in (0,1) or self.phase not in range(1,17 if self.world_recipe==3 else 10) or not 3 <= self.plate_count <= 48:
             raise ValueError('tectonics is 0 or 1; phase is 1..9 (1..16 for recipe 2); plate_count is 3..48')
         if not all(0 <= v < 2**32 for v in (self.layout_variation,self.detail_variation)):
             raise ValueError('variation seeds must be 0..4294967295')
@@ -206,9 +206,14 @@ def measure(h, spacing, radius_cells):
 
 
 def generate(cfg):
-    if cfg.world_recipe == 2:
+    if cfg.world_recipe == 3:
         from .terrain_history import generate_history
         return generate_history(cfg)
+    return generate_base(cfg)
+
+
+def generate_base(cfg):
+    """Shared physical pipeline; history calls this only through connected water."""
     if cfg.auto_parameters and not cfg.world_recipe:
         from .terrain_recipes import seed_config
         cfg=seed_config(cfg)

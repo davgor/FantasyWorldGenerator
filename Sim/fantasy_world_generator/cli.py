@@ -21,7 +21,7 @@ def world_document(request: dict[str, Any]) -> dict[str, Any]:
     result = generate_request(request)
     return {
         "schema": "fantasy-world-generator.world",
-        "schema_version": 1,
+        "schema_version": 2,
         "generator_version": __version__,
         **result,
     }
@@ -55,7 +55,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             request = json.loads(args.request.read_text(encoding="utf-8"))
         else:
             overrides = {key: value for key, value in {"size": args.size, "phase": args.phase}.items() if value is not None}
-            request = {"recipe_version": 1, "seed": 42 if args.seed is None else args.seed, "overrides": overrides}
+            request = {"recipe_version": 3, "seed": 42 if args.seed is None else args.seed, "overrides": overrides}
         _write_json(args.output, world_document(request))
         return 0
     except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://fantasy-world-generator.local/schemas/age-advance-request.schema.json",
-  "title": "Advance an existing recipe 2 world",
+  "title": "Advance an existing recipe 3 world",
   "type": "object",
   "required": ["api_version", "world"],
   "additionalProperties": false,

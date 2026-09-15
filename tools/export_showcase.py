@@ -28,16 +28,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--output', type=Path, default=Path(__file__).resolve().parents[1] / 'Artifacts/showcase')
+    parser.add_argument('--allow-dirty', action='store_true', help='Local verification only; marks the bundle as an uncommitted, non-publishable preview')
     args = parser.parse_args()
     source = args.source.resolve()
     revision = subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip()
-    if subprocess.check_output(['git', '-C', str(source), 'status', '--porcelain'], text=True).strip():
+    dirty = bool(subprocess.check_output(['git', '-C', str(source), 'status', '--porcelain'], text=True).strip())
+    if dirty and not args.allow_dirty:
         parser.error('Source checkout must be clean so the published revision identifies the generated code.')
     sys.path.insert(0, str(source / 'tools'))
     import terrain_lab
     from icarus_sim.terrain_world import generate_request
 
-    manifest = {'format': 2, 'source_repository': REPOSITORY, 'source_revision': revision,
+    manifest = {'format': 3, 'source_dirty': dirty, 'publication_ready': not dirty, 'source_repository': REPOSITORY, 'source_revision': revision,
                 'timings': 'omitted', 'source_files': {}, 'worlds': []}
     for folder in [source / 'Sim/icarus_sim', source / 'tools']:
         for path in sorted(folder.rglob('*')):
@@ -45,7 +47,7 @@ def main():
                 manifest['source_files'][path.relative_to(source).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     payloads = {}
     for slug, title, seed, overrides, description in WORLDS:
-        world = omit_timings(generate_request({'recipe_version': 2, 'seed': seed, 'overrides': {'size': 65, **overrides}}))
+        world = omit_timings(generate_request({'recipe_version': 3, 'seed': seed, 'overrides': {'size': 65, **overrides}}))
         html = terrain_lab.report(world, live=False)
         html += '''<style>
         #world-mode,#world-generate,#world-advance-age,#world-params,#local-lab,.local-lab{display:none!important}
@@ -54,6 +56,8 @@ def main():
         document.getElementById('world-status').textContent='Seed '+data.config.seed+' · Saved world showcase. Explore layers and lairs; generation runs in GitHub Actions. Timings omitted.';
         document.getElementById('world-status').parentElement.querySelector('h2').textContent='Saved world';
         </script>'''
+        if dirty:
+            html=html.replace('Saved world showcase.', 'Saved world showcase. Uncommitted local preview; not a published revision.')
         filename = slug + '.html'
         payloads[filename] = html.encode('utf-8')
         manifest['worlds'].append(dict(id=slug, title=title, description=description, file=filename,
@@ -66,6 +70,7 @@ def main():
     largest = max(w['bytes'] for w in manifest['worlds']) / 1_000_000
     index = (template.replace('__OPTIONS__', options).replace('__DESCRIPTIONS__', descriptions)
              .replace('__REVISION__', revision).replace('__SIZE__', f'{largest:.1f}'))
+    if dirty:index=index.replace('Sample source revision','Base revision — Uncommitted local preview')
     payloads['index.html'] = index.encode('utf-8')
     payloads['manifest.json'] = (json.dumps(manifest, indent=2, allow_nan=False) + '\n').encode('utf-8')
     # Generate everything before replacing any existing sample; failures cannot publish partial worlds.

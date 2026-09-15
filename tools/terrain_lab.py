@@ -108,7 +108,7 @@ def serve(cfg, port):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     from icarus_sim.terrain_world import default_config
-    defaults=default_config(2)
+    defaults=default_config(3)
     for f in fields(Config):
         parser.add_argument('--'+f.name, type=f.type, default=getattr(defaults,f.name))
     parser.add_argument('--output', type=Path, default=Path('Artifacts/terrain-lab'))
@@ -118,7 +118,7 @@ def main():
     parser.add_argument('--repeats', type=int, default=3)
     parser.add_argument('--prompt', help='Hash text to a seed; overrides --seed without interpreting terrain intent')
     args = parser.parse_args()
-    if args.world_recipe != 2 and not any(a=="--phase" or a.startswith("--phase=") for a in sys.argv[1:]):
+    if args.world_recipe != 3 and not any(a=="--phase" or a.startswith("--phase=") for a in sys.argv[1:]):
         args.phase=9
     try:
         if args.prompt is not None:

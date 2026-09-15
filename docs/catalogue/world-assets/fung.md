@@ -13,7 +13,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Broad cap with original ribbed gills
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -28,7 +28,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Narrow clustered cap with fibrous trunk
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -43,7 +43,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Asymmetric bulbous cap and thick stem
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -58,7 +58,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Young curled cap
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -73,7 +73,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Dry hollow stem with no implied enterable interior
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -88,7 +88,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Broken gills facing partly upward
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 
@@ -103,7 +103,7 @@ Each checkbox means the complete job (source, derivatives and import verificatio
 
 **Generate/assemble:** Thin stalk with original spore head
 
-**Use:** Fungal forest; Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
+**Use:** Ironbark taiga (`boreal_forest.earth`), Ancient rootwoods (`forest.earth`), Colossal jungle (`rainforest.earth`); Biome match; use slope, moisture and water eligibility; exclude buildings and roads.
 
 **Dependencies:** MAT-039.
 

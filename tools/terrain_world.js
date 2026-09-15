@@ -30,7 +30,7 @@ if (data.config.world_recipe >= 1) {
     };
   }
   const status=make('p',`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Every random generation starts from defaults.`,head);status.id='world-status';status.setAttribute('role','status');
-  const advanceButton=make('button','Advance age',head);advanceButton.id='world-advance-age';advanceButton.hidden=data.config.world_recipe!==2;advanceButton.disabled=!live||!data.beast_nests;
+  const advanceButton=make('button','Advance age',head);advanceButton.id='world-advance-age';advanceButton.hidden=data.config.world_recipe!==3;advanceButton.disabled=!live||!data.beast_nests;
   const exportButton=make('button','Export world JSON',head);exportButton.onclick=()=>$('download').click();
   mode.onchange=()=>{parameters.hidden=mode.value==='random';generateButton.textContent=mode.value==='random'?'Generate random world':'Generate with parameters';};
   reset.onclick=()=>{explicit={};for(const [k,e] of Object.entries(inputs))e.value=schema[k].default;};
@@ -55,7 +55,7 @@ if (data.config.world_recipe >= 1) {
     const nest=(data.beast_nests?.sites||[]).find(s=>s.id===nestSelect.value);
     const profile=(data.beast_nests?.profiles||[]).find(p=>p.id===(nest?.species_id||speciesSelect.value));
     const diagnostic=(data.beast_nests?.diagnostics||[]).find(d=>d.species_id===profile?.id);
-    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy; purple: elevated anchors. No simulated creature population; recipe 2 age transitions apply explicit local fantasy-threat rules.';
+    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy; purple: elevated anchors. No simulated creature population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
   }
   function rebuildNests(){
     const nests=data.beast_nests;
@@ -120,7 +120,7 @@ if (data.config.world_recipe >= 1) {
     const small=document.createElement('canvas');small.width=n;small.height=n;const c=small.getContext('2d'),im=c.createImageData(n,n);
     let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){lo=Math.min(lo,v);hi=Math.max(hi,v);}
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){
-      const v=grid[z][x];let color=key==='biome_variant'?(v>=0?data.terrain.magical_biomes[v].color:data.terrain.biomes[data.layers.natural_biome[z][x]].color):['biome','natural_biome'].includes(key)?data.terrain.biomes[v].color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
+      const v=grid[z][x];let color=key==='biome_variant'?(v>=0?data.terrain.magical_biomes[v].color:data.terrain.biomes.find(b=>b.id===data.layers.natural_biome[z][x]).color):['biome','natural_biome'].includes(key)?data.terrain.biomes.find(b=>b.id===v).color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
       for(const [name,{check,alpha}] of Object.entries(overlays))if(check.checked){const value=values(name)?.[z]?.[x]||0,a=Math.min(1,Math.max(0,value))*Number(alpha.value),t=rgbFor(name);color=color.map((v,i)=>v*(1-a)+t[i]*a);}
       const at=(z*n+x)*4;im.data.set([...color.map(Math.round),255],at);
     }
