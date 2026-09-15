@@ -52,7 +52,7 @@ def main():
         .layout{display:block}aside{margin-bottom:20px}body{padding:16px}select{max-width:100%}
         </style><script>
         document.getElementById('world-status').textContent='Seed '+data.config.seed+' · Saved world showcase. Explore layers and lairs; generation runs in GitHub Actions. Timings omitted.';
-        document.querySelector('aside h2').textContent='Saved world';
+        document.getElementById('world-status').parentElement.querySelector('h2').textContent='Saved world';
         </script>'''
         filename = slug + '.html'
         payloads[filename] = html.encode('utf-8')
