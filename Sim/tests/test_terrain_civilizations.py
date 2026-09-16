@@ -43,7 +43,7 @@ class CivilizationTests(unittest.TestCase):
         for key, record in registry.items():
             self.assertNotIn('extends', record)
             self.assertIn('temperature_ideal', record)
-            self.assertEqual(get_profile(key)['schema_version'], 3)
+            self.assertEqual(get_profile(key)['schema_version'], 4)
         self.assertTrue(HUMANS <= {v['id'] for v in profile_options()})
 
     def test_environment_partition_and_fallback(self):
@@ -82,8 +82,8 @@ class CivilizationTests(unittest.TestCase):
         request={'recipe_version':3,'seed':42,'overrides':{'size':17}}
         a=generate_request(request);b=generate_request(request)
         self.assertEqual(a['settlements'],b['settlements'])
-        self.assertEqual(a['generator_version'],12)
-        self.assertEqual(a['settlements']['version'],13)
+        self.assertEqual(a['generator_version'],16)
+        self.assertEqual(a['settlements']['version'],14)
         self.assertEqual(a['civilizations']['version'],2)
         all_sites=a['settlements']['sites']+a.get('sky',{}).get('settlements',[])
         self.assertTrue(all(s['population_profile'] not in ('human','highland','woodland') for s in all_sites))

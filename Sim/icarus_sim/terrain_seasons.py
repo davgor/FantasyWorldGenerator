@@ -74,7 +74,7 @@ def add_seasonal_food(result,cfg):
             if hamlet['core_id']!=site['id']:continue
             x,z=hamlet['x'],hamlet['z'];latitude=90-180*z/(cfg.size-1)
             annual=seasonal_harvest(hamlet['delivered_food'],layers['moisture'][z][x],latitude,
-                layers['temperature'][z][x],p['food_temperature_tolerance'],p['temperature_ideal'],options(cfg)['seasonality'] if cfg.world_recipe else 1.)
+                layers['temperature'][z][x],p['food_temperature_tolerance'],p['food_temperature_ideal'],options(cfg)['seasonality'] if cfg.world_recipe else 1.)
             harvest=[a+b for a,b in zip(harvest,annual)]
         demand=core['food_demand']/12
         # Materials imply storage construction/maintenance; humidity/heat drive spoilage.

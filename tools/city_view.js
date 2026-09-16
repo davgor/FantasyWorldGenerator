@@ -30,7 +30,7 @@
 
   const zoomLabel=make('label','Zoom ',controls),zoom=make('input',undefined,zoomLabel);zoom.type='range';zoom.min=1;zoom.max=4;zoom.step=.25;zoom.value=1;
 
-  make('p','Gold: core services · Purple: other services · Blue: worker houses · Gray: streets · Dark green: land · Blue terrain: water · Red terrain: steep/flood-prone. Outlined plots include setbacks.',dialog);
+  make('p','Gold: core services · Purple: other services · Blue: worker houses · Gray: streets · Terrain: natural biome colors · Magic: colored outlines · Orange: world-road junctions. Outlined plots include setbacks.',dialog);
 
   const viewport=make('div',undefined,dialog);viewport.style.cssText='overflow:auto;max-height:65vh;background:#172d28;border:1px solid #526473';
 
@@ -62,11 +62,17 @@
 
     const terrain=document.createElement('canvas');terrain.width=terrain.height=p.terrain.size;const ctx=terrain.getContext('2d'),im=ctx.createImageData(terrain.width,terrain.height);
 
-    for(let z=0;z<terrain.height;z++)for(let x=0;x<terrain.width;x++)im.data.set([[37,65,48,255],[38,89,118,255],[97,57,51,255]][p.terrain.codes[z][x]],(z*terrain.width+x)*4);
+    for(let z=0;z<terrain.height;z++)for(let x=0;x<terrain.width;x++)im.data.set([...window.cityTerrainStyle.terrainColor(p,x,z),255],(z*terrain.width+x)*4);
 
     for(const [x,z] of p.roads)im.data.set([135,137,125,255],(z*terrain.width+x)*4);ctx.putImageData(im,0,0);
 
     const image=document.createElementNS(ns,'image');image.setAttribute('href',terrain.toDataURL());for(const [k,v]of Object.entries({x:lo,y:lo,width:span,height:span}))image.setAttribute(k,v);svg.append(image);
+    const line=(a,b,color,width)=>{const e=document.createElementNS(ns,'line');for(const [k,v]of Object.entries({x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:color,'stroke-width':width}))e.setAttribute(k,v);svg.append(e);};
+    const cell=p.terrain.cell_m;
+    for(let z=0;z<p.terrain.size;z++)for(let x=0;x<p.terrain.size;x++){const c=window.cityTerrainStyle.magicColor(p,x,z),v=p.terrain.biome_variant?.[z]?.[x];if(!c)continue;const a=lo+x*cell,b=lo+z*cell;
+      for(const [dx,dz,u,w]of [[0,-1,[a,b],[a+cell,b]],[1,0,[a+cell,b],[a+cell,b+cell]],[0,1,[a+cell,b+cell],[a,b+cell]],[-1,0,[a,b+cell],[a,b]]])if(p.terrain.biome_variant?.[z+dz]?.[x+dx]!==v){line(u,w,'#dde6dd',1.4);line(u,w,`rgb(${c.join(',')})`,.7);}}
+    for(const c of p.road_connections||[])if(c.status==='connected')for(let i=1;i<c.local_path_m.length;i++)line(c.local_path_m[i-1],c.local_path_m[i],'#edbc83',4);
+
 
     const shown=p.plots.filter(b=>order.indexOf(b.phase)<=order.indexOf(phase.value)).map(b=>b.housing_upgrade&&order.indexOf(b.housing_upgrade.phase)>order.indexOf(phase.value)?{...b,...b.housing_upgrade.previous}:b);
 
@@ -102,7 +108,7 @@
 
     }
 
-    const s=p.stats;summary.textContent=`${p.city_class} · ${p.shape.shape_id?.replaceAll('_',' ')||'No suitable shape'} · ${p.status} · Shown: ${shown.filter(b=>b.kind==='service').length} services, ${shown.filter(b=>b.building_id==='building.worker_house').length} houses, ${shown.filter(b=>b.building_id==='building.worker_apartment').length} apartment buildings, ${shown.reduce((a,b)=>a+b.workers,0)} workers / ${shown.reduce((a,b)=>a+b.beds,0)} beds. Final housing shortfall: ${s.housing_shortfall}. Simulation urban population: ${s.simulation_population??'unavailable'} (separate estimate). World sample spacing: ${p.source_resolution_m} m.`;
+    const s=p.stats;summary.textContent=`${p.city_class} · ${p.shape.shape_id?.replaceAll('_',' ')||'No suitable shape'} · ${p.status} · Shown: ${shown.filter(b=>b.kind==='service').length} services, ${shown.filter(b=>b.building_id==='building.worker_house').length} houses, ${shown.filter(b=>b.building_id==='building.worker_apartment').length} apartment buildings, ${shown.reduce((a,b)=>a+b.workers,0)} workers / ${shown.reduce((a,b)=>a+b.beds,0)} beds. Final housing shortfall: ${s.housing_shortfall}. Simulation urban population: ${s.simulation_population??'unavailable'} (separate estimate). Regional sample spacing: ${p.source_resolution_m} m · Local terrain: ${p.terrain.cell_m} m.`;
 
   }
 

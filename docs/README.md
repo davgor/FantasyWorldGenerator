@@ -2,6 +2,8 @@
 
 - [Repository plan](../PLAN.md) is the canonical roadmap, ownership, package, and acceptance handoff.
 - [Simulation and world layers](terrain-world-layers.md) is the canonical generator behavior contract.
+- [Unified globe scene](unified-world-scene.md) defines leyline variation, city/world junctions and global placements.
+- [Continuous terrain data](continuous-terrain.md) defines shared physical heights and resolved tile exports.
 - [Final-world city planner](city-planner.md) defines ordered building filling, worker housing and the lab city view.
 - [Historical city shapes](city-shapes.md) defines the sourced shape catalogue and location-based planner selection.
 - [Civilization master registry](civilizations.md) is the canonical authoring guide for entities, generation rules and construction libraries.

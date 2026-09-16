@@ -21,6 +21,52 @@ SCHOOLS = {
 }
 
 
+def network_geometry(seed, count):
+    """Uneven seeded clusters, scattered outliers and independently variable links."""
+    rng=random.Random(child_seed(seed,'clustered-ley-v1'))
+    def unit():
+        y=rng.uniform(-1,1);a=rng.uniform(-math.pi,math.pi);r=math.sqrt(1-y*y)
+        return (r*math.cos(a),y,r*math.sin(a))
+    clusters=rng.randint(1,min(4,count));centres=[unit() for _ in range(clusters)]
+    spread=rng.uniform(.12,.8);outlier=rng.uniform(.05,.4);nodes=[];groups=[]
+    for _ in range(count):
+        group=rng.randrange(clusters)
+        for attempt in range(1000):
+            if rng.random()<outlier:p=unit()
+            else:
+                q=[v+rng.gauss(0,spread) for v in centres[group]];length=math.sqrt(sum(v*v for v in q))
+                p=tuple(v/length for v in q)
+            if all(abs(sum(a*b for a,b in zip(p,q)))<.9999 for q in nodes):break
+        else:raise ValueError('Could not separate ley points')
+        nodes.append(p);groups.append(group)
+    # Three sacred loci share a straight spherical alignment; other loci remain scattered.
+    # This is a fantasy interpretation of Watkins' alignments, not a physical law.
+    if count>=3:
+        arc=arc_frame(nodes[0],nodes[1]);t=rng.uniform(.3,.7)*arc[3]
+        nodes[2]=tuple(x*math.cos(t)+v*math.sin(t) for x,v in zip(arc[0],arc[2]))
+        groups[1]=groups[2]=groups[0]
+    pairs={(0,2),(1,2)} if count>=3 else set()
+    # Sparse trees within clusters; some schools have disconnected concentrations.
+    for group in range(clusters):
+        members=[i for i,g in enumerate(groups) if g==group]
+        if not members:continue
+        joined={members[0]}
+        while len(joined)<len(members):
+            _,a,b=min((1-sum(x*y for x,y in zip(nodes[a],nodes[b])),a,b) for a in sorted(joined) for b in members if b not in joined)
+            pairs.add(tuple(sorted((a,b))));joined.add(b)
+    link_chance=rng.uniform(.08,.45)
+    for a in range(count):
+        if rng.random()<link_chance:
+            choices=[b for b in range(count) if b!=a]
+            b=rng.choice(choices);pairs.add(tuple(sorted((a,b))))
+    edges=[]
+    for a,b in sorted(pairs):
+        frame=arc_frame(nodes[a],nodes[b])
+        edges.append({'from':a,'to':b,'path':[[x*math.cos(frame[3]*k/32)+t*math.sin(frame[3]*k/32)
+                       for x,t in zip(frame[0],frame[2])] for k in range(33)]})
+    return nodes,edges,{'version':2,'model':'landscape_alignments','aligned_nodes':[0,2,1] if count>=3 else [],'clusters':clusters,'spread':spread,'outlier_fraction':outlier,'extra_link_probability':link_chance}
+
+
 def generate_networks(result, cfg):
     from .terrain_world import options
     o = options(cfg)
@@ -32,20 +78,20 @@ def generate_networks(result, cfg):
         enabled = cfg.magic_enabled and random.Random(seed).random() < o[name + '_occurrence']
         nodes, edges = [], []
         if enabled:
-            add_magic(temporary, replace(cfg, phase=6, seed=seed, ley_nodes=o[name + '_nodes'],
-                                        ley_width=o[name + '_width']))
+            positions, links, distribution = network_geometry(seed,o[name + '_nodes'])
             rng = random.Random(child_seed(seed, 'intensities'))
             nodes = [{'id': f'{name}-node-{i}', 'direction': list(p), 'intensity': rng.uniform(.35, 1.65)}
-                     for i, p in enumerate(temporary['magic']['nodes'])]
+                     for i, p in enumerate(positions)]
             edges = [{**e, 'id': f'{name}-line-{i}', 'intensity': rng.uniform(.35, 1.65)}
-                     for i, e in enumerate(temporary['magic']['edges'])]
+                     for i, e in enumerate(links)]
         networks[name] = {'name': name, 'group': group, 'descriptors': descriptors, 'color': color,
                           'seed': seed, 'strength': o[name + '_strength'], 'width_m': o[name + '_width'],
-                          'instability': o[name + '_instability'], 'nodes': nodes, 'edges': edges}
-    result['magic'] = {'version': 3, 'school_order': list(SCHOOLS), 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
+                          'instability': o[name + '_instability'], 'nodes': nodes, 'edges': edges,
+                          'distribution':distribution if enabled else None}
+    result['magic'] = {'version': 4, 'school_order': list(SCHOOLS), 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
                        'networks': networks, 'colleges': [], 'enabled': bool(cfg.magic_enabled),
                        'mutation_threshold': .35, 'dominance_margin': .08,
-                       'method': 'Eight independently seeded networks. Node and line intensities are editable; '
+                       'method': 'Eight independently seeded sacred alignments with uneven clusters, scattered outliers and variable connectivity. Node and line intensities are editable; '
                                  'overlapping raw potency is preserved. Mutation requires potency >= 0.35 '
                                  'and an absolute lead >= 0.08 over the next strongest school.'}
     evaluate_networks(result, cfg)

@@ -39,12 +39,15 @@ def generate_patch(world,cfg):
     east=(-math.sin(lon),0.,math.cos(lon))
     north=(-math.sin(lat)*math.cos(lon),math.cos(lat),-math.sin(lat)*math.sin(lon))
     segments=math.ceil(cfg.span/cfg.spacing); step=cfg.span/segments
+    from .terrain_detail import HeightField
+    field=HeightField(world)
+    canonical=bool(world.get('terrain_detail'))
     seed=child_seed(world['config']['seed'],'micro-relief')
     resolved=cfg.detail_scale>=2*step
     def elevation(p):
         base=sample(world['layers']['height'],p)
         detail=cfg.detail_height*perlin3(*(v*radius/cfg.detail_scale for v in p),seed) if resolved else 0.
-        return base,detail
+        return (base,field.height(p)-base) if canonical else (base,detail)
     origin_height=sum(elevation(center))
     grids={key:[] for key in ('height','detail','local_x','local_y','local_z')}
     for z in range(segments+1):
@@ -65,12 +68,12 @@ def generate_patch(world,cfg):
         for x in range(segments):
             a=z*(segments+1)+x; b=a+segments+1
             indices.extend((a,b,a+1,a+1,b,b+1))
-    return {'patch_version':1,'world_config':world['config'],'world_generator_version':world.get('generator_version'),
+    return {'patch_version':2 if canonical else 1,'terrain_detail':world.get('terrain_detail'),'world_config':world['config'],'world_generator_version':world.get('generator_version'),
             'patch_config':asdict(cfg),'radius_m':radius,'size':segments+1,'spacing_m':step,
-            'detail_seed':seed,'detail_resolved':resolved,'origin_height_m':origin_height,
+            'detail_seed':seed,'detail_resolved':True if canonical else resolved,'origin_height_m':origin_height,
             'triangle_indices':indices,'vertex_order':'row-major; flatten local_x/local_y/local_z; triangle normals face outward',
             'coordinates':'local tangent frame: x east, y up, z north; metres; origin on terrain at patch center',
-            'warnings':['Coarse final terrain is interpolated; micro relief is added afterward. Drainage is not rerun at patch resolution.',
+            'warnings':(['Canonical world heights; legacy patch detail controls are ignored. Sample spacing changes mesh fidelity, not terrain.'] if canonical else [])+['Drainage is regional; protected water masks suppress local detail.',
                         'Spacing is on the reference sphere; elevated surface edge lengths differ slightly.'],
             'timing_ms':(perf_counter()-started)*1000,**grids}
 

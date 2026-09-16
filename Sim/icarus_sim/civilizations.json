@@ -1,7 +1,7 @@
 {
   "schema": "fantasy-world-generator.civilization-registry",
-  "schema_version": 5,
-  "revision": 10,
+  "schema_version": 6,
+  "revision": 11,
   "description": "Single authoring source for independent civilizations, generic rule parameters, presentation, building/layout libraries and measured structure blocks. No population inheritance.",
   "defaults": {
     "profile_id": "human_heartland",
@@ -91,7 +91,9 @@
         "allocation_group": null,
         "priority": 0,
         "structure_blocks": null
-      }
+      },
+      "food_temperature_ideal": 18,
+      "minimum_founding_residents": 40
     }
   },
   "building_catalogue": {
@@ -109,7 +111,8 @@
     "elf",
     "gnome",
     "tidekin",
-    "hill_dwarf"
+    "hill_dwarf",
+    "frosthold_dwarf"
   ],
   "parent_races": {
     "human": {
@@ -184,7 +187,9 @@
               "allocation_group": "human_geography",
               "priority": 4,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 20,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -198,7 +203,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -1281,7 +1287,9 @@
               "allocation_group": "human_geography",
               "priority": 1,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 28,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -1295,7 +1303,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -2283,7 +2292,7 @@
             "food_moisture_ideal": 0.55,
             "irrigation": 0.55,
             "food_demand": 10,
-            "land_per_city_km2": 1.8,
+            "land_per_city_km2": 0.9,
             "support_multiplier": 1,
             "college_slope_limit": 15,
             "college_temperature_min": -19,
@@ -2339,7 +2348,9 @@
               "allocation_group": "human_geography",
               "priority": 0,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 4,
+            "minimum_founding_residents": 30
           },
           "settlement": {
             "surface_habitat": {},
@@ -2351,9 +2362,10 @@
             "reason": null
           },
           "economy": {
-            "fishing_reach_multiplier": 1.0,
+            "fishing_reach_multiplier": 1.25,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0.25
           },
           "sky": {
             "score_bias": 0,
@@ -3380,7 +3392,9 @@
               "allocation_group": "human_geography",
               "priority": 3,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -3394,7 +3408,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -4509,7 +4524,9 @@
               "allocation_group": "human_geography",
               "priority": 2,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 25,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -4523,7 +4540,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -5593,7 +5611,9 @@
               "allocation_group": "human_geography",
               "priority": 5,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -5607,7 +5627,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -6612,7 +6633,9 @@
               "allocation_group": null,
               "priority": 0,
               "structure_blocks": null
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {
@@ -6656,7 +6679,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -7696,7 +7720,9 @@
               "allocation_group": null,
               "priority": 0,
               "structure_blocks": null
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -7721,7 +7747,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.5,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": -10,
@@ -8745,7 +8772,9 @@
               "allocation_group": null,
               "priority": 0,
               "structure_blocks": null
-            }
+            },
+            "food_temperature_ideal": 9,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {
@@ -8841,7 +8870,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -9870,7 +9900,9 @@
               "allocation_group": null,
               "priority": 0,
               "structure_blocks": null
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {},
@@ -9887,7 +9919,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": 0.5,
-            "air_terminal_resource_min": 0.5
+            "air_terminal_resource_min": 0.5,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 4,
@@ -10895,7 +10928,9 @@
               "allocation_group": null,
               "priority": 0,
               "structure_blocks": "common"
-            }
+            },
+            "food_temperature_ideal": 18,
+            "minimum_founding_residents": 40
           },
           "settlement": {
             "surface_habitat": {
@@ -10935,7 +10970,8 @@
           "economy": {
             "fishing_reach_multiplier": 1.0,
             "industrial_resource_min": null,
-            "air_terminal_resource_min": null
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0
           },
           "sky": {
             "score_bias": 0,
@@ -11839,6 +11875,1189 @@
                 "structure_id": "building.boundary_wall",
                 "quantity_mode": "fit_route_or_perimeter",
                 "placement_conditions": []
+              },
+              {
+                "structure_id": "building.bridge",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "route_crossing"
+                ]
+              },
+              {
+                "structure_id": "building.wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "defended_perimeter"
+                ]
+              }
+            ]
+          }
+        },
+        "frosthold_dwarf": {
+          "population": {
+            "name": "Frosthold Dwarves",
+            "description": "Small cold-region mineral holds, supported by reachable hinterlands, bounded winter fisheries and trade. No underground or geothermal simulation.",
+            "temperature_ideal": -8,
+            "temperature_tolerance": 20,
+            "slope_comfort": 22,
+            "site_slope_limit": 45,
+            "work_slope_limit": 30,
+            "road_grade_limit": 0.55,
+            "water_reach": 600,
+            "moisture_ideal": 0.6,
+            "water_weight": 0.25,
+            "slope_weight": 0.15,
+            "climate_weight": 0.2,
+            "moisture_weight": 0.15,
+            "resource_weight": 0.25,
+            "flood_penalty": 0.25,
+            "magic_penalty": 0.2,
+            "mutation_limit": 0.45,
+            "difficult_fraction": 0.2,
+            "food_temperature_tolerance": 30,
+            "food_slope_comfort": 24,
+            "food_moisture_ideal": 0.55,
+            "irrigation": 0.7,
+            "food_demand": 10,
+            "land_per_city_km2": 0.55,
+            "support_multiplier": 1,
+            "college_slope_limit": 22,
+            "college_temperature_min": -15,
+            "college_temperature_max": 38,
+            "college_water_reach": 600,
+            "college_flood_limit": 0.5,
+            "college_suitability_min": 0.55,
+            "biome_preferences": {
+              "5": 0.12,
+              "6": 0.05
+            },
+            "food_biome_multipliers": {
+              "13": 0.35
+            },
+            "magic_biome_preferences": {
+              "desert.weave": 0.08,
+              "desert.infernal": 0.08,
+              "desert.water": 0.08
+            },
+            "food_magic_biome_multipliers": {
+              "tundra.infernal": 0.05,
+              "desert.infernal": 0.15,
+              "grassland.infernal": 0.05,
+              "forest.infernal": 0.05,
+              "exposed_rock.infernal": 0.05,
+              "snow.infernal": 0.05,
+              "rainforest.infernal": 0.05,
+              "marsh.infernal": 0.05,
+              "boreal_forest.infernal": 0.05,
+              "cold_tundra.infernal": 0.05,
+              "land_ice.infernal": 0.05,
+              "forest.earth": 0.5,
+              "rainforest.earth": 0.5,
+              "boreal_forest.earth": 0.5,
+              "desert.weave": 0.15,
+              "desert.water": 0.15,
+              "marsh.umbral": 0.35
+            },
+            "civilization": {
+              "kind": "entity",
+              "inspiration": null,
+              "environment": "Cold mineral-rich uplands and coastal cliffs",
+              "habitat": {
+                "field": "temperature",
+                "max": 5
+              },
+              "allocation_group": null,
+              "priority": 0,
+              "structure_blocks": null
+            },
+            "food_temperature_ideal": 9,
+            "minimum_founding_residents": 30
+          },
+          "settlement": {
+            "surface_habitat": {
+              "all": [
+                {
+                  "field": "abs_latitude",
+                  "min": 50
+                },
+                {
+                  "field": "temperature",
+                  "max": 5
+                },
+                {
+                  "field": "resource",
+                  "min": 0.45
+                },
+                {
+                  "any": [
+                    {
+                      "field": "biome",
+                      "in": [
+                        5
+                      ]
+                    },
+                    {
+                      "field": "tpi",
+                      "gt": 6
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "slope",
+                          "gt": 10
+                        },
+                        {
+                          "field": "height",
+                          "gt": 15
+                        }
+                      ]
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "maritime",
+                          "gt": 0.3
+                        },
+                        {
+                          "field": "slope",
+                          "min": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "world_habitat": {
+              "all": [
+                {
+                  "field": "abs_latitude",
+                  "min": 50
+                },
+                {
+                  "field": "temperature",
+                  "max": 5
+                },
+                {
+                  "field": "resource",
+                  "min": 0.45
+                },
+                {
+                  "any": [
+                    {
+                      "field": "biome",
+                      "in": [
+                        5
+                      ]
+                    },
+                    {
+                      "field": "tpi",
+                      "gt": 6
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "slope",
+                          "gt": 10
+                        },
+                        {
+                          "field": "height",
+                          "gt": 15
+                        }
+                      ]
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "maritime",
+                          "gt": 0.3
+                        },
+                        {
+                          "field": "slope",
+                          "min": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "freshwater_reach_multiplier": 2,
+            "support_outside_habitat": true,
+            "coastal_score_weight": 0.25,
+            "resource_score_weight": 0.0,
+            "reason": "Cold mineral-rich upland or coastal cliff with reachable freshwater and supply hinterland"
+          },
+          "economy": {
+            "fishing_reach_multiplier": 1.25,
+            "industrial_resource_min": null,
+            "air_terminal_resource_min": null,
+            "winter_fishing_fraction": 0.15
+          },
+          "sky": {
+            "score_bias": 0,
+            "moisture_score_weight": 0
+          },
+          "presentation": {
+            "map_color_rgb": [
+              133,
+              182,
+              207
+            ],
+            "wall_color_rgb": [
+              111,
+              129,
+              145
+            ],
+            "roof_color_rgb": [
+              60,
+              92,
+              114
+            ],
+            "outpost_colors": false
+          },
+          "buildings": {
+            "packs": {
+              "city_pack_generic_surface": [
+                "leader_homes",
+                "barracks",
+                "noble_homes",
+                "worker_housing",
+                "apartments",
+                "market_district",
+                "religious_building",
+                "granary",
+                "workshop",
+                "courthouse",
+                "watchtower",
+                "temple",
+                "city_wall",
+                "river_dock",
+                "city_gate"
+              ],
+              "city_pack_human_highland": [
+                "leader_homes",
+                "barracks",
+                "noble_homes",
+                "worker_housing",
+                "market_district",
+                "granary",
+                "workshop",
+                "courthouse",
+                "watchtower",
+                "temple",
+                "city_wall"
+              ],
+              "city_pack_dwarven_metalwork": [
+                "leader_homes",
+                "barracks",
+                "noble_homes",
+                "worker_housing",
+                "market_district",
+                "granary",
+                "forge",
+                "courthouse",
+                "watchtower",
+                "temple",
+                "city_wall"
+              ]
+            },
+            "structure_block_ids": [
+              "common"
+            ],
+            "housing_status": "deferred",
+            "layout_features": {
+              "standard_city_layout": [
+                "leader_homes",
+                "barracks",
+                "noble_homes",
+                "worker_housing",
+                "apartments",
+                "market_district",
+                "religious_building"
+              ],
+              "riverfront_city_layout": [
+                "leader_homes",
+                "barracks",
+                "noble_homes",
+                "worker_housing",
+                "apartments",
+                "market_district",
+                "religious_building"
+              ]
+            }
+          },
+          "small_city": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Essential local services and culturally relevant trades.",
+            "buildings": [
+              {
+                "structure_id": "building.water_point",
+                "name": "Public water point",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.well",
+                "name": "Public well",
+                "count": 1,
+                "placement_conditions": [
+                  "usable_groundwater"
+                ]
+              },
+              {
+                "structure_id": "building.latrine",
+                "name": "Public latrines",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.waste_yard",
+                "name": "Waste collection yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.granary",
+                "name": "Granary",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.bakery",
+                "name": "Bakery and communal oven",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hand_mill",
+                "name": "Hand-milling shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.root_cellar",
+                "name": "Cool store and root cellar",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_square",
+                "name": "Market square",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_shelter",
+                "name": "Market stalls and covered hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.warehouse",
+                "name": "Winter supply warehouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cart_yard",
+                "name": "Cart yard and wagon shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.smithy",
+                "name": "Smithy",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.carpenter",
+                "name": "Carpenter and wheelwright yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.mason",
+                "name": "Mason and construction yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.weaver",
+                "name": "Weaver and tailor workshop",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fuel_depot",
+                "name": "Winter fuel store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.civic_hall",
+                "name": "Frosthold council hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.court",
+                "name": "Court and records office",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.notice_space",
+                "name": "Proclamation and notice space",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.infirmary",
+                "name": "Infirmary and healer's house",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fire_shed",
+                "name": "Fire equipment shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.temple",
+                "name": "Ancestral hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cemetery",
+                "name": "Cemetery and funerary shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guardhouse",
+                "name": "Guardhouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.holding_cells",
+                "name": "Holding cells",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.treasury",
+                "name": "Treasury and tax store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guildhall",
+                "name": "Guild hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.preservation_house",
+                "name": "Winter preservation house",
+                "count": 1,
+                "placement_conditions": [
+                  "food_surplus"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.street",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.drainage",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.boundary_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.stairs_ramps",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "grade_change"
+                ]
+              },
+              {
+                "structure_id": "building.retaining_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "retention_needed"
+                ]
+              },
+              {
+                "structure_id": "building.bridge",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "route_crossing"
+                ]
+              },
+              {
+                "structure_id": "building.ditch_palisade",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "defended_perimeter"
+                ]
+              }
+            ]
+          },
+          "medium_city": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Expanded service capacity, organized trades and civic defense.",
+            "buildings": [
+              {
+                "structure_id": "building.water_point",
+                "name": "Public water point",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.well",
+                "name": "Public well",
+                "count": 1,
+                "placement_conditions": [
+                  "usable_groundwater"
+                ]
+              },
+              {
+                "structure_id": "building.latrine",
+                "name": "Public latrines",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.waste_yard",
+                "name": "Waste collection yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.granary",
+                "name": "Granary",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.bakery",
+                "name": "Bakery and communal oven",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hand_mill",
+                "name": "Hand-milling shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.root_cellar",
+                "name": "Cool store and root cellar",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_square",
+                "name": "Market square",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_shelter",
+                "name": "Market stalls and covered hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.warehouse",
+                "name": "Winter supply warehouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cart_yard",
+                "name": "Cart yard and wagon shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.smithy",
+                "name": "Smithy",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.carpenter",
+                "name": "Carpenter and wheelwright yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.mason",
+                "name": "Mason and construction yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.weaver",
+                "name": "Weaver and tailor workshop",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fuel_depot",
+                "name": "Winter fuel store",
+                "count": 2,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.civic_hall",
+                "name": "Frosthold council hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.court",
+                "name": "Court and records office",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.notice_space",
+                "name": "Proclamation and notice space",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.infirmary",
+                "name": "Infirmary and healer's house",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fire_shed",
+                "name": "Fire equipment shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.temple",
+                "name": "Ancestral hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cemetery",
+                "name": "Cemetery and funerary shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guardhouse",
+                "name": "Guardhouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.holding_cells",
+                "name": "Holding cells",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.inn",
+                "name": "Sheltered traders hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.stable",
+                "name": "Stable and farrier yard",
+                "count": 1,
+                "placement_conditions": [
+                  "working_animals"
+                ]
+              },
+              {
+                "structure_id": "building.weigh_house",
+                "name": "Weigh house and toll office",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guildhall",
+                "name": "Guild hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.treasury",
+                "name": "Treasury and tax store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.apothecary",
+                "name": "Apothecary and herb garden",
+                "count": 1,
+                "placement_conditions": [
+                  "medicinal_supply"
+                ]
+              },
+              {
+                "structure_id": "building.school",
+                "name": "School and study hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.barracks",
+                "name": "Barracks service and muster block",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.armory",
+                "name": "Armory",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.training_yard",
+                "name": "Training and muster yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.tower",
+                "name": "Watch and wall towers",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.square",
+                "name": "Public squares and courtyards",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.smelter",
+                "name": "Smelter and furnace yard",
+                "count": 1,
+                "placement_conditions": [
+                  "ore_and_fuel_supply"
+                ]
+              },
+              {
+                "structure_id": "building.gatehouse",
+                "name": "Gatehouse",
+                "count": 1,
+                "placement_conditions": [
+                  "defended_perimeter"
+                ]
+              },
+              {
+                "structure_id": "building.preservation_house",
+                "name": "Winter preservation house",
+                "count": 1,
+                "placement_conditions": [
+                  "food_surplus"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.street",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.drainage",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.boundary_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.stairs_ramps",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "grade_change"
+                ]
+              },
+              {
+                "structure_id": "building.retaining_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "retention_needed"
+                ]
+              },
+              {
+                "structure_id": "building.bridge",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "route_crossing"
+                ]
+              },
+              {
+                "structure_id": "building.wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "defended_perimeter"
+                ]
+              }
+            ]
+          },
+          "capital_city": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Regional administration, major civic institutions and fortified command; provisional capital budget.",
+            "buildings": [
+              {
+                "structure_id": "building.water_point",
+                "name": "Public water point",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.well",
+                "name": "Public well",
+                "count": 1,
+                "placement_conditions": [
+                  "usable_groundwater"
+                ]
+              },
+              {
+                "structure_id": "building.latrine",
+                "name": "Public latrines",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.waste_yard",
+                "name": "Waste collection yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.granary",
+                "name": "Granary",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.bakery",
+                "name": "Bakery and communal oven",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hand_mill",
+                "name": "Hand-milling shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.root_cellar",
+                "name": "Cool store and root cellar",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_square",
+                "name": "Market square",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.market_shelter",
+                "name": "Market stalls and covered hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.warehouse",
+                "name": "Winter supply warehouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cart_yard",
+                "name": "Cart yard and wagon shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.smithy",
+                "name": "Smithy",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.carpenter",
+                "name": "Carpenter and wheelwright yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.mason",
+                "name": "Mason and construction yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.weaver",
+                "name": "Weaver and tailor workshop",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fuel_depot",
+                "name": "Winter fuel store",
+                "count": 2,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.civic_hall",
+                "name": "Frosthold council hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.court",
+                "name": "Court and records office",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.notice_space",
+                "name": "Proclamation and notice space",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.infirmary",
+                "name": "Infirmary and healer's house",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.fire_shed",
+                "name": "Fire equipment shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.temple",
+                "name": "Ancestral hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.cemetery",
+                "name": "Cemetery and funerary shelter",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guardhouse",
+                "name": "Guardhouse",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.holding_cells",
+                "name": "Holding cells",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.inn",
+                "name": "Sheltered traders hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.stable",
+                "name": "Stable and farrier yard",
+                "count": 1,
+                "placement_conditions": [
+                  "working_animals"
+                ]
+              },
+              {
+                "structure_id": "building.weigh_house",
+                "name": "Weigh house and toll office",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.guildhall",
+                "name": "Guild hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.treasury",
+                "name": "Treasury and tax store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.apothecary",
+                "name": "Apothecary and herb garden",
+                "count": 1,
+                "placement_conditions": [
+                  "medicinal_supply"
+                ]
+              },
+              {
+                "structure_id": "building.school",
+                "name": "School and study hall",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.barracks",
+                "name": "Barracks service and muster block",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.armory",
+                "name": "Armory",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.training_yard",
+                "name": "Training and muster yard",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.tower",
+                "name": "Watch and wall towers",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.square",
+                "name": "Public squares and courtyards",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.library",
+                "name": "Library and archive",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.great_temple",
+                "name": "Great temple or cathedral",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.keep",
+                "name": "Frosthold refuge keep",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.isolation_house",
+                "name": "Isolation ward",
+                "count": 1,
+                "placement_conditions": [
+                  "isolation_access"
+                ]
+              },
+              {
+                "structure_id": "building.smelter",
+                "name": "Smelter and furnace yard",
+                "count": 1,
+                "placement_conditions": [
+                  "ore_and_fuel_supply"
+                ]
+              },
+              {
+                "structure_id": "building.laboratory",
+                "name": "Alchemy and magical laboratory",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.crypt",
+                "name": "Crypt or mausoleum",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.gatehouse",
+                "name": "Gatehouse",
+                "count": 1,
+                "placement_conditions": [
+                  "defended_perimeter"
+                ]
+              },
+              {
+                "structure_id": "building.preservation_house",
+                "name": "Winter preservation house",
+                "count": 1,
+                "placement_conditions": [
+                  "food_surplus"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.street",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.drainage",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.boundary_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.stairs_ramps",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "grade_change"
+                ]
+              },
+              {
+                "structure_id": "building.retaining_wall",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": [
+                  "retention_needed"
+                ]
               },
               {
                 "structure_id": "building.bridge",

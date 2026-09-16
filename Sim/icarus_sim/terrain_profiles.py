@@ -6,7 +6,7 @@ from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue
 
 VARIANT_IDS = frozenset(b['id'] for b in biome_catalogue())
 
-FIELDS=set('name description temperature_ideal temperature_tolerance slope_comfort site_slope_limit work_slope_limit road_grade_limit water_reach moisture_ideal water_weight slope_weight climate_weight moisture_weight resource_weight flood_penalty magic_penalty mutation_limit difficult_fraction food_temperature_tolerance food_slope_comfort food_moisture_ideal irrigation food_demand land_per_city_km2 support_multiplier college_slope_limit college_temperature_min college_temperature_max college_water_reach college_flood_limit college_suitability_min biome_preferences food_biome_multipliers magic_biome_preferences food_magic_biome_multipliers'.split())
+FIELDS=set('name description food_temperature_ideal minimum_founding_residents temperature_ideal temperature_tolerance slope_comfort site_slope_limit work_slope_limit road_grade_limit water_reach moisture_ideal water_weight slope_weight climate_weight moisture_weight resource_weight flood_penalty magic_penalty mutation_limit difficult_fraction food_temperature_tolerance food_slope_comfort food_moisture_ideal irrigation food_demand land_per_city_km2 support_multiplier college_slope_limit college_temperature_min college_temperature_max college_water_reach college_flood_limit college_suitability_min biome_preferences food_biome_multipliers magic_biome_preferences food_magic_biome_multipliers'.split())
 
 
 def profiles():
@@ -22,7 +22,7 @@ def validate_habitat(rule,depth=0):
             if set(rule)!={operator} or not isinstance(rule[operator],list) or not rule[operator]:raise ValueError('Invalid habitat combination')
             for child in rule[operator]:validate_habitat(child,depth+1)
             return
-    if rule.get('field') not in ('biome','variant','temperature','moisture','maritime','landmass_area_m2','landmass_fraction','largest_landmass','resource','slope','height','tpi','coastal_support'):
+    if rule.get('field') not in ('biome','variant','temperature','moisture','maritime','landmass_area_m2','landmass_fraction','largest_landmass','resource','slope','height','tpi','coastal_support','abs_latitude'):
         raise ValueError('Unknown habitat field')
     if set(rule)-{'field','in','min','max','gt','equals'} or len(rule)<2:raise ValueError('Invalid habitat comparison')
     for key in ('min','max','gt'):
@@ -76,7 +76,9 @@ def validate_profile(raw,profile_id):
     if not 0<=result['food_demand']<=10000:raise ValueError('Food demand out of range')
     if not .01<=result['land_per_city_km2']<=1000 or not 0<result['support_multiplier']<=10:raise ValueError('Population footprint out of range')
     result['civilization']=identity
-    result['schema_version']=3
+    if type(result['minimum_founding_residents']) is not int or not 1<=result['minimum_founding_residents']<=10000:raise ValueError('Invalid founding minimum')
+    if not -100<=result['food_temperature_ideal']<=100:raise ValueError('Invalid food temperature ideal')
+    result['schema_version']=4
     result['definition_hash']=hashlib.sha256(json.dumps(result,sort_keys=True).encode()).hexdigest()
     return result
 

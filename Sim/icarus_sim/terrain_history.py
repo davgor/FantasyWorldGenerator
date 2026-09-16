@@ -205,7 +205,7 @@ def age_transition(result,cfg,age):
                                     'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests']})
 
 
-STATE_KEYS=('city_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','ruins',
+STATE_KEYS=('world_scene','terrain_detail','city_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','ruins',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area')
 
@@ -255,6 +255,8 @@ def generate_history(cfg):
             c=replace(cfg,phase=6)
             add_climate(result,c);add_terrain_labels(result,c);add_environment(result,c)
             result['layers']['natural_biome']=copy.deepcopy(result['layers']['biome'])
+            from .terrain_detail import attach_detail
+            attach_detail(result)
         elif stage==9:
             generate_networks(result,cfg);refresh_environment(result,cfg)
         elif stage==10:
@@ -267,7 +269,7 @@ def generate_history(cfg):
             from .city_planner import fill_cities
             fill_cities(result)
         capture(stage)
-    result['generator_version']=12
+    result['generator_version']=16
     result['config']=asdict(cfg);result['effective_config']['world_recipe']=3;result['effective_config']['phase']=cfg.phase
     result['phases'].update(version=2,completed=cfg.phase,titles=STAGES)
     result['build_stages']=snapshots
@@ -278,6 +280,8 @@ def generate_history(cfg):
     result['warnings'].append('Recipe 3 history is an artistic simulation: plate motion, city mortality and leyline changes are not calibrated physical or demographic predictions.')
     result['timing_ms']['history_total']=(perf_counter()-started)*1000
     result['timing_ms']['total']=result['timing_ms']['history_total']
+    from .world_debug import build_debug
+    result['debug_stats']=build_debug(result)
     return result
 
 
@@ -290,15 +294,20 @@ def validate_age_world(world):
         cfg=Config(**world['config'])
         if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>257:
             raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=257')
-        if world['terrain']['version']!=6 or world['generator_version']!=12 or world['recipe']['version']!=3:
+        if world['terrain']['version']!=6 or world['generator_version']!=16 or world['recipe']['version']!=3:
             raise ValueError('Retired world contract; regenerate with recipe_version 3')
-        if world['magic']['version']!=3 or world['history']['version']!=1:
+        if world['magic']['version']!=4 or world['history']['version']!=1:
             raise ValueError('Unsupported magic or history state version')
-        if world['settlements']['version']!=13 or world['civilizations']['version']!=2:
+        if world['settlements']['version']!=14 or world['civilizations']['version']!=2:
             raise ValueError('Unsupported civilization or settlement version')
         from .civilization_registry import registry_identity
         if world['civilizations']['registry']!=registry_identity():
             raise ValueError('Civilization registry changed; regenerate or explicitly migrate this world')
+        from .terrain_detail import attach_detail
+        expected_detail={}
+        expected_detail['config']=world['config']
+        attach_detail(expected_detail)
+        if world.get('terrain_detail')!=expected_detail['terrain_detail']:raise ValueError('Terrain detail identity mismatch; regenerate')
         if 'city_plans' in world:
             from .city_planner import planner_identity
             if world['city_plans'].get('identity')!=planner_identity():
@@ -415,6 +424,7 @@ def advance_age_request(body):
         previous_layers=copy.deepcopy(baseline['layers'])
         previous_state={k:copy.deepcopy(baseline.get(k)) for k in STATE_KEYS}
         result.pop('city_plans',None)
+        result.pop('world_scene',None)
         age_transition(result,cfg,age)
         if age==start_age+steps:
             from .city_planner import fill_cities
@@ -429,4 +439,6 @@ def advance_age_request(body):
             result['phases']['completed']=stage
     result['age_api_version']=1
     result['timing_ms']['age_advance_total']=(perf_counter()-started)*1000
+    from .world_debug import build_debug
+    result['debug_stats']=build_debug(result)
     return result

@@ -1,6 +1,8 @@
 /* Dependency-free metre-scale terrain and cuboids. WebGL depth testing handles occlusion. */
 (() => {
   const radians=d=>d*Math.PI/180;
+  function terrainColor(plan,x,z){return plan.terrain.biome_catalogue?.find(b=>b.id===plan.terrain.natural_biome?.[z]?.[x])?.color||[[59,99,71],[41,89,120],[110,66,59]][plan.terrain.codes[z][x]];}
+  function magicColor(plan,x,z){const v=plan.terrain.biome_variant?.[z]?.[x];if(!(v>=0))return null;const school=plan.terrain.magical_catalogue?.[v]?.magic_school;return plan.terrain.magic_colors?.[school]||null;}
   function heightAt(plan,x,z){
     const surface=plan.terrain.surface;if(!surface)return 0;
     const n=surface.size,lo=plan.bounds_m[0],step=surface.step_m;
@@ -26,9 +28,17 @@
     for(let j=0;j<n;j++)for(let i=0;i<n;i++){
       const x=lo+i*step,z=lo+j*step;
       const points=[[x,z],[x+step,z],[x+step,z+step],[x,z+step]].map(([x,z])=>[x,heightAt(plan,x,z)-datum,z]);
-      const color=roads.has(`${i},${j}`)?[.53,.54,.49]:[[.23,.39,.28],[.16,.35,.47],[.43,.26,.23]][plan.terrain.codes[j][i]];
+      const color=roads.has(`${i},${j}`)?[.53,.54,.49]:terrainColor(plan,i,j).map(v=>v/255);
       triangle(points[0],points[2],points[1],color);triangle(points[0],points[3],points[2],color);
+      const magic=magicColor(plan,i,j),variant=plan.terrain.biome_variant?.[j]?.[i];
+      if(magic)for(const [dx,dz,a,b]of [[0,-1,[x,z],[x+step,z]],[1,0,[x+step,z],[x+step,z+step]],[0,1,[x+step,z+step],[x,z+step]],[-1,0,[x,z+step],[x,z]]]){
+        if(plan.terrain.biome_variant?.[j+dz]?.[i+dx]===variant)continue;
+        strip(a,b,1.4,[.8,.85,.8],.14);strip(a,b,.7,magic.map(v=>v/255),.18);
+      }
     }
+    function strip(a,b,width,color,lift=.1){const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!length)return;const dx=-(b[1]-a[1])/length*width/2,dz=(b[0]-a[0])/length*width/2;
+      const q=[[a[0]+dx,a[1]+dz],[b[0]+dx,b[1]+dz],[b[0]-dx,b[1]-dz],[a[0]-dx,a[1]-dz]].map(([x,z])=>[x,heightAt(plan,x,z)-datum+lift,z]);triangle(q[0],q[2],q[1],color);triangle(q[0],q[3],q[2],color);}
+    for(const c of plan.road_connections||[])if(c.status==='connected')for(let i=1;i<c.local_path_m.length;i++)strip(c.local_path_m[i-1],c.local_path_m[i],4,[.93,.65,.32]);
     function box(b,bottom,top,color){const v=boxVertices(b,datum,bottom,top);for(const [a,c,d,e]of faces){triangle(v[a],v[c],v[d],color);triangle(v[a],v[d],v[e],color);}}
     for(const b of plots){
       const floor=b.ground_elevation_m??heightAt(plan,b.x_m,b.z_m),base=b.foundation_bottom_m??floor;
@@ -37,7 +47,8 @@
     }
     return {positions:new Float32Array(positions),colors:new Float32Array(colors),datum};
   }
-  const api={heightAt,boxVertices,geometry};
+  const api={heightAt,boxVertices,geometry,terrainColor,magicColor};
+  if(typeof window!=='undefined')window.cityTerrainStyle={terrainColor,magicColor};
   if(typeof module!=='undefined')module.exports=api;
   if(typeof window==='undefined')return;
   window.CityGeometry=api;

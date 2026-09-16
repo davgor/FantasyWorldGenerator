@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resolved spherical terrain heights",
+  "type": "object",
+  "required": ["schema", "version", "source_sha256", "terrain_detail", "level", "origin_index", "size", "global_cells", "radius_m", "coordinates", "height_reference", "heights_m"],
+  "properties": {
+    "schema": {"const": "fantasy-world-generator.height-tile"},
+    "version": {"const": 1},
+    "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "level": {"type": "integer", "minimum": 1, "maximum": 24},
+    "origin_index": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
+    "size": {"type": "integer", "minimum": 2, "maximum": 257},
+    "global_cells": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 2}},
+    "radius_m": {"type": "number", "exclusiveMinimum": 0},
+    "terrain_detail": {"type": "object", "required": ["version", "seed", "bands"], "properties": {"version": {"const": 1}}},
+    "coordinates": {"type": "string"},
+    "height_reference": {"type": "string"},
+    "heights_m": {"type": "array", "minItems": 2, "maxItems": 257, "items": {"type": "array", "minItems": 2, "maxItems": 257, "items": {"type": "number"}}}
+  }
+}

@@ -57,3 +57,5 @@ Generation algorithm 9 uses standalone civilization entities. Building reference
 ## Final-world city plans
 
 The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.
+
+Algorithm 16 suspends sky islands. The Shattered Coast sample retains ocean archipelagos and coastal communities; its retired sky overrides are removed.

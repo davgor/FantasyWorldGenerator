@@ -45,7 +45,7 @@ def farming_potential(slope,temp,wet,flood,freshwater_distance,adaptation,profil
         from .terrain_profiles import get_profile
         from .civilization_registry import default_profile_id
         profile=get_profile(default_profile_id())
-    terrain=math.exp(-(slope/profile['food_slope_comfort'])**2)*max(0,1-abs(temp-profile['temperature_ideal'])/profile['food_temperature_tolerance'])*(1-.7*flood)
+    terrain=math.exp(-(slope/profile['food_slope_comfort'])**2)*max(0,1-abs(temp-profile['food_temperature_ideal'])/profile['food_temperature_tolerance'])*(1-.7*flood)
     natural=terrain*max(0,1-abs(wet-profile['food_moisture_ideal'])/profile['food_moisture_ideal'])
     access=math.exp(-freshwater_distance/profile['water_reach']) if freshwater_distance>=0 else 0
     irrigation=adaptation*access*max(0,(profile['food_moisture_ideal']-wet)/profile['food_moisture_ideal'])

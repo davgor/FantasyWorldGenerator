@@ -30,6 +30,11 @@ def transport_moisture(height,water,upstream,passes,strength):
     return {'humidity':humidity,'rain':rain,'uplift':rise,'residual':residual}
 
 
+def climate_wetness(rain,temperature,recipe):
+    demand=.025*(1+max(0,temperature-10)/15) if recipe==3 else .025
+    return rain/(rain+demand)
+
+
 def add_climate(result,cfg):
     if not result.get('water') or cfg.phase<6:return result
     started=perf_counter();n=cfg.size;radius=result['effective_config']['globe_radius']
@@ -51,7 +56,7 @@ def add_climate(result,cfg):
     height=[result['layers']['water_surface'][z][x] for x,z in points]
     water=[result['layers']['water_type'][z][x]>0 for x,z in points]
     air=transport_moisture(height,water,stencils,cfg.rain_passes,cfg.rain_strength)
-    moisture=[max(0,min(1,r/(r+.025)+cfg.moisture_bias)) for r in air['rain']]
+    moisture=[max(0,min(1,climate_wetness(r,28-45*direction(x,z,n)[1]**2-max(0,result['layers']['height'][z][x]-result['effective_config']['sea_level'])*.0065+cfg.temperature_offset,cfg.world_recipe)+cfg.moisture_bias)) for i,((x,z),r) in enumerate(zip(points,air['rain']))]
     runoff=[a*r/.04 for a,r in zip(areas,air['rain'])]
     parents=result['water']['receivers']
     # Leaf-to-root accumulation works for any acyclic receiver ordering.

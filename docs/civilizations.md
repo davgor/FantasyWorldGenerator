@@ -26,7 +26,7 @@ The loader rejects duplicate JSON keys, nonfinite numbers, unsupported schemas, 
 
 ## Replay and compatibility
 
-Registry schema version 5 (revision 10) describes this document; `revision` identifies authored updates. Civilization report version 2 exports the registry revision and SHA-256 identity plus presentation data. The hash ignores whitespace but retains object order because order can affect generation. Age advancement rejects a saved world from a different registry; regenerate or explicitly migrate it before advancing.
+Registry schema version 6 (revision 11) describes this document; `revision` identifies authored updates. Civilization report version 2 exports the registry revision and SHA-256 identity plus presentation data. The hash ignores whitespace but retains object order because order can affect generation. Age advancement rejects a saved world from a different registry; regenerate or explicitly migrate it before advancing.
 
 This migration preserves recipe 3 / algorithm 9 placement and asset output for the unchanged shipped definitions. Report-1 saves must be regenerated. A seed alone is insufficient after authored rules change: retain the matching registry and generator version for replay. There is no Unreal integration implied by these data or tests.
 
@@ -121,3 +121,16 @@ Cell habitat/safety eligibility, ruins, city spacing and origin separation remai
 The founding simulation waits for the next diaspora interval when an eligible unused civilization remains, even if ordinary founding has finished. It stops when neither normal expansion nor a diaspora candidate remains, or reaches the existing 128-round limit. Used civilizations and consumed parent bonuses persist through subsequent ages, including destruction of their cities. Interval and bonus enablement are authored in `founding_rules.diaspora_interval_years` and `diaspora_bonus_per_parent` (0 or 1); the interval must align with the round duration.
 
 Algorithm 12 / settlement report 13 / founding report 3 and registry revision 10 require regeneration of earlier saves. Diaspora flags, reason, bonus use and effective quotas are exported; the lab log displays each event. No new asset identity is introduced.
+
+
+## Arctic settlements and Frostholds (revision 11)
+
+Algorithm 13, settlement report 14, population budget 4, founding report 4, population profile schema 4 and registry schema 6/revision 11 introduce independent food temperature and founding minima. Earlier worlds require regeneration; recipe 3 and city planner 2 remain current.
+
+Every population record now requires `food_temperature_ideal` and positive integer `minimum_founding_residents`. Settlement scoring still uses `temperature_ideal`; farm potential and surface/sky seasonal harvests use the separate food ideal. Existing entities retain their previous food ideal, preserving crop curves when comfort is edited. Cold Peoples use 0.9 weighted habitat km2 per city and a 30-resident minimum; Frosthold Dwarves use 0.55 km2 and 30; all other entities retain 40. The minimum applies both to regular quotas and diaspora. Founding clamps supplied quotas against food allowances, and reports the per-entity minima. It never grants extra food or population.
+
+Each entity economy requires `winter_fishing_fraction` in 0..1. Fishing access is `1 - ice + ice * winter_fishing_fraction`, applied to the maximum ice along the fishing route. Cold Peoples retain 25% access at complete ice, Frostholds 15%; other entities retain zero. Both specialists have 1.25x fishing reach. These are provisional game calibrations, not extra fish: exclusive ocean-cell ownership, nominal fish productivity and delivery losses remain binding. The pre-founding marine allowance remains a prospective upper bound; actual harvest and winter/trade shortages are assessed afterward. Sea-trade routes still close under full ice. Hunting, herding, fuel consumption and geothermal production are not simulated by this revision.
+
+`frosthold_dwarf` is a complete independent entity nested under dwarf. It prefers absolute latitude >=50 degrees (both hemispheres), temperature <=5 C, resource >=0.45, and exposed rock, positive upland relief, elevated slopes or coastal cliffs. Its comfort ideal is -8 C while crop ideal remains 9 C. Freshwater and safe reachable supply land remain required; permanent land ice remains excluded. `abs_latitude` is now available to surface settlement habitat rules. Frostholds share finite productive capacity with other peoples rather than creating another copy of it. Existing roads, sea routes and trade stress tests provide supply; presence and adequate food delivery are not guaranteed.
+
+The three Frosthold city blocks use compact independent building counts, shared measured assets, winter fuel stores, supply warehouses, preservation facilities and a guild hall. Housing and apartments use the normal planner. Sheltered construction is a building brief, not a heat/insulation simulation. Capital status remains unchanged. The exhaustive compiler automatically includes Frosthold eligibility through its bindings; no new asset identity is introduced.

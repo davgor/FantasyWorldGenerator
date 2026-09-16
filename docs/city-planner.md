@@ -1,6 +1,6 @@
 # Final-world city planner
 
-City planner version 2 runs after stage 16 and after the last requested age transition. Earlier simulation snapshots do not contain future city plans. It adds the optional, independently versioned `city_plans` world-output section; recipe 3 now uses generation algorithm 12 for parent-race founding. Planner identity includes both civilization/building registries and the city-shape catalogue hash. Age advancement rejects mismatched identities.
+City planner version 4 runs after stage 16 and after the last requested age transition. Earlier simulation snapshots do not contain future city plans. It adds the optional, independently versioned `city_plans` world-output section; recipe 3 now uses generation algorithm 16 for parent-race founding. Planner identity includes both civilization/building registries and the city-shape catalogue hash. Age advancement rejects mismatched identities.
 
 ## Six ordered passes
 
@@ -19,11 +19,11 @@ Plots retain their authored footprint and clearance dimensions. A conservative 4
 
 The terrain mask excludes water, slopes over 25 degrees and coarse flood risk over 0.65. Where routed river lines exist within a river sample, they replace the coarse river flood flag with a provisional 24-metre channel and a 28-metre setback measured from its centreline. These are design assumptions, not simulated flood extents. No bridges are invented. Disconnected street fragments are excluded.
 
-World rasters can be much coarser than a city: land categories use nearest-neighbour samples, while elevations interpolate the final world height field. Neither creates new terrain detail. A 33 × 33 vertex surface in metres is exported under `terrain.surface`; plots export `rotation_degrees`, `ground_elevation_m` (level floor) and `foundation_bottom_m`. Floors sit above sampled plot corner elevations, with schematic plinths rather than simulated earthworks. Version-1 city plans require regeneration before age advancement; the underlying world generation algorithm remains 12. Groundwater, navigability, bridge feasibility, wall continuity and structural engineering are unresolved. Buildings requiring unverified prerequisites remain unplaced. Selection currently derives usable area, slope, aridity and woodland; specialized shoreline/ridge/island shapes await verified topology inputs. Repetition weights count previously planned cities in stable UID order across the world.
+World rasters can be much coarser than a city: land categories use nearest-neighbour samples, while elevations use the final world height field plus canonical local relief. A shared seeded local-relief field adds real elevation detail; see [continuous terrain](continuous-terrain.md). A 4-metre vertex surface in metres is exported under `terrain.surface`; plots export `rotation_degrees`, `ground_elevation_m` (level floor) and `foundation_bottom_m`. Floors sit above sampled plot corner elevations, with schematic plinths rather than simulated earthworks. Version-1/2 city plans require regeneration before age advancement; the underlying world generation algorithm is now 13. Groundwater, navigability, bridge feasibility, wall continuity and structural engineering are unresolved. Buildings requiring unverified prerequisites remain unplaced. Selection currently derives usable area, slope, aridity and woodland; specialized shoreline/ridge/island shapes await verified topology inputs. Repetition weights count previously planned cities in stable UID order across the world.
 
 ## Staffing and housing
 
-`buildings.json` schema 2 / revision 3 defines `housing_profiles.worker_house`: an 8 x 10 x 6 metre building on a 12 x 16 metre plot with four worker beds. Civilization schema 5 / revision 10 links building schema 2. This is a provisional shared dwelling for every civilization; cultural art is separate.
+`buildings.json` schema 2 / revision 3 defines `housing_profiles.worker_house`: an 8 x 10 x 6 metre building on a 12 x 16 metre plot with four worker beds. Civilization schema 6 / revision 11 links building schema 2. This is a provisional shared dwelling for every civilization; cultural art is separate.
 
 Housing serves distinct target workers in successfully placed facilities. It does not add dependents, commuters, simulated NPC objects or general population housing. Existing simulation population is reported separately and never overwritten. Lack of housing space remains a visible shortfall.
 
@@ -40,3 +40,10 @@ The exhaustive asset compiler includes all 80 supported measured structure IDs p
 ### Apartment densification
 
 When houses exhaust available plots, the housing pass upgrades existing houses to four-storey apartments: 10 x 12 x 12 metres, 16 worker beds, on the same 12 x 16 metre reserved plot. It stops once staffing demand is housed. Apartments use a separate building ID in the shared JSON and exhaustive asset list. The exported upgrade phase preserves earlier-pass views. Apartments increase capacity without changing the reserved land or access; they cannot rescue a site with no space for any housing plot.
+
+
+## Globe integration
+
+Planner 4 connects streets to actual regional-road crossings before placing buildings. The world exports global building transforms, street/road paths and shared junctions in `world_scene` version 1. Natural biome fills and magic outlines come from the same globe samples. See [the unified scene contract](unified-world-scene.md).
+
+See [unified globe diagnostics](unified-world-scene.md) for algorithm-16 sky suspension, college spacing, aridity, ley alignments and lab tables.

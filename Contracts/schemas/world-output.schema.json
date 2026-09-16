@@ -19,7 +19,7 @@
       "const": 2
     },
     "generator_version": {
-      "const": 12
+      "const": 16
     },
     "config": {
       "type": "object"
@@ -157,7 +157,7 @@
       ],
       "properties": {
         "version": {
-          "const": 13
+          "const": 14
         },
         "sites": {
           "type": "array",
@@ -226,7 +226,7 @@
       ],
       "properties": {
         "version": {
-          "const": 2
+          "const": 4
         },
         "identity": {
           "type": "object"
@@ -281,7 +281,7 @@
                 "type": "object"
               },
               "version": {
-                "const": 2
+                "const": 4
               },
               "terrain": {
                 "type": "object",
@@ -333,6 +333,58 @@
             "low",
             "low_housing"
           ]
+        }
+      }
+    },
+    "world_scene": {
+      "type": "object",
+      "required": [
+        "version",
+        "unit",
+        "coordinates",
+        "radius_m",
+        "buildings",
+        "streets",
+        "junctions",
+        "regional_roads"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "unit": {
+          "const": "metres"
+        },
+        "buildings": {
+          "type": "array"
+        },
+        "streets": {
+          "type": "array"
+        },
+        "junctions": {
+          "type": "array"
+        },
+        "regional_roads": {
+          "type": "array"
+        }
+      }
+    },
+    "debug_stats": {
+      "type": "object",
+      "required": [
+        "version",
+        "cities",
+        "diaspora"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "cities": {
+          "type": "array"
+        },
+        "diaspora": {
+          "type": "object"
         }
       }
     }

@@ -32,7 +32,7 @@ class MasterRegistryTests(unittest.TestCase):
         self.assertIn('human_maritime',raw['parent_races']['human']['civilizations'])
         data=load_registry()
         self.assertEqual(set(data['parent_races']),{'human','elf','dwarf'})
-        expected={key:('human' if key.startswith('human_') else 'dwarf' if key in ('dwarf','gnome','hill_dwarf') else 'elf') for key in data['entities']}
+        expected={key:('human' if key.startswith('human_') else 'dwarf' if key in ('dwarf','gnome','hill_dwarf','frosthold_dwarf') else 'elf') for key in data['entities']}
         self.assertEqual({k:v['parent_race_id'] for k,v in data['entities'].items()},expected)
         report=civilization_report([])
         self.assertEqual({e['id']:e['parent_race_id'] for e in report['entities']},expected)
@@ -65,8 +65,8 @@ class MasterRegistryTests(unittest.TestCase):
     def test_master_owns_entities_buildings_and_measurements(self):
         from icarus_sim.civilization_registry import load_registry
         data=load_registry()
-        self.assertEqual(data['schema_version'],5)
-        self.assertEqual(len(data['entities']),11)
+        self.assertEqual(data['schema_version'],6)
+        self.assertEqual(len(data['entities']),12)
         self.assertIn('human_maritime',data['entities'])
         self.assertEqual(data['city_classification']['medium_suitability_min'],.65)
         self.assertEqual(sum(len(b['structures']) for b in data['structure_blocks']['common']['blocks']),80)

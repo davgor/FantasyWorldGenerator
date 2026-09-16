@@ -22,7 +22,7 @@ if (data.config.world_recipe >= 1) {
   const schema=data.recipe.parameters;
   let explicit={...data.recipe.overrides};
   for(const [key,s] of Object.entries(schema)){
-    if(['shape','tectonics'].includes(key))continue;
+    if(['shape','tectonics'].includes(key)||s.group==='Sky')continue;
     let group=groups[s.group];if(!group){group=make('details',undefined,parameters);make('summary',s.group,group);groups[s.group]=group;}
     const label=make('label',title(key)+(s.units?' · '+s.units:''),group);label.title=s.description;
     const input=make(s.choices?'select':'input',undefined,label);input.name=key;
@@ -44,12 +44,12 @@ if (data.config.world_recipe >= 1) {
   const foundingLog=make('details',undefined,head);make('summary','Founding rounds',foundingLog);const foundingText=make('pre','',foundingLog);
   const viewer=make('section');viewer.id='world-viewer';document.querySelector('.layout').after(viewer);
   make('h2','Layered world atlas',viewer);
-  make('p','Combine habitats and magical fields. Select an island to inspect its independent elevated surface. Food coverage includes ground, sea and air supply.',viewer);
+  make('p','2D view of the selected stage. Natural biome colors remain visible beneath magic outlines. Sky islands are disabled.',viewer);
   const controls=make('div',undefined,viewer);controls.className='world-controls';
   const monthLabel=make('label','Month ',controls),month=make('select',undefined,monthLabel);month.id='world-month';
   for(let m=0;m<12;m++){const opt=make('option',new Date(2000,m,1).toLocaleString('en',{month:'long'}),month);opt.value=m;}
   const layerLabel=make('label','Inspect field ',controls),field=make('select',undefined,layerLabel);field.id='world-field';
-  const skyLabel=make('label',undefined,controls),showSky=make('input',undefined,skyLabel);showSky.type='checkbox';showSky.checked=true;skyLabel.append(' Sky islands');
+  const skyLabel=make('label',undefined,controls),showSky=make('input',undefined,skyLabel);showSky.type='checkbox';showSky.checked=false;skyLabel.hidden=true;skyLabel.append(' Sky islands');
   const routeLabel=make('label',undefined,controls),showRoutes=make('input',undefined,routeLabel);showRoutes.type='checkbox';showRoutes.checked=true;routeLabel.append(' Trade routes');
   const nestLabel=make('label',undefined,controls),showNests=make('input',undefined,nestLabel);showNests.type='checkbox';showNests.checked=true;showNests.id='world-show-nests';nestLabel.append(' Beast nests');
   const nestPanel=make('details',undefined,viewer);nestPanel.open=true;make('summary','Beast nests: dens, colonies, lairs and aquatic territories',nestPanel);
@@ -62,7 +62,7 @@ if (data.config.world_recipe >= 1) {
     const nest=(data.beast_nests?.sites||[]).find(s=>s.id===nestSelect.value);
     const profile=(data.beast_nests?.profiles||[]).find(p=>p.id===(nest?.species_id||speciesSelect.value));
     const diagnostic=(data.beast_nests?.diagnostics||[]).find(d=>d.species_id===profile?.id);
-    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy; purple: elevated anchors. No simulated creature population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
+    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy. No simulated creature population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
   }
   function rebuildNests(){
     const nests=data.beast_nests;
@@ -82,7 +82,7 @@ if (data.config.world_recipe >= 1) {
   const atlas=make('canvas',undefined,viewer);atlas.id='world-atlas';atlas.width=1000;atlas.height=500;
   const civilizationLegend=make('div',undefined,viewer);civilizationLegend.id='world-civilizations';
   const inspect=make('p','Move over the atlas for field values and overlapping influences.',viewer);inspect.id='world-inspect';
-  const skySelect=make('select',undefined,viewer);skySelect.id='world-sky-select';
+  const skySelect=make('select',undefined,viewer);skySelect.id='world-sky-select';skySelect.hidden=true;
   const skyCanvas=make('canvas',undefined,viewer);skyCanvas.width=850;skyCanvas.height=260;skyCanvas.id='world-sky-mesh';
   const skyInfo=make('p','',viewer);const summary=make('p','',viewer);summary.id='world-summary';
   const cards=make('div',undefined,viewer);cards.className='world-cards';
@@ -123,7 +123,7 @@ if (data.config.world_recipe >= 1) {
     if(data.build_stages){make('h3',data.phases.titles[stage-1],historyCards);make('p',`${data.settlements?.sites.length||0} active cities · ${data.ruins?.length||0} ruins.`,historyCards);for(const ruin of data.ruins||[]){const card=make('article',undefined,historyCards);card.className='world-card';make('strong',ruin.name+' — Ruins',card);make('p',`Age ${ruin.destroyed_age} · Source culture: ${ruin.source_culture}`,card);make('p',ruin.reason,card);if(ruin.new_node_school)make('p','Now a '+ruin.new_node_school+' leyline key point.',card);}}
     regionText.replaceChildren();for(const region of data.regions?.influences||[])make('p',`${title(region.id)}: ${region.reason} · ${region.area_km2.toFixed(2)} km² influence above display threshold`,regionText);
     const routes=data.transport?.routes||[];
-    summary.textContent=`${data.sky?.islands.length||0} floating islands · ${data.sky?.settlements.length||0} sky settlements · ${data.fisheries?.ports.length||0} coastal hamlets · ${routes.filter(r=>r.mode==='sea').length} sea routes · ${routes.filter(r=>r.mode==='air').length} air routes. Surface and sky food are budgeted separately. Fishing delivery ${(data.fisheries?.delivered_annual_food||0).toFixed(2)} / ${(data.fisheries?.potential_annual_food||0).toFixed(2)} potential units. Seed ${data.config.seed}.`;
+    summary.textContent=`${data.fisheries?.ports.length||0} coastal hamlets · ${routes.filter(r=>r.mode==='sea').length} sea routes · ${routes.filter(r=>r.mode==='air').length} air routes. Fishing delivery ${(data.fisheries?.delivered_annual_food||0).toFixed(2)} / ${(data.fisheries?.potential_annual_food||0).toFixed(2)} potential units. Seed ${data.config.seed}.`;
     rebuildNests();drawAtlas();drawSky();
   }
   function values(key){return ['snow','water_ice'].includes(key)?data.seasonal_environment?.months[Number(month.value)]?.[key]:data.layers[key];}
@@ -137,12 +137,14 @@ if (data.config.world_recipe >= 1) {
     const small=document.createElement('canvas');small.width=n;small.height=n;const c=small.getContext('2d'),im=c.createImageData(n,n);
     let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){lo=Math.min(lo,v);hi=Math.max(hi,v);}
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){
-      const v=grid[z][x];let color=key==='biome_variant'?(v>=0?data.terrain.magical_biomes[v].color:data.terrain.biomes.find(b=>b.id===data.layers.natural_biome[z][x]).color):['biome','natural_biome'].includes(key)?data.terrain.biomes.find(b=>b.id===v).color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
+      const v=grid[z][x];let color=key==='biome_variant'?data.terrain.biomes.find(b=>b.id===data.layers.natural_biome[z][x]).color:['biome','natural_biome'].includes(key)?data.terrain.biomes.find(b=>b.id===v).color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
       if(key==='civilization_region')color=v<0?[44,55,64]:civilizationColor(v);
       for(const [name,{check,alpha}] of Object.entries(overlays))if(check.checked){const value=values(name)?.[z]?.[x]||0,a=Math.min(1,Math.max(0,value))*Number(alpha.value),t=rgbFor(name);color=color.map((v,i)=>v*(1-a)+t[i]*a);}
+      if(window.debugBiomeFilter!=null&&data.layers.natural_biome?.[z]?.[x]!==window.debugBiomeFilter)color=[36,44,49];
       const at=(z*n+x)*4;im.data.set([...color.map(Math.round),255],at);
     }
     c.putImageData(im,0,0);const ctx=atlas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(small,0,0,atlas.width,atlas.height);
+    if(key==='biome_variant'){ctx.lineWidth=1;for(let z=0;z<n;z++)for(let x=0;x<n;x++)if(grid[z][x]>=0){ctx.strokeStyle=magicOutline(grid[z][x]);ctx.strokeRect(x*atlas.width/n+.5,z*atlas.height/n+.5,atlas.width/n-1,atlas.height/n-1);}}
     const project=([x,z])=>[x/(n-1)*atlas.width,z/(n-1)*atlas.height];
     if(showRoutes.checked)for(const route of data.transport?.routes||[]){
       const path=route.mode==='air'?route.path:(route.nodes||[]).map(i=>nodePoints[i]);ctx.strokeStyle=route.mode==='air'?'#e7caff':route.mode==='sea'?'#7ff2e5':'#f5cf91';ctx.globalAlpha=route.capacity[Number(month.value)]>0?.85:.2;ctx.lineWidth=1.4;ctx.beginPath();
@@ -151,6 +153,7 @@ if (data.config.world_recipe >= 1) {
     for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]),radius=s.city_class==='capital'?5:s.city_class==='medium'?4:3;ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-radius,p[1]-radius,2*radius,2*radius);if(s.city_class==='capital'){ctx.strokeStyle='#fff2bc';ctx.strokeRect(p[0]-8,p[1]-8,16,16);}}
     for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);ctx.strokeStyle='#e7a177';ctx.strokeRect(x-5,y-5,10,10);ctx.fillStyle='#e7a177';ctx.fillText('R',x+7,y+4);}
     for(const p of data.fisheries?.ports||[]){const [x,y]=project([p.x,p.z]);ctx.strokeStyle='#8ff6ed';ctx.strokeRect(x-4,y-4,8,8);}
+    if($('terrain-icons').checked)for(const f of data.terrain?.features||[]){const [x,y]=project([f.x,f.z]);terrainIcon(ctx,x,y,f.kind,7);}
     for(const landmark of data.regions?.landmarks||[]){const [x,y]=project([landmark.x,landmark.z]);ctx.fillStyle=landmark.kind==='witch_hut'?'#e2a7f1':'#edc17e';ctx.fillText(landmark.kind==='witch_hut'?'W':'T',x,y);}
     if(showNests.checked)for(const nest of visibleNests()){
       const [x,y]=project([nest.x,nest.z]);ctx.strokeStyle=nest.layer!=='surface'?'#dbb6ff':nest.real?'#75f3cf':'#ff9c83';ctx.lineWidth=nest.id===nestSelect.value?3:1.5;ctx.beginPath();ctx.arc(x,y,nest.id===nestSelect.value?8:4,0,Math.PI*2);ctx.stroke();
@@ -194,7 +197,7 @@ if (data.config.world_recipe >= 1) {
   draw=()=>{
     legacyDraw();
     if(data.build_stages&&shownStage!==data){shownStage=data;rebuild();}
-    if(data.magic?.networks)$('magic-summary').textContent=data.magic.version===3?data.magic.groups.join(' · ')+'. '+data.magic.method:'Five independent magical networks: Weave, Umbral, Infernal, Holy and Primordial.';
+    if(data.magic?.networks)$('magic-summary').textContent=data.magic.version>=3?data.magic.groups.join(' · ')+'. '+data.magic.method:'Five independent magical networks: Weave, Umbral, Infernal, Holy and Primordial.';
     if(data.population?.id==='mixed')$('profile-note').textContent='Mixed humans, dwarves, elves, gnomes and Tidekin sea elves.';
     if(data.config.world_recipe&&$('legend').textContent.includes('magical ecology'))$('legend').textContent='Underlying terrain and climate. Fantasy regions remain independent overlays in the layered atlas.';
   };

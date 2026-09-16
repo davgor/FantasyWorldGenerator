@@ -94,7 +94,7 @@ def _number(value,low,high,label,nullable=False):
 
 def validate_registry(data):
     from .terrain_profiles import validate_profile,validate_habitat
-    if not isinstance(data,dict) or data.get('schema')!='fantasy-world-generator.civilization-registry' or type(data.get('schema_version')) is not int or data.get('schema_version')!=5:
+    if not isinstance(data,dict) or data.get('schema')!='fantasy-world-generator.civilization-registry' or type(data.get('schema_version')) is not int or data.get('schema_version')!=6:
         raise ValueError('Unsupported civilization registry schema')
     if type(data.get('revision')) is not int or data['revision']<1:raise ValueError('Invalid registry revision')
     _finite(data)
@@ -156,6 +156,7 @@ def validate_registry(data):
             if type(rules['support_outside_habitat']) is not bool:raise ValueError('Invalid support policy')
             for field in ('coastal_score_weight','resource_score_weight'):_number(rules[field],0,2,field)
             if rules['reason'] is not None and not isinstance(rules['reason'],str):raise ValueError('Invalid site reason')
+            _number(economy['winter_fishing_fraction'],0,1,'winter fishing fraction')
             _number(economy['fishing_reach_multiplier'],.01,10,'fishing reach')
             for field in ('industrial_resource_min','air_terminal_resource_min'):_number(economy[field],0,1,field,True)
             _number(entity['sky']['score_bias'],-100,100,'sky bias')
@@ -208,7 +209,7 @@ def _resolve(path,mtime_ns,size,building_path,building_mtime_ns,building_size):
     ids=[s['id'] for library in buildings['structure_blocks'].values() for block in library['blocks'] for s in block['structures']]
     if len(ids)!=len(set(ids)) or any(not re.fullmatch(r'building\.[a-z][a-z0-9_]*',sid) for sid in ids):
         raise ValueError('Invalid or duplicate neutral building ID')
-    if raw.get('schema_version')!=5 or 'entities' in raw:
+    if raw.get('schema_version')!=6 or 'entities' in raw:
         raise ValueError('Expected schema 5 with civilizations nested in parent race blocks')
     data=copy.deepcopy(raw)
     entities={};parents={}

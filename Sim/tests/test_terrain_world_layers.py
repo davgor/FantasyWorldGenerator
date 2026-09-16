@@ -89,17 +89,21 @@ class LayeredWorldTests(unittest.TestCase):
         cost=water_cost(points,[1]*5,[5,.5,5,5,5],[0]*5,.5,1.)
         self.assertIsNone(cost(0,1,10))
 
-    def test_sky_has_independent_surfaces_and_budgets(self):
-        w=self.world;self.assertTrue(w['sky']['islands'])
-        ids={i['id'] for i in w['sky']['islands']}
-        self.assertEqual(len(ids),len(w['sky']['islands']))
-        for island in w['sky']['islands']:
-            self.assertGreater(island['altitude_m'],w['layers']['height'][island['z']][island['x']])
-            self.assertAlmostEqual(island['area_km2'],math.pi*island['radius_m']**2/1e6)
-            self.assertTrue(island['mesh']['triangles'])
-        for site in w['sky']['settlements']:
-            self.assertIn(site['layer'],ids)
-            self.assertLessEqual(site['population_estimate'],site['freshwater_capacity'])
+    def test_colleges_obey_regional_spacing(self):
+        w=self.world;r=w['effective_config']['globe_radius']
+        from icarus_sim.terrain_globe import direction
+        colleges=w['magic']['colleges']
+        for i,a in enumerate(colleges):
+            p=direction(a['x'],a['z'],w['config']['size'])
+            for b in colleges[i+1:]:
+                q=direction(b['x'],b['z'],w['config']['size'])
+                distance=r*math.acos(max(-1,min(1,sum(u*v for u,v in zip(p,q)))))
+                self.assertGreaterEqual(distance,w['magic']['college_spacing_m']-1e-6)
+
+    def test_sky_suspended_for_recipe_three(self):
+        self.assertFalse(self.world['sky']['enabled'])
+        self.assertEqual(self.world['sky']['islands'],[])
+        self.assertEqual(self.world['sky']['settlements'],[])
 
     def test_population_does_not_reroll_sky_geometry(self):
         human=generate_request({'seed':42,'overrides':{'size':17,'phase':12,'population_profile':'human_heartland'}})

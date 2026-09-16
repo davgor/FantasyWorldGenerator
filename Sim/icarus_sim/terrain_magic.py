@@ -78,6 +78,10 @@ def add_magic(result,cfg):
     return result
 
 
+def college_spacing_m(radius):
+    return max(1500.,radius*.15)
+
+
 def add_colleges(result,cfg):
     if not result.get('magic') or not result.get('humans'):return result
     from .terrain_profiles import get_profile
@@ -107,7 +111,8 @@ def add_colleges(result,cfg):
         hazard=[layers.get('magic_risk_'+city_profiles[o]['id'],layers['magic_hazard'])[z][x] if o>=0 else 1. for (x,z),o in zip(points,owner)]
     suitability=[layers.get('suitability_'+cities[o]['population_profile'],layers['suitability'])[points[i][1]][points[i][0]] if o>=0 else 0 for i,o in enumerate(owner)]
     occupied=[direction(s['x'],s['z'],n) for s in cities+result['humans']['hamlets']+result['humans']['fortresses']]
-    colleges=[]
+    colleges=[];college_points=[]
+    spacing=college_spacing_m(r) if cfg.world_recipe==3 else 150
     for i in sorted(range(len(points)),key=lambda i:(-(density[i]*(1-hazard[i])+.25*suitability[i]),i)):
         if len(colleges)>=cfg.college_count:break
         if owner[i]<0:continue
@@ -115,6 +120,7 @@ def add_colleges(result,cfg):
         if not college_eligible(density[i],hazard[i],profile['mutation_limit'] if cfg.world_recipe else cfg.human_magic_limit,slope[i],temp[i],fresh[i],flood[i],suitability[i],water[i],profile):continue
         x,z=points[i];p=direction(x,z,n)
         if any(r*math.acos(max(-1,min(1,dot(p,q))))<150 for q in occupied):continue
+        if any(r*math.acos(max(-1,min(1,dot(p,q))))<spacing for q in college_points):continue
         path=[i]
         own_parent=parent_by_city[owner[i]] if cfg.world_recipe else parent
         while own_parent[path[-1]]>=0:path.append(own_parent[path[-1]])
@@ -123,8 +129,9 @@ def add_colleges(result,cfg):
                          'density':density[i],'hazard':hazard[i],'suitability':suitability[i],
                          'access_nodes':path,'access_cost':distance[i],
                          'reason':'Strong magic within population mutation, slope, climate, freshwater, flood and suitability limits; reachable from a city.'})
-        occupied.append(p)
+        occupied.append(p);college_points.append(p)
     result['magic']['colleges']=colleges
+    result['magic']['college_spacing_m']=spacing
     result['magic']['college_method']='Colleges share the selected population safety limit; no protective ward discount. Sites may be fewer than requested. Institutions have no separate population or supply demand yet.'
     elapsed=(perf_counter()-started)*1000;result['timing_ms']['colleges']=elapsed;result['timing_ms']['total']+=elapsed
     return result

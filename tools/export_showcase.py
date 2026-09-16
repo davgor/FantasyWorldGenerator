@@ -11,7 +11,7 @@ REPOSITORY = 'https://github.com/davgor/FantasyWorldGenerator'
 WORLDS = [
     ('crossroads', 'The Crossroads', 42, {}, 'Magical networks, competing habitats, settlements and beast lairs.'),
     ('frost', 'The Frostbound Reach', 73, {'temperature_offset': -12, 'seasonality': 1.4, 'mountain_abundance': 1.8}, 'Cold climates, snow and ice across mountain and coastal refuges.'),
-    ('islands', 'The Shattered Coast', 108, {'archipelago_count': 10, 'archipelago_occurrence': 1., 'sky_occurrence': 1., 'sky_clusters': 5}, 'Ocean archipelagos, floating islands and coastal communities.'),
+    ('islands', 'The Shattered Coast', 108, {'archipelago_count': 10, 'archipelago_occurrence': 1.}, 'Ocean archipelagos and coastal communities.'),
 ]
 
 

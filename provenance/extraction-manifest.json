@@ -153,9 +153,18 @@
       "source": "Sim/icarus_sim/terrain_climate.py",
       "source_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
       "destination": "Sim/icarus_sim/terrain_climate.py",
-      "destination_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "fe20e1d1ad5362273772e08f4101ba173745485f4122708308815389a88a936d",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
+          "destination_sha256": "fe20e1d1ad5362273772e08f4101ba173745485f4122708308815389a88a936d",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_ecology.py",
@@ -195,7 +204,7 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "a59b38a792a879e4d5aea7f9286b20ad519eeb13778dbafb8d45ec936ef335a9",
+      "destination_sha256": "7d78e12b9aa883a24c7042c77e4308c68d1cde4eeeb8a21448ea48b3b3a18ef9",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -221,6 +230,13 @@
           "destination_sha256": "a59b38a792a879e4d5aea7f9286b20ad519eeb13778dbafb8d45ec936ef335a9",
           "decision": "docs/decisions/017-civilization-master-registry.md",
           "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a59b38a792a879e4d5aea7f9286b20ad519eeb13778dbafb8d45ec936ef335a9",
+          "destination_sha256": "7d78e12b9aa883a24c7042c77e4308c68d1cde4eeeb8a21448ea48b3b3a18ef9",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
         }
       ]
     },
@@ -262,7 +278,7 @@
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "c79f49b3d7fd2334470353275c6339d8d924b45d23e862ad4aca51293ace7ed4",
+      "destination_sha256": "511153e273db915c39ac05a4036c2591e59e56c9c4196aa7406e373d99b3d456",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -287,6 +303,13 @@
           "destination_sha256": "c79f49b3d7fd2334470353275c6339d8d924b45d23e862ad4aca51293ace7ed4",
           "decision": "docs/decisions/017-civilization-master-registry.md",
           "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "c79f49b3d7fd2334470353275c6339d8d924b45d23e862ad4aca51293ace7ed4",
+          "destination_sha256": "511153e273db915c39ac05a4036c2591e59e56c9c4196aa7406e373d99b3d456",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -311,9 +334,18 @@
       "source": "Sim/icarus_sim/terrain_patch.py",
       "source_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
       "destination": "Sim/icarus_sim/terrain_patch.py",
-      "destination_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "fada727a6fe52fa7a2536c1acdcc49ca1a78a87c3d3a4c9a60118037897b9d42",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
+          "destination_sha256": "fada727a6fe52fa7a2536c1acdcc49ca1a78a87c3d3a4c9a60118037897b9d42",
+          "decision": "docs/continuous-terrain.md",
+          "reason": "Algorithm 14 canonical local terrain, versioned height export, patch and planner integration."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_profiles.json",
@@ -352,7 +384,7 @@
       "source": "Sim/icarus_sim/terrain_profiles.py",
       "source_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
       "destination": "Sim/icarus_sim/terrain_profiles.py",
-      "destination_sha256": "86c3f873e3644b4973c472c81242746162e5cd5bae88f977e74a5ca898b51672",
+      "destination_sha256": "a147b600b869634a8264e807f95185abb599b1061327fd6e66adb1dcfff79a03",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -377,6 +409,13 @@
           "destination_sha256": "86c3f873e3644b4973c472c81242746162e5cd5bae88f977e74a5ca898b51672",
           "decision": "docs/decisions/017-civilization-master-registry.md",
           "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "86c3f873e3644b4973c472c81242746162e5cd5bae88f977e74a5ca898b51672",
+          "destination_sha256": "a147b600b869634a8264e807f95185abb599b1061327fd6e66adb1dcfff79a03",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -393,9 +432,18 @@
       "source": "Sim/icarus_sim/terrain_seasons.py",
       "source_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
       "destination": "Sim/icarus_sim/terrain_seasons.py",
-      "destination_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "0db8aa572e2954b95387c54e995247694c8dcde4e1f1187950902a6bcd17180c",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "90f4551f33fb5cd256aaf74770773d016f8fc58c67a75313955561f412da398b",
+          "destination_sha256": "0db8aa572e2954b95387c54e995247694c8dcde4e1f1187950902a6bcd17180c",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/terrain_seed.py",
@@ -409,7 +457,7 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "7286228ab2f475dbef06cb9069169afa309336c9998851e007bfeb08d096b291",
+      "destination_sha256": "5e1a5713a4d983bb010d1e97a262c14a292a35221362a977396a7ecc02e1fdb6",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -457,6 +505,13 @@
           "destination_sha256": "7286228ab2f475dbef06cb9069169afa309336c9998851e007bfeb08d096b291",
           "decision": "docs/civilizations.md",
           "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7286228ab2f475dbef06cb9069169afa309336c9998851e007bfeb08d096b291",
+          "destination_sha256": "5e1a5713a4d983bb010d1e97a262c14a292a35221362a977396a7ecc02e1fdb6",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
         }
       ]
     },
@@ -464,7 +519,7 @@
       "source": "Sim/icarus_sim/terrain_society.py",
       "source_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
       "destination": "Sim/icarus_sim/terrain_society.py",
-      "destination_sha256": "a829c5a4ca4e1b38dba352f4d3e7216426c8e8c3025cd29ad5a4d91afc30aab9",
+      "destination_sha256": "122327f2a15c328eac9775f048e84d34d320ac7011049105b1633f79846e6c5e",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -482,6 +537,20 @@
           "destination_sha256": "a829c5a4ca4e1b38dba352f4d3e7216426c8e8c3025cd29ad5a4d91afc30aab9",
           "decision": "docs/decisions/017-civilization-master-registry.md",
           "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a829c5a4ca4e1b38dba352f4d3e7216426c8e8c3025cd29ad5a4d91afc30aab9",
+          "destination_sha256": "2a191c6604f226065e7561c0edf4a15158f7f9c2a951f360f883db64eda924d2",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "2a191c6604f226065e7561c0edf4a15158f7f9c2a951f360f883db64eda924d2",
+          "destination_sha256": "122327f2a15c328eac9775f048e84d34d320ac7011049105b1633f79846e6c5e",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -506,7 +575,7 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "f02e7f02a563457d230781cb102ea4410ddba1d1c1a2d1807037d6185f41429c",
+      "destination_sha256": "4f48ca404e74a01200487677787cbaacc367e0d66dcd0b3d0e6d9a2510f7aac9",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -526,6 +595,13 @@
           "destination_sha256": "f02e7f02a563457d230781cb102ea4410ddba1d1c1a2d1807037d6185f41429c",
           "decision": "docs/decisions/016-standalone-civilizations.md",
           "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "f02e7f02a563457d230781cb102ea4410ddba1d1c1a2d1807037d6185f41429c",
+          "destination_sha256": "4f48ca404e74a01200487677787cbaacc367e0d66dcd0b3d0e6d9a2510f7aac9",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     },
@@ -549,7 +625,7 @@
       "source": "Sim/tests/test_terrain_city_layout.py",
       "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
       "destination": "Sim/tests/test_terrain_city_layout.py",
-      "destination_sha256": "048ae38513ece39834a3dcb6c8647829695b3327b0b0c94f36d91c771a0db003",
+      "destination_sha256": "b3c1fcc9042939648b43699c2a8d57965a2222a306508d032bca96a7f6d3588e",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -588,6 +664,13 @@
           "destination_sha256": "048ae38513ece39834a3dcb6c8647829695b3327b0b0c94f36d91c771a0db003",
           "decision": "docs/civilizations.md",
           "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "048ae38513ece39834a3dcb6c8647829695b3327b0b0c94f36d91c771a0db003",
+          "destination_sha256": "b3c1fcc9042939648b43699c2a8d57965a2222a306508d032bca96a7f6d3588e",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -759,7 +842,7 @@
       "source": "Sim/tests/test_terrain_world_layers.py",
       "source_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
       "destination": "Sim/tests/test_terrain_world_layers.py",
-      "destination_sha256": "9989dacd8523bff13d10259e4e50983c05ebdee0d377e5929902d634cb01286d",
+      "destination_sha256": "ccac2b1cfdf3d0f6a251da60262ac956a66522510c753e0a5958641bb6cec431",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -779,6 +862,13 @@
           "destination_sha256": "9989dacd8523bff13d10259e4e50983c05ebdee0d377e5929902d634cb01286d",
           "decision": "docs/decisions/016-standalone-civilizations.md",
           "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "9989dacd8523bff13d10259e4e50983c05ebdee0d377e5929902d634cb01286d",
+          "destination_sha256": "ccac2b1cfdf3d0f6a251da60262ac956a66522510c753e0a5958641bb6cec431",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     },
@@ -1162,7 +1252,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "ca109001f6afea396e45c62a31ea9d7906898f26e18f926ccc110dad5698ed37",
+      "destination_sha256": "b83962d3cff2919ba9ad5c8a681b101c748b47868990671cb0bdebf44bd1cee2",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1252,6 +1342,34 @@
           "destination_sha256": "ca109001f6afea396e45c62a31ea9d7906898f26e18f926ccc110dad5698ed37",
           "decision": "docs/civilizations.md",
           "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "ca109001f6afea396e45c62a31ea9d7906898f26e18f926ccc110dad5698ed37",
+          "destination_sha256": "75934d3936f858630b6792f930273769e7bafe875908407fadf20ec0549ef76e",
+          "decision": "docs/civilizations.md",
+          "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "75934d3936f858630b6792f930273769e7bafe875908407fadf20ec0549ef76e",
+          "destination_sha256": "316eedbc2b67d4200b6bdab7ccb7785f6df25c4928c4d0190f95d5a7b359ed39",
+          "decision": "docs/continuous-terrain.md",
+          "reason": "Algorithm 14 canonical local terrain, versioned height export, patch and planner integration."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "316eedbc2b67d4200b6bdab7ccb7785f6df25c4928c4d0190f95d5a7b359ed39",
+          "destination_sha256": "2e913d447926a4cc789cbe0c515e5095319752110a67b22262bb3cfb3f478b9e",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm15 clustered leyline topology, unified global city/road placement and natural-biome mutation outlines."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "2e913d447926a4cc789cbe0c515e5095319752110a67b22262bb3cfb3f478b9e",
+          "destination_sha256": "b83962d3cff2919ba9ad5c8a681b101c748b47868990671cb0bdebf44bd1cee2",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     },
@@ -1291,7 +1409,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "33d050616910480275bf0da07ebb3a3b12594eafae30b4d6faf8e3278371ca47",
+      "destination_sha256": "49369827db1833dec1f419ba024609a6a9048861997b7596c7e41572dd4cf069",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1325,6 +1443,27 @@
           "destination_sha256": "33d050616910480275bf0da07ebb3a3b12594eafae30b4d6faf8e3278371ca47",
           "decision": "docs/city-planner.md",
           "reason": "Final-world city filling, worker housing and apartments, schematic potential assets and lab inspector."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "33d050616910480275bf0da07ebb3a3b12594eafae30b4d6faf8e3278371ca47",
+          "destination_sha256": "273e384956379ff1aad496ecaf21ac8beec3c76e35507d72056b3f63481fd1a8",
+          "decision": "docs/continuous-terrain.md",
+          "reason": "Algorithm 14 canonical local terrain, versioned height export, patch and planner integration."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "273e384956379ff1aad496ecaf21ac8beec3c76e35507d72056b3f63481fd1a8",
+          "destination_sha256": "f00b3912b2936e6ce7af390863519004dd0ff9561580f5aecfd85c86ffd46846",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm15 clustered leyline topology, unified global city/road placement and natural-biome mutation outlines."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "f00b3912b2936e6ce7af390863519004dd0ff9561580f5aecfd85c86ffd46846",
+          "destination_sha256": "49369827db1833dec1f419ba024609a6a9048861997b7596c7e41572dd4cf069",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     },
@@ -1332,7 +1471,7 @@
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "4816c9de95e0d1e5f151f2671cb6908559a82bf85a269213c86367a1e12d38f6",
+      "destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1358,6 +1497,13 @@
           "destination_sha256": "4816c9de95e0d1e5f151f2671cb6908559a82bf85a269213c86367a1e12d38f6",
           "decision": "docs/city-planner.md",
           "reason": "Bundle the offline WebGL city terrain and measured-building renderer before the city inspector."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "4816c9de95e0d1e5f151f2671cb6908559a82bf85a269213c86367a1e12d38f6",
+          "destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     },
@@ -1365,7 +1511,7 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "58fde55b6979b987d9fa736aec06a29b0da604f15e7e6ad96faa8f11ab97d26b",
+      "destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1413,6 +1559,20 @@
           "destination_sha256": "58fde55b6979b987d9fa736aec06a29b0da604f15e7e6ad96faa8f11ab97d26b",
           "decision": "docs/civilizations.md",
           "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "58fde55b6979b987d9fa736aec06a29b0da604f15e7e6ad96faa8f11ab97d26b",
+          "destination_sha256": "2222229ac852b9573e44267a9589fb7b0eeb7c6fd3951d701c61cfd5d369c5f7",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm15 clustered leyline topology, unified global city/road placement and natural-biome mutation outlines."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "2222229ac852b9573e44267a9589fb7b0eeb7c6fd3951d701c61cfd5d369c5f7",
+          "destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
         }
       ]
     }

@@ -2,7 +2,7 @@
 
 ## Recipe 3: staged construction and two ages
 
-The lab now defaults to recipe **3**, generation algorithm **12**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
+The lab now defaults to recipe **3**, generation algorithm **16**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
 
 1. Plate layout
 2. Tectonic relief
@@ -203,3 +203,14 @@ The live preview offers 16, 32, 64 and 128 cells per side (17, 33, 65 and 129 sa
 The current migration revision uses algorithm 11, settlement report 12 and founding report 2. See [migration and cultural divergence](civilizations.md#migration-and-cultural-divergence-revision-9) for parent origin separation, Hill Dwarves, participation rates, lineage and 250-year rounds. Old algorithm-10 worlds must be regenerated.
 
 Current founding includes [diaspora rounds](civilizations.md#diaspora-rounds-revision-10), using algorithm12, settlement report13 and founding report3. Periodic unused-civilization settlement can exceed ordinary quotas by one supported city per parent, within the global city ceiling. Regenerate algorithm11 saves.
+
+
+Current Arctic specialization uses algorithm 13 and settlement report 14. See [Arctic settlements and Frostholds](civilizations.md#arctic-settlements-and-frostholds-revision-11) for independent crop temperature, per-civilization founding minima and bounded winter fisheries. Regenerate algorithm-12 worlds. Physical terrain generation is unchanged; civilization selection and downstream history/economy differ.
+
+
+Algorithm 14 adds [continuous local terrain](continuous-terrain.md), terrain detail 1 and city planner 3. Region-scale geography remains unchanged; local city geometry now follows the shared detailed surface. Regenerate algorithm-13 worlds.
+
+
+Algorithm 16 adds [varied clustered leyline networks and a unified globe scene](unified-world-scene.md), with magic report 4 and city planner 4. Natural biome colors are preserved beneath school-colored mutation outlines. Regenerate algorithm-14 worlds.
+
+See [unified globe diagnostics](unified-world-scene.md) for algorithm-16 sky suspension, college spacing, aridity, ley alignments and lab tables.

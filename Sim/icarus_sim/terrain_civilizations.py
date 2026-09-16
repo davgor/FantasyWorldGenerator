@@ -46,7 +46,7 @@ def landmass_context(points,areas,graph,water):
 
 def environment_at(result,x,z,context):
     layers=result['layers']
-    return dict(context,biome=layers['biome'][z][x],temperature=layers['temperature'][z][x],
+    return dict(context,abs_latitude=abs(90-180*z/(result['config']['size']-1)),biome=layers['biome'][z][x],temperature=layers['temperature'][z][x],
                 moisture=layers['moisture'][z][x],maritime=layers.get('maritime',[[0.]])[z][x] if 'maritime' in layers else 0.)
 
 

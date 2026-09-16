@@ -20,13 +20,13 @@ class BiomeContractTests(unittest.TestCase):
         self.assertEqual(world['layers']['biome'], world['layers']['natural_biome'])
         self.assertTrue(all(v in NATURAL_BIOMES for row in world['layers']['biome'] for v in row))
         for p in [world['population'], *world.get('peoples', {}).values()]:
-            self.assertEqual(p['schema_version'], 3)
+            self.assertEqual(p['schema_version'], 4)
             for key in ('biome_preferences', 'food_biome_multipliers'):
                 self.assertFalse(set(map(int, p[key])) & RETIRED)
 
     def test_current_world_stages_replay_and_age(self):
         world = generate_request({'recipe_version': 3, 'seed': 42, 'overrides': {'size': 17}})
-        self.assertEqual(world['generator_version'], 12)
+        self.assertEqual(world['generator_version'], 16)
         self.assert_current(world)
         self.assertEqual(len(world['terrain']['magical_biomes']), 104)
         for stage in (8, 9, 10, 13, 14, 15, 16):

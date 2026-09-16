@@ -6,6 +6,17 @@ from pathlib import Path
 
 
 class CityViewTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which('node'), 'Node required')
+    def test_biome_fill_survives_magic_outline(self):
+        script=r"""
+const assert=require('node:assert/strict');
+const {terrainColor,magicColor}=require('./tools/city_view_3d.js');
+const p={terrain:{natural_biome:[[3]],biome_variant:[[0]],biome_catalogue:[{id:3,color:[100,150,70]}],magical_catalogue:[{magic_school:'fire'}],magic_colors:{fire:[207,86,37]},codes:[[0]]}};
+assert.deepEqual(terrainColor(p,0,0),[100,150,70]);
+assert.deepEqual(magicColor(p,0,0),[207,86,37]);
+"""
+        subprocess.run(['node','-e',script],cwd=Path(__file__).resolve().parents[1],check=True,capture_output=True,text=True)
+
     @unittest.skipUnless(shutil.which('node'), 'Node is required for renderer geometry checks')
     def test_true_scale_rotated_box_and_interpolated_terrain(self):
         script=r"""

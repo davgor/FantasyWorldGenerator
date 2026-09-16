@@ -38,6 +38,7 @@ def water_cost(points,water,depth,hazard,limit,draft):
 
 
 def make_sky(result,cfg):
+    if cfg.world_recipe==3:return [],[],[]
     o=options(cfg);l=result['layers'];n=cfg.size;r=result['effective_config']['globe_radius']
     points,_,_=sphere_grid(n,r);rng=random.Random(child_seed(cfg.seed,'sky-archipelagos-v1'))
     islands=[];sites=[];models=[]
@@ -99,7 +100,7 @@ def make_sky(result,cfg):
                   'reason':'Independent rain capture, growing climate and magical tolerance support this island community.'}
             sites.append(site)
             demand=population*profile['food_demand']/100/12
-            models.append({'site_id':site['id'],'harvest':seasonal_harvest(food,wet,90-180*z/(n-1),temp,profile['food_temperature_tolerance'],profile['temperature_ideal'],o['seasonality']),
+            models.append({'site_id':site['id'],'harvest':seasonal_harvest(food,wet,90-180*z/(n-1),temp,profile['food_temperature_tolerance'],profile['food_temperature_ideal'],o['seasonality']),
                            'demand':demand,'storage':demand*4,'spoilage':.02,'transport_budget':area*40/12})
     return islands,sites,models
 
@@ -122,6 +123,7 @@ def add_world_society(result,cfg):
     islands,sky_sites,sky_models=make_sky(result,cfg)
     result['sky']={'version':1,'islands':islands,'settlements':sky_sites if cfg.phase>=7 else [],
                    'area_km2':sum(i['area_km2'] for i in islands),
+                   'enabled':cfg.world_recipe!=3,'disabled_reason':'Sky islands suspended in recipe 3' if cfg.world_recipe==3 else None,
                    'method':'Separate disk surfaces with rain capture, altitude climate and bounded food; static magical support.'}
     if cfg.phase<9 or 'seasonal_food' not in result:return
     o=options(cfg);l=result['layers'];n=cfg.size;r=result['effective_config']['globe_radius']
@@ -163,7 +165,8 @@ def add_world_society(result,cfg):
                   'harbor_quality':harbor[node],'trade_terminal':harbor[node]>=.4,'access_nodes':trace(parents,site['node'],node),
                   'access_cost':distances[node],'reason':'Safe ground connection to city; navigable landing; fishing allocated from exclusive grounds.',
                   'worked_area_km2':0.,'delivered_food':0.,'delivered_materials':0.,'irrigation_benefit':0.,
-                  'monthly_fish':[0.]*12,'fishing_nodes':[]}
+                  'monthly_fish':[0.]*12,'fishing_nodes':[],
+                  'winter_fishing_fraction':entity_rules(site['population_profile'])['economy']['winter_fishing_fraction']}
             ports.append(port)
         city_ports=[p for p in ports if p['core_id']==site['id']]
         industrial_min=entity_rules(site['population_profile'])['economy']['industrial_resource_min']
@@ -192,7 +195,7 @@ def add_world_society(result,cfg):
         x,z=points[i];port['worked_area_km2']+=area
         for m in range(12):
             ice=fishing_ice[k][i][m]
-            port['monthly_fish'][m]+=annual/12*delivery*(1-ice)
+            port['monthly_fish'][m]+=annual/12*delivery*fishing_access_factor(ice,port['winter_fishing_fraction'])
     for port in ports:
         port['delivered_food']=sum(port['monthly_fish'])
         port['role']='harbor + fishing' if port['trade_terminal'] and port['delivered_food']>0 else 'harbor' if port['trade_terminal'] else 'fishing' if port['delivered_food']>0 else 'landing'
@@ -202,7 +205,7 @@ def add_world_society(result,cfg):
     l['fishing_ground_owner']=node_grid(owner,points,n)
     result['fisheries']={'ports':ports,'potential_annual_food':production,
                          'delivered_annual_food':sum(p['delivered_food'] for p in ports),
-                         'method':'One owner per reachable ocean cell; distance losses and monthly ice reduce delivery. Potential capacity is never credited before allocation.'}
+                         'method':'One owner per reachable ocean cell; distance losses and monthly ice reduce delivery; civilization winter fishing retains a bounded fraction under ice. Potential capacity is never credited before allocation.'}
     routes=[]
     for road,model in zip(result['roads']['routes'],result['seasonal_food']['routes']):
         routes.append({**model,'mode':'ground','nodes':road['nodes'],'length_m':road['length_m']})
@@ -261,3 +264,9 @@ def add_world_society(result,cfg):
     result['world_economy']={'version':1,'sites':summarize_run(run,models,all_sites),'models':models,'months':run['months'],
                              'method':'Authoritative new-recipe four-year monthly stress test: existing farm surplus plus allocated fisheries and independent sky production; shared finite ground/sea/air throughput, material budgets, spoilage and loss. No same-month re-export.',
                              'limits':'Artistic food units; static communities and routes. Surface farm production is rural export surplus; this is not demographic equilibrium or a vessel simulator.'}
+
+
+def fishing_access_factor(ice, winter_fraction):
+    """Fraction of the same finite fish harvest accessible under route ice."""
+    ice=max(0.,min(1.,ice));winter_fraction=max(0.,min(1.,winter_fraction))
+    return 1-ice+ice*winter_fraction
