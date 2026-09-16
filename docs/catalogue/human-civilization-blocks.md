@@ -161,4 +161,4 @@ Future damaged, construction and ruin variants need explicit coverage at that in
 
 Each structure now has an operating roster with minimum, target and maximum distinct workers and city/hinterland housing location. Presets multiply these by quantities and separate conditional facilities. See the [staffing contract](../civilizations.md#staffing-and-worker-housing-registry-schema-3-revision-3). Household sizes remain deferred; the final-world planner places four-worker shared houses.
 
-Every city-size preset now includes one core guild hall, staffed by one cook and one bartender. Hero-guild calculations are tracked in [HERO-GUILD](../../board/backlog/HERO-GUILD.md).
+Every city-size preset now includes one core guild hall, staffed by one cook and one bartender. The opt-in [hero guild calculator](../hero-guild.md) reports hero/service/accommodation demand separately; it does not alter these existing workers or place additional buildings.

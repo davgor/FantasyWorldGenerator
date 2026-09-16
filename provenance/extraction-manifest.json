@@ -153,7 +153,7 @@
       "source": "Sim/icarus_sim/terrain_climate.py",
       "source_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
       "destination": "Sim/icarus_sim/terrain_climate.py",
-      "destination_sha256": "fe20e1d1ad5362273772e08f4101ba173745485f4122708308815389a88a936d",
+      "destination_sha256": "e6de5b05e03c4197e41ac4d978532972eb3a0c5a7248fcea4bb65c9bb6fbb732",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -163,6 +163,13 @@
           "destination_sha256": "fe20e1d1ad5362273772e08f4101ba173745485f4122708308815389a88a936d",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "fe20e1d1ad5362273772e08f4101ba173745485f4122708308815389a88a936d",
+          "destination_sha256": "e6de5b05e03c4197e41ac4d978532972eb3a0c5a7248fcea4bb65c9bb6fbb732",
+          "decision": "docs/unified-world-scene.md",
+          "reason": "Reviewed committed algorithm-16 climate_wetness extraction and warm-temperature evaporation proxy; covered by test_world_debug.py. Correct stale pre-final-edit destination hash from 4ea7169."
         }
       ]
     },
@@ -334,7 +341,7 @@
       "source": "Sim/icarus_sim/terrain_patch.py",
       "source_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
       "destination": "Sim/icarus_sim/terrain_patch.py",
-      "destination_sha256": "fada727a6fe52fa7a2536c1acdcc49ca1a78a87c3d3a4c9a60118037897b9d42",
+      "destination_sha256": "ab8731e02bdbe24606df24b4215777b4b93548a16816e95c2f0c3deb25b84f35",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -344,6 +351,13 @@
           "destination_sha256": "fada727a6fe52fa7a2536c1acdcc49ca1a78a87c3d3a4c9a60118037897b9d42",
           "decision": "docs/continuous-terrain.md",
           "reason": "Algorithm 14 canonical local terrain, versioned height export, patch and planner integration."
+        },
+        {
+          "date": "2026-09-16",
+          "previous_destination_sha256": "fada727a6fe52fa7a2536c1acdcc49ca1a78a87c3d3a4c9a60118037897b9d42",
+          "destination_sha256": "ab8731e02bdbe24606df24b4215777b4b93548a16816e95c2f0c3deb25b84f35",
+          "decision": "docs/continuous-terrain.md",
+          "reason": "Reviewed committed HeightField patch sampling, patch version 2, canonical detail metadata and warnings; covered by test_terrain_detail.py. Correct stale pre-final-edit destination hash from 4ea7169."
         }
       ]
     },

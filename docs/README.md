@@ -7,6 +7,7 @@
 - [Final-world city planner](city-planner.md) defines ordered building filling, worker housing and the lab city view.
 - [Historical city shapes](city-shapes.md) defines the sourced shape catalogue and location-based planner selection.
 - [Civilization master registry](civilizations.md) is the canonical authoring guide for entities, generation rules and construction libraries.
+- [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
 - [Standalone civilizations](decisions/016-standalone-civilizations.md) defines human entities, cultural habitat rules and city classifications.
 - [Terrain MathLab](terrain-math-lab.md) records the mathematical model and its evolution.
 - [Unreal integration](unreal-integration.md) defines the engine boundary and current limitations.
@@ -16,4 +17,6 @@
 - [Human civilization blocks](catalogue/human-civilization-blocks.md) define non-housing city layout requirements and provisional metre-scale measurements for the later catalogue rebuild.
 - [Extraction provenance](../provenance/README.md) defines source-hash preservation and licensing limitations.
 - [Contracts](../Contracts/README.md) index versioned schemas and generic capability inputs.
+- [Capabilities and coordinates](../Contracts/capabilities-and-coordinates.md) defines producer negotiation, physical units, globe/local projections and portable coordinate fixtures.
+- [Kernel contracts](../Contracts/kernel-v1.md) defines exact numeric/identity/failure rules and the bounded counter proof, separate from generated worlds.
 - [Ticket board](../board/README.md) identifies active and queued implementation work.

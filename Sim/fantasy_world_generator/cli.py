@@ -9,6 +9,7 @@ from typing import Any, List, Optional
 
 from . import __version__
 from .asset_list import compile_asset_list
+from .capabilities import capabilities_document
 from icarus_sim.terrain_world import generate_request
 
 
@@ -40,12 +41,18 @@ def parser() -> argparse.ArgumentParser:
 
     assets = commands.add_parser("asset-list", help="Compile the exhaustive potential-state asset list")
     assets.add_argument("--output", type=Path, required=True)
+    capabilities = commands.add_parser("capabilities", help="Export supported reference contracts and coordinate conventions")
+    capabilities.add_argument("--version", type=int, default=1, help="Capability descriptor version (default: 1)")
+    capabilities.add_argument("--output", type=Path, required=True)
     return root
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "capabilities":
+            _write_json(args.output, capabilities_document(args.version))
+            return 0
         if args.command == "asset-list":
             _write_json(args.output, compile_asset_list())
             return 0

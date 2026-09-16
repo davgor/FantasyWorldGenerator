@@ -34,9 +34,11 @@ jobs:
         run: python tools/export_showcase.py
       - name: Assemble publish payload
         run: |
-          mkdir -p publish/python publish/contracts
+          mkdir -p publish/python publish/contracts/fixtures
           cp dist/* publish/python/
           cp Contracts/schemas/*.json publish/contracts/
+          cp Fixtures/*.json publish/contracts/fixtures/
+          PYTHONPATH=Sim python -m fantasy_world_generator capabilities --output publish/contracts/capabilities.json
           cp provenance/extraction-manifest.json publish/
           PYTHONPATH=Sim python -m fantasy_world_generator asset-list --output publish/fantasy-world-assets.json
           printf '%s\n' "${GITHUB_SHA}" > publish/source-revision.txt

@@ -2,6 +2,10 @@
 
 Every push to `main` produces one export-only workflow artifact named `fantasy-world-generator-reference`. It contains Python wheel/source distributions, JSON schemas, and `fantasy-world-assets.json`. Pull requests build the same payload and verify that it is reproducible before merge.
 
+The reference payload also contains `contracts/capabilities.json`, emitted by `fantasy-world capabilities`. This versioned descriptor distinguishes supported Python/JSON contracts from unavailable native/editor/cooked capabilities and includes the coordinate/unit conventions. Its canonical source is packaged in the wheel; see [capability negotiation and coordinate fixtures](../Contracts/capabilities-and-coordinates.md).
+
+Portable conformance inputs ship under `contracts/fixtures/`, including the [kernel-v1](../Contracts/kernel-v1.md) numeric, envelope and bounded-counter examples. The root `LICENSE` records private owner-controlled distribution; it does not authorize redistribution of third-party or Epic material. No immutable engine-qualified runtime release is produced by this reference workflow.
+
 The asset list is a capability catalogue, not a generated-world inventory. Its normalized `assets` array is the union of:
 
 - every terrain/biome surface the simulator can emit, including every natural-core × magic-school combination (104 recipe 3 variants);
@@ -14,7 +18,7 @@ Entries may be planned rather than runtime-ready. `status`, `source`, selectors,
 
 Asset-list schema 2 is scoped to recipe 3, includes 13 natural surfaces and all 104 mutations, and excludes retired phenotype surfaces. Natural IDs and exact variant IDs form an OR selector; missing biome selectors are unrestricted, empty selectors match nothing. The compiler sorts normalized identities, rejects collisions, and emits a SHA-256 content digest. Generated timestamps are omitted so the output is byte-reproducible for the same source revision. CI records the merge commit in workflow metadata rather than changing catalogue bytes.
 
-The workflow uploads mutable-retention build evidence to GitHub Actions; it does not publish an immutable Unreal package, publish to PyPI, or create a GitHub Release. It must never be labeled runtime- or cooked-validated. ML-03 will select the Unreal version, toolchain, consumer, immutable artifact channel, and compatibility manifest before runtime publication begins.
+The workflow uploads mutable-retention build evidence to GitHub Actions; it does not publish an immutable Unreal package, publish to PyPI, or create a GitHub Release. It must never be labeled runtime- or cooked-validated. ML-03 records Unreal 5.8.2 as the requested engine target; the installed engine, shipping toolchain/platform, consumer, engine CI and immutable artifact channel remain outstanding before runtime publication.
 
 ## Portfolio samples on GitHub Pages
 
@@ -59,3 +63,7 @@ Generation algorithm 9 uses standalone civilization entities. Building reference
 The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.
 
 Algorithm 16 suspends sky islands. The Shattered Coast sample retains ocean archipelagos and coastal communities; its retired sky overrides are removed.
+
+## Local native source proof
+
+`tools/package_native.py` creates a deterministic content-addressed source ZIP under `Artifacts/native/`. It includes the bounded C++ core, wire/numeric fixtures, contract schema, private license and an isolated headless consumer script. Its manifest declares `unqualified-source-only`; hashes do not make it an engine-qualified release. `tools/qualify_native.py` runs from an extracted bundle and records source integrity, actual compiler/platform and fixture results, explicitly with `unreal_qualified: false`. See [the native workflow](../Core/README.md). No native archive is uploaded or published by the existing reference workflow.

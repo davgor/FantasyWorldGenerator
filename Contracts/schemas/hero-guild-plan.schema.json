@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Opt-in hero guild planning result v1",
+  "description": "Structural result envelope; exact integer tokens, policy rate ordering, identity resolution and accounting are validated by the planning API.",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "policy_source",
+    "policy_revision",
+    "policy",
+    "request",
+    "heroes",
+    "activity",
+    "service",
+    "accommodation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fantasy-world-generator.hero-guild-plan"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "policy_source": {
+      "enum": [
+        "packaged",
+        "caller"
+      ]
+    },
+    "policy_revision": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        }
+      ]
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "resident_rate_numerator",
+        "resident_rate_denominator",
+        "max_resident_heroes",
+        "max_visiting_heroes",
+        "party_size",
+        "max_active_parties",
+        "heroes_per_service_worker",
+        "max_additional_staff"
+      ],
+      "properties": {
+        "resident_rate_numerator": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "resident_rate_denominator": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_resident_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "max_visiting_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "party_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "max_active_parties": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "heroes_per_service_worker": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_additional_staff": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": [
+        "population",
+        "visiting_heroes_requested",
+        "available_jobs",
+        "already_housed_resident_heroes",
+        "available_visitor_beds",
+        "civilization_id",
+        "city_block"
+      ],
+      "properties": {
+        "population": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "visiting_heroes_requested": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "available_jobs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "already_housed_resident_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "available_visitor_beds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "civilization_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "city_block": {
+          "enum": [
+            "small_city",
+            "medium_city",
+            "capital_city"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "heroes": {
+      "type": "object",
+      "required": [
+        "resident",
+        "visiting",
+        "present",
+        "unserved_visitors"
+      ],
+      "properties": {
+        "resident": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "visiting": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "present": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "unserved_visitors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        }
+      },
+      "additionalProperties": false
+    },
+    "activity": {
+      "type": "object",
+      "required": [
+        "active_parties",
+        "active_heroes",
+        "inactive_heroes"
+      ],
+      "properties": {
+        "active_parties": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "active_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "inactive_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        }
+      },
+      "additionalProperties": false
+    },
+    "service": {
+      "type": "object",
+      "required": [
+        "existing_workers_already_counted",
+        "additional_workers",
+        "total_workers",
+        "unserved_heroes"
+      ],
+      "properties": {
+        "existing_workers_already_counted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "additional_workers": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "total_workers": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "unserved_heroes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        }
+      },
+      "additionalProperties": false
+    },
+    "accommodation": {
+      "type": "object",
+      "required": [
+        "resident_hero_beds_needed",
+        "new_staff_beds",
+        "additional_permanent_beds",
+        "temporary_beds_required",
+        "temporary_bed_shortfall"
+      ],
+      "properties": {
+        "resident_hero_beds_needed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "new_staff_beds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "additional_permanent_beds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "temporary_beds_required": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        },
+        "temporary_bed_shortfall": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000002
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

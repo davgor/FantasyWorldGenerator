@@ -1,0 +1,89 @@
+{
+  "provenance": "Canonical byte strings and stream frame hex are independently authored. Expected SHA-256 values obtained with openssl dgst -sha256, without importing the Python oracle.",
+  "canonical": [
+    {
+      "value": {},
+      "ascii": "{}",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "value": null,
+      "ascii": "null",
+      "sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+    },
+    {
+      "value": {
+        "z": 2,
+        "a": 1
+      },
+      "ascii": "{\"a\":1,\"z\":2}",
+      "sha256": "99168216144c7fed5d4c54916cf98d9c66096280c04a499822a99b6658bd177a"
+    },
+    {
+      "value": "\u00e9",
+      "ascii": "\"\\u00e9\"",
+      "sha256": "abc3932c9ec58f042750738c49034e7ee67cf556d6be86832ac3dda38decb703"
+    },
+    {
+      "value": {
+        "\ue000": 1,
+        "\ud800\udc00": 2
+      },
+      "ascii": "{\"\\ue000\":1,\"\\ud800\\udc00\":2}",
+      "sha256": "672b1a96a5e20d692bc0e7f96715ab1ce3647485dd47a747d38e718b967cf760"
+    },
+    {
+      "value": [
+        true,
+        null,
+        -7
+      ],
+      "ascii": "[true,null,-7]",
+      "sha256": "7f059bbaa6070322885d2d641559cad1e0c6006fe80150e46e544fe2bd349c15"
+    }
+  ],
+  "streams": [
+    {
+      "seed": "0000000000000000",
+      "stream": "terrain",
+      "index": 0,
+      "frame_hex": "4d6174684c61622f73747265616d2f7631000000000000000000077465727261696e0000000000000000",
+      "word": "e2659ac26f7c9070"
+    },
+    {
+      "seed": "0000000000000000",
+      "stream": "terrain",
+      "index": 1,
+      "frame_hex": "4d6174684c61622f73747265616d2f7631000000000000000000077465727261696e0000000000000001",
+      "word": "28eba8357c2c2690"
+    },
+    {
+      "seed": "000000000000002a",
+      "stream": "ecology",
+      "index": 0,
+      "frame_hex": "4d6174684c61622f73747265616d2f763100000000000000002a0765636f6c6f67790000000000000000",
+      "word": "995d8b64e779edfd"
+    },
+    {
+      "seed": "000000000000002a",
+      "stream": "ecology",
+      "index": 1,
+      "frame_hex": "4d6174684c61622f73747265616d2f763100000000000000002a0765636f6c6f67790000000000000001",
+      "word": "5b6656f4c5888611"
+    },
+    {
+      "seed": "000000000000002a",
+      "stream": "cosmetics",
+      "index": 0,
+      "frame_hex": "4d6174684c61622f73747265616d2f763100000000000000002a09636f736d65746963730000000000000000",
+      "word": "47b44c2c1d198c54"
+    },
+    {
+      "seed": "ffffffffffffffff",
+      "stream": "terrain",
+      "index": 9007199254740991,
+      "frame_hex": "4d6174684c61622f73747265616d2f763100ffffffffffffffff077465727261696e001fffffffffffff",
+      "word": "19c2fdd03c910424"
+    }
+  ]
+}

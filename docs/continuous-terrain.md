@@ -1,5 +1,7 @@
 # Continuous terrain data
 
+The [portable coordinate contract](../Contracts/capabilities-and-coordinates.md) specifies radial datum, globe and local axes, city-versus-patch projections, tile indexing and strict conformance helpers. Its version 1 documents these existing exports; it does not change their bytes or generation semantics.
+
 Algorithm 14 adds `terrain_detail` version 1 from stage 8 onward. The regional raster remains the climate, hydrology and regional settlement input. The authoritative local surface is that raster plus deterministic position-addressed relief; it is used by city planner 3, canonical patch exports and height tiles. Regenerate algorithm-13 worlds. Age replay checks detail identity as well as planner identity.
 
 ## Height function

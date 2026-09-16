@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MathLab bounded counter proof v1",
+  "description": "Structural envelope schema. The canonical decoder and oracle additionally enforce integer token types, identity/order/accounting, byte limits and interval semantics.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/event"
+    },
+    {
+      "$ref": "#/$defs/state"
+    },
+    {
+      "$ref": "#/$defs/command"
+    },
+    {
+      "$ref": "#/$defs/candidate"
+    },
+    {
+      "$ref": "#/$defs/failure"
+    }
+  ],
+  "$defs": {
+    "event": {
+      "type": "object",
+      "required": [
+        "schema",
+        "schema_version",
+        "world_id",
+        "event_id",
+        "actor_id",
+        "target_id",
+        "time_ms",
+        "delta"
+      ],
+      "properties": {
+        "schema": {
+          "const": "mathlab.counter-event"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "world_id": {
+          "type": "string",
+          "pattern": "^world:[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "event_id": {
+          "type": "string",
+          "pattern": "^event:[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "actor_id": {
+          "type": "string",
+          "pattern": "^actor:[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "target_id": {
+          "const": "counter:main"
+        },
+        "time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "delta": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "receipt": {
+      "type": "object",
+      "required": [
+        "event",
+        "counter_after"
+      ],
+      "properties": {
+        "event": {
+          "$ref": "#/$defs/event"
+        },
+        "counter_after": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "pending": {
+      "type": "object",
+      "required": [
+        "target_time_ms",
+        "events"
+      ],
+      "properties": {
+        "target_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/event"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "required": [
+        "schema",
+        "schema_version",
+        "rules_version",
+        "numeric_version",
+        "world_id",
+        "authority_epoch",
+        "revision",
+        "time_ms",
+        "counter",
+        "receipts",
+        "pending"
+      ],
+      "properties": {
+        "schema": {
+          "const": "mathlab.counter-state"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "rules_version": {
+          "const": 1
+        },
+        "numeric_version": {
+          "const": 1
+        },
+        "world_id": {
+          "type": "string",
+          "pattern": "^world:[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "authority_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "counter": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "receipts": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/receipt"
+          }
+        },
+        "pending": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/pending"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "required": [
+        "schema",
+        "schema_version",
+        "world_id",
+        "authority_epoch",
+        "expected_revision",
+        "target_time_ms",
+        "budget",
+        "events"
+      ],
+      "properties": {
+        "schema": {
+          "const": "mathlab.counter-command"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "world_id": {
+          "type": "string",
+          "pattern": "^world:[a-z0-9][a-z0-9._-]{0,63}$"
+        },
+        "authority_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "target_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "budget": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/event"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": [
+        "schema",
+        "schema_version",
+        "base_state",
+        "command",
+        "next_state",
+        "effects",
+        "work_used"
+      ],
+      "properties": {
+        "schema": {
+          "const": "mathlab.counter-candidate"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "base_state": {
+          "$ref": "#/$defs/state"
+        },
+        "command": {
+          "$ref": "#/$defs/command"
+        },
+        "next_state": {
+          "$ref": "#/$defs/state"
+        },
+        "effects": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/receipt"
+          }
+        },
+        "work_used": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        }
+      },
+      "additionalProperties": false
+    },
+    "failure": {
+      "type": "object",
+      "required": [
+        "schema",
+        "schema_version",
+        "code",
+        "message"
+      ],
+      "properties": {
+        "schema": {
+          "const": "mathlab.failure"
+        },
+        "schema_version": {
+          "const": 1
+        },
+        "code": {
+          "enum": [
+            "INVALID_INPUT",
+            "UNSUPPORTED_VERSION",
+            "UNKNOWN_ID",
+            "STALE_REVISION",
+            "AUTHORITY_MISMATCH",
+            "CONFLICTING_EVENT",
+            "INTERVAL_CONFLICT",
+            "WORK_BUDGET",
+            "STATE_CAPACITY",
+            "NUMERIC_OVERFLOW",
+            "INVALID_CANDIDATE"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -6,13 +6,13 @@ Independent MathLab simulation repository and future producer of the versioned U
 
 Read [PLAN.md](PLAN.md). It contains the source baseline and extraction scope, existing capability limits, ML-00–13 implementation tickets, shared Unreal package contract, ownership boundaries, acceptance gates and relevant world-system design.
 
-The active implementation task is [ML-00](board/in-progress/ML-00.md): extract the existing MathLab from `davgor/icarusUnreal`, preserve provenance and dependencies, and verify a standalone baseline. The pinned Python reference remains importable as `icarus_sim`; new repository-level commands use the `fantasy_world_generator` facade.
+The extraction is complete; see [ML-00 evidence](board/done/ML-00.md) and the [current board](board/README.md). The pinned Python reference remains importable as `icarus_sim`; repository-level commands and portable contract helpers use the `fantasy_world_generator` facade.
 
-Follow with ML-01/02 and the small ML-03 native-runtime/plugin proof. Ordinary reference/core development remains independent of the anime game's assets and character-creator progress.
+ML-01/02 and the scoped ML-03a typed C++ counter proof are complete. ML-03b/c add native JSON/numeric conformance and a reproducible source proof bundle. Continue with the minimal Unreal runtime/plugin proof. Ordinary reference/core development remains independent of the anime game's assets and character-creator progress.
 
 ## Status
 
-The working tree contains an ML-00 extraction candidate and an export-only Python/JSON packaging candidate. Local reference tests and browser/export checks must pass, and clean-checkout CI must supply the final isolation evidence before ML-00 closes. No native kernel, Unreal plugin, cooked consumer, or immutable runtime package has been validated.
+The repository contains the standalone world generator, portable contract fixtures and a [bounded Python counter kernel](Contracts/kernel-v1.md) proving candidate evaluation, idempotent effects and checkpoint/resume. A [C++ counter core](Core/README.md) shares its JSON/numeric fixtures and can be built from an isolated source proof bundle. The opt-in [hero guild planner](docs/hero-guild.md) estimates membership, activity, service and beds without changing generated cities. This kernel is separate from generated worlds and does not implement general gameplay systems. Unreal plugin, cooked consumer and immutable runtime package qualification remain open. Distribution is [private and owner-controlled](LICENSE).
 
 ## Staged world lab
 
@@ -26,6 +26,7 @@ Python 3.9+ and the standard library are sufficient for the reference tests. Pac
 python3 tools/validate_repo.py
 PYTHONPATH=Sim python3 -m fantasy_world_generator generate --seed 42 --size 33 --output Artifacts/world.json
 PYTHONPATH=Sim python3 -m fantasy_world_generator asset-list --output Artifacts/fantasy-world-assets.json
+PYTHONPATH=Sim python3 -m fantasy_world_generator capabilities --output Artifacts/capabilities.json
 ```
 
 See [the documentation map](docs/README.md), [extraction provenance](provenance/README.md), and [current ticket board](board/README.md).

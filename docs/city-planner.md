@@ -1,5 +1,7 @@
 # Final-world city planner
 
+The [portable coordinate contract](../Contracts/capabilities-and-coordinates.md) defines city gnomonic coordinates, radial elevation, building-axis orientation and their distinction from curved patch mesh coordinates. No planner or export version changes are introduced by that additive contract helper.
+
 City planner version 4 runs after stage 16 and after the last requested age transition. Earlier simulation snapshots do not contain future city plans. It adds the optional, independently versioned `city_plans` world-output section; recipe 3 now uses generation algorithm 16 for parent-race founding. Planner identity includes both civilization/building registries and the city-shape catalogue hash. Age advancement rejects mismatched identities.
 
 ## Six ordered passes
@@ -47,3 +49,5 @@ When houses exhaust available plots, the housing pass upgrades existing houses t
 Planner 4 connects streets to actual regional-road crossings before placing buildings. The world exports global building transforms, street/road paths and shared junctions in `world_scene` version 1. Natural biome fills and magic outlines come from the same globe samples. See [the unified scene contract](unified-world-scene.md).
 
 See [unified globe diagnostics](unified-world-scene.md) for algorithm-16 sky suspension, college spacing, aridity, ley alignments and lab tables.
+
+The opt-in [hero guild planning API](hero-guild.md) reports additional resident hero/staff beds separately from visitor lodging. It is not automatically applied to these layout passes; the existing hall cook and bartender remain counted once by current staffing.

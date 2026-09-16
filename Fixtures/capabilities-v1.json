@@ -1,0 +1,20 @@
+{
+  "description": "Hand-authored producer negotiation examples; supported means available in the reference producer, not engine-qualified.",
+  "valid": [
+    {"capability_version": 1, "requires": {"kernel_numeric": 1, "counter_kernel": 1, "counter_state_json": 1, "counter_command_json": 1, "counter_candidate_json": 1}},
+    {"capability_version": 1, "requires": {}},
+    {"capability_version": 1, "requires": {"recipe": 3, "generation_algorithm": 16, "world_json": 2, "coordinates": 1}},
+    {"capability_version": 1, "requires": {"terrain_taxonomy": 1, "asset_list_json": 2, "height_tile_json": 1, "city_plans_json": 4, "world_scene_json": 1}}
+  ],
+  "invalid": [
+    {"capability_version": 2, "requires": {}},
+    {"capability_version": 1, "requires": {"recipe": 2}},
+    {"capability_version": 1, "requires": {"world_json": 3}},
+    {"capability_version": 1, "requires": {"coordinates": 2}},
+    {"capability_version": 1, "requires": {"native_kernel": 1}},
+    {"capability_version": 1, "requires": {"unreal_editor_import": 1}},
+    {"capability_version": 1, "requires": {"unreal_cooked_runtime": 1}},
+    {"capability_version": 1, "requires": {"save_migration": 1}},
+    {"capability_version": 1, "requires": {"unknown": 1}}
+  ]
+}

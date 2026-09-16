@@ -1,6 +1,6 @@
 # HERO-GUILD — Calculate city hero-guild needs
 
-Status: backlog. Owner: unassigned.
+Status: complete. Owner: repository maintainers.
 
 ## Requested behavior
 
@@ -30,3 +30,9 @@ Civilization master JSON, engine-independent calculation module, behavioral test
 ## Documentation impact and handoff
 
 Update `docs/civilizations.md` and relevant world-layer contracts when implemented. This ticket schedules calculation work only; the current hall supplies two service jobs and no hero population estimate.
+
+## Completion evidence — 2026-09-16
+
+Implemented the opt-in `hero_guild.calculate` planning API and a version-1 packaged policy registry with explicit entries for all twelve civilizations. Rates default to zero automatic resident heroes; capacities and rates are caller-configurable. Integer formulas and rounding were documented in `docs/hero-guild.md` before implementation. Six behavioral tests preceded the code and cover zero heroes, small cities, sole-city capitals, visitors, service/party caps, strict inputs, repeatability and all 36 civilization/tier presets. Existing cook/bartender beds are excluded from incremental demand.
+
+Full repository validation passes (213 reference +55 facade/native-driver tests), including unchanged generated assets and reproducible showcase outputs. The installed wheel includes and executes the planner and policies. No new assets are referenced. The calculation is deliberately opt-in: it does not spawn NPCs, change city population, place housing or assign existing residents to jobs. Automatic city/world integration and demographic calibration are future work. Existing civilization/building JSON and replay identities are preserved; historical deferred-work notes there now refer to automatic integration, clarified in `docs/civilizations.md`.

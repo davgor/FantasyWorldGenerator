@@ -1,0 +1,19 @@
+{
+  "description": "Hand-authored envelope examples for the counter proof; identities are world-scoped and never display names.",
+  "events": [
+    {"schema":"mathlab.counter-event","schema_version":1,"world_id":"world:demo","event_id":"event:a","actor_id":"actor:host","target_id":"counter:main","time_ms":2,"delta":5}
+  ],
+  "commands": [
+    {"schema":"mathlab.counter-command","schema_version":1,"world_id":"world:demo","authority_epoch":0,"expected_revision":0,"target_time_ms":10,"budget":1,"events":[]}
+  ],
+  "invalid": [
+    {"kind":"command","code":"UNSUPPORTED_VERSION","value":{"schema":"mathlab.counter-command","schema_version":2,"world_id":"world:demo","authority_epoch":0,"expected_revision":0,"target_time_ms":10,"budget":1,"events":[]}},
+    {"kind":"command","code":"WORK_BUDGET","value":{"schema":"mathlab.counter-command","schema_version":1,"world_id":"world:demo","authority_epoch":0,"expected_revision":0,"target_time_ms":10,"budget":0,"events":[]}},
+    {"kind":"command","code":"INVALID_INPUT","value":{"schema":"mathlab.counter-command","schema_version":1,"world_id":"world:demo","authority_epoch":0,"expected_revision":-1,"target_time_ms":10,"budget":1,"events":[]}},
+    {"kind":"event","code":"UNKNOWN_ID","value":{"schema":"mathlab.counter-event","schema_version":1,"world_id":"world:other","event_id":"event:a","actor_id":"actor:host","target_id":"counter:main","time_ms":2,"delta":5}},
+    {"kind":"event","code":"UNKNOWN_ID","value":{"schema":"mathlab.counter-event","schema_version":1,"world_id":"world:demo","event_id":"event:a","actor_id":"actor:host","target_id":"counter:missing","time_ms":2,"delta":5}},
+    {"kind":"event","code":"INVALID_INPUT","value":{"schema":"mathlab.counter-event","schema_version":1,"world_id":"world:demo","event_id":"event:a","actor_id":"actor:host","target_id":"counter:main","time_ms":2,"delta":0}},
+    {"kind":"event","code":"INVALID_INPUT","value":{"schema":"mathlab.counter-event","schema_version":1,"world_id":"world:demo","event_id":"event:a","actor_id":"actor:host","target_id":"counter:main","time_ms":2,"delta":1.0}},
+    {"kind":"event","code":"UNSUPPORTED_VERSION","value":{"schema":"mathlab.unknown-event","schema_version":1,"world_id":"world:demo","event_id":"event:a","actor_id":"actor:host","target_id":"counter:main","time_ms":2,"delta":5}}
+  ]
+}
