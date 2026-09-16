@@ -1,5 +1,6 @@
 """Dependency-free heightfield experiment; no gameplay or hydrology authority."""
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
+from .civilization_registry import default_profile_id
 import math
 from time import perf_counter
 
@@ -10,7 +11,7 @@ class Config:
     world_options: str = '{}'
     world_size: str = "small"
     auto_parameters: int = 0
-    population_profile: str = 'human'
+    population_profile: str = field(default_factory=default_profile_id)
     shape: str = 'plane'
     globe_radius: float = 10000.0
     tectonics: int = 0

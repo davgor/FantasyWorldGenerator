@@ -66,7 +66,7 @@ class HumanHinterlandTests(unittest.TestCase):
             expected=sum(h['delivered_food'] for h in human['hamlets'] if h['core_id']==core['site_id'])
             self.assertAlmostEqual(core['food_supply'],expected)
             self.assertAlmostEqual(core['food_deficit'],max(0,core['food_demand']-expected-core['food_imports']+core['food_exports']))
-        self.assertTrue(all(c['architecture_style_id'] is None for c in human['cultures']))
+        self.assertTrue(all(c['architecture_style_id']==c['civilization_id']==c['population_profile'] for c in human['cultures']))
         for key in ('culture_region','food_potential','hamlet_catchment'):
             for row in result['layers'][key]:self.assertEqual(row[0],row[-1])
             self.assertEqual(len(set(result['layers'][key][0])),1)

@@ -1,0 +1,7 @@
+{
+  "schema": "fantasy-world-generator.registry-reference",
+  "schema_version": 1,
+  "master": "../../Sim/icarus_sim/buildings.json",
+  "section": "structure_blocks.common",
+  "note": "Shared building definitions live in buildings.json; civilizations reference them."
+}

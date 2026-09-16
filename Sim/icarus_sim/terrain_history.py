@@ -10,7 +10,7 @@ from .terrain_leyline_history import SCHOOLS, generate_networks, evaluate_networ
 
 STAGES = ['Plate layout', 'Tectonic relief', 'Surface detail', 'Erosion and sediment',
           'Connected water', 'Second tectonic relief', 'Valleys and gorges', 'Wind and rain',
-          'Leylines', 'Cities', 'Roads', 'Populated regions', 'Beasties and animals',
+          'Leylines', 'Founding', 'Roads', 'Populated regions', 'Beasties and animals',
           'Age transition 1', 'Age transition 2', 'Simulation complete']
 from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue, natural_catalogue
 
@@ -177,7 +177,7 @@ def age_transition(result,cfg,age):
         fate=city_fate(city,result['layers'],result.get('beast_nests',{}).get('sites',[]),radius,cfg.seed,age,
                        magic_enabled=bool(cfg.magic_enabled))
         if not fate:survivors.append(city);continue
-        ruin={k:copy.deepcopy(city[k]) for k in ('uid','name','node','x','z','direction','height_m','population_profile','source_culture','founded_age')}
+        ruin={k:copy.deepcopy(city[k]) for k in ('uid','name','node','x','z','direction','height_m','population_profile','civilization_id','city_class','source_culture','founded_age')}
         ruin.update(id='ruin-'+city['uid'],kind='ruins',destroyed_age=age,asset_id='marker.city_ruins',**fate)
         ruins.append(ruin);events.append(copy.deepcopy(ruin))
     # Death decisions all use the pre-transition fields. Only then evolve the ley inputs.
@@ -205,7 +205,7 @@ def age_transition(result,cfg,age):
                                     'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests']})
 
 
-STATE_KEYS=('history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','ruins',
+STATE_KEYS=('city_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','ruins',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area')
 
@@ -263,8 +263,11 @@ def generate_history(cfg):
         elif stage==12:civilization(result,cfg,9)
         elif stage==13:add_nests(result,replace(cfg,phase=9))
         elif stage in (14,15):age_transition(result,cfg,stage-13)
+        elif stage==16:
+            from .city_planner import fill_cities
+            fill_cities(result)
         capture(stage)
-    result['generator_version']=8
+    result['generator_version']=12
     result['config']=asdict(cfg);result['effective_config']['world_recipe']=3;result['effective_config']['phase']=cfg.phase
     result['phases'].update(version=2,completed=cfg.phase,titles=STAGES)
     result['build_stages']=snapshots
@@ -287,10 +290,19 @@ def validate_age_world(world):
         cfg=Config(**world['config'])
         if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>257:
             raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=257')
-        if world['terrain']['version']!=6 or world['generator_version']!=8 or world['recipe']['version']!=3:
+        if world['terrain']['version']!=6 or world['generator_version']!=12 or world['recipe']['version']!=3:
             raise ValueError('Retired world contract; regenerate with recipe_version 3')
         if world['magic']['version']!=3 or world['history']['version']!=1:
             raise ValueError('Unsupported magic or history state version')
+        if world['settlements']['version']!=13 or world['civilizations']['version']!=2:
+            raise ValueError('Unsupported civilization or settlement version')
+        from .civilization_registry import registry_identity
+        if world['civilizations']['registry']!=registry_identity():
+            raise ValueError('Civilization registry changed; regenerate or explicitly migrate this world')
+        if 'city_plans' in world:
+            from .city_planner import planner_identity
+            if world['city_plans'].get('identity')!=planner_identity():
+                raise ValueError('City planner data changed; regenerate this world')
         if set(world['magic']['networks'])!=set(SCHOOLS):raise ValueError('Expected exactly eight networks')
         ages=world['history']['ages']
         if not isinstance(ages,list) or [a['age'] for a in ages]!=list(range(1,len(ages)+1)):
@@ -327,6 +339,11 @@ def validate_age_world(world):
         points,_,_=sphere_grid(n,physical['globe_radius'])
         uids=set();occupied=set()
         for city in world['settlements']['sites']:
+            from .terrain_profiles import get_profile
+            if get_profile(city['population_profile'])['civilization']['kind']!='entity' or city['civilization_id']!=city['population_profile']:
+                raise ValueError('Invalid city civilization')
+            if city['city_class'] not in ('small','medium','capital'):
+                raise ValueError('Invalid city classification')
             node=city['node']
             if type(node) is not int or not 0<=node<len(points) or node in occupied:
                 raise ValueError('Invalid or repeated active city node')
@@ -336,6 +353,10 @@ def validate_age_world(world):
                 raise ValueError('City direction disagrees with node')
             if city['uid'] in uids or not isinstance(city['source_culture'],str):raise ValueError('Invalid city identity')
             uids.add(city['uid'])
+        from .terrain_civilizations import classify_cities
+        classified=copy.deepcopy(world['settlements']['sites']);classify_cities(classified)
+        if any(a['city_class']!=b['city_class'] for a,b in zip(classified,world['settlements']['sites'])):
+            raise ValueError('City classifications disagree with suitability')
         if any(r['node'] in occupied for r in world['ruins']):raise ValueError('An active city occupies a ruin')
         for net in world['magic']['networks'].values():
             for key,low,high in [('strength',0,2),('width_m',10,2000),('instability',0,1)]:
@@ -393,7 +414,11 @@ def advance_age_request(body):
         baseline=world if age==start_age+1 else result
         previous_layers=copy.deepcopy(baseline['layers'])
         previous_state={k:copy.deepcopy(baseline.get(k)) for k in STATE_KEYS}
+        result.pop('city_plans',None)
         age_transition(result,cfg,age)
+        if age==start_age+steps:
+            from .city_planner import fill_cities
+            fill_cities(result)
         if 'build_stages' in result:
             stage=len(result['build_stages'])+1
             result['build_stages'].append({'stage':stage,'title':f'Age transition {age}','kind':'age',

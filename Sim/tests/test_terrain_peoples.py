@@ -9,7 +9,8 @@ class PeoplesTests(unittest.TestCase):
         cfg=Config(auto_parameters=1,population_profile='mixed',size=65)
         a=generate(cfg);b=generate(cfg)
         self.assertEqual(a['settlements'],b['settlements'])
-        sites=a['settlements']['sites'];counts={p:sum(s['population_profile']==p for s in sites) for p in ('human','dwarf','elf')}
+        from icarus_sim.terrain_profiles import civilization_ids
+        sites=a['settlements']['sites'];counts={p:sum(s['population_profile']==p for s in sites) for p in civilization_ids()}
         self.assertEqual(sum(counts.values()),len(sites))
         self.assertLessEqual(sum(s['population_estimate'] for s in sites),a['population_budget']['world_cap'])
         self.assertEqual(len({s['node'] for s in sites}),len(sites))
@@ -28,7 +29,7 @@ class PeoplesTests(unittest.TestCase):
             self.assertEqual(rural['population_profile'],sites[rural['core_id']]['population_profile'])
 
     def test_mixed_does_not_change_physical_world(self):
-        a=generate(Config(auto_parameters=1,population_profile='human',size=17))
+        a=generate(Config(auto_parameters=1,population_profile='human_heartland',size=17))
         b=generate(Config(auto_parameters=1,population_profile='mixed',size=17))
         for key in ('height','biome','rainfall','magic_density'):self.assertEqual(a['layers'][key],b['layers'][key])
 
@@ -40,7 +41,7 @@ class PeoplesTests(unittest.TestCase):
         cfg=replace(Config(**result['config']),phase=7)
         add_settlements(result,cfg)
         self.assertTrue(result['settlements']['sites'])
-        self.assertEqual({s['population_profile'] for s in result['settlements']['sites']},{'human'})
+        self.assertTrue({s['population_profile'] for s in result['settlements']['sites']} <= {'human_desert','human_cold','gnome','tidekin'})
         self.assertEqual(result['population_budget']['shares']['dwarf'],0)
         self.assertEqual(result['population_budget']['shares']['elf'],0)
 
@@ -59,19 +60,19 @@ class PeoplesTests(unittest.TestCase):
 
     def test_life_capacity_needs_productive_land_and_does_not_double_count(self):
         from icarus_sim.terrain_settlements import life_capacity
-        cap,allowances=life_capacity([1e6],{'human':[1.]})
-        both,split=life_capacity([1e6],{'human':[1.],'elf':[1.]})
+        cap,allowances=life_capacity([1e6],{'human_heartland':[1.]})
+        both,split=life_capacity([1e6],{'human_heartland':[1.],'elf':[1.]})
         self.assertEqual(cap,both)
         self.assertEqual(sum(split.values()),both)
-        self.assertEqual(life_capacity([1e6],{'human':[0.]})[0],0)
-        self.assertGreater(cap,life_capacity([1e6],{'human':[.2]})[0])
-        self.assertEqual(life_capacity([2e6],{'human':[1.]})[0],cap*2)
+        self.assertEqual(life_capacity([1e6],{'human_heartland':[0.]})[0],0)
+        self.assertGreater(cap,life_capacity([1e6],{'human_heartland':[.2]})[0])
+        self.assertEqual(life_capacity([2e6],{'human_heartland':[1.]})[0],cap*2)
 
     def test_default_world_population_balance_regression(self):
         # Calibration fixture, not a requirement imposed on arbitrary worlds.
         r=generate(Config(auto_parameters=1,population_profile='mixed',size=129,seed=42))
         counts=r['population_budget']['placed_cities']
-        self.assertGreaterEqual(counts['human'],4)
+        self.assertGreaterEqual(sum(v for k,v in counts.items() if k.startswith('human_')),4)
         self.assertGreaterEqual(counts['dwarf']+counts['elf'],1)
         self.assertLessEqual(r['population_budget']['allocated'],r['population_budget']['world_cap'])
 

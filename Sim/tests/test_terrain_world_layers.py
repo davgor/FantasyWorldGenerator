@@ -102,7 +102,7 @@ class LayeredWorldTests(unittest.TestCase):
             self.assertLessEqual(site['population_estimate'],site['freshwater_capacity'])
 
     def test_population_does_not_reroll_sky_geometry(self):
-        human=generate_request({'seed':42,'overrides':{'size':17,'phase':12,'population_profile':'human'}})
+        human=generate_request({'seed':42,'overrides':{'size':17,'phase':12,'population_profile':'human_heartland'}})
         mixed=generate_request({'seed':42,'overrides':{'size':17,'phase':12}})
         self.assertEqual(human['sky']['islands'],mixed['sky']['islands'])
         self.assertEqual(human['layers']['height'],mixed['layers']['height'])

@@ -1,5 +1,7 @@
 # World asset production list
 
+[Human civilization blocks](../human-civilization-blocks.md) now hold the forward-looking human city layout requirements and measurements. They will feed a later rebuild of this production catalogue; the inherited jobs below remain the current export baseline. Reuse links do not establish that a job completely satisfies a new structure requirement.
+
 This is the actual item-by-item production baseline for **Epic 010**: **492 jobs**, each with a stable ID, brief, scale, placement context, dependencies and a shared output/acceptance contract. Nothing in this catalogue has been generated or verified yet. “Not started” means required work, not that an existing reusable asset has been audited and rejected.
 
 The list covers the current generator, not every conceivable future game feature. Exact plant families and dimensions below are proposed art-direction choices, not claims about simulated botany. Approve the representative prototypes first, then work through the remaining IDs without another broad inventory exercise.
@@ -108,3 +110,7 @@ Epic 008 is the umbrella environment-library coverage checklist; Epic 009 integr
 ## Evidence
 
 [Catalogue audit](AUDIT.md) records coverage, counts, ID/dependency checks and remaining prototype decisions. All art and Unreal validation evidence is initially empty by design.
+
+## Final-world city plans
+
+The [city planner](../../city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.

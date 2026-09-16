@@ -1,8 +1,7 @@
-"""Editable population templates; no profile may bypass world generation rules."""
+"""Validated population views of the master civilization registry."""
 import json
 import hashlib
 import math
-from pathlib import Path
 from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue
 
 VARIANT_IDS = frozenset(b['id'] for b in biome_catalogue())
@@ -11,17 +10,48 @@ FIELDS=set('name description temperature_ideal temperature_tolerance slope_comfo
 
 
 def profiles():
-    return json.loads(Path(__file__).with_name('terrain_profiles.json').read_text(encoding='utf-8'))
+    from .civilization_registry import population_profiles
+    return population_profiles()
+
+
+def validate_habitat(rule,depth=0):
+    if not isinstance(rule,dict) or depth>8:raise ValueError('Invalid habitat rule')
+    if not rule:return
+    for operator in ('all','any'):
+        if operator in rule:
+            if set(rule)!={operator} or not isinstance(rule[operator],list) or not rule[operator]:raise ValueError('Invalid habitat combination')
+            for child in rule[operator]:validate_habitat(child,depth+1)
+            return
+    if rule.get('field') not in ('biome','variant','temperature','moisture','maritime','landmass_area_m2','landmass_fraction','largest_landmass','resource','slope','height','tpi','coastal_support'):
+        raise ValueError('Unknown habitat field')
+    if set(rule)-{'field','in','min','max','gt','equals'} or len(rule)<2:raise ValueError('Invalid habitat comparison')
+    for key in ('min','max','gt'):
+        if key in rule and (type(rule[key]) not in (int,float) or not math.isfinite(rule[key])):raise ValueError('Invalid habitat bound')
+    if 'min' in rule and 'max' in rule and rule['min']>rule['max']:raise ValueError('Reversed habitat bounds')
+    if 'in' in rule and (not isinstance(rule['in'],list) or not rule['in'] or any(not isinstance(v,str) and (type(v) not in (int,float,bool) or not math.isfinite(v)) for v in rule['in'])):
+        raise ValueError('Invalid habitat membership')
+    if 'equals' in rule and (type(rule['equals']) not in (int,float,bool) or not math.isfinite(rule['equals'])):raise ValueError('Invalid habitat equality')
 
 
 def get_profile(profile_id):
     registry=profiles()
     if not isinstance(profile_id,str) or profile_id not in registry:raise ValueError('Unknown population profile')
-    raw=registry[profile_id];base=registry['human']
-    if set(base)!=FIELDS:raise ValueError('Human profile has missing or unknown traits')
-    if raw.get('extends','human')!='human':raise ValueError('Profiles may extend only human')
-    if set(raw)-set(base)-{'extends'}:raise ValueError('Unknown population trait')
-    result=dict(base);result.update({k:v for k,v in raw.items() if k!='extends'});result['id']=profile_id
+    return validate_profile(registry[profile_id],profile_id)
+
+
+def validate_profile(raw,profile_id):
+    if set(raw)!=FIELDS|{'civilization'}:raise ValueError('Civilization requires a complete independent trait record')
+    identity=raw['civilization']
+    if not isinstance(identity,dict) or identity.get('kind') not in ('entity','aggregate'):
+        raise ValueError('Invalid civilization identity')
+    if set(identity)!={'kind','inspiration','environment','habitat','allocation_group','priority','structure_blocks'}:
+        raise ValueError('Incomplete civilization identity')
+    if type(identity['priority']) is not int or identity['priority']<0:raise ValueError('Invalid habitat priority')
+    for key in ('inspiration','allocation_group','structure_blocks'):
+        if identity[key] is not None and (not isinstance(identity[key],str) or not identity[key]):raise ValueError('Invalid civilization label')
+    if not isinstance(identity['environment'],str) or not identity['environment']:raise ValueError('Missing civilization environment')
+    validate_habitat(identity['habitat'])
+    result={k:v for k,v in raw.items() if k!='civilization'};result['id']=profile_id
     for k,v in result.items():
         if k in ('name','description','id'):
             if not isinstance(v,str) or not v:raise ValueError('Invalid profile text')
@@ -45,12 +75,17 @@ def get_profile(profile_id):
         if not 0<result[k]<90:raise ValueError(f'{k} must be between 0 and 90 degrees')
     if not 0<=result['food_demand']<=10000:raise ValueError('Food demand out of range')
     if not .01<=result['land_per_city_km2']<=1000 or not 0<result['support_multiplier']<=10:raise ValueError('Population footprint out of range')
-    result['schema_version']=2
+    result['civilization']=identity
+    result['schema_version']=3
     result['definition_hash']=hashlib.sha256(json.dumps(result,sort_keys=True).encode()).hexdigest()
     return result
 
 
 def profile_options():return [{'id':key,'name':value['name']} for key,value in profiles().items()]
+
+
+def civilization_ids():
+    return tuple(key for key,value in profiles().items() if value['civilization']['kind']=='entity')
 
 
 def biome_preference(profile, core_id, variant_id=None):

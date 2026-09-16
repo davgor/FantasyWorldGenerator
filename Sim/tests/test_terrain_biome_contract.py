@@ -20,13 +20,13 @@ class BiomeContractTests(unittest.TestCase):
         self.assertEqual(world['layers']['biome'], world['layers']['natural_biome'])
         self.assertTrue(all(v in NATURAL_BIOMES for row in world['layers']['biome'] for v in row))
         for p in [world['population'], *world.get('peoples', {}).values()]:
-            self.assertEqual(p['schema_version'], 2)
+            self.assertEqual(p['schema_version'], 3)
             for key in ('biome_preferences', 'food_biome_multipliers'):
                 self.assertFalse(set(map(int, p[key])) & RETIRED)
 
     def test_current_world_stages_replay_and_age(self):
         world = generate_request({'recipe_version': 3, 'seed': 42, 'overrides': {'size': 17}})
-        self.assertEqual(world['generator_version'], 8)
+        self.assertEqual(world['generator_version'], 12)
         self.assert_current(world)
         self.assertEqual(len(world['terrain']['magical_biomes']), 104)
         for stage in (8, 9, 10, 13, 14, 15, 16):
@@ -77,7 +77,7 @@ class BiomeContractTests(unittest.TestCase):
 
     def test_profiles_use_explicit_variant_rules(self):
         from icarus_sim.terrain_profiles import get_profile, biome_food_multiplier
-        human, woodland = get_profile('human'), get_profile('woodland')
+        human, woodland = get_profile('human_heartland'), get_profile('elf')
         self.assertGreater(biome_food_multiplier(woodland, 4, 'forest.earth'),
                            biome_food_multiplier(human, 4, 'forest.earth'))
         self.assertEqual(biome_food_multiplier(human, 4, None), 1)
@@ -88,9 +88,9 @@ class BiomeContractTests(unittest.TestCase):
         from icarus_sim.terrain_profiles import profiles, get_profile
         for field, key in [('food_biome_multipliers', '10'), ('magic_biome_preferences', 'forest.unknown')]:
             data = profiles()
-            data['human'][field][key] = .5
+            data['human_heartland'][field][key] = .5
             with patch('icarus_sim.terrain_profiles.profiles', return_value=data):
-                with self.assertRaises(ValueError):get_profile('human')
+                with self.assertRaises(ValueError):get_profile('human_heartland')
 
     def test_building_selection_matches_natural_or_exact_variant(self):
         from icarus_sim.terrain_settlements import _city_building_packs, _pick_city_building_pack
@@ -98,17 +98,18 @@ class BiomeContractTests(unittest.TestCase):
         pack = catalogue['packs'][0]
         pack.update(biomes={2}, biome_variants={'forest.earth'}, profiles=None, id='explicit-state-pack')
         catalogue['packs'] = [pack]
-        args = (42, 'human', 4, 20., 2., .5, 50., catalogue)
+        args = (42, 'human_heartland', 4, 20., 2., .5, 50., catalogue)
         self.assertEqual(_pick_city_building_pack(*args, variant_id='forest.earth'), 'explicit-state-pack')
         self.assertEqual(_pick_city_building_pack(*args, variant_id='forest.weave'), catalogue['fallback_pack_id'])
-        self.assertEqual(_pick_city_building_pack(42,'human',2,20.,2.,.5,50.,catalogue), 'explicit-state-pack')
+        self.assertEqual(_pick_city_building_pack(42,'human_heartland',2,20.,2.,.5,50.,catalogue), 'explicit-state-pack')
 
     def test_explicit_empty_building_variant_selector_matches_nothing(self):
         from pathlib import Path
         from icarus_sim import terrain_settlements
-        raw = json.loads(Path(terrain_settlements.__file__).with_name('terrain_city_building_packs.json').read_text())
+        from icarus_sim.civilization_registry import building_pack_data
+        raw = building_pack_data()
         raw['packs'][1]['criteria'] = {'biome_variants': []}
         catalogue = terrain_settlements._validate_building_packs(raw)
         catalogue['packs'] = [catalogue['packs'][1]]
-        actual = terrain_settlements._pick_city_building_pack(42,'human',4,20.,2.,.5,50.,catalogue,'forest.earth')
+        actual = terrain_settlements._pick_city_building_pack(42,'human_heartland',4,20.,2.,.5,50.,catalogue,'forest.earth')
         self.assertEqual(actual, catalogue['fallback_pack_id'])

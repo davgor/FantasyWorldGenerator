@@ -9,12 +9,24 @@ from icarus_sim.terrain_biome_catalogue import natural_catalogue
 
 
 class AssetListTests(unittest.TestCase):
+    def test_building_references_name_standalone_civilizations(self):
+        from icarus_sim.terrain_profiles import civilization_ids
+        known=set(civilization_ids());seen=set()
+        for asset in compile_asset_list()['assets']:
+            if asset['source']!='simulation.building_packs':continue
+            for reference in asset['metadata']['references']:
+                self.assertTrue(set(reference['civilization_ids']) <= known)
+                seen.update(reference['civilization_ids'])
+        self.assertEqual(seen,known)
+        self.assertNotIn('human',seen)
+
     def test_all_potential_state_sources_are_included(self):
         document = compile_asset_list()
         assets = {item["id"]: item for item in document["assets"]}
         self.assertEqual(document["summary"]["by_source"]["simulation.biomes"], len(natural_catalogue()))
         self.assertEqual(document["summary"]["by_source"]["simulation.creature_profiles"], 381)
         self.assertEqual(document["summary"]["by_source"]["simulation.building_packs"], 84)
+        self.assertEqual(document["summary"]["by_source"]["simulation.city_planner"], 82)
         self.assertEqual(document["summary"]["by_source"]["production.world_asset_catalogue"], 492)
         self.assertIn("creature.kraken", assets)
         self.assertIn("terrain.biome.017", assets)

@@ -846,56 +846,11 @@ The calibration data is in `Artifacts/recipe-scale-calibration.json` locally.
 
 ### Population templates
 
-Edit `Sim/icarus_sim/terrain_profiles.json`. The human profile defines the baseline;
-additional profiles may extend it with overrides. Reload the lab after adding a
-profile so it appears in the selector. Three presets are included:
-
-- **Humans:** temperate generalists, irrigation, mixed farming/resources.
-- **Highland folk (example):** colder preference, greater slope tolerance, mineral
-  and rock preferences, and agriculture adapted to slopes. No tunnels are implied.
-- **Woodland folk (example):** forest preference, higher magical tolerance and a
-  greater ability to use fungal food. No species anatomy or automatic wards are implied.
-
-A new profile can start as a small override, for example:
-
-```json
-"ashen_folk": {
-  "extends": "human",
-  "name": "Ashen folk",
-  "description": "An experimental population adapted to magical wastelands.",
-  "mutation_limit": 0.7,
-  "biome_preferences": {"9": 0.15},
-  "food_biome_multipliers": {"9": 0.6, "10": 0.5, "11": 0.15, "13": 0.35, "14": 0.35}
-}
-```
-
-Mapping overrides replace the inherited mapping, rather than merging individual
-entries. Unlisted biome food multipliers default to 1; unlisted preferences to 0.
-Fields and numeric ranges are validated. Profiles cover temperature, water reach,
-slope comfort/limits, suitability weights, food climate, biome preferences and
-food multipliers, irrigation, demand, transport grade, magical tolerance and
-college safety checks. Shared graph algorithms and terrain facts stay common.
-In expert mode the legacy scalar config controls (such as road grade and mutation
-limit) are explicit overrides; derived mode takes those values from the profile.
-
-Exports include the full `population` definition, schema version and definition
-hash, plus profile IDs on settlements and society output. For compatibility,
-the society section is still named `humans`, although it now contains any selected
-population. Its version is 3; settlement metadata is version 4. Culture IDs begin
-with the profile ID, and architecture style remains null. Only one population is
-simulated per run; this is permutation support, not multi-species competition.
-
-Changing a profile changes settlement scores, admissible terrain, food output,
-safety and downstream roads/regions. It does **not** reroll terrain, water, rainfall,
-biomes or leylines. Reproduction requires the same recipe and profile definitions;
-the exported hash identifies definition changes, but the current API does not
-install archived definitions automatically. Profile examples are design templates,
-not established fictional races or biological claims.
-
+Population definitions and all civilization-specific rules are authored in the [civilization master registry](civilizations.md). Each entity is a complete independent record; no human base or inheritance is supported. Presentation stays in that master; construction libraries and measured requirements live in linked buildings.json. Its revision/hash is exported in civilization report version 2 and checked before age advancement.
 
 ## Coexisting peoples and inferred capacity (006.10 / 006.11)
 
-The server defaults to `population_profile=mixed`: humans, dwarves and elves coexist. Normal generation exposes seed, resolution and phase; profile comparisons and manual controls remain in Expert mode. Python `Config` retains its human default for compatibility. Species roof colours and city cards identify the peoples. Rural sites, culture IDs and colleges inherit their host population; cross-population roads permit trade, while culture groups use qualifying same-population road links.
+The server defaults to `population_profile=mixed`: the six independent human cultures, dwarves, elves, gnomes and Tidekin coexist. Normal generation exposes seed, resolution and phase; profile comparisons and manual controls remain in Expert mode. Python `Config` uses the registry default, currently Heartland humans. Registry roof colours and city cards identify the peoples. Rural sites, culture IDs and colleges inherit their host population; cross-population roads permit trade, while culture groups use qualifying same-population road links.
 
 There are **no required city counts, one-to-two minority rolls, forced minimum city, or enforced human majority ratio**. Broad human habitat generally favours human prevalence, but the environment decides. Dwarves require mineral-rich uplands; elves require moist forest. All share exclusive site spacing and conservative surface-road safety. Missing habitat may result in no cities for a people, including humans.
 

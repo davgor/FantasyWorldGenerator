@@ -30,7 +30,8 @@ def arc_distance(p,a,b):return distance_to_frame(p,arc_frame(a,b))
 def college_eligible(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile=None):
     if profile is None:
         from .terrain_profiles import get_profile
-        profile=get_profile('human')
+        from .civilization_registry import default_profile_id
+        profile=get_profile(default_profile_id())
     return (density>=.35 and hazard<=limit and water==0 and slope<profile['college_slope_limit'] and profile['college_temperature_min']<temp<profile['college_temperature_max']
             and 0<=fresh<=profile['college_water_reach'] and flood<profile['college_flood_limit'] and suitability>=profile['college_suitability_min'])
 

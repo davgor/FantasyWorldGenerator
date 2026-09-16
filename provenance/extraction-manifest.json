@@ -80,7 +80,7 @@
       "source": "Sim/icarus_sim/terrain_city_building_packs.json",
       "source_sha256": "87e214559a0dce5332096e2929fe6346042c92568f4b96ed3519f7bca41a4173",
       "destination": "Sim/icarus_sim/terrain_city_building_packs.json",
-      "destination_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
+      "destination_sha256": "6a94ecd0b7eb630a6bdbc464a3edc1176547b1d8dd8554cea327b34dd4c15bc8",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -90,17 +90,64 @@
           "destination_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
+          "baseline_git_sha256": "e2669a42c076fc5f37635b297469ed9432b141b566197f5234ed40d6cc2324b8",
+          "destination_sha256": "8cf8d1978259407844fedd4a5d9f4cd2d98a22168b059bcacbc5b4edd7be55d9",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "8cf8d1978259407844fedd4a5d9f4cd2d98a22168b059bcacbc5b4edd7be55d9",
+          "destination_sha256": "f87ee066cfd592aa089585231b90aed4463dc66299445bf7f389e8d3296f940e",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "f87ee066cfd592aa089585231b90aed4463dc66299445bf7f389e8d3296f940e",
+          "destination_sha256": "6a94ecd0b7eb630a6bdbc464a3edc1176547b1d8dd8554cea327b34dd4c15bc8",
+          "decision": "docs/civilizations.md",
+          "reason": "Move shared building definitions to linked buildings.json and document neutral measured IDs and combined replay identity."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_city_layout_profiles.json",
       "source_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
       "destination": "Sim/icarus_sim/terrain_city_layout_profiles.json",
-      "destination_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "cac5558d0ac179623333954cb287675b93f223681475a21ed554c0c0e7c35b7c",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
+          "baseline_git_sha256": "388705198ff866bed2f9a5931ef40d850d88e1f604a4b3b5865873bde0cf1c00",
+          "destination_sha256": "4960a5cbc97baa5d8193d3daf94b063cd681ba6184dac8313a83faa37f9b9f08",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "4960a5cbc97baa5d8193d3daf94b063cd681ba6184dac8313a83faa37f9b9f08",
+          "destination_sha256": "eb4fef47ca8384794c38ac5cc7cb7c90d4bca82366edd415ce6a6dceb197d911",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "eb4fef47ca8384794c38ac5cc7cb7c90d4bca82366edd415ce6a6dceb197d911",
+          "destination_sha256": "cac5558d0ac179623333954cb287675b93f223681475a21ed554c0c0e7c35b7c",
+          "decision": "docs/civilizations.md",
+          "reason": "Move shared building definitions to linked buildings.json and document neutral measured IDs and combined replay identity."
+        }
+      ],
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_climate.py",
@@ -148,10 +195,10 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
+      "destination_sha256": "a59b38a792a879e4d5aea7f9286b20ad519eeb13778dbafb8d45ec936ef335a9",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Syntax-only quote change makes the Python 3.12 PEP 701 f-string parse on Python 3.9+; generated values are regression-tested unchanged. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -159,6 +206,21 @@
           "destination_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
+          "baseline_git_sha256": "e2fcb188b8aa5cf59beb7310fd843f3ca761beaec195f908b875cbf2298c7631",
+          "destination_sha256": "7caf2729e8876c771029a249d03b5cbd87a17270665d6585bb74c92c12e58331",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7caf2729e8876c771029a249d03b5cbd87a17270665d6585bb74c92c12e58331",
+          "destination_sha256": "a59b38a792a879e4d5aea7f9286b20ad519eeb13778dbafb8d45ec936ef335a9",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
         }
       ]
     },
@@ -166,11 +228,11 @@
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
+      "destination_sha256": "ae181ad260925764b5376e88bae70cf24293a904eb96e47863c7b4e0e77c40e2",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Dispatch recipe 2 with a version-specific phase range; preserve legacy generation. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -178,6 +240,21 @@
           "destination_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
+          "baseline_git_sha256": "f8581459e87bf310e033539c2a81535cfdbcd15cb2975ed4620ade65760c0af3",
+          "destination_sha256": "bdf6bd49e693c2b1e5f75c6ed2b4caf827f2a1db42a955a47a8fcbdf102164ec",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "bdf6bd49e693c2b1e5f75c6ed2b4caf827f2a1db42a955a47a8fcbdf102164ec",
+          "destination_sha256": "ae181ad260925764b5376e88bae70cf24293a904eb96e47863c7b4e0e77c40e2",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
         }
       ]
     },
@@ -185,7 +262,7 @@
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
+      "destination_sha256": "c79f49b3d7fd2334470353275c6339d8d924b45d23e862ad4aca51293ace7ed4",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -195,9 +272,24 @@
           "destination_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
+          "baseline_git_sha256": "aa0d5911350822ea9207fda991bcafcebe9949cd9f1a52c0f7830378fcecd7f7",
+          "destination_sha256": "796f71ec4422803a087a60148b346fb63a3aa9cd32090dfceef97b8a4dbe6991",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "796f71ec4422803a087a60148b346fb63a3aa9cd32090dfceef97b8a4dbe6991",
+          "destination_sha256": "c79f49b3d7fd2334470353275c6339d8d924b45d23e862ad4aca51293ace7ed4",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
@@ -227,7 +319,7 @@
       "source": "Sim/icarus_sim/terrain_profiles.json",
       "source_sha256": "584b82cc40e3355c6c8ccad66f5ff5c3f2c8e8b8518418501609100802b2d861",
       "destination": "Sim/icarus_sim/terrain_profiles.json",
-      "destination_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
+      "destination_sha256": "72742d9db5ec6cc1e33249a93bc7d3e2ffb8eaee3f094d3f5efeec0596f612a6",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -237,15 +329,30 @@
           "destination_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
+          "baseline_git_sha256": "85183b2725b76825998c7323b5bc4a7dd6a48b891b1742ccf02304d6d9391667",
+          "destination_sha256": "863b71f2a4b40298928b085aad4377527ff6cc92d6e1c60e3fee268b98c3629f",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "863b71f2a4b40298928b085aad4377527ff6cc92d6e1c60e3fee268b98c3629f",
+          "destination_sha256": "72742d9db5ec6cc1e33249a93bc7d3e2ffb8eaee3f094d3f5efeec0596f612a6",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_profiles.py",
       "source_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
       "destination": "Sim/icarus_sim/terrain_profiles.py",
-      "destination_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
+      "destination_sha256": "86c3f873e3644b4973c472c81242746162e5cd5bae88f977e74a5ca898b51672",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -255,9 +362,24 @@
           "destination_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
+          "baseline_git_sha256": "cbd4cdfece87fed003bd72f5d9d552ea95e3e3ea83042326a68a73c6da8fc3f2",
+          "destination_sha256": "69f5448e66d87dd6ec7b325ba795de1737e575c1d3b02813285c04883f81cd76",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "69f5448e66d87dd6ec7b325ba795de1737e575c1d3b02813285c04883f81cd76",
+          "destination_sha256": "86c3f873e3644b4973c472c81242746162e5cd5bae88f977e74a5ca898b51672",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_recipes.py",
@@ -287,11 +409,11 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
+      "destination_sha256": "7286228ab2f475dbef06cb9069169afa309336c9998851e007bfeb08d096b291",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Recipe 2 excludes ruins from placement and preserves surviving city identities during age rebuilds. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -299,6 +421,42 @@
           "destination_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
+          "baseline_git_sha256": "725e067c83a1fe1bfff828c2fd929c1f0f177f96d37fd4299af10452ba0f7071",
+          "destination_sha256": "16667eac9a669f08efa1e43357e213b4206b51516713a243c2601f9cbc71cb61",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "16667eac9a669f08efa1e43357e213b4206b51516713a243c2601f9cbc71cb61",
+          "destination_sha256": "af0854901433c7a79fd2d63ab0431d591cf70e6fab61c5c54b4e35d4cd6fa542",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "af0854901433c7a79fd2d63ab0431d591cf70e6fab61c5c54b4e35d4cd6fa542",
+          "destination_sha256": "9c46f5a9e31549f0d091b6b655c181b8beb35f911a6e7db1a25b6a4dc8ff3896",
+          "decision": "docs/civilizations.md",
+          "reason": "Parent-race founding rounds, algorithm 10/settlements 11, and simulation resolution controls."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "9c46f5a9e31549f0d091b6b655c181b8beb35f911a6e7db1a25b6a4dc8ff3896",
+          "destination_sha256": "8c0f24012d5efcfc07d594d325f8419b7944d2c26e44e80b4c1a16b61fb37703",
+          "decision": "docs/civilizations.md",
+          "reason": "Migration ancestry/calendar, separated origins, High Elf and Hill Dwarf civilization revision; algorithm11/settlements12."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "8c0f24012d5efcfc07d594d325f8419b7944d2c26e44e80b4c1a16b61fb37703",
+          "destination_sha256": "7286228ab2f475dbef06cb9069169afa309336c9998851e007bfeb08d096b291",
+          "decision": "docs/civilizations.md",
+          "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
         }
       ]
     },
@@ -306,9 +464,27 @@
       "source": "Sim/icarus_sim/terrain_society.py",
       "source_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
       "destination": "Sim/icarus_sim/terrain_society.py",
-      "destination_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "a829c5a4ca4e1b38dba352f4d3e7216426c8e8c3025cd29ad5a4d91afc30aab9",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
+          "baseline_git_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
+          "destination_sha256": "7cf6655efd267b4b5b64077a7528891df6bf68e4df1bf9221bba26bd957eac0d",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7cf6655efd267b4b5b64077a7528891df6bf68e4df1bf9221bba26bd957eac0d",
+          "destination_sha256": "a829c5a4ca4e1b38dba352f4d3e7216426c8e8c3025cd29ad5a4d91afc30aab9",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        }
+      ],
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_tectonics.py",
@@ -330,11 +506,11 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
+      "destination_sha256": "f02e7f02a563457d230781cb102ea4410ddba1d1c1a2d1807037d6185f41429c",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Add explicit recipe 2 defaults, registry, and eight-school option validation while preserving recipe 1 defaults. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Standalone civilization contract; see decision 016 and revision record.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -342,6 +518,14 @@
           "destination_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
+          "baseline_git_sha256": "ce711fb481e3cdffd0aeab30eab0d6d8cb030f9fa0f14aad47bbf8ba927930b7",
+          "destination_sha256": "f02e7f02a563457d230781cb102ea4410ddba1d1c1a2d1807037d6185f41429c",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
         }
       ]
     },
@@ -365,7 +549,7 @@
       "source": "Sim/tests/test_terrain_city_layout.py",
       "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
       "destination": "Sim/tests/test_terrain_city_layout.py",
-      "destination_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
+      "destination_sha256": "048ae38513ece39834a3dcb6c8647829695b3327b0b0c94f36d91c771a0db003",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -375,9 +559,38 @@
           "destination_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
+          "baseline_git_sha256": "10ec2e44d61a65a638aa11e912a6c4dc972839c228041be6ec7b124176723230",
+          "destination_sha256": "8c4f56366437adea6eb44b1a07a5176df3eaf80c4005aa329915630b8b272317",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "8c4f56366437adea6eb44b1a07a5176df3eaf80c4005aa329915630b8b272317",
+          "destination_sha256": "fd683afb3df302876c6c70fd3bcbda3129aed46ac9b1ef20a7749349a883b512",
+          "decision": "docs/civilizations.md",
+          "reason": "Parent-race founding rounds, algorithm 10/settlements 11, and simulation resolution controls."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "fd683afb3df302876c6c70fd3bcbda3129aed46ac9b1ef20a7749349a883b512",
+          "destination_sha256": "a4c3a375f5ddf603ce1a62b4ed88d2e8791f0530774f0b9f959f13ed9294dd00",
+          "decision": "docs/civilizations.md",
+          "reason": "Migration ancestry/calendar, separated origins, High Elf and Hill Dwarf civilization revision; algorithm11/settlements12."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "a4c3a375f5ddf603ce1a62b4ed88d2e8791f0530774f0b9f959f13ed9294dd00",
+          "destination_sha256": "048ae38513ece39834a3dcb6c8647829695b3327b0b0c94f36d91c771a0db003",
+          "decision": "docs/civilizations.md",
+          "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Standalone civilization contract; see decision 016 and revision record."
     },
     {
       "source": "Sim/tests/test_terrain_climate_sites.py",
@@ -399,9 +612,20 @@
       "source": "Sim/tests/test_terrain_humans.py",
       "source_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
       "destination": "Sim/tests/test_terrain_humans.py",
-      "destination_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "c5cd91ad47ad5de8af98dab2e0cab688a4f23076bff2891768cf948f3bd9f65e",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
+          "baseline_git_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
+          "destination_sha256": "c5cd91ad47ad5de8af98dab2e0cab688a4f23076bff2891768cf948f3bd9f65e",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        }
+      ],
+      "modification": "Standalone civilization contract; see decision 016 and revision record."
     },
     {
       "source": "Sim/tests/test_terrain_lab.py",
@@ -459,7 +683,7 @@
       "source": "Sim/tests/test_terrain_peoples.py",
       "source_sha256": "7c0b57de1437886f0336662cb7e7a1a9310b76b29b8965a26a04883291789809",
       "destination": "Sim/tests/test_terrain_peoples.py",
-      "destination_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
+      "destination_sha256": "2495e5d21027a70f6d144e7ce9e002273e458e32d9d39720c5400eb5fb108fe6",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -469,15 +693,23 @@
           "destination_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
+          "baseline_git_sha256": "70af42b8efa986e337293794098cde432117f6b01d34deda4580b192b670dad0",
+          "destination_sha256": "2495e5d21027a70f6d144e7ce9e002273e458e32d9d39720c5400eb5fb108fe6",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Standalone civilization contract; see decision 016 and revision record."
     },
     {
       "source": "Sim/tests/test_terrain_recipes.py",
       "source_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
       "destination": "Sim/tests/test_terrain_recipes.py",
-      "destination_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
+      "destination_sha256": "2be866decebb42efc712635778c6b21d089a9fbd40b83a93bec5287d8628b6c0",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -487,9 +719,17 @@
           "destination_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
+          "baseline_git_sha256": "7a63224350df8a88b1ed43ec969a65c80309eb8671b3b6eaec0e1b1a17e291df",
+          "destination_sha256": "2be866decebb42efc712635778c6b21d089a9fbd40b83a93bec5287d8628b6c0",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Standalone civilization contract; see decision 016 and revision record."
     },
     {
       "source": "Sim/tests/test_terrain_seasons.py",
@@ -519,11 +759,11 @@
       "source": "Sim/tests/test_terrain_world_layers.py",
       "source_sha256": "4c081c3944850f357a53ac1b619dd7bfdbdcecd1958c605627f99a8fc246b28b",
       "destination": "Sim/tests/test_terrain_world_layers.py",
-      "destination_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
+      "destination_sha256": "9989dacd8523bff13d10259e4e50983c05ebdee0d377e5929902d634cb01286d",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Recipe 2 is now supported; the unsupported-version regression uses recipe 3. Recipe 1 behavior assertions remain unchanged. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Standalone civilization contract; see decision 016 and revision record.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -531,6 +771,14 @@
           "destination_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
+          "baseline_git_sha256": "fb26baf69edc5a7bc4c72b5f8d43613f757ce5a18f25e40723491709505e79c1",
+          "destination_sha256": "9989dacd8523bff13d10259e4e50983c05ebdee0d377e5929902d634cb01286d",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
         }
       ]
     },
@@ -621,7 +869,7 @@
       "source": "docs/catalogue/world-assets/README.md",
       "source_sha256": "81ea8697a98e7f61d7c213e76b9791d22b5a1353da6060d610b316ea7d5838c3",
       "destination": "docs/catalogue/world-assets/README.md",
-      "destination_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
+      "destination_sha256": "f9a118c3c1b9868dcc0b0c1cdbb5b653b497c6a8bd48b88a585ce6a769584dcb",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -631,9 +879,24 @@
           "destination_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
+          "baseline_git_sha256": "523a7389dec737b0fd83e3250d345868c2389d6361cbc0621cc6472bf6719583",
+          "destination_sha256": "66f0b187282af892f18d7523e4cb393c09d5b5b9ca220bc18e7e52089a1787b6",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "66f0b187282af892f18d7523e4cb393c09d5b5b9ca220bc18e7e52089a1787b6",
+          "destination_sha256": "f9a118c3c1b9868dcc0b0c1cdbb5b653b497c6a8bd48b88a585ce6a769584dcb",
+          "decision": "docs/city-planner.md",
+          "reason": "Final-world city filling, worker housing and apartments, schematic potential assets and lab inspector."
         }
       ],
-      "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
+      "modification": "Standalone civilization contract; see decision 016 and revision record."
     },
     {
       "source": "docs/catalogue/world-assets/anim.md",
@@ -866,10 +1129,10 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "71a182f41ff3ecda949b0b791ea7213f695d7106b8d180ed56c50a31ae64e341",
+      "destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
-      "modification": "Point the lab default to recipe 2 while retaining historical method documentation. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revision": "revisions/recipe-2-history.json",
       "revisions": [
         {
@@ -878,6 +1141,20 @@
           "destination_sha256": "71a182f41ff3ecda949b0b791ea7213f695d7106b8d180ed56c50a31ae64e341",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "71a182f41ff3ecda949b0b791ea7213f695d7106b8d180ed56c50a31ae64e341",
+          "destination_sha256": "0013839b7c73e3ea6ae03e17ca4ec6c6d483715aa5292bad7c33697f4d9670df",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "0013839b7c73e3ea6ae03e17ca4ec6c6d483715aa5292bad7c33697f4d9670df",
+          "destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
+          "decision": "docs/civilizations.md",
+          "reason": "Move shared building definitions to linked buildings.json and document neutral measured IDs and combined replay identity."
         }
       ]
     },
@@ -885,11 +1162,11 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
+      "destination_sha256": "ca109001f6afea396e45c62a31ea9d7906898f26e18f926ccc110dad5698ed37",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Canonical recipe 2 phases, magic competition, biome variants, age transitions, compatibility and limitations. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -897,6 +1174,84 @@
           "destination_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
+          "baseline_git_sha256": "7ee31aa73ee277675b514905f8bb8ee8a51f8af58aaa8093dbfe6a036e10c4c5",
+          "destination_sha256": "1213303b015ae3145d6aab65a7526eed1d66f9deacafa4dc23af575cd07edf15",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "1213303b015ae3145d6aab65a7526eed1d66f9deacafa4dc23af575cd07edf15",
+          "destination_sha256": "76a1a9b221397dae4f176233b0230a4e18c96d89ac22e809996ad8235394e8e7",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "76a1a9b221397dae4f176233b0230a4e18c96d89ac22e809996ad8235394e8e7",
+          "destination_sha256": "024029e964bb5eabf1b701357ff21c06ae9d75d65727a26b8fa89b2dffa8d5eb",
+          "decision": "docs/civilizations.md",
+          "reason": "Document registry schema 2, explicit city-size presets and unchanged runtime placement."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "024029e964bb5eabf1b701357ff21c06ae9d75d65727a26b8fa89b2dffa8d5eb",
+          "destination_sha256": "5ff94a1239e3b091ae7c9b40590c48a66d6a10ed2d4551169e0973bddc401480",
+          "decision": "docs/civilizations.md",
+          "reason": "Document registry schema 3 staffing rosters and planning-only worker housing estimates."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "5ff94a1239e3b091ae7c9b40590c48a66d6a10ed2d4551169e0973bddc401480",
+          "destination_sha256": "1049abe98527c2e21f8a592f4f695ce9f6b6a96ab5d5af6701051293625cd14f",
+          "decision": "docs/civilizations.md",
+          "reason": "Move shared building definitions to linked buildings.json and document neutral measured IDs and combined replay identity."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "1049abe98527c2e21f8a592f4f695ce9f6b6a96ab5d5af6701051293625cd14f",
+          "destination_sha256": "29c0480c9af7d4eb1c448b9dc7558a6d9f4e04cb04609c5cec9d58d7aafa98b8",
+          "decision": "docs/city-shapes.md",
+          "reason": "Document sourced city shape catalogue and independent future-planner selection boundary."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "29c0480c9af7d4eb1c448b9dc7558a6d9f4e04cb04609c5cec9d58d7aafa98b8",
+          "destination_sha256": "59d234cfd3d61f59f32e0636d360e853f899f158da6f321653562ac518423750",
+          "decision": "docs/city-planner.md",
+          "reason": "Final-world city filling, worker housing and apartments, schematic potential assets and lab inspector."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "59d234cfd3d61f59f32e0636d360e853f899f158da6f321653562ac518423750",
+          "destination_sha256": "cb6574f257ebce72f5081adbf560022acf258e6508bca67bc9c8e7c4387c90bc",
+          "decision": "docs/civilizations.md",
+          "reason": "Parent-race founding rounds, algorithm 10/settlements 11, and simulation resolution controls."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "cb6574f257ebce72f5081adbf560022acf258e6508bca67bc9c8e7c4387c90bc",
+          "destination_sha256": "99966fae40865ac7730227d61a5262fc3da40e11eef0d623524c715d7a7d86e5",
+          "decision": "docs/civilizations.md",
+          "reason": "Document algorithm 10 and settlement report 11 compatibility."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "99966fae40865ac7730227d61a5262fc3da40e11eef0d623524c715d7a7d86e5",
+          "destination_sha256": "bbf4a1b0e37a382cef80e4bcfef1ef862e08f566c5e031eaa577a385415cb781",
+          "decision": "docs/civilizations.md",
+          "reason": "Migration ancestry/calendar, separated origins, High Elf and Hill Dwarf civilization revision; algorithm11/settlements12."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "bbf4a1b0e37a382cef80e4bcfef1ef862e08f566c5e031eaa577a385415cb781",
+          "destination_sha256": "ca109001f6afea396e45c62a31ea9d7906898f26e18f926ccc110dad5698ed37",
+          "decision": "docs/civilizations.md",
+          "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
         }
       ]
     },
@@ -936,11 +1291,11 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
+      "destination_sha256": "33d050616910480275bf0da07ebb3a3b12594eafae30b4d6faf8e3278371ca47",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Render stage snapshots, new diagnostic categories, natural fallback colors and ruin markers. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -948,6 +1303,28 @@
           "destination_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
+          "baseline_git_sha256": "fdc3b6254acfe96c279ae11b05be37172490a8178ead5e896634d7ada9c61292",
+          "destination_sha256": "18ba4b301cdb9fde9f0cc827fa94bb81470f9ce566b1f7c1d0d97c5a0f8a2af1",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "18ba4b301cdb9fde9f0cc827fa94bb81470f9ce566b1f7c1d0d97c5a0f8a2af1",
+          "destination_sha256": "8b5b151e1cc0549cf1bd9bfac8bf8a79c0d68fede2304d4e0038a8778676c5c4",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "8b5b151e1cc0549cf1bd9bfac8bf8a79c0d68fede2304d4e0038a8778676c5c4",
+          "destination_sha256": "33d050616910480275bf0da07ebb3a3b12594eafae30b4d6faf8e3278371ca47",
+          "decision": "docs/city-planner.md",
+          "reason": "Final-world city filling, worker housing and apartments, schematic potential assets and lab inspector."
         }
       ]
     },
@@ -955,7 +1332,7 @@
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "bc16372007929596011602df11f9e78edb044c684c5c8c85f111a504b6c681c9",
+      "destination_sha256": "4816c9de95e0d1e5f151f2671cb6908559a82bf85a269213c86367a1e12d38f6",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -967,6 +1344,20 @@
           "destination_sha256": "bc16372007929596011602df11f9e78edb044c684c5c8c85f111a504b6c681c9",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "bc16372007929596011602df11f9e78edb044c684c5c8c85f111a504b6c681c9",
+          "destination_sha256": "beae74ce9ad7211dfeb6bc2f6d442c0978567a4b0368e3b579d1f4725b4dd475",
+          "decision": "docs/city-planner.md",
+          "reason": "Final-world city filling, worker housing and apartments, schematic potential assets and lab inspector."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "beae74ce9ad7211dfeb6bc2f6d442c0978567a4b0368e3b579d1f4725b4dd475",
+          "destination_sha256": "4816c9de95e0d1e5f151f2671cb6908559a82bf85a269213c86367a1e12d38f6",
+          "decision": "docs/city-planner.md",
+          "reason": "Bundle the offline WebGL city terrain and measured-building renderer before the city inspector."
         }
       ]
     },
@@ -974,11 +1365,11 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
+      "destination_sha256": "58fde55b6979b987d9fa736aec06a29b0da604f15e7e6ad96faa8f11ab97d26b",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Show recipe 2 stage-aware atlas, eight networks, variant inspection and cultural ruin cards. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
+      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -986,6 +1377,42 @@
           "destination_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
+          "baseline_git_sha256": "3b0fae357f5b48c7d986868ff21df22d5d9cb1922f7196aa8f5a4b6afafc4a28",
+          "destination_sha256": "f62779b23c356b5c2fc02213335669b72f3131f7480ab2dc30fdb00f8ead59d0",
+          "decision": "docs/decisions/016-standalone-civilizations.md",
+          "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "f62779b23c356b5c2fc02213335669b72f3131f7480ab2dc30fdb00f8ead59d0",
+          "destination_sha256": "d446cc19bc79f811f994f9f8b4baddd8db3b7fc9fe8a9623587e88d69418c0b4",
+          "decision": "docs/decisions/017-civilization-master-registry.md",
+          "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "d446cc19bc79f811f994f9f8b4baddd8db3b7fc9fe8a9623587e88d69418c0b4",
+          "destination_sha256": "dab81df6372f08a47e50408f26e8c8e0f4b6a547022b5f35541c949bc6457a8d",
+          "decision": "docs/civilizations.md",
+          "reason": "Parent-race founding rounds, algorithm 10/settlements 11, and simulation resolution controls."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "dab81df6372f08a47e50408f26e8c8e0f4b6a547022b5f35541c949bc6457a8d",
+          "destination_sha256": "59c44d71d85231cf80f7e57300f123872b6281a8b5740955904ef2f6a29961fb",
+          "decision": "docs/civilizations.md",
+          "reason": "Migration ancestry/calendar, separated origins, High Elf and Hill Dwarf civilization revision; algorithm11/settlements12."
+        },
+        {
+          "date": "2026-09-15",
+          "previous_destination_sha256": "59c44d71d85231cf80f7e57300f123872b6281a8b5740955904ef2f6a29961fb",
+          "destination_sha256": "58fde55b6979b987d9fa736aec06a29b0da604f15e7e6ad96faa8f11ab97d26b",
+          "decision": "docs/civilizations.md",
+          "reason": "Seeded diaspora rounds with food-supported bonus caps, persistent usage ledgers and algorithm12/settlements13 exports."
         }
       ]
     }

@@ -49,3 +49,11 @@ sample runs cannot overtake newer ones. Manual retries check that their source r
 To revoke publishing, remove that portfolio deploy key and source repository secret. To rotate it,
 register a replacement dedicated key and replace the secret. Missing credentials fail publication with
 an actionable error; validation and artifact builds still run. The private key never enters an artifact.
+
+## Civilization references
+
+Generation algorithm 9 uses standalone civilization entities. Building references in the exhaustive asset list include sorted `civilization_ids`, intersecting pack and option eligibility. Existing asset identities and production jobs remain shared candidates; no culture-specific art is implied. See [decision 016](decisions/016-standalone-civilizations.md).
+
+## Final-world city plans
+
+The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.

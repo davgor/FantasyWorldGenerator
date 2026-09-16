@@ -20,3 +20,25 @@ Sim/tests/test_terrain_nests.py -text whitespace=cr-at-eol
 Sim/tests/test_terrain_peoples.py -text whitespace=cr-at-eol
 Sim/tests/test_terrain_seasons.py -text whitespace=cr-at-eol
 Sim/tests/test_terrain_world_size.py -text whitespace=cr-at-eol
+
+# Preserve bytes reviewed for standalone civilization revision 016.
+Sim/icarus_sim/terrain_city_building_packs.json -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_city_layout_profiles.json -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_lab.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_profiles.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_settlements.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_society.py -text whitespace=cr-at-eol
+Sim/icarus_sim/terrain_world.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_city_layout.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_recipes.py -text whitespace=cr-at-eol
+Sim/tests/test_terrain_world_layers.py -text whitespace=cr-at-eol
+docs/catalogue/world-assets/README.md -text whitespace=cr-at-eol
+docs/terrain-world-layers.md -text whitespace=cr-at-eol
+tools/terrain_lab.html -text whitespace=cr-at-eol
+tools/terrain_world.js -text whitespace=cr-at-eol
+
+# Preserve reviewed master registry migration bytes.
+docs/terrain-math-lab.md -text whitespace=cr-at-eol
+
+# Preserve reviewed city planner bytes.
+tools/terrain_lab.py -text whitespace=cr-at-eol

@@ -2,7 +2,7 @@
 
 ## Recipe 3: staged construction and two ages
 
-The lab now defaults to recipe **3**, generation algorithm **8**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
+The lab now defaults to recipe **3**, generation algorithm **12**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
 
 1. Plate layout
 2. Tectonic relief
@@ -13,7 +13,7 @@ The lab now defaults to recipe **3**, generation algorithm **8**, with sixteen s
 7. Valleys and gorges
 8. Wind and rain
 9. Leylines, over natural biomes
-10. Cities, after magical biome classification
+10. Founding, parent-race settlement rounds after magical biome classification
 11. Roads
 12. Populated regions, supporting hamlets and supply
 13. Beasties and animals
@@ -55,11 +55,11 @@ The `ley_holy` and `ley_primordial` grids are compatibility projections for exis
 
 The old standalone categories—Desolation (9), Fungal forest (10), Crystalline desert (11), Enchanted forest (12), and Haunted marsh (14)—are removed from generation, profiles, building criteria and production selectors. These numeric IDs are reserved and invalid, never recycled. Haunted marsh still exists as the explicitly defined `marsh.umbral` variant. There is no compatibility phenotype or automatic conversion of old saved worlds.
 
-Population profile schema **2** has natural-only `biome_preferences` and `food_biome_multipliers`, plus `magic_biome_preferences` and `food_magic_biome_multipliers` keyed by exact `core.school` IDs. A matching variant overrides the natural value; otherwise the natural value applies (default preference 0, food factor 1). Population capacity and rural food use the same lookup, then apply the existing local magic-risk reduction. Contested/weak magic gets natural rules. Elven habitat uses forest, rainforest and boreal forest cores. Mineral-rich dwarven habitat may also use Glass mirages, Hellglass wastes and Frostglass dunes; existing relief, water and safety gates still apply.
+Population profile schema **3** stores complete independent civilization records without inheritance. It has natural-only `biome_preferences` and `food_biome_multipliers`, plus `magic_biome_preferences` and `food_magic_biome_multipliers` keyed by exact `core.school` IDs. A matching variant overrides the natural value; otherwise the natural value applies (default preference 0, food factor 1). Population capacity and rural food use the same lookup, then apply the existing local magic-risk reduction. Contested/weak magic gets natural rules. Elven habitat uses forest, rainforest and boreal forest cores. Mineral-rich dwarven habitat may also use Glass mirages, Hellglass wastes and Frostglass dunes; existing relief, water and safety gates still apply.
 
-The initial explicit food calibration carries harsh terrain penalties onto land Infernal variants, woodland food adaptation onto Earth woodland variants, dry crystal penalties onto the three named glass deserts, and haunted-wetland penalties onto `marsh.umbral`. This is provisional game balance, not a biological claim. Exact values are in `terrain_profiles.json`; adding a new state never inherits a retired numeric category.
+The initial explicit food calibration carries harsh terrain penalties onto land Infernal variants, woodland food adaptation onto Earth woodland variants, dry crystal penalties onto the three named glass deserts, and haunted-wetland penalties onto `marsh.umbral`. This is provisional game balance, not a biological claim. Exact values are in `civilizations.json`; adding a new state never inherits a retired numeric category.
 
-Building-pack schema **2** and production catalogue schema **2** match natural IDs or exact variant IDs. Core eligibility includes mutated versions of that core. Either selector list may match; all other criteria still apply. An omitted biome selector is unrestricted; an explicit empty selector matches nothing. Fungal art is eligible in Earth-altered woodland, enchanted woodland art in Weave woodland, glass/crystal desert art in the three glass deserts, scorched/desolate art in land Infernal variants, and haunted wetland art in `marsh.umbral`. These are candidate visual assets, never extra water, resources or population. The exhaustive asset compiler emits the full potential-state list, including states absent from a sampled seed.
+Building-pack schema **3** and production catalogue schema **2** match natural IDs or exact variant IDs. Core eligibility includes mutated versions of that core. Either selector list may match; all other criteria still apply. An omitted biome selector is unrestricted; an explicit empty selector matches nothing. Fungal art is eligible in Earth-altered woodland, enchanted woodland art in Weave woodland, glass/crystal desert art in the three glass deserts, scorched/desolate art in land Infernal variants, and haunted wetland art in `marsh.umbral`. These are candidate visual assets, never extra water, resources or population. The exhaustive asset compiler emits the full potential-state list, including states absent from a sampled seed.
 
 Regional influence overlays remain independently inspectable opportunity fields, not biome categories. The geometry, climate, magic and food remain artistic approximations.
 
@@ -120,7 +120,9 @@ Regional overlays include demonic and draconic territory, piracy, steampunk, wit
 
 ## Settlements, sky and supply
 
-Mixed populations add gnomes and coastal Tidekin sea elves alongside humans, dwarves and elves. Environmental preferences differ from cultural traits: maritime, islander, industrial and pirate. Islander status requires a small connected landmass; any eligible people may adopt it. Tidekin do not live underwater in this version.
+Algorithm-8 worlds require regeneration. Settlement schema 10 and civilization report 1 expose entity identity and city class; rural report 6 carries architecture style keys and `civilization_region` independently of seed-local interaction groups.
+
+Mixed populations select independent Maritime humans, Desert humans, Cold peoples, Large islanders, Deep rainforest humans and Heartland humans alongside dwarves, elves, gnomes and coastal Tidekin. The generic human/highland/woodland profile IDs are retired. Each nonempty civilization has exactly one suitability-ranked capital; other cities are medium at suitability >= 0.65 and small otherwise. Zero-city civilizations are valid. See [standalone civilizations](decisions/016-standalone-civilizations.md) for habitat priority, independent entity definitions, cultural region layers and compatibility. Environmental preferences differ from cultural traits: maritime, islander, industrial and pirate. Islander status requires a small connected landmass; any eligible people may adopt it. Tidekin do not live underwater in this version.
 
 Cities consider coastal support opportunities before placement. Additional coastal hamlets require a safe ground connection and viable landing. After exclusive fishing grounds are allocated, hamlet roles resolve to harbor, fishing, combined harbor/fishing or landing. Each ocean cell supplies at most one hamlet. Vessel reach, distance losses and monthly ice reduce delivered food; prospective fishing habitat is an upper bound, never harvested supply by itself.
 
@@ -170,8 +172,34 @@ The atlas has a nest toggle, species filter (including absent species), location
 
 `world` must be the actual object, not a filename or the placeholder string shown above. Both `steps` and `leyline_edits` are optional. Steps are bounded to 1–10 per call; age numbering continues beyond the two genesis ages. Pass the returned world to the next call. Retries against the same original input reproduce the same output; this stateless endpoint does not persist or advance a server-owned world. The caller's Python object is not mutated.
 
-The API validates recipe 3 through stage 13 or later, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
+The API validates recipe 3 / algorithm 12 through stage 13 or later, settlement/civilization identity and classification, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
 
 Player leyline edits are applied before environmental/biome refresh. **Creature nests are recalculated before each age's city-fate decisions and again after the age's biome/civilization rebuild**, and export `evaluated_age`. Thus time skips and significant player changes do not reuse an obsolete creature distribution. The surface geography is preserved through these civilization ages. Terrain-changing player systems must supply coherent rebuilt hydrology/climate before using this boundary.
 
 `history.operations` records API steps and leyline edits. `history.ages` records each outcome. When supplied, saved build history gains an inspectable step for each additional age. Genesis `config.phase` remains within its 1–16 recipe range; `phases.completed` can exceed 16 in an advanced world. Config-only replay reconstructs genesis; persist the returned runtime state and operation record to preserve player actions. There is no database, authentication service, multiplayer arbitration, or Unreal save importer in this loopback lab.
+
+### Civilization data boundary
+
+The [master registry](civilizations.md) owns entity traits, placement/economy/sky rules, colors and links to shared construction libraries in buildings.json. Civilization report version 2 exports its revision/hash and presentation data. Age advancement requires the same registry identity; report-1 saves require regeneration. Parent-race founding changes city placement under algorithm 10; regenerate algorithm-9 worlds.
+
+Registry schema 2 / revision 3 requires independent small_city, medium_city and capital_city planning blocks for every entity. These measured presets do not yet change runtime layouts. The changed registry identity requires regeneration of revision-1 worlds before age advancement; see the [city preset contract](civilizations.md#preconfigured-city-size-blocks-registry-schema-2-revision-2).
+
+Registry schema 3 / revision 3 adds staffing rosters and worker-bed estimates to measured city plans. This planning data does not modify simulated population, generated layouts or NPC state. The changed registry identity requires regeneration before age advancement; see the staffing contract in civilizations.md.
+
+### City shape planning catalogue
+
+The independent [historical city shapes catalogue](city-shapes.md) supplies sourced morphology patterns and deterministic location selection for future city planning. It does not yet alter generated layouts, roads, population or assets. A future footprint adapter must provide the documented site facts, and runtime integration must add the catalogue identity to seed/save compatibility checks.
+
+## Final-world city plans
+
+The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.
+
+### Founding and preview resolution
+
+Algorithm 10 replaces simultaneous city selection with [parent-race founding rounds](civilizations.md#founding-rounds-revision-8). Exported settlement report 11 records attempts and turn numbers. Terrain algorithms are unchanged, but city results and dependent society/history results differ from algorithm 9; regenerate old saves.
+
+The live preview offers 16, 32, 64 and 128 cells per side (17, 33, 65 and 129 samples including boundary vertices). The prominent resolution selector affects random and parameter generation. Regenerate this seed preserves the current seed and explicit overrides while recomputing at the selected resolution; higher fidelity can change resolved geography and founding sites. Static exported previews cannot regenerate. The globe mesh-density control only changes display sampling, not simulation resolution.
+
+The current migration revision uses algorithm 11, settlement report 12 and founding report 2. See [migration and cultural divergence](civilizations.md#migration-and-cultural-divergence-revision-9) for parent origin separation, Hill Dwarves, participation rates, lineage and 250-year rounds. Old algorithm-10 worlds must be regenerated.
+
+Current founding includes [diaspora rounds](civilizations.md#diaspora-rounds-revision-10), using algorithm12, settlement report13 and founding report3. Periodic unused-civilization settlement can exceed ordinary quotas by one supported city per parent, within the global city ceiling. Regenerate algorithm11 saves.

@@ -11,6 +11,11 @@ if (data.config.world_recipe >= 1) {
   const mode=make('select',undefined,head);mode.id='world-mode';
   for(const [value,text] of [['random','Random'],['parameters','Parameters']]){const option=make('option',text,mode);option.value=value;}
   const generateButton=make('button','Generate random world',head);generateButton.id='world-generate';generateButton.disabled=!live;
+  const resolutionLabel=make('label','Simulation resolution ',head),resolution=make('select',undefined,resolutionLabel);resolution.id='world-resolution';
+  for(const size of [17,33,65,129]){const option=make('option',`${size-1} × ${size-1} cells${size===65?' · detailed':''}`,resolution);option.value=size;}
+  resolution.value=String(data.config.size);if(!resolution.value)resolution.value='65';
+  const refine=make('button','Regenerate this seed at selected resolution',head);refine.id='world-refine';refine.disabled=!live;
+  make('p','Higher resolution recomputes terrain and founding from the same seed. It adds sampled detail and can change city locations; zoom alone does not.',head);
   const parameters=make('form',undefined,head);parameters.id='world-params';parameters.hidden=true;
   const reset=make('button','Reset parameters to defaults',parameters);reset.type='button';
   const inputs={};const groups={};let busy=false;
@@ -21,7 +26,7 @@ if (data.config.world_recipe >= 1) {
     let group=groups[s.group];if(!group){group=make('details',undefined,parameters);make('summary',s.group,group);groups[s.group]=group;}
     const label=make('label',title(key)+(s.units?' · '+s.units:''),group);label.title=s.description;
     const input=make(s.choices?'select':'input',undefined,label);input.name=key;
-    if(s.choices){for(const v of s.choices){const opt=make('option',title(v),input);opt.value=v;}}
+    if(s.choices){for(const v of s.choices){const opt=make('option',s.choice_labels?.[v]||title(v),input);opt.value=v;}}
     else {input.type=s.type==='string'?'text':'number';input.step=s.type==='integer'?'1':'any';if(s.min!==undefined)input.min=s.min;if(s.max!==undefined)input.max=s.max;}
     input.required=true;input.value=data.recipe.resolved[key]??s.default;inputs[key]=input;
     input.onchange=()=>{
@@ -29,12 +34,14 @@ if (data.config.world_recipe >= 1) {
       if(key==='world_size'&&!Object.hasOwn(explicit,'globe_radius'))inputs.globe_radius.value=10000*({small:1,medium:2,large:3}[input.value]);
     };
   }
-  const status=make('p',`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Every random generation starts from defaults.`,head);status.id='world-status';status.setAttribute('role','status');
+  const status=make('p',`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Random generation uses defaults at the selected resolution.`,head);status.id='world-status';status.setAttribute('role','status');
   const advanceButton=make('button','Advance age',head);advanceButton.id='world-advance-age';advanceButton.hidden=data.config.world_recipe!==3;advanceButton.disabled=!live||!data.beast_nests;
   const exportButton=make('button','Export world JSON',head);exportButton.onclick=()=>$('download').click();
+  refine.onclick=()=>{if(busy)return;mode.value='parameters';mode.onchange();explicit={...completeWorld.recipe.overrides,size:Number(resolution.value)};inputs.seed.value=completeWorld.config.seed;for(const [k,v]of Object.entries(explicit))if(inputs[k])inputs[k].value=v;generateButton.click();};
   mode.onchange=()=>{parameters.hidden=mode.value==='random';generateButton.textContent=mode.value==='random'?'Generate random world':'Generate with parameters';};
   reset.onclick=()=>{explicit={};for(const [k,e] of Object.entries(inputs))e.value=schema[k].default;};
   parameters.onsubmit=e=>{e.preventDefault();generateButton.click();};
+  const foundingLog=make('details',undefined,head);make('summary','Founding rounds',foundingLog);const foundingText=make('pre','',foundingLog);
   const viewer=make('section');viewer.id='world-viewer';document.querySelector('.layout').after(viewer);
   make('h2','Layered world atlas',viewer);
   make('p','Combine habitats and magical fields. Select an island to inspect its independent elevated surface. Food coverage includes ground, sea and air supply.',viewer);
@@ -73,6 +80,7 @@ if (data.config.world_recipe >= 1) {
   speciesSelect.onchange=rebuildNestLocations;nestSelect.onchange=()=>{inspectNest();drawAtlas();};showNests.onchange=drawAtlas;
   const details=make('details',undefined,viewer);make('summary','Independent overlays and opacity',details);const layers=make('div',undefined,details);layers.id='world-layers';
   const atlas=make('canvas',undefined,viewer);atlas.id='world-atlas';atlas.width=1000;atlas.height=500;
+  const civilizationLegend=make('div',undefined,viewer);civilizationLegend.id='world-civilizations';
   const inspect=make('p','Move over the atlas for field values and overlapping influences.',viewer);inspect.id='world-inspect';
   const skySelect=make('select',undefined,viewer);skySelect.id='world-sky-select';
   const skyCanvas=make('canvas',undefined,viewer);skyCanvas.width=850;skyCanvas.height=260;skyCanvas.id='world-sky-mesh';
@@ -83,8 +91,11 @@ if (data.config.world_recipe >= 1) {
   const colors={weave:[180,143,247],umbral:[109,103,176],infernal:[243,83,59],radiant:[255,220,126],fire:[207,86,37],water:[65,156,202],earth:[67,120,51],air:[176,210,213],holy:[255,220,126],primordial:[98,213,137],reef:[83,214,204],lagoon:[94,204,231],estuary:[118,160,101],kelp:[71,147,107],fjord:[92,160,189],boreal:[71,129,103],tundra:[178,188,149],ice_cap:[227,245,255],snow:[242,245,250],water_ice:[178,227,250]};
   let overlays={},nodePoints=[];
   const rgbFor=key=>colors[key.replace('ley_','').replace('zone_','')]||[216,166,110];
+  const civilizationColor=index=>data.civilizations?.entities.find(e=>e.region_index===index)?.presentation?.map_color_rgb||[128,128,128];
   function rebuild(){
     advanceButton.disabled=busy||!live||!completeWorld.beast_nests;
+    civilizationLegend.replaceChildren();
+    if(data.civilizations){make('p','Civilization regions follow reachable city support areas; wilderness remains unassigned. Larger square pins are capitals.',civilizationLegend);for(const entity of data.civilizations.entities){const capital=data.settlements?.sites.find(s=>s.node===entity.capital_node);const label=make('span',`${entity.name}: ${entity.city_count} cities${capital?' · Capital: '+capital.name:''}. `,civilizationLegend);label.style.color=`rgb(${civilizationColor(entity.region_index).join(',')})`;}}
     nodePoints=[];for(let z=0;z<data.config.size;z++)for(let x=0;x<(z===0||z===data.config.size-1?1:data.config.size-1);x++)nodePoints.push([x,z]);
     for(const key of Object.keys(data.layers))if(!layerInfo[key])layerInfo[key]=[title(key),'relative'];
     const old=field.value;field.replaceChildren();
@@ -103,6 +114,7 @@ if (data.config.world_recipe >= 1) {
       const card=make('article',undefined,cards);card.className='world-card';make('strong',s.name,card);
       make('p',`${s.layer} · Food coverage ${(s.food_coverage*100).toFixed(0)}% · Annual shortage ${s.annual_shortage.toFixed(2)} · Lean months ${s.lean_months.join(', ')||'none'}`,card);
       const source=(data.settlements?.sites||[]).find(site=>site.id===s.site_id);
+      if(source){const civilization=data.civilizations?.entities.find(e=>e.id===source.civilization_id);make('p',`${civilization?.name||title(source.population_profile)} · ${title(source.city_class)} · Suitability ${source.suitability.toFixed(2)}`,card);}
       if(source?.suitability_factors){const why=make('details',undefined,card);make('summary','Why this location?',why);make('p',Object.entries(source.suitability_factors).map(([k,v])=>`${title(k)} ${v>=0?'+':''}${v.toFixed(2)}`).join(' · '),why);make('p',`Community traits: ${source.community_traits?.join(', ')||'settled'}. ${source.reason}`,why);}
       const ports=(data.fisheries?.ports||[]).filter(p=>p.core_id===s.site_id);
       for(const p of ports)make('p',`${p.id}: ${p.role}; harbor ${p.harbor_quality.toFixed(2)}, ${p.worked_area_km2.toFixed(2)} km² exclusive fishing grounds, ${p.delivered_food.toFixed(2)} annual food units.`,card);
@@ -116,11 +128,17 @@ if (data.config.world_recipe >= 1) {
   }
   function values(key){return ['snow','water_ice'].includes(key)?data.seasonal_environment?.months[Number(month.value)]?.[key]:data.layers[key];}
   function drawAtlas(){
+    const founding=data.settlements?.founding;
+    foundingLog.hidden=!founding;
+    const cultureName=id=>data.civilizations?.entities.find(e=>e.id===id)?.name||id;
+    foundingText.textContent=founding?`${founding.placed_cities} / ${founding.target_cities} cities · ${founding.turns} rounds · ${founding.years_per_round||250} years per round · years ${founding.start_year||0}–${founding.end_year??0} · ${founding.stop_reason.replaceAll('_',' ')}\n`+founding.events.map(e=>`Year ${e.founding_year??((founding.start_year||0)+(e.turn-1)*(founding.years_per_round||250))} · Turn ${e.turn} · ${e.parent_race_id} · ${e.status.replaceAll('_',' ')}${e.population_profile?' · '+cultureName(e.population_profile):''}${e.migration_source_node!=null?' · from node '+e.migration_source_node+' ('+cultureName(e.source_civilization_id)+')':''}${e.cultural_branch?' · cultural branch':''}${e.diaspora_reason?' · '+e.diaspora_reason.replaceAll('_',' '):''}${e.diaspora_bonus?' · parent bonus city':''} · ${e.founding_capital?'separate parent origin':'reach '+Math.round(e.radius_m)+' m'}`).join('\n'):'';
+
     const n=data.config.size,key=field.value,grid=values(key);if(!grid)return;
     const small=document.createElement('canvas');small.width=n;small.height=n;const c=small.getContext('2d'),im=c.createImageData(n,n);
     let lo=Infinity,hi=-Infinity;for(const row of grid)for(const v of row){lo=Math.min(lo,v);hi=Math.max(hi,v);}
     for(let z=0;z<n;z++)for(let x=0;x<n;x++){
       const v=grid[z][x];let color=key==='biome_variant'?(v>=0?data.terrain.magical_biomes[v].color:data.terrain.biomes.find(b=>b.id===data.layers.natural_biome[z][x]).color):['biome','natural_biome'].includes(key)?data.terrain.biomes.find(b=>b.id===v).color:[45+170*(v-lo)/(hi-lo||1),70+145*(v-lo)/(hi-lo||1),90+125*(v-lo)/(hi-lo||1)];
+      if(key==='civilization_region')color=v<0?[44,55,64]:civilizationColor(v);
       for(const [name,{check,alpha}] of Object.entries(overlays))if(check.checked){const value=values(name)?.[z]?.[x]||0,a=Math.min(1,Math.max(0,value))*Number(alpha.value),t=rgbFor(name);color=color.map((v,i)=>v*(1-a)+t[i]*a);}
       const at=(z*n+x)*4;im.data.set([...color.map(Math.round),255],at);
     }
@@ -130,7 +148,7 @@ if (data.config.world_recipe >= 1) {
       const path=route.mode==='air'?route.path:(route.nodes||[]).map(i=>nodePoints[i]);ctx.strokeStyle=route.mode==='air'?'#e7caff':route.mode==='sea'?'#7ff2e5':'#f5cf91';ctx.globalAlpha=route.capacity[Number(month.value)]>0?.85:.2;ctx.lineWidth=1.4;ctx.beginPath();
       for(let i=1;i<path.length;i++){const a=project(path[i-1]),b=project(path[i]);if(Math.abs(a[0]-b[0])<atlas.width/2){ctx.moveTo(...a);ctx.lineTo(...b);}}ctx.stroke();
     }ctx.globalAlpha=1;
-    for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]);ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-3,p[1]-3,6,6);}
+    for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]),radius=s.city_class==='capital'?5:s.city_class==='medium'?4:3;ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-radius,p[1]-radius,2*radius,2*radius);if(s.city_class==='capital'){ctx.strokeStyle='#fff2bc';ctx.strokeRect(p[0]-8,p[1]-8,16,16);}}
     for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);ctx.strokeStyle='#e7a177';ctx.strokeRect(x-5,y-5,10,10);ctx.fillStyle='#e7a177';ctx.fillText('R',x+7,y+4);}
     for(const p of data.fisheries?.ports||[]){const [x,y]=project([p.x,p.z]);ctx.strokeStyle='#8ff6ed';ctx.strokeRect(x-4,y-4,8,8);}
     for(const landmark of data.regions?.landmarks||[]){const [x,y]=project([landmark.x,landmark.z]);ctx.fillStyle=landmark.kind==='witch_hut'?'#e2a7f1':'#edc17e';ctx.fillText(landmark.kind==='witch_hut'?'W':'T',x,y);}
@@ -150,6 +168,7 @@ if (data.config.world_recipe >= 1) {
     const active=Object.keys(overlays).map(k=>[k,values(k)?.[z]?.[x]||0]).filter(([k,v])=>v>.05).sort((a,b)=>b[1]-a[1]);
     const variant=data.layers.biome_variant?.[z]?.[x];const core=data.terrain?.natural_biomes?.find(b=>b.id===data.layers.natural_biome?.[z]?.[x]);const mutation=variant>=0?data.terrain.magical_biomes[variant]:null;
     inspect.textContent=(core?`Natural: ${core.name} · ${mutation?mutation.name+' / '+mutation.magic_school:'No dominant magical mutation'} · `:'')+`${(-180+360*x/(n-1)).toFixed(1)}°, ${(90-180*z/(n-1)).toFixed(1)}° · ${title(field.value)}: ${(values(field.value)?.[z]?.[x]||0).toFixed(3)} · ${active.map(([k,v])=>title(k)+' '+v.toFixed(2)).join(' · ')||'No strong overlay'}`;
+    if(field.value==='civilization_region'){const entity=data.civilizations?.entities.find(c=>c.region_index===values(field.value)?.[z]?.[x]);inspect.textContent+=` · ${entity?.name||'Unassigned wilderness'}`;}
   };
   atlas.onclick=e=>{const rect=atlas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*(data.config.size-1),z=(e.clientY-rect.top)/rect.height*(data.config.size-1);const nest=showNests.checked?[...visibleNests()].sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z))[0]:null;if(nest&&Math.hypot(nest.x-x,nest.z-z)<data.config.size*.018){speciesSelect.value=nest.species_id;rebuildNestLocations();nestSelect.value=nest.id;inspectNest();drawAtlas();return;}const island=[...(data.sky?.islands||[])].sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z))[0];if(island&&Math.hypot(island.x-x,island.z-z)<data.config.size*.035){skySelect.value=island.id;drawSky();}};
   month.onchange=()=>{drawAtlas();drawSky();draw();};field.onchange=showRoutes.onchange=drawAtlas;showSky.onchange=()=>{drawAtlas();draw();};skySelect.onchange=drawSky;
@@ -183,8 +202,9 @@ if (data.config.world_recipe >= 1) {
     if(busy||!live||mode.value==='parameters'&&!parameters.reportValidity())return;
     busy=true;generateButton.disabled=true;status.textContent='Generating terrain, habitats and supply networks…';
     try{
-      const randomMode=mode.value==='random';const seed=randomMode?crypto.getRandomValues(new Uint32Array(1))[0]:Number(inputs.seed.value);const overrides={};
+      const randomMode=mode.value==='random';const seed=randomMode?crypto.getRandomValues(new Uint32Array(1))[0]:Number(inputs.seed.value);const overrides={size:Number(resolution.value)};
       if(!randomMode)for(const k of Object.keys(explicit)){if(!inputs[k])continue;overrides[k]=schema[k].type==='string'?inputs[k].value:Number(inputs[k].value);}
+      overrides.size=Number(resolution.value);
       const response=await fetch('/world/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seed,recipe_version:completeWorld.config.world_recipe,overrides})});const result=await response.json();if(!response.ok)throw Error(result.error||'Generation failed');
       data=result;explicit={...data.recipe.overrides};for(const [k,input] of Object.entries(inputs))input.value=data.recipe.resolved[k]??schema[k].default;
       for(const [k,v] of Object.entries(data.config))if($('controls').elements[k])$('controls').elements[k].value=v;

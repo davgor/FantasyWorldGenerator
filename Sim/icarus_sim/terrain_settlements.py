@@ -1,20 +1,15 @@
 """Explainable candidate settlement sites and terrain-constrained road proposals."""
-import json
 import heapq
 import math
 import random
 from time import perf_counter
-from pathlib import Path
 from .terrain_erosion import sphere_grid
 from .terrain_globe import direction,perlin3
 from .terrain_tectonics import child_seed
 from .terrain_climate import node_grid
 from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue, cell_variant
 from .terrain_profiles import biome_preference, biome_food_multiplier
-
-
-_CITY_BUILDING_PACKS = None
-_CITY_LAYOUT_PROFILES = None
+from .civilization_registry import building_pack_data,layout_profile_data,entity_rules,section
 
 
 def _coerce_finite_number(value, field):
@@ -61,7 +56,7 @@ def _coerce_feature_count(value, field):
     profiles = value.get('profiles')
     if profiles is not None and (not isinstance(profiles, list) or any(not isinstance(p, str) for p in profiles)):
         raise ValueError(f'{field}.profiles must be list of profile ids')
-    return {'base': base, 'per_100_residents': per_100, 'min': min_count, 'max': max_count, 'profiles': set(profiles) if profiles else None}
+    return {'base': base, 'per_100_residents': per_100, 'min': min_count, 'max': max_count, 'profiles': set(profiles) if profiles is not None else None}
 
 
 def _coerce_optional_bool(value, default, field):
@@ -360,11 +355,7 @@ def _build_city_building_plan(rng, city_seed, population_profile, city_populatio
 
 
 def _load_city_layout_profiles():
-    global _CITY_LAYOUT_PROFILES
-    if _CITY_LAYOUT_PROFILES is not None:
-        return _CITY_LAYOUT_PROFILES
-    path = Path(__file__).with_name('terrain_city_layout_profiles.json')
-    raw = json.loads(path.read_text(encoding='utf-8'))
+    raw = layout_profile_data()
     if not isinstance(raw, dict):
         raise ValueError('City layout profiles must be object')
     if not isinstance(raw.get('schema_version'), int):
@@ -382,10 +373,10 @@ def _load_city_layout_profiles():
         normalized[profile['id']] = profile
     if raw['fallback_profile_id'] not in normalized:
         raise ValueError('fallback_profile_id must reference a profile id')
-    _CITY_LAYOUT_PROFILES = {'schema_version': int(raw['schema_version']),
+    catalogue = {'schema_version': int(raw['schema_version']),
                             'fallback_profile_id': raw['fallback_profile_id'],
                             'profiles': normalized}
-    return _CITY_LAYOUT_PROFILES
+    return catalogue
 
 
 def _pick_city_layout_profile(pack_entry, layout_profiles, river_distance_m):
@@ -404,8 +395,8 @@ def _pick_city_layout_profile(pack_entry, layout_profiles, river_distance_m):
 def _validate_building_packs(value):
     if not isinstance(value, dict):
         raise ValueError('City building packs must be a dictionary')
-    if value.get('schema_version') != 2:
-        raise ValueError('City building packs require schema 2')
+    if value.get('schema_version') != 3:
+        raise ValueError('City building packs require schema 3')
     if not isinstance(value.get('fallback_pack_id'), str) or not value['fallback_pack_id']:
         raise ValueError('City building packs must define fallback_pack_id')
     packs = value.get('packs')
@@ -590,13 +581,7 @@ def _build_city_layout_plan(city_seed, node, points, layout_profile, population_
 
 
 def _city_building_packs():
-    global _CITY_BUILDING_PACKS
-    if _CITY_BUILDING_PACKS is not None:
-        return _CITY_BUILDING_PACKS
-    path = Path(__file__).with_name('terrain_city_building_packs.json')
-    raw = json.loads(path.read_text(encoding='utf-8'))
-    _CITY_BUILDING_PACKS = _validate_building_packs(raw)
-    return _CITY_BUILDING_PACKS
+    return _validate_building_packs(building_pack_data())
 
 
 def _pick_city_building_pack(city_seed, profile_id, biome, height_m, slope_deg, resource, freshwater_m, pack_catalog, variant_id=None):
@@ -728,11 +713,17 @@ def add_settlements(result,cfg):
                +biome_preference(profile,layers['biome'][points[i][1]][points[i][0]],cell_variant(result,*points[i])))
         scores.append(max(0,min(1,score-profile['magic_penalty']*hazard[i])) if water[i]==0 else 0)
     eligible=[i for i in range(len(points)) if water[i]==0 and slope[i]<profile['site_slope_limit'] and hazard[i]<=cfg.human_magic_limit]
-    species_ids=('human','dwarf','elf') if cfg.population_profile=='mixed' else (cfg.population_profile,)
-    if cfg.world_recipe and cfg.population_profile=='mixed':species_ids+=('gnome','tidekin')
+    from .terrain_profiles import civilization_ids, profiles as profile_registry
+    from .terrain_civilizations import landmass_context, environment_at, eligible_civilizations, classify_cities, civilization_report,matches
+    species_ids=civilization_ids() if cfg.population_profile=='mixed' else (cfg.population_profile,)
+    contexts=landmass_context(points,areas,graph,water)
+    registry=profile_registry()
+    rules={key:entity_rules(key) for key in species_ids};defaults=section('defaults')
+    entity_habitats=[set(eligible_civilizations(environment_at(result,x,z,contexts[i]),registry)) for i,(x,z) in enumerate(points)]
     score_sets={};habitats={};potentials={};profiles={p:get_profile(p) for p in species_ids}
     from .terrain_humans import farming_potential
     for species,p in profiles.items():
+        settlement=rules[species]['settlement'];economy=rules[species]['economy']
         species_hazard=values('magic_risk_'+species) if cfg.world_recipe and 'magic_risk_'+species in layers else hazard
         field=[];candidates=[];potential=[]
         for i,(x,z) in enumerate(points):
@@ -744,30 +735,28 @@ def add_settlements(result,cfg):
                 +p['resource_weight']*resource[i]-p['flood_penalty']*flood[i]
                 +biome_preference(p,biome,cell_variant(result,x,z))-p['magic_penalty']*species_hazard[i])
             if cfg.world_recipe:
-                score+=layers['coastal_support'][z][x]*(.35 if species=='tidekin' else .15)
-                if species=='gnome':score+=.15*resource[i]
+                score+=layers['coastal_support'][z][x]*settlement['coastal_score_weight']
+                if settlement['resource_score_weight']:score+=settlement['resource_score_weight']*resource[i]
             field.append(max(0,min(1,score)) if not water[i] else 0)
-            habitat=True
-            if species=='dwarf':habitat=resource[i]>=.5 and ((biome==5 or cell_variant(result,x,z) in ('desert.weave','desert.infernal','desert.water')) or layers['tpi'][z][x]>6 or (slope[i]>10 and height[i]>15))
-            if species=='elf':habitat=biome in (4,7,15) and wet[i]>=.55
+            habitat=species in entity_habitats[i]
+            environment=dict(environment_at(result,x,z,contexts[i]),resource=resource[i],slope=slope[i],height=height[i],
+                             tpi=layers['tpi'][z][x],variant=cell_variant(result,x,z),coastal_support=layers['coastal_support'][z][x] if cfg.world_recipe else 0.)
+            habitat=habitat and matches(settlement['world_habitat' if cfg.world_recipe else 'surface_habitat'],environment)
             if cfg.world_recipe:
-                if species=='elf':habitat=biome in (4,7,15) and wet[i]>=.4
-                if species=='gnome':habitat=resource[i]>.45
-                if species=='tidekin':habitat=layers['maritime'][z][x]>.3 and layers['coastal_support'][z][x]>.1
                 if biome==17:habitat=False
             safe=not water[i] and species_hazard[i]<=(p['mutation_limit'] if cfg.world_recipe else min(cfg.human_magic_limit,p['mutation_limit']))
             suitable=habitat and safe and slope[i]<p['site_slope_limit']
-            if species in ('dwarf','elf'):suitable=suitable and distances[i]<=p['water_reach']*2
+            if settlement['freshwater_reach_multiplier'] is not None:suitable=suitable and distances[i]<=p['water_reach']*settlement['freshwater_reach_multiplier']
             if suitable:candidates.append(i)
             fresh=distances[i] if math.isfinite(distances[i]) else -1
             _,food=farming_potential(slope[i],temp[i],wet[i],flood[i],fresh,p['irrigation'],p)
             food*=biome_food_multiplier(p,biome,cell_variant(result,x,z))*(1-species_hazard[i])
             if cfg.world_recipe and biome==17:food=0.
-            potential.append(food if safe and slope[i]<p['work_slope_limit'] and (suitable or species=='dwarf') else 0.)
-        if species=='dwarf':
+            potential.append(food if safe and slope[i]<p['work_slope_limit'] and (suitable or settlement['support_outside_habitat']) else 0.)
+        if settlement['support_outside_habitat']:
             support=reachable_support(graph,candidates,road_cost_function(points,water,height,flood,river,cfg,hazard),cfg.support_reach)
             potential=[value if support[i] else 0. for i,value in enumerate(potential)]
-            layers['dwarf_support_reach']=node_grid([int(v) for v in support],points,n)
+            layers[species+'_support_reach']=node_grid([int(v) for v in support],points,n)
         if cfg.world_recipe:
             from .terrain_world import options
             from .terrain_society import water_cost
@@ -775,60 +764,41 @@ def add_settlements(result,cfg):
             o=options(cfg);depth=values('water_depth')
             starts={j for i in candidates for j,d in graph[i] if water[j]==1 and depth[j]>=.1 and species_hazard[j]<=p['mutation_limit']}
             fishing_cost=water_cost(points,water,depth,species_hazard,p['mutation_limit'],.1)
-            marine_distance,_,_=allocate_access(graph,[(i,0) for i in starts],fishing_cost,o['fishing_reach']*(1.5 if species=='tidekin' else 1.))
+            marine_distance,_,_=allocate_access(graph,[(i,0) for i in starts],fishing_cost,o['fishing_reach']*economy['fishing_reach_multiplier'])
             for i,(x,z) in enumerate(points):
                 if math.isfinite(marine_distance[i]):potential[i]=layers['fishing_productivity'][z][x]*o['fish_productivity']/100
         score_sets[species]=field;habitats[species]=candidates;potentials[species]=potential
     inferred=cfg.world_recipe or cfg.auto_parameters or cfg.population_profile=='mixed'
     cap,allowances=life_capacity(areas,potentials)
-    quotas={};footprints={};remaining=24  # Lab computation ceiling, not a desired count.
+    quotas={};footprints={}
     for species,p in profiles.items():
         footprints[species]=sum(areas[i]*score_sets[species][i] for i in habitats[species])/1e6
         capacity=min(habitat_capacity(areas,score_sets[species],habitats[species],p['land_per_city_km2']),allowances[species]//40)
-        quotas[species]=min(remaining,capacity) if inferred else cfg.settlement_count
-        remaining-=quotas[species]
+        quotas[species]=min(24,capacity) if inferred else min(capacity,cfg.settlement_count)
     if not cfg.auto_parameters and cfg.settlement_count==0:quotas={p:0 for p in profiles}
-    if cfg.world_recipe:
-        while sum(quotas.values())>cfg.settlement_count:
-            key=max(quotas,key=lambda p:quotas[p]);quotas[key]-=1
-    human_count=quotas[species_ids[0]]
+    # Apply the shared computation ceiling after assessing every entity, so early
+    # registry entries cannot exhaust the budget before later species are assessed.
+    limit=min(24,cfg.settlement_count) if not cfg.auto_parameters else 24
+    while sum(quotas.values())>limit:
+        key=max(quotas,key=lambda p:(quotas[p],p));quotas[key]-=1
     if cfg.world_recipe:scores=score_sets[species_ids[0]]
-    eligible=habitats[species_ids[0]]
-    jitter=[rng.uniform(0,.06) for _ in points];selected=[];outposts=[]
-    def fits(i):
-        return i not in {ruin['node'] for ruin in result.get('ruins',[])} and i not in selected and all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[i],vectors[j])))))>=cfg.settlement_spacing for j in selected)
-    wanted_outposts=round(human_count*cfg.stubbornness)
-    for i in sorted(eligible,key=lambda i:(scores[i]+jitter[i],-i),reverse=True):
-        if len(selected)>=human_count-wanted_outposts:break
-        if fits(i):selected.append(i)
-    harsh=[i for i in eligible if scores[i]<.55 or distances[i]>profile['water_reach']*1.5 or temp[i]<profile['temperature_ideal']-.6*profile['temperature_tolerance'] or slope[i]>1.5*profile['slope_comfort']]
-    for i in sorted(harsh,key=lambda i:(resource[i]+.25*(1-scores[i])+jitter[i],-i),reverse=True):
-        if len(outposts)>=wanted_outposts:break
-        if fits(i):selected.append(i);outposts.append(i)
-    # If difficult sites are unavailable, fill remaining slots with normal sites.
-    for i in sorted(eligible,key=lambda i:(scores[i]+jitter[i],-i),reverse=True):
-        if len(selected)>=human_count:break
-        if fits(i):selected.append(i)
-    peoples=[species_ids[0]]*len(selected)
-    for species in species_ids[1:]:
-        added=0
-        for i in sorted(habitats[species],key=lambda i:(-score_sets[species][i]-jitter[i],i)):
-            if added>=quotas[species]:break
-            if fits(i):selected.append(i);peoples.append(species);added+=1
-    if cfg.world_recipe==3 and '_survivors' in result:
-        survivors=result['_survivors']
-        chosen=[s['node'] for s in survivors];chosen_peoples=[s['population_profile'] for s in survivors]
-        for node,people in zip(selected,peoples):
-            if node in chosen or chosen_peoples.count(people)>=quotas[people]:continue
-            if all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[node],vectors[j])))))>=cfg.settlement_spacing for j in chosen):
-                if len(chosen)<cfg.settlement_count:chosen.append(node);chosen_peoples.append(people)
-        selected,peoples=chosen,chosen_peoples
+    from .founding import found_cities
+    parents=section('parent_races')
+    owners={key:rules[key]['parent_race_id'] for key in profiles}
+    parents={key:value for key,value in parents.items() if key in owners.values()}
+    survivors=[dict(s,parent_race_id=owners[s['population_profile']]) for s in result.get('_survivors',[])]
+    def founding_distance(i,j):
+        return r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[i],vectors[j])))))
+    founded,founding=found_cities(seed,parents,owners,quotas,habitats,score_sets,founding_distance,
+                                cfg.settlement_spacing,math.pi*r,survivors,[ruin['node'] for ruin in result.get('ruins',[])],food_allowances=allowances,city_limit=limit,magic_enabled=bool(cfg.magic_enabled),diaspora_bonus_used=result.get('settlements',{}).get('founding',{}).get('diaspora_bonus_used',[]) if '_survivors' in result else [],used_civilizations=result.get('settlements',{}).get('founding',{}).get('used_civilizations',[]) if '_survivors' in result else [],start_year=(result.get('settlements',{}).get('founding',{}).get('end_year',0)+section('founding_rules')['years_per_round']) if '_survivors' in result else 0,**section('founding_rules'))
+    quotas=founding['effective_quotas']
+    selected=[s['node'] for s in founded];peoples=[s['population_profile'] for s in founded];outposts=[]
     if inferred:
         result['population_budget']={'version':3,'world_cap':cap,'allowances':allowances,
             'shares':{p:allowances[p]/cap if cap else 0 for p in profiles},
             'weighted_habitat_km2':footprints,'requested_cities':quotas,
             'calibration':{'residents_per_productive_km2':100,'minimum_city_region_residents':40,'lab_city_ceiling':24},
-            'method':'Capacity integrates area-weighted farming potential, climate, freshwater/irrigation, slope, biome and mutation penalties. Dwarven productive hinterland may extend beyond mineral uplands only over safe terrain routes within support reach. Overlapping peoples split each cell capacity. Provisional 100 residents per fully productive km2, not validated agricultural yields; access and trade can reduce realized support. Cities require habitat footprint and 40 regional residents; no species count or majority guarantee. Unsettled capacity remains unused.'}
+            'method':'Capacity integrates area-weighted farming potential, climate, freshwater/irrigation, slope, biome and mutation penalties. Dwarven productive hinterland may extend beyond mineral uplands only over safe terrain routes within support reach. Overlapping peoples split each cell capacity. Provisional 100 residents per fully productive km2, not validated agricultural yields; access and trade can reduce realized support. Cities require habitat footprint and 40 regional residents; no species count or majority guarantee. Diaspora can waive a city-count footprint quota for an unused civilization with at least 40 supported residents, once per parent; habitat and spacing still apply. Unsettled capacity remains unused.'}
         for species,field in potentials.items():layers['life_capacity_'+species]=node_grid(field,points,n)
         if cfg.auto_parameters:
             result['config']['settlement_count']=sum(quotas.values())
@@ -853,12 +823,14 @@ def add_settlements(result,cfg):
                                                          city_layout_profile['placement']['river_buffer_m'])
         city_layout=_build_city_layout_plan(city_seed,i,points,city_layout_profile,peoples[k],None,city_river_distance,graph[i],river,anchor_candidates,graph,pack_entry)
         sites.append({'id':k,'name':names[k%len(names)]+' City','population_profile':peoples[k],
+            **{key:founded[k].get(key) for key in ('founding_year','migration_source_node','source_civilization_id','migration_distance_m','cultural_branch','diaspora','diaspora_reason','diaspora_bonus')},
+            'parent_race_id':founded[k]['parent_race_id'],'founding_turn':founded[k].get('founding_turn',1),'founding_capital':founded[k].get('founding_capital',False),
             'node':i,'x':x,'z':z,'direction':vectors[i],'height_m':height[i],'outpost':outpost,'kind':'city',
             'suitability':score_sets[peoples[k]][i],'freshwater_distance_m':distances[i] if math.isfinite(distances[i]) else None,
             'slope_degrees':slope[i],'temperature_c':temp[i],'moisture':wet[i],'flood_risk':flood[i],
             'resource_potential':resource[i],'city_layout':city_layout,
             'building_pack_id':building_pack_id,'building_pack_seed':city_seed,'building_pack_version':building_packs['schema_version'],
-            'reason':'Mineral-rich upland with freshwater access' if peoples[k]=='dwarf' else 'Moist forest habitat with freshwater access' if peoples[k]=='elf' else 'Resource-driven difficult site' if outpost else 'Combined freshwater, slope, climate and flood-risk score'})
+            'reason':rules[peoples[k]]['settlement']['reason'] or (defaults['outpost_site_reason'] if outpost else defaults['normal_site_reason'])})
         if cfg.world_recipe:
             p=profiles[peoples[k]];risk=layers.get('magic_risk_'+peoples[k],layers.get('magic_hazard',[[0.]*n]*n))[z][x]
             sites[-1]['suitability_factors']={
@@ -868,8 +840,8 @@ def add_settlements(result,cfg):
                 'moisture':p['moisture_weight']*max(0,1-abs(wet[i]-p['moisture_ideal'])),
                 'resources':p['resource_weight']*resource[i], 'flood':-p['flood_penalty']*flood[i],
                 'biome':biome_preference(p,layers['biome'][z][x],cell_variant(result,x,z)), 'magic':-p['magic_penalty']*risk,
-                'coastal_support':layers['coastal_support'][z][x]*(.35 if peoples[k]=='tidekin' else .15),
-                'gnome_metal_affinity':.15*resource[i] if peoples[k]=='gnome' else 0.}
+                'coastal_support':layers['coastal_support'][z][x]*rules[peoples[k]]['settlement']['coastal_score_weight'],
+                defaults['resource_score_factor_label']:rules[peoples[k]]['settlement']['resource_score_weight']*resource[i]}
     if cfg.world_recipe==3:
         previous={s['node']:s for s in result.get('_survivors',result.get('settlements',{}).get('sites',[]))}
         for site in sites:
@@ -902,7 +874,9 @@ def add_settlements(result,cfg):
     layers.update({'suitability' :node_grid(scores,points,n),'flood_risk':node_grid(flood,points,n),
                    'resource_potential':node_grid(resource,points,n),
                    'freshwater_distance':node_grid([v if math.isfinite(v) else -1 for v in distances],points,n)})
-    result['settlements']={'version':9,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
+    classify_cities(sites)
+    result['civilizations']=civilization_report(sites)
+    result['settlements']={'version':13,'founding':founding,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
         'method':'Candidate sites, not built cities or population simulation. Resources are seeded potential, flood risk a proximity/height proxy. Outposts can accept poor conditions; water cells and slopes beyond the selected population limit remain excluded. City assets are selected from deterministic data-driven building packs.'}
     site_end=perf_counter();result['timing_ms']['settlements']=(site_end-started)*1000
     if cfg.phase>=8:

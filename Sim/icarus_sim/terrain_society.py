@@ -10,6 +10,7 @@ from .terrain_erosion import sphere_grid
 from .terrain_globe import direction
 from .terrain_climate import node_grid
 from .terrain_profiles import get_profile
+from .civilization_registry import entity_rules
 from .terrain_settlements import road_cost_function, shortest_paths
 from .terrain_humans import allocate_access
 from .terrain_seasons import simulate_food, seasonal_harvest
@@ -59,11 +60,18 @@ def make_sky(result,cfg):
             cold=cold_habitat(temps,wet,o['ice_accumulation']);area=math.pi*radius**2/1e6
             freshwater=area*wet*160 # provisional rain capture residents-equivalent budget
             food=area*80*clamp(1-abs(temp-16)/35)*wet*(0 if cold=='ice_cap' else 1.)
-            potential=math.floor(min(freshwater,food*1.5));people=('human','dwarf','elf','gnome','tidekin') if cfg.population_profile=='mixed' else (cfg.population_profile,)
+            from .terrain_civilizations import eligible_civilizations
+            potential=math.floor(min(freshwater,food*1.5))
+            sky_environment=dict(biome=7 if wet>=.7 and temp>20 else 3,temperature=temp,moisture=wet,
+                                 maritime=0.,landmass_area_m2=area*1e6,landmass_fraction=1.,largest_landmass=True)
+            eligible=eligible_civilizations(sky_environment)
+            people=eligible if cfg.population_profile=='mixed' else [p for p in eligible if p==cfg.population_profile]
             people_rng=random.Random(child_seed(cfg.seed,f'sky-population-{k}-{j}-v1'))
-            profile_id=max(people,key=lambda p: -abs(get_profile(p)['temperature_ideal']-temp)+people_rng.uniform(0,8)+(4 if p=='gnome' else 3*wet if p=='elf' else -10 if p=='tidekin' else 0))
-            profile=get_profile(profile_id);hazard=l.get('magic_risk_'+profile_id,l['magic_hazard'])[z][x]
-            population=potential if hazard<=profile['mutation_limit'] else 0
+            sky_rules={p:entity_rules(p)['sky'] for p in people}
+            profile_id=max(people,key=lambda p: -abs(get_profile(p)['temperature_ideal']-temp)+people_rng.uniform(0,8)+(sky_rules[p]['score_bias']+sky_rules[p]['moisture_score_weight']*wet)) if people else None
+            profile=get_profile(profile_id) if profile_id else None
+            hazard=l.get('magic_risk_'+profile_id,l['magic_hazard'])[z][x] if profile_id else 0
+            population=potential if profile and hazard<=profile['mutation_limit'] else 0
             island_id=f'sky-{k}-{j}';vertices=[];triangles=[]
             # A small independent disk mesh, never a displacement of the ground below.
             vertices.append([0.,altitude,0.])
@@ -85,7 +93,7 @@ def make_sky(result,cfg):
                     'months':[{'temperature':t,'snow':clamp(-t/8)*clamp(wet*2)} for t in temps]}
             islands.append(island)
             if population<4:continue
-            site={'id':island_id+'-settlement','layer':island_id,'kind':'sky_settlement','population_profile':profile_id,
+            site={'id':island_id+'-settlement','layer':island_id,'kind':'sky_settlement','population_profile':profile_id,'civilization_id':profile_id,
                   'x':x,'z':z,'direction':direction(x,z,n),'altitude_m':altitude,'population_estimate':population,
                   'name':f'{profile["name"]} Skyhaven {k+1}.{j+1}','freshwater_capacity':freshwater,
                   'reason':'Independent rain capture, growing climate and magical tolerance support this island community.'}
@@ -158,11 +166,12 @@ def add_world_society(result,cfg):
                   'monthly_fish':[0.]*12,'fishing_nodes':[]}
             ports.append(port)
         city_ports=[p for p in ports if p['core_id']==site['id']]
-        site['community_traits']=(['islander'] if city_ports and l['island_habitat'][site['z']][site['x']] else ['maritime'] if city_ports else [])+(['industrial'] if site['population_profile']=='gnome' and site['resource_potential']>.5 else [])
+        industrial_min=entity_rules(site['population_profile'])['economy']['industrial_resource_min']
+        site['community_traits']=(['islander'] if city_ports and l['island_habitat'][site['z']][site['x']] else ['maritime'] if city_ports else [])+(['industrial'] if industrial_min is not None and site['resource_potential']>industrial_min else [])
     # Each port searches only accessible water. Globally award each cell once.
     claims={};fishing_ice=[]
     for k,port in enumerate(ports):
-        profile=get_profile(port['population_profile']);reach=o['fishing_reach']*(1.5 if port['population_profile']=='tidekin' else 1.)
+        profile=get_profile(port['population_profile']);reach=o['fishing_reach']*entity_rules(port['population_profile'])['economy']['fishing_reach_multiplier']
         risk=vals('magic_risk_'+port['population_profile']) if 'magic_risk_'+port['population_profile'] in l else hazard
         cost=water_cost(points,water,depth,risk,profile['mutation_limit'],.1)
         distances,_,parents=allocate_access(graph,[(port['sea_node'],0)],cost,reach)
@@ -222,7 +231,8 @@ def add_world_society(result,cfg):
     terminals=[]
     for i,site in enumerate(all_sites):
         x,z=site['x'],site['z'];is_sky=i>=len(sites)
-        enabled=is_sky or (site['population_profile']=='gnome' and site['resource_potential']>.5) or l.get('ley_weave',[[0.]*n]*n)[z][x]>.12
+        air_min=entity_rules(site['population_profile'])['economy']['air_terminal_resource_min']
+        enabled=is_sky or (air_min is not None and site['resource_potential']>air_min) or l.get('ley_weave',[[0.]*n]*n)[z][x]>.12
         if enabled:terminals.append(i)
     for index,a in enumerate(terminals):
         for b in terminals[index+1:]:

@@ -72,9 +72,15 @@ def _creature_assets() -> list[dict[str, Any]]:
 
 
 def _building_assets() -> list[dict[str, Any]]:
+    from icarus_sim.terrain_profiles import civilization_ids
+    from icarus_sim.civilization_registry import building_pack_data
+    known=set(civilization_ids())
     references: dict[str, dict[str, Any]] = {}
-    for pack in _load("icarus_sim", "terrain_city_building_packs.json")["packs"]:
+    for pack in building_pack_data()["packs"]:
+        pack_people=set(pack['criteria'].get('population_profiles',known)) & known
         for option in pack["building_options"]:
+            option_people=option.get('profiles',option.get('count',{}).get('profiles'))
+            people=pack_people & (set(option_people) if option_people else known)
             for choice in option["asset_choices"]:
                 asset_id = choice["asset_id"]
                 row = references.setdefault(
@@ -90,7 +96,8 @@ def _building_assets() -> list[dict[str, Any]]:
                     },
                 )
                 row["metadata"]["references"].append(
-                    {"pack_id": pack["id"], "option_id": option["id"], "weight": choice["weight"]}
+                    {"pack_id": pack["id"], "option_id": option["id"], "weight": choice["weight"],
+                     "civilization_ids": sorted(people)}
                 )
     for row in references.values():
         row["metadata"]["references"].sort(key=lambda item: (item["pack_id"], item["option_id"], item["weight"]))
@@ -128,9 +135,19 @@ def _production_assets() -> list[dict[str, Any]]:
     return result
 
 
+def _city_planner_assets():
+    from icarus_sim.civilization_registry import section
+    rows=[s for library in section('structure_blocks').values() for block in library['blocks'] for s in block['structures']]
+    rows+=list(section('housing_profiles').values())
+    return [{'id':s['id'],'kind':'building','name':s['name'],'source':'simulation.city_planner',
+             'status':'schematic','selectors':{'building_id':s['id']},
+             'metadata':{'dimensions_m':s['dimensions_m'],'plot_m':s['plot_m'],
+                         'rendering':'Labeled rectangle; production art remains unassigned'}} for s in rows]
+
+
 def compile_asset_list() -> dict[str, Any]:
     """Return a deterministic, normalized potential-state asset catalogue."""
-    assets = _terrain_assets() + _creature_assets() + _building_assets() + _production_assets() + _history_assets()
+    assets = _terrain_assets() + _creature_assets() + _building_assets() + _production_assets() + _history_assets() + _city_planner_assets()
     assets.sort(key=lambda item: item["id"])
     ids = [item["id"] for item in assets]
     if len(ids) != len(set(ids)):

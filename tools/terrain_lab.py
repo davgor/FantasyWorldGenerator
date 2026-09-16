@@ -17,7 +17,7 @@ from icarus_sim.terrain_patch import patch_request
 
 def report(result, live=False):
     template = Path(__file__).with_name('terrain_lab.html').read_text(encoding='utf-8')
-    extension=Path(__file__).with_name('terrain_world.js').read_text(encoding='utf-8')
+    extension=Path(__file__).with_name('terrain_world.js').read_text(encoding='utf-8')+'\n'+Path(__file__).with_name('city_view_3d.js').read_text(encoding='utf-8')+'\n'+Path(__file__).with_name('city_view.js').read_text(encoding='utf-8')
     return template.replace('__DATA__', json.dumps(result, allow_nan=False)).replace('__LIVE__', json.dumps(live))+'\n<script>\n'+extension+'\n</script>'
 
 

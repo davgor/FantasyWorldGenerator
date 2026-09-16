@@ -127,7 +127,8 @@ def evaluate_networks(result, cfg):
     # Compatibility projections for existing ecological/nest requirements, never extra networks.
     l['ley_holy'] = l['ley_radiant']
     l['ley_primordial'] = node_grid([max(l['ley_'+s][z][x] for s in ('fire','water','earth','air')) for x,z in points], points, n)
-    for people in ('human','dwarf','elf','gnome','tidekin'):
+    from .terrain_profiles import civilization_ids
+    for people in civilization_ids():
         l['magic_risk_'+people] = node_grid(hazard, points, n)
     magic['nodes'], magic['edges'] = [], []
     for name, net in magic['networks'].items():

@@ -3,6 +3,7 @@ import json
 import math
 from dataclasses import asdict
 from functools import lru_cache
+from .terrain_profiles import civilization_ids, profile_options
 
 NETWORKS = ('weave', 'umbral', 'infernal', 'radiant', 'fire', 'water', 'earth', 'air')
 ZONES = ('demonic', 'draconic', 'pirate', 'steampunk', 'witch_huts', 'red_sands',
@@ -110,8 +111,9 @@ def registry(version=3):
                    type='integer' if type(v) is int else 'number' if type(v) is float else 'string',units='')
             for k,v in cfg.items() if k not in inactive}
     for key,choices in {'world_size':['small','medium','large'], 'shape':['globe'],
-                        'population_profile':['mixed','human','dwarf','elf','gnome','tidekin']}.items():
+                        'population_profile':['mixed',*civilization_ids()]}.items():
         result[key]['choices']=choices
+    result['population_profile']['choice_labels']={p['id']:p['name'] for p in profile_options()}
     bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,16 if version==3 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
             'plate_count':(3,48),'layout_variation':(0,4294967295),'detail_variation':(0,4294967295),
             'crust_bias':(-1,1),'belt_width':(.01,.3),'mountain_detail':(0,1),'temperature_offset':(-40,40),

@@ -43,7 +43,8 @@ def allocate_access(graph, seeds, cost, limit=math.inf):
 def farming_potential(slope,temp,wet,flood,freshwater_distance,adaptation,profile=None):
     if profile is None:
         from .terrain_profiles import get_profile
-        profile=get_profile('human')
+        from .civilization_registry import default_profile_id
+        profile=get_profile(default_profile_id())
     terrain=math.exp(-(slope/profile['food_slope_comfort'])**2)*max(0,1-abs(temp-profile['temperature_ideal'])/profile['food_temperature_tolerance'])*(1-.7*flood)
     natural=terrain*max(0,1-abs(wet-profile['food_moisture_ideal'])/profile['food_moisture_ideal'])
     access=math.exp(-freshwater_distance/profile['water_reach']) if freshwater_distance>=0 else 0
@@ -124,8 +125,13 @@ def add_humans(result,cfg):
     groups=culture_groups(len(sites),links,cfg.culture_link_cost)
     culture_ids={g:f"{sites[g]['population_profile']}-{child_seed(cfg.seed,'culture-'+str(g)):08x}" for g in sorted(set(groups))}
     cultures=[{'index':g,'id':culture_ids[g],'city_ids':[i for i,v in enumerate(groups) if v==g],
-               'population_profile':sites[g]['population_profile'],'architecture_style_id':None} for g in sorted(set(groups))]
+               'population_profile':sites[g]['population_profile'],'civilization_id':sites[g]['population_profile'],
+               'architecture_style_id':sites[g]['population_profile']} for g in sorted(set(groups))]
     region=[groups[o] if o>=0 and distance[i]<=cfg.support_reach else -1 for i,o in enumerate(owner)]
+    from .terrain_profiles import civilization_ids
+    entity_index={key:index for index,key in enumerate(civilization_ids())}
+    civilization_region=[entity_index[sites[o]['population_profile']] if o>=0 and distance[i]<=cfg.support_reach else -1 for i,o in enumerate(owner)]
+    layers['civilization_region']=node_grid(civilization_region,points,n)
     # Relative exportable potential after rural subsistence, not people or tonnes/year.
     fresh=values('freshwater_distance')
     yields=[(0.,0.) if water[i] else farming_potential(slope[i],temp[i],wet[i],flood[i],fresh[i],node_profiles[i]['irrigation'] if cfg.population_profile=='mixed' else cfg.human_adaptation,node_profiles[i])
@@ -206,12 +212,12 @@ def add_humans(result,cfg):
     layers.update({'food_potential':node_grid(food,points,n),'natural_food_potential':node_grid(natural,points,n),
                    'irrigation_benefit':node_grid([b-a for a,b in yields],points,n),'culture_region':node_grid(region,points,n),
                    'hamlet_catchment':node_grid(farm_owner,points,n)})
-    result['humans']={'version':5,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
+    result['humans']={'version':6,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
         'method':'All primary pins are cities. Rural sites share exclusive reachable catchments. Food/material values are relative exportable potential units, not historical yields or population capacity. Irrigation requires nearby mapped freshwater; water extraction capacity and groundwater are not simulated. Cities can buy finite surplus over roads using material potential, with transport loss; remaining shortages stay visible.',
-        'culture_method':'Existing road links below a cost threshold form single-link interaction groups. Culture IDs are seed-local, not inferred ethnicities or political borders; styles remain unassigned. Territory stops at the support reach; wilderness remains unassigned.',
+        'culture_method':'Existing road links below a cost threshold form single-link interaction groups. Culture IDs are seed-local, not inferred ethnicities or political borders; architecture style keys identify standalone civilizations. Territory stops at the support reach; wilderness remains unassigned.',
         'defence_method':'Fortresses are spaced route-defence proposals, not a siege or visibility simulation. Garrison demand is not yet budgeted.'}
     if 'magic' in result:
-        result['humans']['version']=4
+        result['humans']['version']=6
         result['humans']['method']+=' Mutation and the selected population biome food multipliers reduce crop surplus. Rural access cannot cross unsafe magic.'
     result['warnings'].extend([result['humans']['method'],result['humans']['culture_method'],result['humans']['defence_method']])
     elapsed=(perf_counter()-started)*1000;result['timing_ms']['human_hinterlands']=elapsed;result['timing_ms']['total']+=elapsed

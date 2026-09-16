@@ -28,7 +28,7 @@ class CityLayoutTests(unittest.TestCase):
         self.assertEqual(candidates, [])
 
         profile = _load_city_layout_profiles()['profiles']['standard_city_layout']
-        plan = _build_city_layout_plan(7, 0, points, profile, 'human', 200, 0, graph[0], [True, True, False], candidates)
+        plan = _build_city_layout_plan(7, 0, points, profile, 'human_heartland', 200, 0, graph[0], [True, True, False], candidates)
         self.assertIn('fallback', plan)
         self.assertTrue(all(feature['count'] == 0 for feature in plan['features'].values()))
         self.assertTrue(any(feature['target_count'] > 0 for feature in plan['features'].values()))
@@ -38,7 +38,7 @@ class CityLayoutTests(unittest.TestCase):
         first = generate(config)
         second = generate(config)
         self.assertEqual(first['settlements'], second['settlements'])
-        self.assertEqual(first['settlements']['version'], 9)
+        self.assertEqual(first['settlements']['version'], 13)
         self.assertTrue(first['settlements']['sites'])
 
         points, _, graph = sphere_grid(config.size, first['effective_config']['globe_radius'])
