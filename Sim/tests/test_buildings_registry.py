@@ -17,12 +17,18 @@ class BuildingsRegistryTests(unittest.TestCase):
         buildings = json.loads(registry.REGISTRY_PATH.with_name('buildings.json').read_text(encoding='utf-8'))
         rows = [s for b in buildings['structure_blocks']['common']['blocks'] for s in b['structures']]
         self.assertEqual(len(rows), 80)
-        self.assertTrue(all(s['id'].startswith('building.') for s in rows))
+        rural = [s for b in buildings['structure_blocks']['rural']['blocks'] for s in b['structures']]
+        self.assertEqual(len(rural), 13)
+        self.assertTrue(all(s['id'].startswith('building.hamlet_') for s in rural))
+        self.assertEqual(buildings['housing_profiles']['hamlet_house']['id'], 'building.hamlet_house')
         for key in raw['civilization_order']:
             for tier in registry.CITY_BLOCKS:
                 halls = [r for r in registry.city_plan(key, tier)['buildings'] if r['structure_id']=='building.guildhall']
                 self.assertEqual(len(halls), 1)
                 self.assertEqual(halls[0]['staffing_totals']['workers']['target'], 2)
+            hamlet = registry.hamlet_plan(key)
+            self.assertEqual(hamlet['settlement_block'], 'hamlet')
+            self.assertTrue(any(r['structure_id']=='building.hamlet_well' for r in hamlet['buildings']))
 
     def test_linked_edit_reloads_and_changes_replay_identity(self):
         raw = json.loads(registry.REGISTRY_PATH.read_text(encoding='utf-8'))

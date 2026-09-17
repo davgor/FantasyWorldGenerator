@@ -336,6 +336,129 @@
         }
       }
     },
+    "hamlet_plans": {
+      "type": "object",
+      "required": [
+        "version",
+        "identity",
+        "hamlets",
+        "phase_order"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "identity": {
+          "type": "object"
+        },
+        "hamlets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "hamlet_id",
+              "shape",
+              "plots",
+              "stats",
+              "status",
+              "version",
+              "terrain",
+              "bounds_m"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unbuildable"
+                ]
+              },
+              "kind": {
+                "const": "hamlet"
+              },
+              "plots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rotation_degrees",
+                    "ground_elevation_m",
+                    "foundation_bottom_m",
+                    "dimensions_m",
+                    "plot_m"
+                  ],
+                  "properties": {
+                    "rotation_degrees": {
+                      "type": "number"
+                    },
+                    "ground_elevation_m": {
+                      "type": "number"
+                    },
+                    "foundation_bottom_m": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "stats": {
+                "type": "object"
+              },
+              "version": {
+                "const": 1
+              },
+              "terrain": {
+                "type": "object",
+                "required": [
+                  "cell_m",
+                  "size",
+                  "codes",
+                  "surface"
+                ],
+                "properties": {
+                  "surface": {
+                    "type": "object",
+                    "required": [
+                      "size",
+                      "step_m",
+                      "heights_m"
+                    ],
+                    "properties": {
+                      "size": {
+                        "type": "integer",
+                        "minimum": 2
+                      },
+                      "step_m": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "heights_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "phase_order": {
+          "const": [
+            "map",
+            "shape",
+            "high",
+            "high_housing",
+            "low",
+            "low_housing"
+          ]
+        }
+      }
+    },
     "world_scene": {
       "type": "object",
       "required": [

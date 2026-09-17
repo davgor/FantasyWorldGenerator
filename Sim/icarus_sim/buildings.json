@@ -1,7 +1,7 @@
 {
   "schema": "fantasy-world-generator.building-registry",
   "schema_version": 2,
-  "revision": 3,
+  "revision": 4,
   "description": "Shared building definitions, measurements, staffing, runtime packs and layout libraries. Civilization presets reference these records.",
   "building_packs": {
     "schema_version": 3,
@@ -6096,6 +6096,653 @@
         "conversion": "Future Unreal adapter converts metres to centimetres by multiplying by 100."
       },
       "library_id": "common"
+    },
+    "rural": {
+      "schema": "fantasy-world-generator.civilization-blocks",
+      "schema_version": 1,
+      "catalogue_revision": 1,
+      "status": "design_only",
+      "runtime_placement_enabled": false,
+      "scope": "Dedicated rural hamlet layout requirements, separate from urban city blocks so cultural art can diverge.",
+      "deferred_blocks": [
+        "housing"
+      ],
+      "unit": "metres",
+      "priority_definitions": {
+        "core": "Provide this service in an ordinary support hamlet, allowing role-filtered alternatives.",
+        "conditional": "Use when local role, shore access or spare capacity justifies it.",
+        "specialist": "Reserve for rare rural roles; unused in the first hamlet presets."
+      },
+      "scale_policy": {
+        "counts": "Use civilization hamlet preset quantities as provisional budgets.",
+        "sharing": "Several functions may share a yard; do not double-count capacity.",
+        "geometry": "Use explicit dimensions_m and clearance_m; do not scale randomly.",
+        "world_budget": "Hamlets are numerous; keep footprints compact.",
+        "housing": "Hamlet cottages use housing_profiles.hamlet_house, not city worker housing.",
+        "asset_links": "Reuse candidates point at production ARCH hamlet assemblies where known.",
+        "state": "Schematic potential states only; no Unreal mesh claim."
+      },
+      "blocks": [
+        {
+          "id": "hamlet_services",
+          "name": "Hamlet services",
+          "structures": [
+            {
+              "id": "building.hamlet_well",
+              "name": "Hamlet well",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "service_yard",
+              "purpose": "Supply drinking water for the rural settlement.",
+              "placement": "Near dwellings and work yards.",
+              "requirements": [
+                "Usable shallow water or delivered supply."
+              ],
+              "reuse_candidates": [
+                "production.arch-006"
+              ],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 2,
+                "depth": 2,
+                "height": 2
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 4,
+                "depth": 6
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "well_keeper",
+                    "minimum": 0,
+                    "target": 1,
+                    "maximum": 1
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_latrine",
+              "name": "Hamlet latrine",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "service_yard",
+              "purpose": "Provide basic sanitation away from the well.",
+              "placement": "Downslope of dwellings and water.",
+              "requirements": [
+                "Drainage and waste removal path."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 3,
+                "depth": 3,
+                "height": 2
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 5,
+                "depth": 7
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "sanitation_worker",
+                    "minimum": 0,
+                    "target": 1,
+                    "maximum": 1
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_food_store",
+              "name": "Hamlet food store",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "storehouse",
+              "purpose": "Dry raised store with ventilation for local reserves.",
+              "placement": "Central to farmyard or landing.",
+              "requirements": [
+                "Dry raised floor and ventilation."
+              ],
+              "reuse_candidates": [
+                "production.arch-007"
+              ],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 4,
+                "depth": 6,
+                "height": 3
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 6,
+                "depth": 11
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "store_keeper",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 2
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_barn",
+              "name": "Hamlet barn",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "storehouse",
+              "purpose": "Open agricultural storage enclosure for harvest and fodder.",
+              "placement": "Beside farmyard on workable land.",
+              "requirements": [
+                "Farming catchment and cart access."
+              ],
+              "reuse_candidates": [
+                "production.arch-008"
+              ],
+              "geometry_type": "compound",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 8,
+                "height": 5
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 10,
+                "depth": 14
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "farm_hand",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_farmyard",
+              "name": "Hamlet farmyard",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "service_yard",
+              "purpose": "Compact working household yard for farming labour.",
+              "placement": "On suitable agricultural ground.",
+              "requirements": [
+                "Farming catchment labour."
+              ],
+              "reuse_candidates": [
+                "production.arch-006"
+              ],
+              "geometry_type": "compound",
+              "dimensions_m": {
+                "width": 10,
+                "depth": 12,
+                "height": 4
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 14,
+                "depth": 18
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "farmer",
+                    "minimum": 2,
+                    "target": 3,
+                    "maximum": 4
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_staging_yard",
+              "name": "Hamlet staging yard",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "service_yard",
+              "purpose": "Covered raw-material staging for resource hamlets.",
+              "placement": "Beside extraction or haul path.",
+              "requirements": [
+                "Resource catchment and haul access."
+              ],
+              "reuse_candidates": [
+                "production.arch-009"
+              ],
+              "geometry_type": "compound",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 6,
+                "height": 3
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 10,
+                "depth": 11
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "hauler",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_shrine",
+              "name": "Hamlet shrine",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "landmark",
+              "purpose": "Small faith marker for the rural community.",
+              "placement": "Quiet edge of the settlement.",
+              "requirements": [
+                "Local custom and spare land."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 4,
+                "depth": 4,
+                "height": 4
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 6,
+                "depth": 9
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "caretaker",
+                    "minimum": 0,
+                    "target": 1,
+                    "maximum": 1
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_meeting_shed",
+              "name": "Hamlet meeting shed",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "hall",
+              "purpose": "Light civic shelter for gatherings and notices.",
+              "placement": "Near the track and food store.",
+              "requirements": [
+                "Community gathering need."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 8,
+                "height": 4
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 8,
+                "depth": 13
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "steward",
+                    "minimum": 0,
+                    "target": 1,
+                    "maximum": 1
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_cart_shed",
+              "name": "Hamlet cart shed",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "service_yard",
+              "purpose": "Shelter for delivery carts and tools.",
+              "placement": "On the approach track.",
+              "requirements": [
+                "Cart traffic to the parent city."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 8,
+                "height": 3
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 8,
+                "depth": 13
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "carter",
+                    "minimum": 0,
+                    "target": 1,
+                    "maximum": 2
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_smith_shed",
+              "name": "Hamlet smith shed",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "workshop",
+              "purpose": "Small forge for tool repair.",
+              "placement": "Fire-separated from stores.",
+              "requirements": [
+                "Fuel and repair demand."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 5,
+                "depth": 6,
+                "height": 4
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 7,
+                "depth": 11
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "smith",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 2
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_landing",
+              "name": "Hamlet landing",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "waterfront",
+              "purpose": "Shore landing for coastal support hamlets.",
+              "placement": "On navigable shore.",
+              "requirements": [
+                "Navigable landing and safe ground connection."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "compound",
+              "dimensions_m": {
+                "width": 4,
+                "depth": 8,
+                "height": 2
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 8,
+                "depth": 14
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "boatman",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_net_shed",
+              "name": "Hamlet net shed",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "storehouse",
+              "purpose": "Store nets and fishing gear.",
+              "placement": "Beside the landing.",
+              "requirements": [
+                "Fishing allocation and shore access."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "simple_building",
+              "dimensions_m": {
+                "width": 4,
+                "depth": 6,
+                "height": 3
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 6,
+                "depth": 11
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [
+                  {
+                    "role": "fisher",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  }
+                ],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            },
+            {
+              "id": "building.hamlet_track",
+              "name": "Hamlet track",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "linear_infrastructure",
+              "purpose": "Connect plots to the parent-city approach.",
+              "placement": "Continuous path through the hamlet.",
+              "requirements": [
+                "Passable grades and delivery width."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "linear_segment",
+              "dimensions_m": {
+                "width": 3,
+                "depth": 8,
+                "height": 0
+              },
+              "clearance_m": {
+                "front": 0,
+                "rear": 0,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 5,
+                "depth": 8
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "hinterland",
+                "roles": [],
+                "notes": "Provisional operating roster per instance, including working owners and apprentices where listed. Distinct people across all shifts; excludes visitors, customers, patients and dependents. Each post assumes a different worker unless a future assignment model shares jobs."
+              }
+            }
+          ]
+        }
+      ],
+      "measurement_status": "provisional_design_defaults",
+      "measurement_convention": {
+        "axes": "Local X = width across frontage; local Z = depth away from front access edge; Y = height above local grade. Rotate the entire footprint, clearances and access together.",
+        "footprint": "dimensions_m bounds the building, compound or open area. Compound bounds include its named working yard. A height of zero means no enclosing building height; it does not mean no vegetation, equipment or terrain.",
+        "plot": "plot_m is the unrotated reservation: width + left + right, depth + front + rear. Clearances lie outside the footprint; road carriageways are separate. Shared courts/clearances require an explicit compatible layout, never automatic overlapping.",
+        "linear": "For linear_segment rows, width is corridor cross-section and depth is repeat length or illustrative bridge span. Fit a path with segments; do not tile ends as independent rectangular building plots. Height is above-grade extent, not terrain rise, ditch depth or bridge clearance.",
+        "access": "Access attaches at the front edge for buildings and compounds. Linear paths connect at both ends. minimum_clear_width_m is route clearance, not an implied door opening. Internal passages, turning swept paths, slopes and vertical clearance require later validation.",
+        "terrain": "No terrain suitability, foundation depth, underground depth, usable floor area, occupancy, flood clearance, rotor sweep or structural-span guarantee is inferred from these bounding boxes.",
+        "variations": "One medium-city planning size per requirement. Shared-use buildings and smaller/larger variants need explicit recipes; defaults are proposed game design, not measured historical buildings or final meshes.",
+        "conversion": "Future Unreal adapter converts metres to centimetres by multiplying by 100."
+      },
+      "library_id": "rural"
     }
   },
   "housing_profiles": {
@@ -6128,6 +6775,21 @@
       },
       "worker_beds": 16,
       "notes": "Four-storey shared worker housing; same reserved plot as a worker house allows deterministic densification. Provisional capacity, no dependents."
+    },
+    "hamlet_house": {
+      "id": "building.hamlet_house",
+      "name": "Hamlet cottage",
+      "dimensions_m": {
+        "width": 5,
+        "depth": 6,
+        "height": 4
+      },
+      "plot_m": {
+        "width": 9,
+        "depth": 12
+      },
+      "worker_beds": 2,
+      "notes": "Compact rural dwelling for hamlet staffing; culturally distinct from city worker houses. No apartment densification in planner v1."
     }
   }
 }

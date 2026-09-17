@@ -5,6 +5,7 @@
 - [Unified globe scene](unified-world-scene.md) defines leyline variation, city/world junctions and global placements.
 - [Continuous terrain data](continuous-terrain.md) defines shared physical heights and resolved tile exports.
 - [Final-world city planner](city-planner.md) defines ordered building filling, worker housing and the lab city view.
+- [Final-world hamlet planner](hamlet-planner.md) defines independent rural packing, dedicated hamlet building IDs and lab hamlet view.
 - [Historical city shapes](city-shapes.md) defines the sourced shape catalogue and location-based planner selection.
 - [Civilization master registry](civilizations.md) is the canonical authoring guide for entities, generation rules and construction libraries.
 - [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
@@ -16,6 +17,7 @@
 - [Agent workflow](agent-workflow.md) defines implementation and evidence standards.
 - [World asset catalogue](catalogue/world-assets/README.md) contains the inherited production briefs.
 - [Human civilization blocks](catalogue/human-civilization-blocks.md) define non-housing city layout requirements and provisional metre-scale measurements for the later catalogue rebuild.
+- [Hamlet building blocks](catalogue/hamlet-blocks.md) define dedicated rural structure IDs and cottage housing separate from city blocks.
 - [Extraction provenance](../provenance/README.md) defines source-hash preservation and licensing limitations.
 - [Contracts](../Contracts/README.md) index versioned schemas and generic capability inputs.
 - [Capabilities and coordinates](../Contracts/capabilities-and-coordinates.md) defines producer negotiation, physical units, globe/local projections and portable coordinate fixtures.

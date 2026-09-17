@@ -1266,11 +1266,11 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "1997764b903a2036947e9e8e784716e876ab9c35bb7b8b656b80398b34ef825e",
+      "destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
+      "modification": "Hamlet planner documentation and lab wiring; see docs/hamlet-planner.md. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -1391,6 +1391,13 @@
           "destination_sha256": "1997764b903a2036947e9e8e784716e876ab9c35bb7b8b656b80398b34ef825e",
           "decision": "docs/city-planner.md",
           "reason": "Regional threat assessments after beasties and each age; city fortification planner inputs."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "1997764b903a2036947e9e8e784716e876ab9c35bb7b8b656b80398b34ef825e",
+          "destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
+          "decision": "docs/hamlet-planner.md",
+          "reason": "Document independent hamlet_plans packing after city planner; rural schematic assets."
         }
       ]
     },
@@ -1430,11 +1437,11 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "42e12d1d9982d2754953bd9b2b3e9ee65c996cd20bc1c636bfff4ad2f5d6b6fc",
+      "destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
-      "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
+      "modification": "Hamlet planner documentation and lab wiring; see docs/hamlet-planner.md. Original extraction source hash retained.",
       "revisions": [
         {
           "date": "2026-09-15",
@@ -1492,6 +1499,13 @@
           "destination_sha256": "42e12d1d9982d2754953bd9b2b3e9ee65c996cd20bc1c636bfff4ad2f5d6b6fc",
           "decision": "docs/city-planner.md",
           "reason": "Regional threat assessments and city fortification planner/lab support."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "42e12d1d9982d2754953bd9b2b3e9ee65c996cd20bc1c636bfff4ad2f5d6b6fc",
+          "destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
+          "decision": "docs/hamlet-planner.md",
+          "reason": "Persist hamlet_plans in stage history and open hamlet layout from rural cards."
         }
       ]
     },

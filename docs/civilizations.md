@@ -12,10 +12,11 @@ Civilization definitions and city selections live in [civilizations.json](../Sim
 - `city_classification`: one capital per nonempty entity, retaining a surviving parent founding capital, otherwise choosing highest suitability then lowest node; medium cities start at suitability 0.65. Remaining cities are small. No city is forced for an absent civilization. Sky settlements remain separate.
 - In `buildings.json`, `building_packs` and `layout_profiles`: shared reusable construction libraries. Entity bindings control allowed packs, options and layout features; an empty feature selector disables that feature.
 - In `buildings.json`, `structure_blocks.common`: measured planning requirements. The shared library contains 80 non-housing structures in 11 blocks. Its dimensions are provisional design inputs in metres; the final-world city planner places eligible measured requirements and worker housing. See [measurement rules](catalogue/human-civilization-blocks.md).
+- In `buildings.json`, `structure_blocks.rural`: dedicated hamlet structures (13 rows including track) plus `housing_profiles.hamlet_house`. Every entity binds the `rural` library and owns a `hamlet` preset. See [hamlet blocks](catalogue/hamlet-blocks.md) and the [hamlet planner](hamlet-planner.md).
 
 ## Add or edit a civilization
 
-1. Add a stable lowercase ID inside the chosen `parent_races.<race>.civilizations` block, with all six definition sections and the three city-size blocks. Copying an existing full entry is an authoring convenience only: the resulting entry is independent.
+1. Add a stable lowercase ID inside the chosen `parent_races.<race>.civilizations` block, with all six definition sections, the three city-size blocks and the `hamlet` block. Copying an existing full entry is an authoring convenience only: the resulting entry is independent.
 2. Set its name, identity and population traits. Configure habitat expressions and settlement/economy/sky parameters using the existing keys. Empty habitat expressions match everywhere.
 3. Set its colors and explicit building-pack option, layout-feature and structure-library bindings. Include the fallback pack binding. New assets also need valid library records and exhaustive asset compilation coverage.
 4. Increment the registry `revision` for a content change. Preserve existing IDs and order when compatibility matters. Run `python -m unittest discover -s Sim/tests` with `PYTHONPATH=Sim`, and the repository validator.
@@ -26,7 +27,7 @@ The loader rejects duplicate JSON keys, nonfinite numbers, unsupported schemas, 
 
 ## Replay and compatibility
 
-Registry schema version 6 (revision 11) describes this document; `revision` identifies authored updates. Civilization report version 2 exports the registry revision and SHA-256 identity plus presentation data. The hash ignores whitespace but retains object order because order can affect generation. Age advancement rejects a saved world from a different registry; regenerate or explicitly migrate it before advancing.
+Registry schema version 6 (revision 12) describes this document; `revision` identifies authored updates. Civilization report version 2 exports the registry revision and SHA-256 identity plus presentation data. The hash ignores whitespace but retains object order because order can affect generation. Age advancement rejects a saved world from a different registry; regenerate or explicitly migrate it before advancing.
 
 This migration preserves recipe 3 / algorithm 9 placement and asset output for the unchanged shipped definitions. Report-1 saves must be regenerated. A seed alone is insufficient after authored rules change: retain the matching registry and generator version for replay. There is no Unreal integration implied by these data or tests.
 
@@ -78,7 +79,7 @@ Schema remains 3; authored revision advances to 4, changing the registry hash an
 
 ## Linked building registry (civilization schema 4 / revision 5)
 
-The top-level `building_catalogue` link is `{"path":"buildings.json","schema_version":2}`. It resolves only to the sibling file, not to a network URL or arbitrary path. The building registry has its own schema (`fantasy-world-generator.building-registry`), schema version 2 and revision 3. Increment the edited file's revision when authored content changes.
+The top-level `building_catalogue` link is `{"path":"buildings.json","schema_version":2}`. It resolves only to the sibling file, not to a network URL or arbitrary path. The building registry has its own schema (`fantasy-world-generator.building-registry`), schema version 2 and revision 4. Increment the edited file's revision when authored content changes.
 
 `buildings.json` owns measured definitions (dimensions, clearances, staffing, requirements and reuse candidates), runtime building packs and layout libraries. `civilizations.json` owns civilization rules, pack/feature bindings, complete small/medium/capital selection lists, counts, display-name overrides and optional staffing overrides. The measured library ID is `common`, and references such as `building.guildhall` are neutral across races. Old `human.*` measured IDs are retired; existing runtime asset/pack IDs remain stable.
 
@@ -134,6 +135,10 @@ Each entity economy requires `winter_fishing_fraction` in 0..1. Fishing access i
 `frosthold_dwarf` is a complete independent entity nested under dwarf. It prefers absolute latitude >=50 degrees (both hemispheres), temperature <=5 C, resource >=0.45, and exposed rock, positive upland relief, elevated slopes or coastal cliffs. Its comfort ideal is -8 C while crop ideal remains 9 C. Freshwater and safe reachable supply land remain required; permanent land ice remains excluded. `abs_latitude` is now available to surface settlement habitat rules. Frostholds share finite productive capacity with other peoples rather than creating another copy of it. Existing roads, sea routes and trade stress tests provide supply; presence and adequate food delivery are not guaranteed.
 
 The three Frosthold city blocks use compact independent building counts, shared measured assets, winter fuel stores, supply warehouses, preservation facilities and a guild hall. Housing and apartments use the normal planner. Sheltered construction is a building brief, not a heat/insulation simulation. Capital status remains unchanged. The exhaustive compiler automatically includes Frosthold eligibility through its bindings; no new asset identity is introduced.
+
+## Hamlet presets and rural catalogue (revision 12)
+
+Registry revision 12 and building registry revision 4 add `structure_blocks.rural`, `housing_profiles.hamlet_house`, and a required per-entity `hamlet` preset. The [hamlet planner](hamlet-planner.md) exports independent `hamlet_plans` version 1 after final-stage city packing. City planner version and `city_plans` contract are unchanged; regenerate revision-11 worlds before age advancement.
 
 ## Opt-in hero guild planning
 

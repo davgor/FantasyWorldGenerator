@@ -109,7 +109,7 @@
 
       const text=document.createElementNS(ns,'text');text.setAttribute('x',b.x_m);text.setAttribute('y',b.z_m);text.setAttribute('font-size',Math.min(4,b.plot_m.width/5));text.setAttribute('text-anchor','middle');text.setAttribute('fill','#112029');
 
-      const words=(b.kind==='housing'?(b.building_id==='building.worker_apartment'?'Apartments ':'House ')+b.id.slice(5):b.name).split(' ');let line='',lines=[];for(const w of words){if((line+' '+w).length>14&&line){lines.push(line);line=w;}else line+=(line?' ':'')+w;}if(line)lines.push(line);
+      const words=(b.kind==='housing'?(b.building_id==='building.worker_apartment'?'Apartments ':b.building_id==='building.hamlet_house'?'Cottage ':'House ')+b.id.slice(5):b.name).split(' ');let line='',lines=[];for(const w of words){if((line+' '+w).length>14&&line){lines.push(line);line=w;}else line+=(line?' ':'')+w;}if(line)lines.push(line);
 
       lines.forEach((line,i)=>{const t=document.createElementNS(ns,'tspan');t.setAttribute('x',b.x_m);t.setAttribute('dy',i?4:-(lines.length-1)*2);t.textContent=line;text.append(t);});g.append(text);
 
@@ -117,24 +117,31 @@
 
     }
 
-    const s=p.stats;summary.textContent=`${p.city_class} · ${p.shape.shape_id?.replaceAll('_',' ')||'No suitable shape'} · ${p.status} · Shown: ${shown.filter(b=>b.kind==='service').length} services, ${shown.filter(b=>b.building_id==='building.worker_house').length} houses, ${shown.filter(b=>b.building_id==='building.worker_apartment').length} apartment buildings, ${shown.reduce((a,b)=>a+b.workers,0)} workers / ${shown.reduce((a,b)=>a+b.beds,0)} beds. Final housing shortfall: ${s.housing_shortfall}. Simulation urban population: ${s.simulation_population??'unavailable'} (separate estimate). Regional sample spacing: ${p.source_resolution_m} m · Local terrain: ${p.terrain.cell_m} m.`;
+    const s=p.stats;const houseId=p.hamlet_id?'building.hamlet_house':'building.worker_house';const aptId='building.worker_apartment';
+    if(p.hamlet_id)summary.textContent=`Hamlet ${p.role||''} · ${p.shape.shape_id?.replaceAll('_',' ')||'compact'} · ${p.status} · Shown: ${shown.filter(b=>b.kind==='service').length} services, ${shown.filter(b=>b.building_id===houseId).length} cottages, ${shown.reduce((a,b)=>a+b.workers,0)} workers / ${shown.reduce((a,b)=>a+b.beds,0)} beds. Final housing shortfall: ${s.housing_shortfall}. Parent city: ${p.core_city_uid}. Regional sample spacing: ${p.source_resolution_m} m · Local terrain: ${p.terrain.cell_m} m.`;
+    else summary.textContent=`${p.city_class} · ${p.shape.shape_id?.replaceAll('_',' ')||'No suitable shape'} · ${p.status} · Shown: ${shown.filter(b=>b.kind==='service').length} services, ${shown.filter(b=>b.building_id===houseId).length} houses, ${shown.filter(b=>b.building_id===aptId).length} apartment buildings, ${shown.reduce((a,b)=>a+b.workers,0)} workers / ${shown.reduce((a,b)=>a+b.beds,0)} beds. Final housing shortfall: ${s.housing_shortfall}. Simulation urban population: ${s.simulation_population??'unavailable'} (separate estimate). Regional sample spacing: ${p.source_resolution_m} m · Local terrain: ${p.terrain.cell_m} m.`;
 
   }
 
   phase.onchange=drawCity;view.onchange=drawCity;zoom.oninput=()=>{if(view.value==='3d')renderer?.zoom(Number(zoom.value));else drawCity();};
 
-  window.openCityPlan=site=>{
-
-    current=data.city_plans?.cities.find(p=>p.city_uid===site.uid||p.site_id===site.id)||null;
-
-    title.textContent=site.name+' — City layout';failList.replaceChildren();details.textContent='Select a building or use the building list for staffing and dimensions.';renderer?.reset();
-
+  function showPlan(plan,heading,missingMessage){
+    current=plan;title.textContent=heading;failList.replaceChildren();details.textContent='Select a building or use the building list for staffing and dimensions.';renderer?.reset();
     if(current){phase.value='low_housing';zoom.value=1;for(const row of current.unplaced)make('li',`${row.count} × ${row.building_id}: ${row.reason}`,failList);for(const warning of current.warnings)make('li',warning,failList);drawCity();}
-
-    else{svg.replaceChildren();sceneContainer.style.display='none';buildingSelect.replaceChildren();summary.textContent='City filling is available after Simulation complete. Generate all 16 stages and inspect the final stage.';}
-
+    else{svg.replaceChildren();sceneContainer.style.display='none';buildingSelect.replaceChildren();summary.textContent=missingMessage;}
     if(!dialog.open)dialog.showModal();renderer?.redraw();
+  }
 
+  window.openCityPlan=site=>{
+    showPlan(data.city_plans?.cities.find(p=>p.city_uid===site.uid||p.site_id===site.id)||null,
+             (site.name||'City')+' — City layout',
+             'City filling is available after Simulation complete. Generate all 16 stages and inspect the final stage.');
+  };
+
+  window.openHamletPlan=site=>{
+    showPlan(data.hamlet_plans?.hamlets.find(p=>p.hamlet_id===site.id||p.node===site.node)||null,
+             `${site.id} · ${site.role||'hamlet'} — Hamlet layout`,
+             'Hamlet filling is available after Simulation complete. Generate all 16 stages and inspect the final stage.');
   };
 
   function nearest(event,canvas,globe=false){
@@ -147,15 +154,25 @@
 
       if(globe){const lat=Math.PI/2-site.z/(n-1)*Math.PI,lon=site.x/(n-1)*2*Math.PI-Math.PI,p=[Math.cos(lat)*Math.cos(lon),Math.sin(lat),Math.cos(lat)*Math.sin(lon)],yaw=Number(document.getElementById('yaw').value)*Math.PI/180,pitch=Number(document.getElementById('pitch').value)*Math.PI/180,xx=p[0]*Math.cos(yaw)+p[2]*Math.sin(yaw),zz=-p[0]*Math.sin(yaw)+p[2]*Math.cos(yaw),yy=p[1]*Math.cos(pitch)-zz*Math.sin(pitch),depth=p[1]*Math.sin(pitch)+zz*Math.cos(pitch);if(depth<.08)continue;const r=(data.effective_config||data.config).globe_radius,rad=1+Number(document.getElementById('relief').value)*(data.layers.water_surface?.[site.z]?.[site.x]||0)/r,scale=230*Number(document.getElementById('zoom').value);x=360+xx*rad*scale;y=310-yy*rad*scale;}
 
-      const d=Math.hypot(x-mx,y-my);if(d<distance){distance=d;best=site;}
+      const d=Math.hypot(x-mx,y-my);if(d<distance){distance=d;best={kind:'city',site};}
 
-    }return best;
+    }
+    for(const site of data.humans?.hamlets||[]){let x=site.x/(n-1)*canvas.width,y=site.z/(n-1)*canvas.height;
+      if(globe){const lat=Math.PI/2-site.z/(n-1)*Math.PI,lon=site.x/(n-1)*2*Math.PI-Math.PI,p=[Math.cos(lat)*Math.cos(lon),Math.sin(lat),Math.cos(lat)*Math.sin(lon)],yaw=Number(document.getElementById('yaw').value)*Math.PI/180,pitch=Number(document.getElementById('pitch').value)*Math.PI/180,xx=p[0]*Math.cos(yaw)+p[2]*Math.sin(yaw),zz=-p[0]*Math.sin(yaw)+p[2]*Math.cos(yaw),yy=p[1]*Math.cos(pitch)-zz*Math.sin(pitch),depth=p[1]*Math.sin(pitch)+zz*Math.cos(pitch);if(depth<.08)continue;const r=(data.effective_config||data.config).globe_radius,rad=1+Number(document.getElementById('relief').value)*(data.layers.water_surface?.[site.z]?.[site.x]||0)/r,scale=230*Number(document.getElementById('zoom').value);x=360+xx*rad*scale;y=310-yy*rad*scale;}
+      const d=Math.hypot(x-mx,y-my);if(d<distance){distance=d;best={kind:'hamlet',site};}
+    }
+    return best;
 
+  }
+
+  function openNearest(hit){
+    if(!hit)return;
+    if(hit.kind==='hamlet')window.openHamletPlan(hit.site);else window.openCityPlan(hit.site);
   }
 
   document.addEventListener('click',e=>{
 
-    const canvas=e.target;if(canvas.tagName==='CANVAS'&&['map','world-atlas'].includes(canvas.id)){const site=nearest(e,canvas);if(site){e.stopImmediatePropagation();window.openCityPlan(site);}}
+    const canvas=e.target;if(canvas.tagName==='CANVAS'&&['map','world-atlas'].includes(canvas.id)){const hit=nearest(e,canvas);if(hit){e.stopImmediatePropagation();openNearest(hit);}}
 
     const button=e.target.closest('button');if(button&&!dialog.contains(button)){const site=data.settlements?.sites.find(s=>s.uid===button.dataset.cityUid||s.name===button.textContent);if(site){e.stopImmediatePropagation();window.openCityPlan(site);}}
 
@@ -165,7 +182,7 @@
 
   globe.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});
 
-  globe.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5){const site=nearest(e,globe,true);if(site){e.stopImmediatePropagation();window.openCityPlan(site);}}down=null;});
+  globe.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5){const hit=nearest(e,globe,true);if(hit){e.stopImmediatePropagation();openNearest(hit);}}down=null;});
 
   globe.addEventListener('pointercancel',()=>{down=null;});
 

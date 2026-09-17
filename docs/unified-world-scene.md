@@ -18,7 +18,7 @@ Every connection records its regional route ID, stable junction ID, local gate c
 
 ## World JSON
 
-Final generation and subsequent completed age transitions include `world_scene` version 1 alongside `city_plans`. It contains globally positioned building footprints and transforms, street polylines, regional-road polylines and junctions. XYZ is globe-centred in metres: Y points north, X passes through latitude 0/longitude 0, Z through latitude 0/longitude 90. Surface positions use `(radius_m + canonical_height_m) * direction`.
+Final generation and subsequent completed age transitions include `world_scene` version 1 alongside `city_plans` and `hamlet_plans`. It contains globally positioned building footprints and transforms, street polylines, regional-road polylines and junctions. City and hamlet entries are tagged with `settlement_kind` (`city` or `hamlet`) plus `city_uid` or `hamlet_id` so consumers can filter independently. XYZ is globe-centred in metres: Y points north, X passes through latitude 0/longitude 0, Z through latitude 0/longitude 90. Surface positions use `(radius_m + canonical_height_m) * direction`.
 
 Buildings have globe positions, unit up/width/depth axes and measured dimensions. Footprint corners preserve authored widths/depths. City previews use the corresponding local projection, with radial heights drawn vertically; the globe scene supplies the actual orientation and curvature. These are two coordinate representations of the same generated records, not separate settlements.
 
