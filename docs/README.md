@@ -10,7 +10,8 @@
 - [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
 - [Standalone civilizations](decisions/016-standalone-civilizations.md) defines human entities, cultural habitat rules and city classifications.
 - [Terrain MathLab](terrain-math-lab.md) records the mathematical model and its evolution.
-- [Unreal integration](unreal-integration.md) defines the engine boundary and current limitations.
+- [Unreal integration](unreal-integration.md) defines the engine boundary, UnrealWorldGen consumer, and current limitations.
+- [UnrealWorldGen development consumer](decisions/018-unrealworldgen-dev-consumer.md) requires in-process native genesis, Z-up Unreal mapping, detailed-terrain contact, catalogue registry, and a packaged Win64 generate loop before asset production.
 - [Publishing](publishing.md) defines release artifacts and the exhaustive asset-list policy.
 - [Agent workflow](agent-workflow.md) defines implementation and evidence standards.
 - [World asset catalogue](catalogue/world-assets/README.md) contains the inherited production briefs.

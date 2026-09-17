@@ -127,7 +127,7 @@ These new `ML-*` IDs belong to this plan; they are not existing `LAB-*` completi
 | ML-00 | Extract repository/dependency closure, preserve provenance and rerun baseline | — | PK01; original checkout unavailable, browser/CLI/tests work, real failures recorded |
 | ML-01 | Contract/taxonomy/IDs/units/version registry and conformance fixtures | ML-00 | Explicit old/new channel mapping decisions; independent seeds and invalid-input cases |
 | ML-02 | Bounded state/time/event kernel with pure headless transition proof | ML-01 | Duplicate/reordered/retried inputs, checkpoint/replay and explicit numeric contract |
-| ML-03 | Native kernel + generic Unreal plugin and isolated consumer release proof | ML-02 | PK02–04/08/10; first real transition in cooked consumer; engine/toolchain pinned |
+| ML-03 | Native world generate + Unreal plugin + UnrealWorldGen importer + packaged generate→materialize (see board ML-03/d/e) | ML-02 | PK02–04/06/08/10; `.uplugin`; in-process genesis not Python; Z-up importer; cooked Win64 digest |
 | ML-04 | Abstract component/material/support damage and repair model | ML-02 | Persistent breach/blocker/surviving targets; no Chaos requirement in rule fixtures |
 | ML-05 | Residue, node lifecycle and bounded propagation | ML-02 | Brief versus sustained sources, suppression, mixed/compatible links, no duplicate emission |
 | ML-06 | Persistent settlement graph, genesis adapter and logical construction plans | ML-01/02 | Convert candidate city layouts without pretending estimates are live state; claims/district/IDs/invalid plans |
