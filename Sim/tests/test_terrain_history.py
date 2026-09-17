@@ -149,7 +149,7 @@ class AgeApiTests(unittest.TestCase):
             self.assertEqual(a[key],b[key])
         self.assertEqual(a['layers']['height'],before['layers']['height'])
         self.assertEqual(a['history']['ages'][-1]['order'][0],'nests before fates')
-        self.assertEqual(a['history']['ages'][-1]['order'][-1],'nests')
+        self.assertEqual(a['history']['ages'][-1]['order'][-1],'threat assessment')
         self.assertEqual(a['beast_nests']['evaluated_age'],4)
         from icarus_sim.terrain_history import materialize_stage
         view=materialize_stage(a,len(a['build_stages']))

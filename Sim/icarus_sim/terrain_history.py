@@ -107,17 +107,18 @@ def carve_relics(result,cfg,old):
     result['geological_history']['relic_method']='Compare old and rerouted river occupancy and dry former water footprints. Incise beds/shoulders, then reroute again; refilled features retain relic provenance.'
 
 
-def city_fate(city,layers,nests,radius,seed,age,roll=None,magic_enabled=True):
-    p={name:layers['ley_'+name][city['z']][city['x']] for name in SCHOOLS}
-    causes=[]
-    descriptions={'weave':'An arcane surge tore the city apart.', 'umbral':'Necrotic entropy extinguished the city.',
-                  'infernal':'Infernal corruption and demonic incursions drove its people away.',
-                  'radiant':'An overwhelming radiant surge forced the city to be abandoned.',
-                  'fire':'A fire leyline engulfed the city in flames.', 'water':'A water leyline drowned or froze the city.',
-                  'earth':'An earth leyline let roots and stone reclaim the city.',
-                  'air':'An air leyline shattered the city with storms and force.'}
-    winner=dominant_school(p)
-    if winner:causes.append((winner,min(.6,p[winner]*.45),descriptions[winner],{'school':winner,'potency':p[winner]}))
+LEY_DESTRUCTION={'weave':'An arcane surge tore the city apart.', 'umbral':'Necrotic entropy extinguished the city.',
+                 'infernal':'Infernal corruption and demonic incursions drove its people away.',
+                 'radiant':'An overwhelming radiant surge forced the city to be abandoned.',
+                 'fire':'A fire leyline engulfed the city in flames.', 'water':'A water leyline drowned or froze the city.',
+                 'earth':'An earth leyline let roots and stone reclaim the city.',
+                 'air':'An air leyline shattered the city with storms and force.'}
+THREAT_ASSESSMENT_VERSION=1
+
+
+def fantasy_nest_threats(city,nests,radius):
+    """Standing fantasy nest pressure. Shared by age fate and regional threat assessment."""
+    threats=[]
     for nest in sorted(nests,key=lambda n:n['id']):
         if nest.get('layer','surface')!='surface' or nest.get('real',True):continue
         dragon='dragon' in nest.get('name','').lower()
@@ -126,9 +127,57 @@ def city_fate(city,layers,nests,radius,seed,age,roll=None,magic_enabled=True):
         distance=radius*math.acos(max(-1.,min(1.,sum(a*b for a,b in zip(city['direction'],nest['direction'])))))
         reach=min(radius*.5,max(350.,nest.get('spacing_m',350.)*2))
         if distance>reach:continue
-        causes.append(('dragon' if dragon else 'monster',.55*(1-distance/reach),
-                       nest['name']+' drove the inhabitants away.',{'nest_id':nest['id'],'distance_m':distance,'reach_m':reach}))
-    if magic_enabled:causes.append(('self_magic',.035+.06*p['weave'],'The city destroyed itself in a magical experiment, leaving a new Weave key point.',{}))
+        threats.append({'kind':'dragon' if dragon else 'monster','weight':.55*(1-distance/reach),
+                        'reason':nest['name']+' drove the inhabitants away.',
+                        'nest_id':nest['id'],'name':nest['name'],'family':nest.get('family'),
+                        'distance_m':distance,'reach_m':reach})
+    return threats
+
+
+def ley_threat_pressure(city,layers):
+    potencies={name:layers['ley_'+name][city['z']][city['x']] for name in SCHOOLS}
+    winner=dominant_school(potencies)
+    if not winner:return 0.,None
+    return min(.6,potencies[winner]*.45),{'school':winner,'potency':potencies[winner]}
+
+
+def assess_city_threat(city,layers,nests,radius):
+    nests=fantasy_nest_threats(city,nests,radius)
+    nest_pressure=sum(t['weight'] for t in nests)
+    ley_pressure,ley=ley_threat_pressure(city,layers)
+    contributors=[{'kind':t['kind'],'weight':round(t['weight'],6),'nest_id':t['nest_id'],'name':t['name'],
+                   'family':t['family'],'distance_m':round(t['distance_m'],4),'reach_m':round(t['reach_m'],4)}
+                  for t in nests]
+    if ley:contributors.append({'kind':'ley','weight':round(ley_pressure,6),**ley})
+    return {'city_uid':city['uid'],'city_name':city.get('name'),'site_id':city.get('id'),
+            'regional_threat':round(min(1.,nest_pressure+ley_pressure),6),
+            'nest_pressure':round(nest_pressure,6),'ley_pressure':round(ley_pressure,6),
+            'contributors':contributors,'ley':ley}
+
+
+def add_threat_assessments(result,evaluated_after,age=None):
+    radius=result['effective_config']['globe_radius']
+    nests=result.get('beast_nests',{}).get('sites',[])
+    layers=result['layers']
+    cities=sorted(result.get('settlements',{}).get('sites',[]),key=lambda s:str(s.get('uid',s['id'])))
+    reports=[assess_city_threat(city,layers,nests,radius) for city in cities]
+    result['threat_assessments']={
+        'version':THREAT_ASSESSMENT_VERSION,'evaluated_after':evaluated_after,'age':age,
+        'cities':reports,
+        'method':'Per-city standing pressure from eligible fantasy nests (dragons and infernal/undead/aberrant families within reach) plus dominant local leyline potency. Same nest eligibility and reach as age-fate weights; excludes magical self-destruction.',
+        'limits':'Artistic regional threat for fortification and shape preference, not creature counts, hostility AI or guaranteed attacks. Real-animal nests do not contribute.'}
+
+
+def city_fate(city,layers,nests,radius,seed,age,roll=None,magic_enabled=True):
+    potencies={name:layers['ley_'+name][city['z']][city['x']] for name in SCHOOLS}
+    causes=[]
+    ley_pressure,ley=ley_threat_pressure(city,layers)
+    if ley:causes.append((ley['school'],ley_pressure,LEY_DESTRUCTION[ley['school']],ley))
+    for threat in fantasy_nest_threats(city,nests,radius):
+        causes.append((threat['kind'],threat['weight'],threat['reason'],
+                       {'nest_id':threat['nest_id'],'distance_m':threat['distance_m'],'reach_m':threat['reach_m']}))
+    if magic_enabled:causes.append(('self_magic',.035+.06*potencies['weave'],
+                                    'The city destroyed itself in a magical experiment, leaving a new Weave key point.',{}))
     chance=min(.9,sum(c[1] for c in causes))
     rng=random.Random(child_seed(seed,'city-fate-'+city['uid'],age))
     draw=rng.random() if roll is None else roll
@@ -199,13 +248,14 @@ def age_transition(result,cfg,age):
     result.pop('_survivors',None);result.pop('_age',None)
     add_nests(result,replace(cfg,phase=9))
     result['beast_nests']['evaluated_age']=age
+    add_threat_assessments(result,'age',age)
     old_ids={s['uid'] for s in survivors}
     new=[s['uid'] for s in result['settlements']['sites'] if s['uid'] not in old_ids]
     result['history']['ages'].append({'age':age,'events':events,'surviving_city_ids':sorted(old_ids),
-                                    'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests']})
+                                    'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests','threat assessment']})
 
 
-STATE_KEYS=('world_scene','terrain_detail','city_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','ruins',
+STATE_KEYS=('world_scene','terrain_detail','city_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area')
 
@@ -263,7 +313,9 @@ def generate_history(cfg):
             add_biome_variants(result,cfg);civilization(result,cfg,7)
         elif stage==11:civilization(result,cfg,8)
         elif stage==12:civilization(result,cfg,9)
-        elif stage==13:add_nests(result,replace(cfg,phase=9))
+        elif stage==13:
+            add_nests(result,replace(cfg,phase=9))
+            add_threat_assessments(result,'beast_nests')
         elif stage in (14,15):age_transition(result,cfg,stage-13)
         elif stage==16:
             from .city_planner import fill_cities

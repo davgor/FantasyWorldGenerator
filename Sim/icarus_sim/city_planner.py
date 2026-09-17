@@ -3,11 +3,12 @@ import hashlib
 import json
 import math
 from .city_geometry import grow_roads, corners, footprint_cells
-from .terrain_globe import sample as sample_height
+from .terrain_detail import HeightField
 from .civilization_registry import city_plan, section, registry_identity
 from .city_shapes import select_shape, load_catalogue
+from .city_fortifications import program_half_m, build_fortifications, wall_and_gate_defs
 
-VERSION=4
+VERSION=5
 CELL=4
 
 
@@ -17,7 +18,6 @@ def planner_identity():
 
 
 def _sampler(world,site,half):
-    from .terrain_detail import HeightField
     field=HeightField(world)
     n=world['config']['size'];radius=world.get('effective_config',world['config'])['globe_radius']
     lat=math.pi/2-math.pi*site['z']/(n-1);lon=-math.pi+2*math.pi*site['x']/(n-1)
@@ -63,16 +63,19 @@ def _sampler(world,site,half):
 def plan_city(world,site,nearby_counts=None):
     preset=city_plan(site['population_profile'],site['city_class']+'_city')
     housing=section('housing_profiles');house=housing['worker_house'];apartment=housing['worker_apartment']
-    half={'small':240,'medium':320,'capital':400}[site['city_class']]
     # Bound footprints by neighbouring city anchors, without moving any anchor.
     n=world['config']['size'];radius=world.get('effective_config',world['config'])['globe_radius']
+    neighbour_half={'small':240,'medium':320,'capital':400}[site['city_class']]
     for other in world['settlements']['sites']:
         if other is site or other.get('uid')==site.get('uid'):continue
         lat1=math.pi/2-math.pi*site['z']/(n-1);lat2=math.pi/2-math.pi*other['z']/(n-1)
         dl=2*math.pi*(other['x']-site['x'])/(n-1)
         distance=radius*math.acos(max(-1,min(1,math.sin(lat1)*math.sin(lat2)+math.cos(lat1)*math.cos(lat2)*math.cos(dl))))
-        half=min(half,distance*.28)
-    half=max(CELL,int(half/CELL)*CELL);size=2*half//CELL
+        neighbour_half=min(neighbour_half,distance*.28)
+    half=program_half_m(preset,site['city_class'],neighbour_half,
+                        house_plot=(house['plot_m']['width'],house['plot_m']['depth']),
+                        beds_per_house=house['worker_beds'])
+    size=2*half//CELL
     sample,resolution=_sampler(world,site,half)
     terrain=[];biomes=[];mutations=[];valid=set();slopes=[];woods=0;heights={}
     for j in range(size):
@@ -90,20 +93,24 @@ def plan_city(world,site,nearby_counts=None):
              'source':'canonical terrain height in metres','terrain_detail':world.get('terrain_detail'),
              'coordinates':'local east/north gnomonic coordinates; radial elevation above reference sphere'}
     center=sample(0,0)
+    threat=next((c['regional_threat'] for c in world.get('threat_assessments',{}).get('cities',[])
+                 if c['city_uid']==site.get('uid',str(site['id']))),0.)
     facts={'buildable_area_m2':len(valid)*CELL*CELL,'usable_land_fraction':len(valid)/(size*size),
            'local_slope_degrees':sum(slopes)/len(slopes) if slopes else 90,
-           'aridity':1-max(0,min(1,center['moisture'])),'wooded_fraction':woods/max(1,len(valid))}
+           'aridity':1-max(0,min(1,center['moisture'])),'wooded_fraction':woods/max(1,len(valid)),
+           'regional_threat':threat,'defense_priority':threat}
     # Fine topology/navigability is unknown in this world raster; do not invent it.
     selected=select_shape(facts,world['config']['seed'],str(site.get('uid',site['id'])),site['city_class'],nearby_counts)
     result={'version':VERSION,'city_uid':site.get('uid',str(site['id'])),'site_id':site['id'],'name':site['name'],
             'civilization_id':site['population_profile'],'city_class':site['city_class'],'unit':'metres',
             'bounds_m':[-half,-half,half,half],'terrain':{'cell_m':CELL,'size':size,'codes':terrain,'surface':surface,'natural_biome':biomes,'biome_variant':mutations,'biome_catalogue':world.get('terrain',{}).get('biomes',[]),'magical_catalogue':world.get('terrain',{}).get('magical_biomes',[]),'magic_colors':{k:v['color'] for k,v in world.get('magic',{}).get('networks',{}).items()}},
             'reference_frame':{'radius_m':radius,'latitude_degrees':90-180*site['z']/(n-1),'longitude_degrees':-180+360*site['x']/(n-1),'projection':'direction=normalize(up+(east*x_m+north*z_m)/radius_m); position=(radius_m+height_m)*direction'},
-            'location':facts,'shape':selected,'plots':[],'roads':[],'unplaced':[],
-            'passes':[{'id':key,'placed':0} for key in ('map','shape','high','high_housing','low','low_housing')],
+            'location':facts,'shape':selected,'plots':[],'roads':[],'unplaced':[],'fortifications':None,
+            'passes':[{'id':key,'placed':0} for key in ('map','shape','fortification','high','high_housing','low','low_housing')],
             'warnings':['Schematic packing over canonical detailed terrain; groundwater and structural feasibility are not resolved.',
                         'Routed river centerlines reserve a provisional 24 m channel and 28 m setback from centerline, not a simulated flood extent.',
-                        'Four worker beds per house; 16 per apartment building when land is constrained. Dependents, commuters and households are not modeled.'],
+                        'Four worker beds per house; 16 per apartment building when land is constrained. Dependents, commuters and households are not modeled.',
+                        'City walls are schematic enceintes separate from castle bailey generation.'],
             'source_resolution_m':round(resolution,2),'status':'unbuildable','stats':{}}
     result['debug']={'terrain_safe_cells':len(valid),'total_cells':size*size,'housing_passes':[],
                      'apartment_policy':'houses_first_then_upgrade_on_plot_exhaustion'}
@@ -121,6 +128,7 @@ def plan_city(world,site,nearby_counts=None):
     def inside(x,z):
         if family in ('grid','compound','hybrid'):return abs(x)<rx and abs(z)<rz
         if family=='cluster':return any((x-cx)**2+(z-cz)**2<(half*.52)**2 for cx,cz in ((-half*.32,0),(half*.32,0),(0,half*.25)))
+        # organic, contour, rings and paired lobes share an elliptical clip; ring scales are fortification-only.
         return (x/rx)**2+(z/rz)**2<1
     terrain_valid=set(valid)
     valid={c for c in valid if inside(-half+(c[0]+.5)*CELL,-half+(c[1]+.5)*CELL)}
@@ -136,6 +144,16 @@ def plan_city(world,site,nearby_counts=None):
             c.update(status='connected',reason='Terrain-safe junction to regional road',local_path_m=[[-half+(a+.5)*CELL,-half+(b+.5)*CELL] for a,b in approach]+[gate])
     result['roads']=[list(c) for c in sorted(road)]
     result['street_paths_m']=[[[round(-half+(x+.5)*CELL,2),round(-half+(z+.5)*CELL,2)] for x,z in path] for path in paths]
+    wall_def,gate_def=wall_and_gate_defs(preset)
+    gate_budget=next((row['count'] for row in preset['buildings'] if row['structure_id']=='building.gatehouse'),0)
+    tower_budget=next((row['count'] for row in preset['buildings'] if row['structure_id']=='building.tower'),0)
+    fortifications=build_fortifications(valid=valid,half=half,cell=CELL,rx=rx,rz=rz,family=family,
+                                        shape_id=selected['shape_id'],parameters=selected['parameters'],
+                                        city_class=site['city_class'],road_connections=result['road_connections'],
+                                        wall_structure=wall_def,gate_structure=gate_def,
+                                        tower_budget=tower_budget,gate_budget=max(1,gate_budget))
+    result['fortifications']=fortifications
+    result['passes'][2]['placed']=len(fortifications['segments'])
     anchors=[]
     for path in result['street_paths_m']:
         for i in range(0,len(path),1):
@@ -167,9 +185,10 @@ def plan_city(world,site,nearby_counts=None):
                 if corridor<=valid:options.append((x,z,degrees,ax,az,footprint,corridor,ground))
         candidate_cache[(w,d)]=options
         return options
-    def install(row,phase,kind='service'):
+    def install(row,phase,kind='service',placement=None):
         w=row['plot_m']['width'];d=row['plot_m']['depth']
-        for x,z,degrees,ax,az,footprint,corridor,ground in candidates(w,d):
+        options=[placement] if placement else candidates(w,d)
+        for x,z,degrees,ax,az,footprint,corridor,ground in options:
             if footprint&occupied or footprint&access or corridor&occupied:continue
             occupied.update(footprint);access.update(corridor-footprint)
             plot={'id':f"plot-{len(result['plots'])}",'building_id':row.get('structure_id',row.get('id')),
@@ -183,18 +202,47 @@ def plan_city(world,site,nearby_counts=None):
             result['passes'][next(i for i,p in enumerate(result['passes']) if p['id']==phase)]['placed']+=1
             return True
         return False
+    # Reserve gatehouse footprints on the enceinte openings before street-front packing.
+    placed_gates=0;placed_towers=0
+    if fortifications['defended_perimeter'] and gate_def and 'plot_m' in gate_def:
+        for gate in fortifications['gates']:
+            x,z=gate['position_m'];approach=gate.get('approach_m') or [x+1,z]
+            angle=math.atan2(approach[1]-z,approach[0]-x)
+            degrees=round(math.degrees(angle),4)
+            footprint=cells(x,z,gate_def['plot_m']['width'],gate_def['plot_m']['depth'],angle)
+            ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,gate_def['plot_m']['width'],gate_def['plot_m']['depth'],angle)]
+            ground+=[heights[c] for c in sorted(footprint) if c in heights] or [sample(x,z,False)['height']]
+            corridor=footprint
+            if install(gate_def,'fortification','service',(x,z,degrees,x,z,footprint,corridor,ground)):
+                placed_gates+=1;gate['plot_id']=result['plots'][-1]['id']
+    tower_row=next((row for row in preset['buildings'] if row['structure_id']=='building.tower'),None)
+    if fortifications['defended_perimeter'] and tower_row:
+        for tower in fortifications['towers']:
+            if placed_towers>=tower_budget:break
+            x,z=tower['position_m'];degrees=0.
+            footprint=cells(x,z,tower_row['plot_m']['width'],tower_row['plot_m']['depth'],0)
+            if not footprint<=valid or footprint&road or footprint&occupied:continue
+            ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,tower_row['plot_m']['width'],tower_row['plot_m']['depth'],0)]
+            ground+=[heights[c] for c in sorted(footprint)]
+            if install(tower_row,'fortification','service',(x,z,degrees,x,z,footprint,footprint,ground)):
+                placed_towers+=1;tower['plot_id']=result['plots'][-1]['id']
     conditions={'usable_groundwater':False,'water_collection_or_delivery':site.get('freshwater_distance_m') is not None,
                 'navigable_shore':False,'flowing_water':False,'reliable_wind':False,
                 'ore_and_fuel_supply':site.get('resource_potential',0)>=.5,'food_surplus':False,
                 'working_animals':False,'clay_and_fuel_supply':False,'medicinal_supply':facts['wooded_fraction']>.1,
-                'clear_sky_view':True,'isolation_access':True,'defended_perimeter':False}
+                'clear_sky_view':True,'isolation_access':True,'defended_perimeter':fortifications['defended_perimeter']}
     high=[];low=[]
     for row in preset['buildings']:
+        remaining=row['count']
+        if row['structure_id']=='building.gatehouse':remaining=max(0,remaining-placed_gates)
+        if row['structure_id']=='building.tower':remaining=max(0,remaining-placed_towers)
+        if remaining<=0:continue
         missing=[c for c in row['placement_conditions'] if not conditions.get(c,False)]
         if missing:
-            result['unplaced'].append({'building_id':row['structure_id'],'count':row['count'],'reason':'Unverified prerequisite: '+', '.join(missing)})
+            result['unplaced'].append({'building_id':row['structure_id'],'count':remaining,'reason':'Unverified prerequisite: '+', '.join(missing)})
             continue
-        (high if row['priority']=='core' else low).append(row)
+        entry={**row,'count':remaining}
+        (high if row['priority']=='core' else low).append(entry)
     def house_workers(phase):
         workers=sum(p['workers'] for p in result['plots']);beds=sum(p['beds'] for p in result['plots'])
         audit={'phase':phase,'workers':workers,'starting_beds':beds,'houses_placed':0,'upgrades':0,'plots_exhausted':False}
@@ -226,7 +274,8 @@ def plan_city(world,site,nearby_counts=None):
     workers=sum(p['workers'] for p in result['plots']);beds=sum(p['beds'] for p in result['plots'])
     result['debug'].update(shape_safe_cells=len(valid),road_cells=len(road),occupied_cells=len(occupied),access_cells=len(access),
                            vacant_shape_cells=len(valid-road-occupied-access),
-                           housing_frontage_candidates=len(candidates(house['plot_m']['width'],house['plot_m']['depth'])))
+                           housing_frontage_candidates=len(candidates(house['plot_m']['width'],house['plot_m']['depth'])),
+                           fortification_rings=len(fortifications['rings']),program_half_m=half)
     core_ids={r['structure_id'] for r in preset['buildings'] if r['priority']=='core'}
     failed_core=sum(r['count'] for r in result['unplaced'] if r['building_id'] in core_ids)
     result['status']='complete' if not failed_core and beds>=workers else 'partial'
@@ -236,7 +285,8 @@ def plan_city(world,site,nearby_counts=None):
                      'apartments':sum(p['building_id']==apartment['id'] for p in result['plots']),
                      'unplaced_core':failed_core,'unplaced_total':sum(r['count'] for r in result['unplaced']),
                      'simulation_population':site.get('urban_population_estimate',site.get('population_estimate')),
-                     'reserved_plot_area_m2':sum(p['plot_m']['width']*p['plot_m']['depth'] for p in result['plots'])}
+                     'reserved_plot_area_m2':sum(p['plot_m']['width']*p['plot_m']['depth'] for p in result['plots']),
+                     'wall_segments':len(fortifications['segments']),'defended_perimeter':fortifications['defended_perimeter']}
     return result
 
 
@@ -247,7 +297,7 @@ def fill_cities(world):
         key=plan['shape']['shape_id']
         if key:counts[key]=counts.get(key,0)+1
     world['city_plans']={'version':VERSION,'identity':planner_identity(),'cities':cities,
-                         'phase_order':['map','shape','high','high_housing','low','low_housing'],
+                         'phase_order':['map','shape','fortification','high','high_housing','low','low_housing'],
                          'scope':'Schematic local metres from final world raster; does not change simulated population.'}
     from .world_scene import build_scene
     build_scene(world)

@@ -1266,7 +1266,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "b83962d3cff2919ba9ad5c8a681b101c748b47868990671cb0bdebf44bd1cee2",
+      "destination_sha256": "1997764b903a2036947e9e8e784716e876ab9c35bb7b8b656b80398b34ef825e",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1384,6 +1384,13 @@
           "destination_sha256": "b83962d3cff2919ba9ad5c8a681b101c748b47868990671cb0bdebf44bd1cee2",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "b83962d3cff2919ba9ad5c8a681b101c748b47868990671cb0bdebf44bd1cee2",
+          "destination_sha256": "1997764b903a2036947e9e8e784716e876ab9c35bb7b8b656b80398b34ef825e",
+          "decision": "docs/city-planner.md",
+          "reason": "Regional threat assessments after beasties and each age; city fortification planner inputs."
         }
       ]
     },
@@ -1423,7 +1430,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "49369827db1833dec1f419ba024609a6a9048861997b7596c7e41572dd4cf069",
+      "destination_sha256": "42e12d1d9982d2754953bd9b2b3e9ee65c996cd20bc1c636bfff4ad2f5d6b6fc",
       "status": "modified",
       "reason": "Canonical MathLab documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1478,6 +1485,13 @@
           "destination_sha256": "49369827db1833dec1f419ba024609a6a9048861997b7596c7e41572dd4cf069",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "49369827db1833dec1f419ba024609a6a9048861997b7596c7e41572dd4cf069",
+          "destination_sha256": "42e12d1d9982d2754953bd9b2b3e9ee65c996cd20bc1c636bfff4ad2f5d6b6fc",
+          "decision": "docs/city-planner.md",
+          "reason": "Regional threat assessments and city fortification planner/lab support."
         }
       ]
     },

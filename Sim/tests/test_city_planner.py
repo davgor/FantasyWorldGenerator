@@ -21,7 +21,7 @@ class CityPlannerTests(unittest.TestCase):
     def test_priority_order_housing_and_replay(self):
         world=fixture();a=plan_city(world,world['settlements']['sites'][0])
         self.assertEqual(a,plan_city(world,world['settlements']['sites'][0]))
-        self.assertEqual([p['id'] for p in a['passes']],['map','shape','high','high_housing','low','low_housing'])
+        self.assertEqual([p['id'] for p in a['passes']],['map','shape','fortification','high','high_housing','low','low_housing'])
         self.assertGreater(a['stats']['workers'],0)
         self.assertGreaterEqual(a['stats']['worker_beds'],a['stats']['workers'])
         self.assertTrue(any(p['building_id']=='building.guildhall' for p in a['plots']))
