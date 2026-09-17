@@ -10,10 +10,12 @@ import re
 REGISTRY_PATH=Path(__file__).with_name('civilizations.json')
 BUILDING_SECTIONS=('building_packs','layout_profiles','structure_blocks','housing_profiles')
 CITY_BLOCKS=('small_city','medium_city','capital_city')
+HAMLET_BLOCK='hamlet'
 PLACEMENT_CONDITIONS={'usable_groundwater','water_collection_or_delivery','navigable_shore',
     'flowing_water','reliable_wind','ore_and_fuel_supply','food_surplus','working_animals',
     'clay_and_fuel_supply','medicinal_supply','clear_sky_view','isolation_access',
-    'route_crossing','grade_change','retention_needed','defended_perimeter'}
+    'route_crossing','grade_change','retention_needed','defended_perimeter',
+    'farming_support','resource_support'}
 STAFF_LEVELS=('minimum','target','maximum')
 
 
@@ -43,39 +45,47 @@ def staffing_totals(staff, count):
             'hinterland_worker_beds':{k:v if staff['housing_location']=='hinterland' else 0 for k,v in workers.items()}}
 
 
-def _validate_city_blocks(entity, libraries):
+def _validate_settlement_blocks(entity, libraries, tiers, label):
     structures={s['id']:s for key in entity['buildings']['structure_block_ids']
                 for block in libraries[key]['blocks'] for s in block['structures']}
-    for tier in CITY_BLOCKS:
+    for tier in tiers:
         plan=entity[tier]
         if plan['status']!='preconfigured_design' or plan['housing_status']!='deferred':
-            raise ValueError('Unsupported city plan status')
+            raise ValueError('Unsupported '+label+' plan status')
         for group in ('buildings','infrastructure'):
             entries=plan[group]
-            if not isinstance(entries,list) or not entries:raise ValueError('Empty city plan group')
+            if not isinstance(entries,list) or not entries:raise ValueError('Empty '+label+' plan group')
             seen=set()
             for entry in entries:
                 sid=entry['structure_id']
-                if sid not in structures or sid in seen:raise ValueError('Unknown or duplicate city structure')
+                if sid not in structures or sid in seen:raise ValueError('Unknown or duplicate '+label+' structure')
                 seen.add(sid);structure=structures[sid]
                 if 'staffing' in entry:_validate_staffing(entry['staffing'])
                 if group=='infrastructure' and entry.get('staffing',structure['staffing'])['roles']:
                     raise ValueError('Linear infrastructure uses shared service crews')
                 if structure['module_family']=='housing':raise ValueError('Housing is deferred')
                 if not isinstance(entry['placement_conditions'],list) or not set(entry['placement_conditions'])<=PLACEMENT_CONDITIONS:
-                    raise ValueError('Invalid city placement condition')
+                    raise ValueError('Invalid '+label+' placement condition')
                 if group=='buildings':
                     if structure['geometry_type']=='linear_segment':raise ValueError('Linear structure needs route sizing')
-                    if type(entry['count']) is not int or not 1<=entry['count']<=10000:raise ValueError('Invalid city building count')
-                    if not isinstance(entry['name'],str) or not entry['name'].strip():raise ValueError('Missing city building name')
+                    if type(entry['count']) is not int or not 1<=entry['count']<=10000:raise ValueError('Invalid '+label+' building count')
+                    if not isinstance(entry['name'],str) or not entry['name'].strip():raise ValueError('Missing '+label+' building name')
                 elif structure['geometry_type']!='linear_segment' or entry['quantity_mode']!='fit_route_or_perimeter':
-                    raise ValueError('Invalid city infrastructure sizing')
+                    raise ValueError('Invalid '+label+' infrastructure sizing')
                 size=structure['dimensions_m'];clear=structure['clearance_m'];plot=structure['plot_m']
                 for value in (size['width'],size['depth'],plot['width'],plot['depth']):_number(value,.01,100000,'structure dimension')
                 _number(size['height'],0,100000,'structure height')
                 for side in ('left','right','front','rear'):_number(clear[side],0,100000,'structure clearance')
                 if plot['width']!=size['width']+clear['left']+clear['right'] or plot['depth']!=size['depth']+clear['front']+clear['rear']:
-                    raise ValueError('City structure plot does not include its clearances')
+                    raise ValueError(label.capitalize()+' structure plot does not include its clearances')
+
+
+def _validate_city_blocks(entity, libraries):
+    _validate_settlement_blocks(entity, libraries, CITY_BLOCKS, 'city')
+
+
+def _validate_hamlet_block(entity, libraries):
+    _validate_settlement_blocks(entity, libraries, (HAMLET_BLOCK,), 'hamlet')
 
 
 def _finite(value):
@@ -110,10 +120,10 @@ def validate_registry(data):
         for key,parent in parents.items():
             _number(parent['founding_participation_percent'],0,100,'founding participation percent')
             if not re.fullmatch('[a-z][a-z0-9_]*',key) or not isinstance(parent.get('name'),str) or not parent['name']:raise ValueError('Invalid parent race')
-        for housing_key in ('worker_house','worker_apartment'):
+        for housing_key in ('worker_house','worker_apartment','hamlet_house'):
             house=data['housing_profiles'][housing_key]
             if house['id']!='building.'+housing_key or type(house['worker_beds']) is not int or not 1<=house['worker_beds']<=32:
-                raise ValueError('Invalid worker-housing capacity')
+                raise ValueError('Invalid housing capacity')
             for key in ('width','depth'):
                 _number(house['dimensions_m'][key],1,100,'housing footprint')
                 _number(house['plot_m'][key],house['dimensions_m'][key],200,'housing plot')
@@ -146,7 +156,7 @@ def validate_registry(data):
             if len({o['id'] for o in pack['building_options']})!=len(pack['building_options']):raise ValueError('Duplicate building option')
             if pack.get('layout_profile_id') is not None and pack['layout_profile_id'] not in layout_index:raise ValueError('Unknown pack layout')
         for key,entity in entities.items():
-            if set(entity)!={'parent_race_id','population','settlement','economy','sky','presentation','buildings',*CITY_BLOCKS}:raise ValueError('Incomplete civilization entity')
+            if set(entity)!={'parent_race_id','population','settlement','economy','sky','presentation','buildings',*CITY_BLOCKS,HAMLET_BLOCK}:raise ValueError('Incomplete civilization entity')
             if entity['parent_race_id'] not in parents:raise ValueError('Unknown parent race')
             population=validate_profile(entity['population'],key)
             if population['civilization']['kind']!='entity':raise ValueError('Entity must declare entity kind')
@@ -172,9 +182,11 @@ def validate_registry(data):
             for layout,features in buildings['layout_features'].items():
                 if layout not in layout_index or not set(features)<=layout_index[layout]:raise ValueError('Unknown layout feature reference')
             if not set(buildings['structure_block_ids'])<=set(data['structure_blocks']):raise ValueError('Unknown structure block library')
+            if 'rural' not in buildings['structure_block_ids']:raise ValueError('Entity needs the rural hamlet structure library')
             block=population['civilization']['structure_blocks']
             if block is not None and block not in buildings['structure_block_ids']:raise ValueError('Structure block identity disagrees with bindings')
             _validate_city_blocks(entity,data['structure_blocks'])
+            _validate_hamlet_block(entity,data['structure_blocks'])
         for key,profile in configs.items():
             if validate_profile(profile,key)['civilization']['kind']!='aggregate':raise ValueError('Invalid aggregate configuration')
     except (KeyError,TypeError,AttributeError) as exc:
@@ -251,15 +263,13 @@ def section(name):return copy.deepcopy(_document()[name])
 def entity_rules(entity_id):return copy.deepcopy(_document()['entities'][entity_id])
 
 
-def city_plan(entity_id, city_block):
-    """Resolve an independent size preset into measured, unplaced requirements."""
-    if city_block not in CITY_BLOCKS:raise ValueError('Unknown city size block')
+def _expand_settlement_plan(entity_id, block_name, block_key):
     doc=_document()
     if entity_id not in doc['entities']:raise ValueError('Unknown civilization')
     entity=doc['entities'][entity_id]
     structures={s['id']:s for key in entity['buildings']['structure_block_ids']
                 for block in doc['structure_blocks'][key]['blocks'] for s in block['structures']}
-    plan=copy.deepcopy(entity[city_block])
+    plan=copy.deepcopy(entity[block_name])
     for group in ('buildings','infrastructure'):
         plan[group]=[{**copy.deepcopy(structures[row['structure_id']]),**row} for row in plan[group]]
     summary={group:{metric:{level:0 for level in STAFF_LEVELS}
@@ -275,8 +285,20 @@ def city_plan(entity_id, city_block):
     summary.update(total_residents=None,houses_required=None,
                    basis='One distinct resident worker per filled roster post; household members and housing occupancy not yet modeled.')
     plan['staffing_summary']=summary
-    plan.update(civilization_id=entity_id,city_block=city_block,unit='metres',runtime_placement_enabled=False)
+    plan.update(civilization_id=entity_id,unit='metres',runtime_placement_enabled=False)
+    plan[block_key]=block_name
     return plan
+
+
+def city_plan(entity_id, city_block):
+    """Resolve an independent size preset into measured, unplaced requirements."""
+    if city_block not in CITY_BLOCKS:raise ValueError('Unknown city size block')
+    return _expand_settlement_plan(entity_id, city_block, 'city_block')
+
+
+def hamlet_plan(entity_id):
+    """Resolve the rural hamlet preset into measured, unplaced requirements."""
+    return _expand_settlement_plan(entity_id, HAMLET_BLOCK, 'settlement_block')
 
 
 def default_profile_id():return _document()['defaults']['profile_id']

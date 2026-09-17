@@ -26,7 +26,7 @@ class AssetListTests(unittest.TestCase):
         self.assertEqual(document["summary"]["by_source"]["simulation.biomes"], len(natural_catalogue()))
         self.assertEqual(document["summary"]["by_source"]["simulation.creature_profiles"], 381)
         self.assertEqual(document["summary"]["by_source"]["simulation.building_packs"], 84)
-        self.assertEqual(document["summary"]["by_source"]["simulation.city_planner"], 82)
+        self.assertEqual(document["summary"]["by_source"]["simulation.city_planner"], 96)
         self.assertEqual(document["summary"]["by_source"]["production.world_asset_catalogue"], 492)
         self.assertIn("creature.kraken", assets)
         self.assertIn("terrain.biome.017", assets)

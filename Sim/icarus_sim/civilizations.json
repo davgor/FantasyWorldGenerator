@@ -1,7 +1,7 @@
 {
   "schema": "fantasy-world-generator.civilization-registry",
   "schema_version": 6,
-  "revision": 11,
+  "revision": 12,
   "description": "Single authoring source for independent civilizations, generic rule parameters, presentation, building/layout libraries and measured structure blocks. No population inheritance.",
   "defaults": {
     "profile_id": "human_heartland",
@@ -279,7 +279,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -1212,6 +1213,102 @@
                 "placement_conditions": [
                   "defended_perimeter"
                 ]
+              }
+            ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
               }
             ]
           }
@@ -1379,7 +1476,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -2262,6 +2360,102 @@
                 "placement_conditions": [
                   "defended_perimeter"
                 ]
+              }
+            ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
               }
             ]
           }
@@ -2440,7 +2634,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -3309,6 +3504,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "human_large_island": {
@@ -3484,7 +3775,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -4443,6 +4735,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "human_rainforest": {
@@ -4616,7 +5004,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -5543,6 +5932,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "human_heartland": {
@@ -5703,7 +6188,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -6548,6 +7034,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         }
       },
@@ -6755,7 +7337,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -7648,6 +8231,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "tidekin": {
@@ -7808,7 +8487,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -8691,6 +9371,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         }
       },
@@ -8942,7 +9718,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -9829,6 +10606,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "gnome": {
@@ -9979,7 +10852,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -10850,6 +11724,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "hill_dwarf": {
@@ -11046,7 +12016,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -11891,6 +12862,102 @@
                 ]
               }
             ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
+              }
+            ]
           }
         },
         "frosthold_dwarf": {
@@ -12163,7 +13230,8 @@
               ]
             },
             "structure_block_ids": [
-              "common"
+              "common",
+              "rural"
             ],
             "housing_status": "deferred",
             "layout_features": {
@@ -13072,6 +14140,102 @@
                 "placement_conditions": [
                   "defended_perimeter"
                 ]
+              }
+            ]
+          },
+          "hamlet": {
+            "status": "preconfigured_design",
+            "housing_status": "deferred",
+            "selection_notes": "Compact rural support services; role filters farming, resource and coastal extras at plan time.",
+            "buildings": [
+              {
+                "structure_id": "building.hamlet_well",
+                "name": "Hamlet well",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_latrine",
+                "name": "Hamlet latrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_food_store",
+                "name": "Hamlet food store",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_barn",
+                "name": "Hamlet barn",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_farmyard",
+                "name": "Hamlet farmyard",
+                "count": 1,
+                "placement_conditions": [
+                  "farming_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_staging_yard",
+                "name": "Hamlet staging yard",
+                "count": 1,
+                "placement_conditions": [
+                  "resource_support"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_shrine",
+                "name": "Hamlet shrine",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_meeting_shed",
+                "name": "Hamlet meeting shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_cart_shed",
+                "name": "Hamlet cart shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_smith_shed",
+                "name": "Hamlet smith shed",
+                "count": 1,
+                "placement_conditions": []
+              },
+              {
+                "structure_id": "building.hamlet_landing",
+                "name": "Hamlet landing",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              },
+              {
+                "structure_id": "building.hamlet_net_shed",
+                "name": "Hamlet net shed",
+                "count": 1,
+                "placement_conditions": [
+                  "navigable_shore"
+                ]
+              }
+            ],
+            "infrastructure": [
+              {
+                "structure_id": "building.hamlet_track",
+                "quantity_mode": "fit_route_or_perimeter",
+                "placement_conditions": []
               }
             ]
           }

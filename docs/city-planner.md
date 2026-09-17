@@ -30,7 +30,7 @@ World rasters can be much coarser than a city: land categories use nearest-neigh
 
 ## Staffing and housing
 
-`buildings.json` schema 2 / revision 3 defines `housing_profiles.worker_house`: an 8 x 10 x 6 metre building on a 12 x 16 metre plot with four worker beds. Civilization schema 6 / revision 11 links building schema 2. This is a provisional shared dwelling for every civilization; cultural art is separate.
+`buildings.json` schema 2 / revision 4 defines `housing_profiles.worker_house`: an 8 x 10 x 6 metre building on a 12 x 16 metre plot with four worker beds. Civilization schema 6 / revision 12 links building schema 2. This is a provisional shared dwelling for every civilization; cultural art is separate. Rural cottages use a separate `hamlet_house` profile; see [hamlet planner](hamlet-planner.md).
 
 Housing serves distinct target workers in successfully placed facilities. It does not add dependents, commuters, simulated NPC objects or general population housing. Existing simulation population is reported separately and never overwritten. Lack of housing space remains a visible shortfall.
 
@@ -38,7 +38,7 @@ Housing serves distinct target workers in successfully placed facilities. It doe
 
 Click a city on the map, atlas, globe, or city-name list to open its separate layout dialog. The default WebGL 3D view shows the terrain surface and rotated cuboids at authored width, depth and height, with no vertical exaggeration. Drag to orbit, scroll to zoom, reset the camera, toggle labels, or use the building selector. A 2D plan remains available and is the fallback when WebGL is unavailable. Both views retain phase filtering (including pre-upgrade houses), selection and statistics. Core services are gold, lower-priority services purple, and housing blue. Phase selection reveals the ordered fill; zoom and building selection expose dimensions, staffing and beds. Stats and unplaced reasons remain visible. Generate through the final stage to obtain plans.
 
-The exhaustive asset compiler includes all 80 supported measured structure IDs plus `building.worker_house` and `building.worker_apartment`, marked schematic. They are potential final states, not a claim that production art or an Unreal importer exists. World coordinates and dimensions remain metres.
+The exhaustive asset compiler includes all measured city structure IDs plus `building.worker_house` and `building.worker_apartment`, marked schematic, alongside rural hamlet IDs from the same compiler pass. They are potential final states, not a claim that production art or an Unreal importer exists. World coordinates and dimensions remain metres.
 
 ## Verification
 
