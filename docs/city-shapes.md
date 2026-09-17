@@ -1,6 +1,6 @@
 # Historical city shapes and location selection
 
-[city_shapes.json](../Sim/icarus_sim/city_shapes.json) is the canonical shape catalogue (schema 1, revision 1). It contains 16 researched morphology patterns, their historical sources, location requirements, weighted preferences, layout guidance and variation ranges. `city_shapes.py` validates it and provides standalone deterministic selection. Both ship with the package.
+[city_shapes.json](../Sim/icarus_sim/city_shapes.json) is the canonical shape catalogue (schema 1, revision 2). It contains researched morphology patterns, their historical sources, location requirements, weighted preferences, layout guidance and variation ranges. `city_shapes.py` validates it and provides standalone deterministic selection. Both ship with the package.
 
 The selector supplies the [final-world city planner](city-planner.md), which generates schematic streets and measured building plots after simulation. The catalogue alone remains a selection API, not a geometric solver.
 
@@ -23,6 +23,7 @@ The available patterns are:
 - Ceremonial/residential clusters, informed by [Tikal's distinct functional ensembles](https://whc.unesco.org/en/list/64). This is a pre-Columbian reference, not a claim that Maya cities were European medieval towns.
 - Linked enclosed compounds, informed by [Chan Chan](https://whc.unesco.org/en/list/366).
 - An older core with a planned extension, informed by [Ferrara](https://whc.unesco.org/en/list/733). This Renaissance reference is disabled by default; request `include_later=True` to include it.
+- Concentric defensive enceintes for capitals, informed by [Carcassonne's fortification lines](https://whc.unesco.org/en/list/345). High `regional_threat` strongly prefers this pattern so multi-ring walls can appear; it is an explicit game adaptation, not a claim about any fictional setting.
 
 All civilizations can use compatible shapes. A historical reference does not lock an invented race to that culture. Site features determine feasibility; optional trade, planning and defense scores influence preference, not eligibility.
 

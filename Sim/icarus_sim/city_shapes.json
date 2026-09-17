@@ -1,7 +1,7 @@
 {
   "schema": "fantasy-world-generator.city-shapes",
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "status": "planner_input_not_runtime_geometry",
   "units": "metres unless a field states otherwise",
   "research_date": "2026-09-15",
@@ -91,6 +91,13 @@
       "min": 0,
       "max": 1,
       "unit": "fraction_or_normalized_score"
+    },
+    "regional_threat": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "unit": "fraction_or_normalized_score",
+      "description": "Standing regional threat from fantasy nests and dominant leyline potency after beasties/age assessments."
     },
     "planned_foundation": {
       "type": "number",
@@ -217,6 +224,13 @@
       "publisher": "UNESCO World Heritage Centre / nominated heritage documentation",
       "accessed": "2026-09-15",
       "supports": "Successive planned additions developed an inherited urban core."
+    },
+    "carcassonne": {
+      "title": "Historic Fortified City of Carcassonne - UNESCO",
+      "url": "https://whc.unesco.org/en/list/345",
+      "publisher": "UNESCO World Heritage Centre / nominated heritage documentation",
+      "accessed": "2026-09-17",
+      "supports": "Concentric and successive fortification lines enclose urban fabric behind controlled gates."
     }
   },
   "shapes": [
@@ -1578,6 +1592,101 @@
         "Verify connectivity, road grades, bridge spans and every building access width.",
         "Keep water intakes, drainage, waste and fire/service access feasible.",
         "If reservations and housing cannot fit, reduce the approved program or reject the site; do not silently drop core services."
+      ]
+    },
+    {
+      "id": "concentric_enceintes",
+      "name": "Concentric defensive enceintes",
+      "family": "rings",
+      "enabled_by_default": true,
+      "city_classes": [
+        "capital"
+      ],
+      "base_weight": 6,
+      "history": {
+        "source_ids": [
+          "carcassonne"
+        ],
+        "evidence": "Concentric and successive fortification lines enclose urban fabric behind controlled gates.",
+        "adaptation": "Game pattern for high-threat capitals: multiple intact active wall rings with gated belts between them. Not a reconstruction of Carcassonne and not a claim about any anime setting; regional threat assessments select when this form appears.",
+        "period_note": "Medieval multi-wall fortification as a reusable abstract; fantasy concentric belts are an explicit game adaptation"
+      },
+      "eligibility": {
+        "all": [
+          {
+            "field": "buildable_area_m2",
+            "min": 40000
+          },
+          {
+            "field": "usable_land_fraction",
+            "min": 0.2
+          },
+          {
+            "field": "local_slope_degrees",
+            "max": 25
+          }
+        ]
+      },
+      "preferences": [
+        {
+          "when": {
+            "field": "regional_threat",
+            "min": 0.55
+          },
+          "bonus": 18
+        },
+        {
+          "when": {
+            "field": "defense_priority",
+            "min": 0.5
+          },
+          "bonus": 8
+        }
+      ],
+      "layout": {
+        "footprint": "Nested elliptical defensive belts around a civic or citadel core",
+        "street_network": "Radial spokes and ring streets connect gates; districts fill between rings",
+        "primary_anchor": "inner_citadel",
+        "housing_fill": "Reserve required public buildings, service access, streets, drainage and public spaces first. Prefer fill inside the active outer wall; do not force fill across exclusions.",
+        "building_fit": "Use actual building plot_m and clearance_m from buildings.json; never shrink buildings to meet a density target.",
+        "guild_hall": "Reserve the civilization preset guild hall near an accessible public center; counts and staff remain in the linked building/civilization data.",
+        "orientation": "Fit the named ridge, bank, shore, neck or route anchors. Unconstrained rotation is allowed only on sites without directional anchors.",
+        "fortification_mode": "concentric_active"
+      },
+      "variation": {
+        "aspect_ratio": {
+          "min": 1,
+          "max": 1.5
+        },
+        "street_curvature": {
+          "min": 0.2,
+          "max": 0.55
+        },
+        "block_spacing_m": {
+          "min": 40,
+          "max": 90
+        },
+        "plaza_offset_fraction": {
+          "min": 0,
+          "max": 0.2
+        },
+        "district_count": {
+          "min": 2,
+          "max": 3,
+          "integer": true
+        },
+        "ring_count": {
+          "min": 2,
+          "max": 3,
+          "integer": true
+        }
+      },
+      "placement_checks": [
+        "Fit footprint to the buildable mask and available area; aspect ratio is a proposal, not permission to cross water.",
+        "Verify connectivity, road grades, bridge spans and every building access width.",
+        "Keep water intakes, drainage, waste and fire/service access feasible.",
+        "If reservations and housing cannot fit, reduce the approved program or reject the site; do not silently drop core services.",
+        "Close each defensive ring on buildable land or report an explicit incomplete perimeter."
       ]
     },
     {

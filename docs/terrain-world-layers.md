@@ -16,9 +16,9 @@ The lab now defaults to recipe **3**, generation algorithm **16**, with sixteen 
 10. Founding, parent-race settlement rounds after magical biome classification
 11. Roads
 12. Populated regions, supporting hamlets and supply
-13. Beasties and animals
-14. Age transition 1
-15. Age transition 2
+13. Beasties and animals (then regional threat assessment)
+14. Age transition 1 (ends with refreshed threat assessment)
+15. Age transition 2 (ends with refreshed threat assessment)
 16. Simulation complete
 
 `POST /world/generate` accepts recipe **3** only, e.g. `{"recipe_version":3,"seed":42,"overrides":{"size":33,"phase":16}}`. Omitted recipe versions, the publishing CLI and the lab all default to 3. Recipes 1 and 2 are retired and rejected: existing worlds must be regenerated. Seed compatibility with those recipes is intentionally broken by the clean-start biome migration. Recipe 3 replays deterministically from its exported `Config`, including `world_options`. The standalone `world_recipe=0` geometry experiment remains a development tool, uses the current biome rules, and does not promise historical seed/save compatibility.
@@ -72,6 +72,10 @@ Ruins retain a stable city UID, founding age, destruction age, source culture, p
 After all fates are decided, line and key-point intensities evolve independently by seeded factors 0.65–1.35, bounded at 4. Magical self-destruction leaves an intensity-2.5 Weave key point at the ruin. Then natural/environmental reports and magical variants are recalculated, civilization placement runs again against updated habitat, and roads, supporting hamlets, forts, colleges, fisheries and food budgets are rebuilt using active cities only. New eligible cities may appear within each people's remaining habitat capacity after survivors are counted; none are forced. Existing survivors persist, while current population/support estimates are recalculated. This is not a conserved population migration model.
 
 Nests are reevaluated before city fates and after each age so all ages see current habitat and settlement clearance. Independent sky settlements are refreshed through the existing support model; surface-city ruin history does not yet simulate sky-city mortality or displaced populations. `history.ages` records losses, survivor UIDs and new city UIDs. Simulation complete freezes the second age's state.
+
+### Regional threat assessments (schema 1)
+
+After beast nests (stage 13) and again after each age transition (including `advance-age`), the world exports `threat_assessments`. Each active city receives a `regional_threat` in [0, 1] from eligible fantasy nest pressure (dragons and infernal/undead/aberrant families within the same reach rules as age-fate weights) plus dominant local leyline potency. Magical self-destruction is excluded from the standing score. Assessments are deterministic, versioned, and stage-isolated: earlier snapshots never expose later ages' scores. City fortification and capital multi-ring shape preference consume the latest assessment at plan time. Real-animal nests do not contribute; the score is not a creature count or hostility AI.
 
 ### Verification and boundaries
 
@@ -174,7 +178,7 @@ The atlas has a nest toggle, species filter (including absent species), location
 
 The API validates recipe 3 / algorithm 12 through stage 13 or later, settlement/civilization identity and classification, supported magic/history versions, grid dimensions, finite numbers, spherical seams/poles, natural biome IDs, city/node locations, physical scale, and network IDs/endpoints/intensities. Invalid requests return HTTP 400. At most 128 leyline edits are accepted per request. Nodes are bounded to 1,024 and lines to 4,096 per school. The endpoint's body ceiling is 256 MiB (other lab JSON requests retain 64 KiB). Very large worlds can omit `build_stages` when only the current state is needed; the core age operation does not depend on visual history.
 
-Player leyline edits are applied before environmental/biome refresh. **Creature nests are recalculated before each age's city-fate decisions and again after the age's biome/civilization rebuild**, and export `evaluated_age`. Thus time skips and significant player changes do not reuse an obsolete creature distribution. The surface geography is preserved through these civilization ages. Terrain-changing player systems must supply coherent rebuilt hydrology/climate before using this boundary.
+Player leyline edits are applied before environmental/biome refresh. **Creature nests are recalculated before each age's city-fate decisions and again after the age's biome/civilization rebuild**, and export `evaluated_age`. **Regional threat assessments refresh after those post-age nests** (and once after the initial beasties stage). Thus time skips and significant player changes do not reuse an obsolete creature distribution or fortification threat score. The surface geography is preserved through these civilization ages. Terrain-changing player systems must supply coherent rebuilt hydrology/climate before using this boundary.
 
 `history.operations` records API steps and leyline edits. `history.ages` records each outcome. When supplied, saved build history gains an inspectable step for each additional age. Genesis `config.phase` remains within its 1–16 recipe range; `phases.completed` can exceed 16 in an advanced world. Config-only replay reconstructs genesis; persist the returned runtime state and operation record to preserve player actions. There is no database, authentication service, multiplayer arbitration, or Unreal save importer in this loopback lab.
 

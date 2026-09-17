@@ -2,7 +2,7 @@
 
 See [capabilities and coordinates v1](../Contracts/capabilities-and-coordinates.md) for the exact globe/tangent axes, building rotation convention, datum, projection differences and consumer negotiation. The coordinate oracle is an independent reference, not an engine adapter.
 
-Algorithm 16 uses magic report 4 and city planner 4. Regenerate worlds from earlier algorithms. Existing authored school node counts, occurrence, strength, width, variation and intensity controls remain supported. No new potential asset IDs are introduced.
+Algorithm 16 uses magic report 4 and city planner 5. Regenerate worlds from earlier algorithms. Existing authored school node counts, occurrence, strength, width, variation and intensity controls remain supported. No new potential asset IDs are introduced.
 
 ## Magical geography
 

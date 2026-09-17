@@ -16,7 +16,7 @@
 
   const phaseLabel=make('label','Placement pass ',controls),phase=make('select',undefined,phaseLabel);
 
-  for(const [v,t] of [['high','3 · High priority'],['high_housing','4 · Their houses'],['low','5 · Low priority'],['low_housing','6 · Their houses']]){const o=make('option',t,phase);o.value=v;}
+  for(const [v,t] of [['fortification','2 · Walls and gates'],['high','3 · High priority'],['high_housing','4 · Their houses'],['low','5 · Low priority'],['low_housing','6 · Their houses']]){const o=make('option',t,phase);o.value=v;}
 
   phase.value='low_housing';
 
@@ -30,7 +30,7 @@
 
   const zoomLabel=make('label','Zoom ',controls),zoom=make('input',undefined,zoomLabel);zoom.type='range';zoom.min=1;zoom.max=4;zoom.step=.25;zoom.value=1;
 
-  make('p','Gold: core services · Purple: other services · Blue: worker houses · Gray: streets · Terrain: natural biome colors · Magic: colored outlines · Orange: world-road junctions. Outlined plots include setbacks.',dialog);
+  make('p','Gold: core services · Purple: other services · Blue: worker houses · Gray: streets · Brown: city walls · Terrain: natural biome colors · Magic: colored outlines · Orange: world-road junctions. Outlined plots include setbacks.',dialog);
 
   const viewport=make('div',undefined,dialog);viewport.style.cssText='overflow:auto;max-height:65vh;background:#172d28;border:1px solid #526473';
 
@@ -52,7 +52,7 @@
 
   let current=null;
 
-  const order=['high','high_housing','low','low_housing'];
+  const order=['fortification','high','high_housing','low','low_housing'];
 
   function drawCity(){
 
@@ -73,6 +73,15 @@
       for(const [dx,dz,u,w]of [[0,-1,[a,b],[a+cell,b]],[1,0,[a+cell,b],[a+cell,b+cell]],[0,1,[a+cell,b+cell],[a,b+cell]],[-1,0,[a,b+cell],[a,b]]])if(p.terrain.biome_variant?.[z+dz]?.[x+dx]!==v){line(u,w,'#dde6dd',1.4);line(u,w,`rgb(${c.join(',')})`,.7);}}
     for(const c of p.road_connections||[])if(c.status==='connected')for(let i=1;i<c.local_path_m.length;i++)line(c.local_path_m[i-1],c.local_path_m[i],'#edbc83',4);
 
+    for(const ring of p.fortifications?.rings||[]){
+      const pts=ring.polyline_m||[];
+      for(let i=0;i<pts.length;i++)line(pts[i],pts[(i+1)%pts.length],'#6b4a2e',3.2);
+    }
+    for(const gate of p.fortifications?.gates||[]){
+      const m=document.createElementNS(ns,'circle');
+      for(const [k,v]of Object.entries({cx:gate.position_m[0],cy:gate.position_m[1],r:3.5,fill:'#c4a35a',stroke:'#2a1a0c','stroke-width':.6}))m.setAttribute(k,v);
+      svg.append(m);
+    }
 
     const shown=p.plots.filter(b=>order.indexOf(b.phase)<=order.indexOf(phase.value)).map(b=>b.housing_upgrade&&order.indexOf(b.housing_upgrade.phase)>order.indexOf(phase.value)?{...b,...b.housing_upgrade.previous}:b);
 
