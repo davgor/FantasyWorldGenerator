@@ -39,7 +39,7 @@ class NativeCounterTests(unittest.TestCase):
         compiler=shutil.which('clang++') or shutil.which('g++')
         if compiler is None:
             self.skipTest('headless native proof requires a C++17 compiler; Python reference remains standalone')
-        flags=shlex.split(os.environ.get('MATHLAB_CXXFLAGS',''))
+        flags=shlex.split(os.environ.get('FANTASY_WORLD_GENERATOR_CXXFLAGS',''))
         if sys.platform == 'darwin':
             sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True).strip()
             headers=Path(sdk)/'usr/include/c++/v1'
@@ -51,8 +51,8 @@ class NativeCounterTests(unittest.TestCase):
         declarations+='\nauto first_command='+command(fixture['first_command'])+';'
         declarations+='\nauto resume_command='+command(fixture['resume_command'])+';'
         harness=(ROOT/'Core/tests/counter_cases.inc').read_text()
-        source='#include "counter.hpp"\n#include <algorithm>\n#include <iostream>\n#include <stdexcept>\nusing namespace mathlab;\n'+harness.replace('/* SHARED_FIXTURES */',declarations)
-        with tempfile.TemporaryDirectory(prefix='mathlab-native-') as directory:
+        source='#include "counter.hpp"\n#include <algorithm>\n#include <iostream>\n#include <stdexcept>\nusing namespace fantasy_world_generator;\n'+harness.replace('/* SHARED_FIXTURES */',declarations)
+        with tempfile.TemporaryDirectory(prefix='fantasy-world-generator-native-') as directory:
             cpp=Path(directory)/'test.cpp'; binary=Path(directory)/'counter_test'
             cpp.write_text(source)
             built=subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags,

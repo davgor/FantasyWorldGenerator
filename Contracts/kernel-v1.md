@@ -8,7 +8,9 @@ Authoritative kernel values are integers in `[-9007199254740991, 900719925474099
 
 Random stream version 1 is an indexed SHA-256-based pseudorandom-word generator, not the legacy world's PRNG. `kernel_numeric.random_word(seed, stream, index, version=1)` is a pure function. The seed is exactly 16 lowercase hexadecimal digits representing an unsigned 64-bit word. Stream names match `[a-z][a-z0-9._-]{0,63}`; indices are integers from 0 through 9007199254740991. There is no global RNG state or implicit counter advance, and indices cannot wrap.
 
-Hash this byte sequence with SHA-256, take its first eight bytes in network/big-endian order, and return 16 lowercase hexadecimal digits:
+Hash this byte sequence with SHA-256, take its first eight bytes in network/big-endian order, and return 16 lowercase hexadecimal digits.
+
+The ASCII prefix `MathLab/stream/v1` is the frozen kernel v1 hash-domain label. It is not the product name. Changing it would break every existing kernel-numeric fixture and saved stream word.
 
 ```text
 ASCII "MathLab/stream/v1" + NUL
@@ -34,7 +36,7 @@ The value domain is null, booleans, bounded integers, Unicode scalar strings, ar
 
 ## Identity, envelopes and failures (ML-01d)
 
-Structural envelopes are in [`schemas/counter-kernel.schema.json`](schemas/counter-kernel.schema.json). Version 1 includes `mathlab.counter-state`, `mathlab.counter-event`, `mathlab.counter-command`, `mathlab.counter-candidate`, and `mathlab.failure`. State also declares `rules_version: 1` and `numeric_version: 1`. Unknown schema IDs or versions are rejected; there is no migration or fallback. Extra or missing fields are invalid. Standard JSON Schema cannot enforce every lexical/accounting rule: the strict decoder and semantic oracle remain required, including rejection of floating integer-valued tokens such as 1.0.
+Structural envelopes are in [`schemas/counter-kernel.schema.json`](schemas/counter-kernel.schema.json). Version 1 includes `fantasy-world-generator.counter-state`, `fantasy-world-generator.counter-event`, `fantasy-world-generator.counter-command`, `fantasy-world-generator.counter-candidate`, and `fantasy-world-generator.failure`. State also declares `rules_version: 1` and `numeric_version: 1`. Unknown schema IDs or versions are rejected; there is no migration or fallback. Extra or missing fields are invalid. Standard JSON Schema cannot enforce every lexical/accounting rule: the strict decoder and semantic oracle remain required, including rejection of floating integer-valued tokens such as 1.0.
 
 IDs are ASCII strings with a type prefix (`world:`, `actor:`, `event:`, `counter:`), followed by `[a-z0-9][a-z0-9._-]{0,63}`. The host allocates a stable unique world ID and preserves it with saves. Actor, event and target IDs are scoped by that world; they are not display names, array indices, UObject pointers or derived from presentation details. The first rule supports only `counter:main`. A wrong world or unsupported target fails. Actor IDs identify already accepted host facts: the kernel does not authenticate an actor or establish ownership of arbitrary resources.
 

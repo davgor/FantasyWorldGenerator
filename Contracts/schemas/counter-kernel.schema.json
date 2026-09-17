@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "MathLab bounded counter proof v1",
+  "title": "FantasyWorldGenerator bounded counter proof v1",
   "description": "Structural envelope schema. The canonical decoder and oracle additionally enforce integer token types, identity/order/accounting, byte limits and interval semantics.",
   "oneOf": [
     {
@@ -34,7 +34,7 @@
       ],
       "properties": {
         "schema": {
-          "const": "mathlab.counter-event"
+          "const": "fantasy-world-generator.counter-event"
         },
         "schema_version": {
           "const": 1
@@ -125,7 +125,7 @@
       ],
       "properties": {
         "schema": {
-          "const": "mathlab.counter-state"
+          "const": "fantasy-world-generator.counter-state"
         },
         "schema_version": {
           "const": 1
@@ -194,7 +194,7 @@
       ],
       "properties": {
         "schema": {
-          "const": "mathlab.counter-command"
+          "const": "fantasy-world-generator.counter-command"
         },
         "schema_version": {
           "const": 1
@@ -246,7 +246,7 @@
       ],
       "properties": {
         "schema": {
-          "const": "mathlab.counter-candidate"
+          "const": "fantasy-world-generator.counter-candidate"
         },
         "schema_version": {
           "const": 1
@@ -285,7 +285,7 @@
       ],
       "properties": {
         "schema": {
-          "const": "mathlab.failure"
+          "const": "fantasy-world-generator.failure"
         },
         "schema_version": {
           "const": 1

@@ -2,7 +2,7 @@
 #include <array>
 #include <limits>
 
-namespace mathlab {
+namespace fantasy_world_generator {
 namespace {
 // SHA-256 constants and recurrence: NIST FIPS 180-4 sections 4.2.2, 5.3.3, 6.2.
 constexpr std::array<std::uint32_t,64> constants{{
@@ -68,7 +68,8 @@ std::string random_word(const std::string& seed,const std::string& stream,std::i
     numeric_version(version);auto seed_value=word_value(seed);
     if(stream.empty() || stream.size()>64 || stream[0]<'a' || stream[0]>'z' || index<0 || index>max_safe) throw Error("INVALID_INPUT");
     for(char c:stream) if(!((c>='a' && c<='z') || (c>='0' && c<='9') || c=='.' || c=='_' || c=='-')) throw Error("INVALID_INPUT");
-    std::string frame="MathLab/stream/v1";frame+='\0';network_word(frame,seed_value);
+    std::string frame="MathLab/stream/v1"; // frozen kernel v1 domain; not the product name
+    frame+='\0';network_word(frame,seed_value);
     frame+=static_cast<char>(stream.size());frame+=stream;network_word(frame,static_cast<std::uint64_t>(index));
     return sha256(frame).substr(0,16);
 }

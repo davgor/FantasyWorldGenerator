@@ -1,6 +1,6 @@
 # FantasyWorldGenerator
 
-Independent MathLab simulation repository and future producer of the versioned Unreal plugin consumed by the separate anime game project.
+Independent FantasyWorldGenerator simulation repository and future producer of the versioned Unreal plugin consumed by the separate anime game project.
 
 ## Start here
 

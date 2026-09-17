@@ -87,6 +87,7 @@ jobs:
             echo "Source revision has been superseded; the newer main run will publish."
             exit 0
           fi
+          # Frozen GitHub Pages directory (live URL /mathlab/); not the product name.
           cp Artifacts/showcase/* Artifacts/portfolio/public/mathlab/
           cd Artifacts/portfolio
           git config user.name "Fantasy World Generator publishing"

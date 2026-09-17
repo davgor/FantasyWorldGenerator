@@ -4,7 +4,7 @@
 
 This slice is epic items 2 and 3: the UnrealWorldGen importer (Z-up, centimetres, Landscape, registry, hub) and the packaged Win64 generate → materialize loop. It runs against the **native** generate API from [ML-03d](ML-03d.md) (epic item 1). Sibling **UnrealWorldGen** (Unreal 5.8, local Win64) pulls a plugin from FantasyWorldGenerator `main` and proves the **same** path in PIE and in a **packaged Win64** build, with no Python.
 
-1. Merges to `main` produce a source-inclusive `MathLabRuntime` archive for `Plugins/`.
+1. Merges to `main` produce a source-inclusive `FantasyWorldGenerator` archive for `Plugins/`.
 2. The game uses the plugin generate/capability/sample/registry API.
 3. Hub: capsule pawn, use object, loading screen, random uint32 seed, in-process generate, Z-up Landscape unwrap:
    - Heights from on-demand detailed samples (same function as buildings/roads)
@@ -23,7 +23,9 @@ Debug look is allowed. Architecture (frame, sampling, registry, cooked generate)
 
 ### Package
 
-`Unreal/MathLabRuntime/`: `.uplugin`, runtime module wrapping `Core/`. Packaging tool + CI source archive. Qualification report for the local cook includes package digest, engine patch, Win64 target, `genesis: native-core`. `unreal_qualified` becomes true for this consumer only after the packaged loop passes.
+`Unreal/FantasyWorldGenerator/`: `.uplugin`, runtime module wrapping `Core/`. Packaging tool + CI source archive. Qualification report for the local cook includes package digest, engine patch, Win64 target, `genesis: native-core`. `unreal_qualified` becomes true for this consumer only after the packaged loop passes.
+
+The 2026-09-17 skeleton still **mirrors** Core frame/validation in `FantasyWorldGeneratorFrame.h` with compile-time asserts against `genesis.hpp`. ML-03e must compile Core `.cpp` (except tests) into the module, delete that mirror, and stop shipping a second copy of the rules (PK10). A numeric Core entry point is required for Landscape samples; JSON decimal strings per vertex are not that API.
 
 ### Translation
 

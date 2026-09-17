@@ -1,6 +1,6 @@
 #include "json.hpp"
 
-namespace mathlab::json {
+namespace fantasy_world_generator::json {
 namespace {
 void require(bool ok) { if (!ok) throw Error("INVALID_INPUT"); }
 bool digit(char c) { return c>='0' && c<='9'; }

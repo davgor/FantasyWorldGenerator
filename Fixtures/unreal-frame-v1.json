@@ -1,0 +1,24 @@
+{
+  "description": "Source local metres (east, up, north) to Unreal centimetres (east, north, up). Hand-authored; do not regenerate from an Unreal session. Kernel JSON excludes floats, so a source offset is a JSON integer or an exact decimal string and centimetres are exact integers. Float consumers: relative 1e-12, absolute 1e-9.",
+  "mapping": {
+    "unreal_x": "east_m * 100",
+    "unreal_y": "north_m * 100",
+    "unreal_z": "up_m * 100",
+    "scale_unit_axes": false,
+    "winding": "reverse source indices for left-handed Unreal"
+  },
+  "valid": [
+    {"name": "east is Unreal +X", "east_m": "1", "up_m": "0", "north_m": "0", "expected_cm": [100, 0, 0]},
+    {"name": "north is Unreal +Y", "east_m": "0", "up_m": "0", "north_m": "1", "expected_cm": [0, 100, 0]},
+    {"name": "up is Unreal +Z not Y", "east_m": "0", "up_m": "1", "north_m": "0", "expected_cm": [0, 0, 100]},
+    {"name": "combined offset", "east_m": "2", "up_m": "0.5", "north_m": "-3", "expected_cm": [200, -300, 50]},
+    {"name": "negative height", "east_m": "0", "up_m": "-0.01", "north_m": "0", "expected_cm": [0, 0, -1]}
+  ],
+  "invalid_generate": [
+    {"recipe_version": 2, "seed": 1},
+    {"recipe_version": 3, "seed": -1},
+    {"recipe_version": 3, "seed": 4294967296},
+    {"recipe_version": 3, "seed": 1, "overrides": {"size": 258}},
+    {"recipe_version": 3, "seed": 1, "overrides": {"shape": "plane"}}
+  ]
+}

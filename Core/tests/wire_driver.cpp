@@ -6,7 +6,7 @@
 #include <locale>
 
 int main(int argc,char** argv) {
-    using namespace mathlab;
+    using namespace fantasy_world_generator;
     try {
         if(argc!=2) throw Error("INVALID_INPUT");
         std::string bytes;char c;

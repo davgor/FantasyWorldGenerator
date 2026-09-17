@@ -38,7 +38,7 @@ def mappings(source: Path):
         "board/done/LAB-017.md",
         "board/done/LAB-018.md",
     ):
-        yield relative, relative, "Canonical MathLab documentation, dependency, or historical evidence"
+        yield relative, relative, "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     for name in ("LAB-005.md", "LAB-006.md", "LAB-017.md", "LAB-018.md"):
         yield f"docs/reviews/{name}", f"provenance/source-reviews/{name}", "Historical source review retained outside the active review namespace"
     yield "docs/catalogue/world-assets/manifest.json", "Contracts/catalogues/world-assets.json", "Pinned semantic asset-requirement input; Unreal assets and bindings remain game-owned"

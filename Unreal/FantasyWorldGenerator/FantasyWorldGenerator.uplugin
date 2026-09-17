@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "FantasyWorldGenerator Runtime",
+	"Description": "FantasyWorldGenerator runtime boundary: source-to-Unreal frame and generate-request validation. Native world generate, importer, Landscape and asset registry are not implemented yet.",
+	"Category": "FantasyWorldGenerator",
+	"CreatedBy": "David Gorden",
+	"EngineVersion": "5.8.0",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"Installed": false,
+	"EnabledByDefault": false,
+	"Modules": [
+		{
+			"Name": "FantasyWorldGenerator",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}

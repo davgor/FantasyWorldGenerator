@@ -64,7 +64,7 @@ def main():
                                       seed=seed, recipe=world['recipe'], bytes=len(payloads[filename]),
                                       sha256=hashlib.sha256(payloads[filename]).hexdigest()))
         print(slug, len(payloads[filename]), 'bytes', flush=True)
-    template = Path(__file__).with_name('mathlab-showcase.html').read_text(encoding='utf-8')
+    template = Path(__file__).with_name('fantasy-world-generator-showcase.html').read_text(encoding='utf-8')
     options = ''.join(f'<option value="{w[0]}">{escape(w[1])}</option>' for w in WORLDS)
     descriptions = json.dumps({w[0]: f'{w[4]} Seed {w[2]}.' for w in WORLDS})
     largest = max(w['bytes'] for w in manifest['worlds']) / 1_000_000

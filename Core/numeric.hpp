@@ -1,6 +1,6 @@
 #pragma once
 #include "json.hpp"
-namespace mathlab {
+namespace fantasy_world_generator {
 // Bounded contract hashing, not a cryptographic authentication API.
 std::string sha256(const std::string& bytes);
 std::string digest(const json::Value& value);

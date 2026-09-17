@@ -4,7 +4,7 @@ On 2026-09-16 the owner selected sibling project `UnrealWorldGen` as the first U
 
 ## Decision
 
-- FantasyWorldGenerator owns `Unreal/MathLabRuntime/`. UnrealWorldGen consumes that plugin and does not fork generator rules.
+- FantasyWorldGenerator owns `Unreal/FantasyWorldGenerator/`. UnrealWorldGen consumes that plugin and does not fork generator rules.
 - **In this epic (ML-03), all required:** (1) `.uplugin` plus in-process native **world** generate — Core is counter-only today; (2) UnrealWorldGen importer — Z-up, ×100, Landscape, registry; (3) packaged Win64 generate → materialize with package digest. Python world JSON does not close any of these.
 - **Forbidden:** HTTP to `terrain_lab.py`, spawning `python -m fantasy_world_generator`, Unreal Editor Python, or an embedded interpreter. The browser lab remains inspection-only.
 - Native API freeze includes on-demand detailed surface sampling and the [source-to-Unreal frame](../unreal-integration.md) (east→X, north→Y, up→Z, ×100 on lengths, winding reverse). Regional raster size is not the placement surface.

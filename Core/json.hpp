@@ -4,7 +4,7 @@
 #include <variant>
 #include <utility>
 
-namespace mathlab::json {
+namespace fantasy_world_generator::json {
 constexpr std::size_t max_bytes=1048576, max_nodes=16384, max_depth=32, max_text_bytes=4096;
 struct Value {
     using Array=std::vector<Value>;

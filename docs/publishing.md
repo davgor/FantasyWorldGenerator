@@ -23,14 +23,16 @@ The workflow uploads mutable-retention build evidence to GitHub Actions; it does
 ## Portfolio samples on GitHub Pages
 
 After each push/merge to this repository's `main`, the export workflow validates the repository,
-regenerates three recipe-3, 65-grid worlds (seeds 42, 73, 108), and pushes only `public/mathlab/` to
-[davgor.github.io](https://github.com/davgor/davgor.github.io). That commit triggers the portfolio's
+regenerates three recipe-3, 65-grid worlds (seeds 42, 73, 108), and pushes only the frozen
+published directory `public/mathlab/` to
+[davgor.github.io](https://github.com/davgor/davgor.github.io). That path is the existing GitHub Pages
+URL, not the product name; moving it would break the live showcase. That commit triggers the portfolio's
 normal Pages deployment, including browser tests. No cron or cross-repository personal token is used.
 Pull requests build and test the same samples but cannot publish. Manual workflow dispatch can retry
-publication. No-change exports do not create empty commits. The showcase replaces the old MathLab
+publication. No-change exports do not create empty commits. The showcase is the FantasyWorldGenerator
 section at [/mathlab/](https://davgor.github.io/mathlab/) and links back here.
 
-`tools/export_showcase.py` owns the sample recipes and uses `tools/mathlab-showcase.html` for the selector.
+`tools/export_showcase.py` owns the sample recipes and uses `tools/fantasy-world-generator-showcase.html` for the selector.
 Publication requires a clean source checkout. `--allow-dirty` is an explicit local-verification mode: its manifest records `source_dirty: true`, `publication_ready: false`, and the pages say “Uncommitted local preview.” The normal publication command still rejects uncommitted source. Run `python tools/export_showcase.py` to build `Artifacts/showcase`.
 Manifest format 3 records the exact generator commit, source-file hashes, recipes/overrides and HTML
 hashes. Wall-clock measurements are omitted as empty timing maps in these presentation exports for
@@ -45,7 +47,7 @@ leaves the previous deployment live. This is not an Unreal runtime or packaged-g
 
 `PORTFOLIO_DEPLOY_KEY` is an Actions secret holding a dedicated SSH key with write access only to
 `davgor/davgor.github.io`. Its public key is registered as a write-enabled deploy key on that repository.
-The workflow stages only the generated `public/mathlab` directory and uses a normal fast-forward push;
+The workflow stages only the generated `public/mathlab` directory (frozen published path) and uses a normal fast-forward push;
 concurrent portfolio edits cause failure rather than being overwritten. Re-run the source workflow to
 retry against the latest portfolio commit. Push runs are serialized without cancellation so older
 sample runs cannot overtake newer ones. Manual retries check that their source revision is still main.
@@ -63,6 +65,10 @@ Generation algorithm 9 uses standalone civilization entities. Building reference
 The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The exhaustive asset list includes 82 additional schematic potential identities (80 measured services and two housing types); these are not production art. Terrain recipe and algorithm remain unchanged.
 
 Algorithm 16 suspends sky islands. The Shattered Coast sample retains ocean archipelagos and coastal communities; its retired sky overrides are removed.
+
+## Local plugin source archive
+
+`tools/package_plugin.py` creates a deterministic content-addressed ZIP under `Artifacts/unreal/` containing the `Unreal/FantasyWorldGenerator/` source tree, the private license inside the copied plugin folder, and a manifest with per-file hashes. It is source-only: assets, build products, `.uasset`/`.umap` files, Python, and `/Game` content references are rejected rather than packaged. Its manifest records `genesis: native-core`, engine 5.8 / Win64, `native_generate: incomplete`, `core_vendored: false`, `unreal_qualified: false`, and `unreal_cooked_runtime: false`. The plugin tree now exists, but generate, the UnrealWorldGen importer, and the cooked Win64 loop are still open; a reproducible archive is an integrity identifier, not an engine-qualified release. The existing reference workflow does not build or upload it.
 
 ## Local native source proof
 

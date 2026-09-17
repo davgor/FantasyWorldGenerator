@@ -7,7 +7,7 @@
 #include <tuple>
 #include <vector>
 
-namespace mathlab {
+namespace fantasy_world_generator {
 constexpr std::int64_t max_safe = 9007199254740991LL;
 struct Error : std::runtime_error {
     std::string code;
@@ -31,7 +31,7 @@ struct Pending {
     bool operator==(const Pending& b) const { return target_time_ms == b.target_time_ms && events == b.events; }
 };
 struct Snapshot {
-    std::string schema = "mathlab.counter-state";
+    std::string schema = "fantasy-world-generator.counter-state";
     std::int64_t schema_version=1, rules_version=1, numeric_version=1;
     std::string world_id;
     std::int64_t authority_epoch=0, revision=0, time_ms=0, counter=0;

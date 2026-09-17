@@ -29,7 +29,7 @@
       "destination": "Sim/README.md",
       "destination_sha256": "0a32f4b0388625260cd476479645d0d37ad00c484f4a0e93242a29d70b5c3bfc",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Standalone commands, supported Python baseline, and future-ticket references replace source-monorepo instructions."
     },
     {
@@ -900,7 +900,7 @@
       "destination": "board/done/LAB-005.md",
       "destination_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "board/done/LAB-006.md",
@@ -908,7 +908,7 @@
       "destination": "board/done/LAB-006.md",
       "destination_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "board/done/LAB-017.md",
@@ -916,7 +916,7 @@
       "destination": "board/done/LAB-017.md",
       "destination_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "board/done/LAB-018.md",
@@ -924,7 +924,7 @@
       "destination": "board/done/LAB-018.md",
       "destination_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "docs/catalogue/creatures.json",
@@ -932,7 +932,7 @@
       "destination": "docs/catalogue/creatures.json",
       "destination_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "docs/catalogue/world-assets/AUDIT.md",
@@ -1218,7 +1218,7 @@
       "destination": "docs/decisions/014-mathlab-biome-gate.md",
       "destination_sha256": "59aa69d89d4f5e7dc2b783b031f0f70ac784f7bf8ec61376133e59851cfd314a",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
     },
     {
@@ -1227,7 +1227,7 @@
       "destination": "docs/mathlab-revisions.json",
       "destination_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
       "status": "exact",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence"
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
     },
     {
       "source": "docs/terrain-math-lab.md",
@@ -1235,7 +1235,7 @@
       "destination": "docs/terrain-math-lab.md",
       "destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revision": "revisions/recipe-2-history.json",
       "revisions": [
@@ -1268,7 +1268,7 @@
       "destination": "docs/terrain-world-layers.md",
       "destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
       "modification": "Hamlet planner documentation and lab wiring; see docs/hamlet-planner.md. Original extraction source hash retained.",
       "revisions": [
@@ -1439,7 +1439,7 @@
       "destination": "tools/terrain_lab.html",
       "destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
       "modification": "Hamlet planner documentation and lab wiring; see docs/hamlet-planner.md. Original extraction source hash retained.",
       "revisions": [
@@ -1515,7 +1515,7 @@
       "destination": "tools/terrain_lab.py",
       "destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
       "modification": "Launch recipe 2 by default and preserve explicit legacy phase defaults. Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained.",
       "revisions": [
@@ -1555,7 +1555,7 @@
       "destination": "tools/terrain_world.js",
       "destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
       "status": "modified",
-      "reason": "Canonical MathLab documentation, dependency, or historical evidence",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
       "revisions": [

@@ -21,7 +21,7 @@ class KernelContractTests(unittest.TestCase):
                 function(case['value'])
             self.assertEqual(failure.exception.code, case['code'])
             doc=failure.exception.document()
-            self.assertEqual(doc['schema'], 'mathlab.failure')
+            self.assertEqual(doc['schema'], 'fantasy-world-generator.failure')
             self.assertEqual(doc['schema_version'], 1)
 
     def test_types_ids_and_budget_fail_explicitly(self):

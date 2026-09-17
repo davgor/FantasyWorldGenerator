@@ -22,7 +22,7 @@ class CounterKernelTests(unittest.TestCase):
 
     def command(self, state=None, events=None, target=10, budget=64):
         state=self.state if state is None else state
-        return dict(schema='mathlab.counter-command',schema_version=1,world_id=state['world_id'],
+        return dict(schema='fantasy-world-generator.counter-command',schema_version=1,world_id=state['world_id'],
                     authority_epoch=state['authority_epoch'],expected_revision=state['revision'],
                     target_time_ms=target,budget=budget,events=[] if events is None else copy.deepcopy(events))
 

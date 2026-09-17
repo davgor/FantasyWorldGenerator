@@ -1,0 +1,8 @@
+[mcp_servers.unrealMCP]
+command = "uv"
+args = [
+    "--directory",
+    'C:\Users\davgo\Documents\GitHub\UnrealWorldGen\Tools\unreal-mcp-python',
+    "run",
+    "unreal_mcp_server.py",
+]

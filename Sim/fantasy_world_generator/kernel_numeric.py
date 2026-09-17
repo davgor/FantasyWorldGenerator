@@ -96,6 +96,7 @@ def random_word(seed, stream, index, *, version=1):
         raise KernelError('INVALID_INPUT', 'invalid stream domain')
     integer(index, 'stream index')
     name = stream.encode('ascii')
+    # Frozen kernel v1 domain label; not the product name. Do not rename.
     frame = b'MathLab/stream/v1\0' + bytes.fromhex(seed) + bytes([len(name)]) + name + index.to_bytes(8, 'big')
     return hashlib.sha256(frame).hexdigest()[:16]
 

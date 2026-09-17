@@ -6,7 +6,7 @@ The catalogue is prepared now. Production stays in the backlog until started. No
 
 Build the following representative jobs in dependency order. Their acceptance establishes style, scale, density/texel targets and engine performance budgets before bulk production.
 
-Landscaping jobs first require the [source UE-014 biome gate](https://github.com/davgor/icarusUnreal/blob/d551767cb1c3bd259bb00f56be1e52c2182c5ec3/docs/epics/14-landscaping-pipeline.md): reconcile/backport decided definitions into MathLab and validate the exact revisions consumed by texture/foliage recipes. New or changed biomes cannot enter production on catalogue status alone. The existing list remains a job baseline, not evidence of validated layered-world coverage.
+Landscaping jobs first require the [source UE-014 biome gate](https://github.com/davgor/icarusUnreal/blob/d551767cb1c3bd259bb00f56be1e52c2182c5ec3/docs/epics/14-landscaping-pipeline.md): reconcile/backport decided definitions into FantasyWorldGenerator and validate the exact revisions consumed by texture/foliage recipes. New or changed biomes cannot enter production on catalogue status alone. The existing list remains a job baseline, not evidence of validated layered-world coverage.
 
 - [ ] `MAT-001` — Fertile loam (include its listed dependencies first).
 

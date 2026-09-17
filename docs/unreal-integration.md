@@ -66,13 +66,13 @@ Every identity in the exhaustive asset list has an Unreal registry row: object p
 
 Python can already write world JSON. That is not Unreal setup. ML-03 must close all three:
 
-1. `.uplugin` (`MathLabRuntime`) and an in-process native generate API. `Core/` today is the counter only; world genesis is in scope ([ML-03d](../board/backlog/ML-03d.md)).
+1. `.uplugin` (`FantasyWorldGenerator`) and an in-process native generate API. `Core/` today is the counter only; world genesis is in scope ([ML-03d](../board/backlog/ML-03d.md)).
 2. UnrealWorldGen importer: Z-up / centimetre mapping in this document, Landscape, asset-ID registry ([ML-03e](../board/backlog/ML-03e.md)).
 3. Packaged Win64 generate → materialize loop with an exact package digest (ML-03e). Editor PIE does not close the epic.
 
 See [decision 018](decisions/018-unrealworldgen-dev-consumer.md) and parent [ML-03](../board/in-progress/ML-03.md).
 
-The first engine host is sibling project **UnrealWorldGen** (Unreal 5.8, local Win64). The plugin is owned here at `Unreal/MathLabRuntime/`. See [decision 018](decisions/018-unrealworldgen-dev-consumer.md), [ML-03d](../board/backlog/ML-03d.md), and [ML-03e](../board/backlog/ML-03e.md).
+The first engine host is sibling project **UnrealWorldGen** (Unreal 5.8, local Win64). The plugin is owned here at `Unreal/FantasyWorldGenerator/`. See [decision 018](decisions/018-unrealworldgen-dev-consumer.md), [ML-03d](../board/backlog/ML-03d.md), and [ML-03e](../board/backlog/ML-03e.md).
 
 - Genesis is in-process native `Core/` code. No Python lab, spawned Python, or embedded interpreter.
 - ML-03d proves native generate, on-demand sampling, axis fixtures, and catalogue-complete registry schema **headlessly** before UnrealWorldGen maps.
@@ -82,6 +82,16 @@ The first engine host is sibling project **UnrealWorldGen** (Unreal 5.8, local W
 
 Hub gameplay lives in UnrealWorldGen.
 
+### Plugin tree status
+
+`Unreal/FantasyWorldGenerator/` now exists as a runtime-module skeleton: one Win64 `Runtime` module, the metres-to-centimetre frame conversion above, generate-request validation (recipe 3, uint32 seed, raster 1–257, tectonic globe), and a `UFantasyWorldGeneratorSubsystem` that reports `bNativeGenerateAvailable`, `bCoreGenesisLinked` and `bUnrealQualified` as false. `CanContainContent` is false and no `/Game` path is referenced, so it carries no consumer content.
+
+Native world generate, on-demand sampling, Landscape, water, hub, and asset-ID registry materialization are still open ([ML-03d](../board/backlog/ML-03d.md), [ML-03e](../board/backlog/ML-03e.md)). Its frame and validation rules are a **temporary private mirror** of the Core genesis rules, reporting the same failure codes. `FantasyWorldGenerator.Build.cs` resolves a `Core/` include path and the module static-asserts Core's recipe, seed, grid and centimetre constants, so the mirror cannot drift silently; no Core translation unit is compiled or linked yet. `Core/` stays free of UObject types.
+
+Core transports request offsets as exact whole metres or bounded decimal strings so float rounding never enters the centimetre frame. Compiling Core into the module therefore also needs a numeric Core entry point, so an adapter can convert sampled Landscape and foundation heights without formatting decimal strings per vertex.
+
+The plugin has not been compiled by Unreal Build Tool, enabled in UnrealWorldGen, loaded by an editor, or cooked. `tests/test_plugin_frame.py` checks only the engine-independent rules headlessly.
+
 ## Import sequence
 
 1. Validate the native/JSON envelope and supported recipe version.
@@ -90,4 +100,4 @@ Hub gameplay lives in UnrealWorldGen.
 4. Materialize settlements, structures, roads, and nest anchors on the sampled surface without adding unsupported inhabitants or resources.
 5. Store generator version, seed, resolved configuration, source digest, importer version, and cooked package digest with the created world.
 
-A bounded headless C++ counter core is available in `Core/`; world generate, `.uplugin`, importer, and cooked loop are the open ML-03 push-to-Unreal items, not out-of-epic work.
+A bounded headless C++ counter core is available in `Core/` and the `.uplugin` tree exists but is uncompiled; native world generate, the importer, and the cooked loop are the open ML-03 push-to-Unreal items, not out-of-epic work.

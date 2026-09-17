@@ -1,4 +1,4 @@
-# MathLab ticket board
+# FantasyWorldGenerator ticket board
 
 - `in-progress/` contains active work with recorded scope and evidence.
 - `backlog/` contains reviewed, dependency-ordered work that is not yet active.

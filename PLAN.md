@@ -1,12 +1,12 @@
-# MathLab producer — standalone repository handoff
+# FantasyWorldGenerator producer — standalone repository handoff
 
 Planning revision 5 · 15 September 2026. Copy this complete file into its target repository as the working plan. It embeds the package contract and relevant canonical requirements. Any counterpart links provide context; the required scope and first actions are included here. All extraction, implementation and release work remains planned.
 
 
 ## Included sections
 
-- [MathLab repository plan](#18-mathlab-repository-plan)
-- [MathLab → Unreal game package contract](#20-mathlab-unreal-package-contract)
+- [FantasyWorldGenerator repository plan](#18-fantasy-world-generator-repository-plan)
+- [FantasyWorldGenerator → Unreal game package contract](#20-fantasy-world-generator-unreal-package-contract)
 - [World simulation and persistent consequences](#13-world-simulation-and-consequences)
 - [Systemic settlements and procedural construction](#16-settlements-and-procedural-construction)
 - [Magical labor, domains and emergent civilization](#17-magical-labor-and-civilization)
@@ -16,11 +16,11 @@ Planning revision 5 · 15 September 2026. Copy this complete file into its targe
 
 ---
 
-<a id="18-mathlab-repository-plan"></a>
+<a id="18-fantasy-world-generator-repository-plan"></a>
 
-# MathLab repository plan
+# FantasyWorldGenerator repository plan
 
-**Repository: [davgor/FantasyWorldGenerator](https://github.com/davgor/FantasyWorldGenerator), created by the user.** This is the MathLab producer plan for the local agent. User ownership: independent simulation work, using the developer/model of your choice. Extract the existing MathLab from `davgor/icarusUnreal`, evolve its portable simulation, and publish a versioned Unreal plugin consumed by the separate new game. This repository does not own the anime game or depend on its source/assets.
+**Repository: [davgor/FantasyWorldGenerator](https://github.com/davgor/FantasyWorldGenerator), created by the user.** This is the FantasyWorldGenerator producer plan for the local agent. User ownership: independent simulation work, using the developer/model of your choice. Extract the existing FantasyWorldGenerator from `davgor/icarusUnreal`, evolve its portable simulation, and publish a versioned Unreal plugin consumed by the separate new game. This repository does not own the anime game or depend on its source/assets.
 
 **Status:** planning and read-only source review. No repository was created, no files were removed from IcarusUnreal, no simulation code was changed and no package was built/published. Source baseline verified at `d551767cb1c3bd259bb00f56be1e52c2182c5ec3` on 15 September 2026. All new repo/ticket/module names are proposed.
 
@@ -55,14 +55,14 @@ Current named network keys are exactly `weave`, `umbral`, `infernal`, `holy`, `p
 | Regression suite | `Sim/tests/` and every fixture/input it actually reads |
 | Lab UI and server | `tools/terrain_lab.py`, `tools/terrain_lab.html`, `tools/terrain_world.js`; inspect any additional resolved imports before copying |
 | Known external-to-Sim test dependency | `docs/catalogue/creatures.json`: nest coverage test reads it through the repository root; include a versioned snapshot initially or deliberately replace with an equivalent pinned contract fixture |
-| Canonical lab docs | `docs/terrain-math-lab.md`, `docs/terrain-world-layers.md`, `docs/mathlab-revisions.json`; preservation/baseline manifests and relevant LAB tickets/reviews/biome-gate decision |
+| Canonical generator docs | `docs/terrain-math-lab.md`, `docs/terrain-world-layers.md`, `docs/mathlab-revisions.json`; preservation/baseline manifests and relevant LAB tickets/reviews/biome-gate decision |
 | Historical provenance | Relevant protected reference snapshots and notices; retain origin/hashes even if archived paths are relocated |
 | CI/config | Extract only relevant terrain/preservation/test commands and declared runtime/test dependencies; replace monorepo/game assumptions with standalone checks |
 | Stay with the game/reference | IcarusCreator code, `.uproject`, Unreal game assets, MetaHuman/DNA bindings, outfits, animation binaries, purchased art, game-specific authoring skills and unrelated tools |
 
-The allowlist is an extraction plan, not a certified complete dependency closure. The known creature-catalogue read must not be lost by copying only `Sim/`. Generic species/culture/recipe simulation definitions become versioned MathLab inputs; game art/bindings retain their own ownership. Avoid two independently edited catalogues with the same semantic IDs. File-copy extraction with provenance is acceptable; preserving filtered Git history is an alternative to choose when executing, not a reason to rewrite the source repo.
+The allowlist is an extraction plan, not a certified complete dependency closure. The known creature-catalogue read must not be lost by copying only `Sim/`. Generic species/culture/recipe simulation definitions become versioned FantasyWorldGenerator inputs; game art/bindings retain their own ownership. Avoid two independently edited catalogues with the same semantic IDs. File-copy extraction with provenance is acceptable; preserving filtered Git history is an alternative to choose when executing, not a reason to rewrite the source repo.
 
-Existing baseline commands, from the extracted root with equivalent paths: `PYTHONPATH=Sim python -m unittest discover -s Sim/tests -q` and `python tools/terrain_lab.py --serve`. Adapt environment syntax for the host shell. Run new standalone CI rather than assuming the original PowerShell game-wide wrapper is portable. No command was executed against a full MathLab checkout in this review.
+Existing baseline commands, from the extracted root with equivalent paths: `PYTHONPATH=Sim python -m unittest discover -s Sim/tests -q` and `python tools/terrain_lab.py --serve`. Adapt environment syntax for the host shell. Run new standalone CI rather than assuming the original PowerShell game-wide wrapper is portable. No command was executed against a full FantasyWorldGenerator checkout in this review.
 
 ## Repository layout and build independence
 
@@ -71,16 +71,16 @@ Existing baseline commands, from the extracted root with equivalent paths: `PYTH
 | `Sim/`, `tools/` | Preserved Python reference and browser workbench; ordinary development without Unreal |
 | `Core/` | Portable native simulation implementation and its headless tests |
 | `Contracts/`, `Fixtures/` | Versioned schemas, taxonomy/ID registry, semantic examples, conformance cases and expected outcomes |
-| `Unreal/MathLabRuntime/` | Generic runtime plugin wrapper and optional separate editor module; no game-specific asset bindings |
+| `Unreal/FantasyWorldGenerator/` | Generic runtime plugin wrapper and optional separate editor module; no game-specific asset bindings |
 | `Tests/UnrealConsumer/` | Minimal plugin consumer used for engine/cooked package qualification |
 | `docs/`, `board/`, `provenance/` | Canonical requirements, work tickets, actual evidence, open decisions and extraction history |
 | `release/` tooling | Build/export/manifest checks and immutable package publication; generated releases are artifacts |
 
 The proposed C++ kernel and plugin are new work. Keep the current Python baseline running while moving one supported rule at a time into a tested runtime core. Prefer workbench access to the same core once practical; if Python remains an independent oracle, every changed rule updates reviewed conformance cases in this repo. No duplicated shipping solver in the game repo.
 
-## Rules assigned to MathLab
+## Rules assigned to FantasyWorldGenerator
 
-| Domain | MathLab owns | Game supplies / consumes |
+| Domain | FantasyWorldGenerator owns | Game supplies / consumes |
 | --- | --- | --- |
 | World genesis | Terrain/climate/water/biome/habitat fields, stable layer/seed contracts, site/layout proposals | Validated definition inputs; actual Unreal terrain, materials and placement |
 | Structural consequences | Portable material eligibility, component damage/support failure, abstract critical-rubble outcomes and repair rules | Accepted hit IDs/magnitude and authored component/support/proxy definitions; Chaos/collision/nav execution |
@@ -94,7 +94,7 @@ The proposed C++ kernel and plugin are new work. Keep the current Python baselin
 | Civilization/history | State-derived classification and causal historical initialization/evolution | Original cultural content and physical explorable ruins |
 | Persistence/time | Portable state/events/serialization, stable identities, rule migrations, bounded step/replay and checkpoints | Game-owned durable storage, session clock/authority, networking and transaction commit |
 
-MathLab does not own body/face fitting, hair/ear/tail physics, character/outfit UI, apparel assets, combat input/animation/hit detection, Chaos trajectories, actual NavMesh, local behavior trees/perception, save-file durability, network transport or LLM deployment. Numeric work in those areas is not automatically a MathLab responsibility.
+FantasyWorldGenerator does not own body/face fitting, hair/ear/tail physics, character/outfit UI, apparel assets, combat input/animation/hit detection, Chaos trajectories, actual NavMesh, local behavior trees/perception, save-file durability, network transport or LLM deployment. Numeric work in those areas is not automatically a FantasyWorldGenerator responsibility.
 
 ## Required simulation outcomes
 
@@ -116,11 +116,11 @@ Ambient undead initially remain hostile to novice necromancers. Bound undead fol
 
 Faction decisions use supported knowledge, historical understanding, observed trends, confidence, resources, travel, relationships/treaties and prior outcomes. Friendly rulers can warn, offer conventional workers, negotiate, sanction, contain or intervene against severe risk. War remains conditional; an LLM is optional and cannot invent facts/resources. Villains understand the system, but section 21 supplied only that heading, so detailed manipulation tactics are not locked requirements.
 
-Classify civilization from real population/workforce, culture, buildings/infrastructure, economy, military, territory and magic with explained transitions/hysteresis. Historical Nature/Radiant/Arcane/Necrotic failures become physically explorable sites in the game; MathLab proves bounded causal scenarios and clearly distinguishes authored genesis from simulated history.
+Classify civilization from real population/workforce, culture, buildings/infrastructure, economy, military, territory and magic with explained transitions/hysteresis. Historical Nature/Radiant/Arcane/Necrotic failures become physically explorable sites in the game; FantasyWorldGenerator proves bounded causal scenarios and clearly distinguishes authored genesis from simulated history.
 
 ## Independent ticket sequence
 
-These new `ML-*` IDs belong to this plan; they are not existing `LAB-*` completion claims. Their dependencies are entirely within MathLab plus a supported Unreal SDK for plugin gates. They do not wait for character assets or a playable game.
+These new `ML-*` IDs belong to this plan; they are not existing `LAB-*` completion claims. Their dependencies are entirely within FantasyWorldGenerator plus a supported Unreal SDK for plugin gates. They do not wait for character assets or a playable game.
 
 | Ticket | Deliverable | Depends on | Required evidence |
 | --- | --- | --- | --- |
@@ -145,7 +145,7 @@ ML-03 proves packaging early; it does not block further Python rule experiments 
 
 Each ticket must state requested behavior, proposed mechanism, unresolved balance, consulted sources, changed files and observed evidence. Pure fixtures cover state/cost/event invariants, not merely values reread from the implementation. Keep critical threshold decisions stable under the declared numeric contract; version intentional legacy behavior changes. Use PK01–10 from the package contract and relevant WA/SA requirements in the supporting design sections of the standalone handoff.
 
-New biome/habitat definitions require MathLab behavior/distribution/transition evidence before the game produces dependent biome content, following the retained [biome validation decision](https://github.com/davgor/icarusUnreal/blob/d551767cb1c3bd259bb00f56be1e52c2182c5ec3/docs/decisions/014-mathlab-biome-gate.md). This gate does not block neutral creator rooms, base bodies or unrelated authored game assets.
+New biome/habitat definitions require FantasyWorldGenerator behavior/distribution/transition evidence before the game produces dependent biome content, following the retained [biome validation decision](https://github.com/davgor/icarusUnreal/blob/d551767cb1c3bd259bb00f56be1e52c2182c5ec3/docs/decisions/014-mathlab-biome-gate.md). This gate does not block neutral creator rooms, base bodies or unrelated authored game assets.
 
 Keep fast Python/core CI separate from Unreal package CI. The latter needs an available, properly configured supported engine/toolchain runner and a clean minimal consumer. A green Python suite cannot publish a release labeled cooked-runtime validated. Retain failed fixtures, performance workload/limits, source/artifact hashes and migration evidence. Release mechanics and permission setup are implementation tasks, not done by describing a workflow.
 
@@ -156,19 +156,19 @@ First local-agent action in `FantasyWorldGenerator`: read this complete plan, in
 
 ---
 
-<a id="20-mathlab-unreal-package-contract"></a>
+<a id="20-fantasy-world-generator-unreal-package-contract"></a>
 
-# MathLab → Unreal game package contract
+# FantasyWorldGenerator → Unreal game package contract
 
-**Contract draft 1, planning revision 5.** Requested boundary: `davgor/FantasyWorldGenerator` owns MathLab and publishes a versioned Unreal plugin; the new anime game repository consumes that package. The user has created the MathLab destination repo. Game repository, plugin/module and API names below remain proposals. No MathLab code extraction, plugin build, release or runtime integration was executed by this planning task.
+**Contract draft 1, planning revision 5.** Requested boundary: `davgor/FantasyWorldGenerator` owns FantasyWorldGenerator and publishes a versioned Unreal plugin; the new anime game repository consumes that package. The user has created the FantasyWorldGenerator destination repo. Game repository, plugin/module and API names below remain proposals. No FantasyWorldGenerator code extraction, plugin build, release or runtime integration was executed by this planning task.
 
 ## Ownership and dependency direction
 
-MathLab owns generic simulation definitions, schemas, rule implementation, reproducible fixtures and the Unreal plugin wrapper. The game owns content bindings, playable actions, input/UI, physical presentation, local actor AI, save storage/session authority and packaging of the complete game. MathLab has no dependency on the game repository, its `.uproject`, `/Game` asset paths or IcarusCreator/MetaHuman classes. A minimal consumer test project may live in MathLab to qualify its plugin.
+FantasyWorldGenerator owns generic simulation definitions, schemas, rule implementation, reproducible fixtures and the Unreal plugin wrapper. The game owns content bindings, playable actions, input/UI, physical presentation, local actor AI, save storage/session authority and packaging of the complete game. FantasyWorldGenerator has no dependency on the game repository, its `.uproject`, `/Game` asset paths or IcarusCreator/MetaHuman classes. A minimal consumer test project may live in FantasyWorldGenerator to qualify its plugin.
 
 ```mermaid
 flowchart TD
-  L["MathLab reference and fixtures"] --> K["Portable simulation kernel"]
+  L["FantasyWorldGenerator reference and fixtures"] --> K["Portable simulation kernel"]
   K --> P["Versioned Unreal plugin"]
   P --> G["Game dependency lock"]
   G --> H["Authoritative game host"]
@@ -183,11 +183,11 @@ Repository independence is a build/release boundary, not two live authorities. T
 
 ## What the Unreal package contains
 
-The required deliverable is a runtime-capable Unreal code plugin with a `.uplugin` descriptor, runtime module/build definitions, public API and supported rule/schema data. Proposed implementation: a portable native C++ kernel plus a thin Unreal runtime wrapper, with optional editor-only diagnostics in a separate module. Retain Python as the existing reference/workbench and use conformance fixtures while moving supported production rules into the kernel. Both implementations, where temporarily necessary, belong to MathLab; the game must not grow its own copy of the formulas.
+The required deliverable is a runtime-capable Unreal code plugin with a `.uplugin` descriptor, runtime module/build definitions, public API and supported rule/schema data. Proposed implementation: a portable native C++ kernel plus a thin Unreal runtime wrapper, with optional editor-only diagnostics in a separate module. Retain Python as the existing reference/workbench and use conformance fixtures while moving supported production rules into the kernel. Both implementations, where temporarily necessary, belong to FantasyWorldGenerator; the game must not grow its own copy of the formulas.
 
 This is an implementation proposal to prove early, not an existing automatic Python-to-C++ exporter. Epic documents code plugins and separate runtime/editor modules in its [plugin guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine). Its [Python guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python) identifies the built-in Python environment as editor tooling, not packaged gameplay. Therefore copying the current Python lab into a plugin is not the runtime plan. Embedding another interpreter or depending on a running Python server would require a separate deliberate change to this architecture.
 
-A source-inclusive plugin archive is the proposed baseline for independent distribution; validated precompiled binaries may be included for named engine/toolchain/platform/target combinations. An engine descriptor version is not proof of binary compatibility. Package qualification must actually compile/load the plugin and execute a cooked consumer. Ordinary MathLab Python/core work should not require an Unreal installation; only plugin build/acceptance jobs do.
+A source-inclusive plugin archive is the proposed baseline for independent distribution; validated precompiled binaries may be included for named engine/toolchain/platform/target combinations. An engine descriptor version is not proof of binary compatibility. Package qualification must actually compile/load the plugin and execute a cooked consumer. Ordinary FantasyWorldGenerator Python/core work should not require an Unreal installation; only plugin build/acceptance jobs do.
 
 An export-only baseline may publish world genesis/data and inspection tools, explicitly labeled without live simulation capability. Dynamic residue, jobs, nodes and factions require a runtime kernel release. A successful JSON export or editor import cannot mark that gate complete.
 
@@ -195,14 +195,14 @@ An export-only baseline may publish world genesis/data and inspection tools, exp
 
 | Release metadata | Required meaning |
 | --- | --- |
-| Identity | Package name/version, immutable artifact identifier/checksum, MathLab source commit and contract digest |
+| Identity | Package name/version, immutable artifact identifier/checksum, FantasyWorldGenerator source commit and contract digest |
 | Compatibility | Exact tested Unreal patch/build, toolchain, platform, architecture and Editor/Development/Shipping targets; source-build requirements |
 | Behavior | Rule, taxonomy, generator/seed, snapshot/event and content-definition schema versions; supported capability list |
 | Contents | Plugin source and qualified binaries/data, public contract, license/provenance notices, migration notes and fixture/evidence manifest |
 | Evidence | Core/reference comparison, clean consumer compile/load, cooked execution, save round-trip and scoped performance result; remaining gaps |
 | Upgrade | Compatible versions, required state/content migrations, retired IDs and rollback constraints |
 
-The game commits a proposed `Dependencies/mathlab.lock.json` naming an exact version/artifact digest and compatible rule/schema set. Fetch/install into the project's `Plugins/` area in a reproducible build step; the installed package is a dependency, not an editable source fork. Do not consume floating `main`, automatically install “latest,” or silently retune old saves on startup. Package distribution can use private release artifacts or another chosen registry; no public marketplace publication is required by this plan.
+The game commits a proposed `Dependencies/fantasy-world-generator.lock.json` naming an exact version/artifact digest and compatible rule/schema set. Fetch/install into the project's `Plugins/` area in a reproducible build step; the installed package is a dependency, not an editable source fork. Do not consume floating `main`, automatically install “latest,” or silently retune old saves on startup. Package distribution can use private release artifacts or another chosen registry; no public marketplace publication is required by this plan.
 
 An upgrade is a reviewable game dependency change: verify digest/version, compile, run shared fixtures and game adapter tests, load copied representative saves, perform a packaged gameplay smoke test, then adopt the lock change. Preserve previous package and save generations. If a migration is irreversible, rollback restores the compatible prior save/package pair; changing the lock alone cannot make a newer save readable by old code. Never update a running session's rules midway through an owned interval.
 
@@ -222,9 +222,9 @@ Names below describe intended operations, not existing exported functions. Suppo
 
 Minimum persistent families: structures/components/support and critical proxy references; region composition/residue; nodes/links; environment/ecology/hideouts/populations; settlement graph/claims/districts/plots; stock/work/job reservations; magical workers/bindings/infrastructure; Wells/domains/borders; knowledge/responses/classification/history; action/event receipts and scheduler checkpoints. Store definition identities and semantic data, not UObject pointers or raw transient actor/fragment indices.
 
-Game → plugin commands are accepted gameplay facts, not raw keyboard events or animation notifications. Unreal validates actor authorization, target contact, local collision/range and action resource eligibility. MathLab validates the relevant rule, component/material eligibility, schema/revision and transition. Document which layer owns each cost/effect so neither spends it twice. The structural solver receives authored support/material definitions; it does not infer an engineering model from any arbitrary mesh.
+Game → plugin commands are accepted gameplay facts, not raw keyboard events or animation notifications. Unreal validates actor authorization, target contact, local collision/range and action resource eligibility. FantasyWorldGenerator validates the relevant rule, component/material eligibility, schema/revision and transition. Document which layer owns each cost/effect so neither spends it twice. The structural solver receives authored support/material definitions; it does not infer an engineering model from any arbitrary mesh.
 
-MathLab → game outputs include authoritative logical transitions and semantic events. Game code binds structure/component IDs to prepared meshes, Chaos/ruin proxies and navigation updates; environment fields to anime materials/foliage/VFX; population reservations to actual actors; faction orders to travel/dialogue/combat execution. Completed engine actions return new accepted events. Rendering never becomes the source of magical influence, ownership or threat knowledge.
+FantasyWorldGenerator → game outputs include authoritative logical transitions and semantic events. Game code binds structure/component IDs to prepared meshes, Chaos/ruin proxies and navigation updates; environment fields to anime materials/foliage/VFX; population reservations to actual actors; faction orders to travel/dialogue/combat execution. Completed engine actions return new accepted events. Rendering never becomes the source of magical influence, ownership or threat knowledge.
 
 ## One commit, one interval, one result
 
@@ -240,32 +240,32 @@ Public spatial records declare world/layer IDs, coordinate frame/origin, units, 
 
 Keep terrain/genesis, architectural variation, ecology placement, structural presentation and cosmetics on independent versioned seed streams. Save actual component outcomes/critical geometry, worker/resource progress and persistent overrides separately. Seeded fixtures do not imply identical Python/C++ random streams or Chaos trajectories. Adopt an explicit PRNG/hash/numeric/order contract for the kernel and version any difference from legacy outputs; conformance thresholds must not hide different lifecycle decisions.
 
-MathLab owns stable semantic taxonomy/definition schemas and baseline simulation profiles. The game owns anime assets, fitted cosmetics, authored modules and their bindings, and may supply validated gameplay-specific recipe/worker/capability profiles. These profiles use contract IDs, not package-specific UObject knowledge inside the kernel. Share a versioned species/culture/material/recipe-ID registry or compatible exported subset; neither repo silently regenerates IDs or assumes old seed-local culture groups are political identities.
+FantasyWorldGenerator owns stable semantic taxonomy/definition schemas and baseline simulation profiles. The game owns anime assets, fitted cosmetics, authored modules and their bindings, and may supply validated gameplay-specific recipe/worker/capability profiles. These profiles use contract IDs, not package-specific UObject knowledge inside the kernel. Share a versioned species/culture/material/recipe-ID registry or compatible exported subset; neither repo silently regenerates IDs or assumes old seed-local culture groups are political identities.
 
-Creator, Outfit Studio and construction previews use read-only snapshots or isolated draft state with no world commit capability. Any example/mock adapter is explicitly test-only. It cannot silently replace a missing plugin in a shipping world or claim MathLab feature acceptance.
+Creator, Outfit Studio and construction previews use read-only snapshots or isolated draft state with no world commit capability. Any example/mock adapter is explicitly test-only. It cannot silently replace a missing plugin in a shipping world or claim FantasyWorldGenerator feature acceptance.
 
 ## Cross-repository acceptance
 
 | ID | Gate | Required evidence |
 | --- | --- | --- |
-| PK01 | Isolated MathLab extraction | Python tests, browser launch and fixture exports run with the original game checkout unavailable; dependencies/provenance accounted |
+| PK01 | Isolated FantasyWorldGenerator extraction | Python tests, browser launch and fixture exports run with the original game checkout unavailable; dependencies/provenance accounted |
 | PK02 | Reference/kernel conformance | Same versioned inputs/PRNG/order satisfy declared output/threshold contract; intentional changes get versions and reviewed fixtures |
-| PK03 | Standalone plugin consumer | Clean minimal Unreal consumer compiles, loads and runs supported rules from the released package without the MathLab checkout/browser/Python service |
+| PK03 | Standalone plugin consumer | Clean minimal Unreal consumer compiles, loads and runs supported rules from the released package without the FantasyWorldGenerator checkout/browser/Python service |
 | PK04 | Shipping runtime boundary | Cooked game executes a real supported transition; no editor-only module or Python-editor dependency required |
 | PK05 | State/event transaction | Crash/retry/duplicate/failed commit preserves exactly one damage, residue, job/output and dispatch effect within the supported capability scope |
 | PK06 | Conversion and materialization | Stable IDs/units/layers and critical breach/route outcomes survive package input/output and local presentation changes |
 | PK07 | Versioned upgrade/rollback | Invalid artifact/schema/capability rejected; supported copied-save migration and compatible rollback pair demonstrated |
-| PK08 | Independent developer progress | Game creator builds without a MathLab release; MathLab core work/tests build without game assets/editor; plugin gate independently uses its test consumer |
+| PK08 | Independent developer progress | Game creator builds without a FantasyWorldGenerator release; FantasyWorldGenerator core work/tests build without game assets/editor; plugin gate independently uses its test consumer |
 | PK09 | Bounded simulation host | Time/work/catch-up and detail changes preserve accounting; benchmark declared workload and runtime target |
 | PK10 | Two-repo ownership | No duplicated game-side rule implementation, hardcoded game asset dependency in kernel or mutable floating release |
 
-These are future gates. Core tests are owned by MathLab, generic plugin/package tests by MathLab, and full game/asset/save integration tests by the game. A shared feature closes only when its required gates on both sides pass. Engine/package/performance/networking acceptance is never inferred from a plan or standalone Python result.
+These are future gates. Core tests are owned by FantasyWorldGenerator, generic plugin/package tests by FantasyWorldGenerator, and full game/asset/save integration tests by the game. A shared feature closes only when its required gates on both sides pass. Engine/package/performance/networking acceptance is never inferred from a plan or standalone Python result.
 
 ## Existing ticket ownership map
 
 All NEW-001–018 tasks belong to the game, including the new character-features workflow. The original WORLD/SET/CIV IDs remain integrated feature milestones; their former gameplay dependencies do not block independently runnable ML work.
 
-| Integrated feature | MathLab producer | Game consumer | Responsibility boundary |
+| Integrated feature | FantasyWorldGenerator producer | Game consumer | Responsibility boundary |
 | --- | --- | --- | --- |
 | WORLD-01 | ML-04 | GAME-02/08 | Component/support truth versus fracture/ruin/collision/nav |
 | WORLD-02 | ML-05 | GAME-03/08 | Residue rule versus accepted spell/source adapter |
@@ -438,11 +438,11 @@ Magical labor and infrastructure increase useful output and ecological pressure 
 
 Authoritative time, records, deduplication and presentation boundaries: architecture and persistence (game-repository companion context). Production contracts: world content (game-repository companion context). Bounded tickets: roadmap (game-repository companion context). Required evidence: [world acceptance](#15-world-acceptance).
 
-## MathLab rule ownership and Unreal execution
+## FantasyWorldGenerator rule ownership and Unreal execution
 
-The independent MathLab repo now owns the portable rules described in this chapter and publishes them through its Unreal runtime plugin. Existing terrain-generation fields are the reference foundation; live residue/events/jobs/faction progress are new capabilities, not already present because the lab has a map. Rules must be promoted through versioned native/plugin fixtures before the game uses them.
+The independent FantasyWorldGenerator repo now owns the portable rules described in this chapter and publishes them through its Unreal runtime plugin. Existing terrain-generation fields are the reference foundation; live residue/events/jobs/faction progress are new capabilities, not already present because the lab has a map. Rules must be promoted through versioned native/plugin fixtures before the game uses them.
 
-The game validates actual world actions, calls the supported package, durably commits outcomes and resolves them into real structures, creatures, reports and environmental presentation. Local perception/pathing/combat/Chaos remain game work. A strategic report/forecast rule is portable; gathering a witness observation or executing a siege is embodied game work. The [package contract](#20-mathlab-unreal-package-contract) prevents duplicate authority, formula forks, per-frame sources and regeneration over persistent state. All current outcomes, open taxonomy/balance and conditional branches remain required.
+The game validates actual world actions, calls the supported package, durably commits outcomes and resolves them into real structures, creatures, reports and environmental presentation. Local perception/pathing/combat/Chaos remain game work. A strategic report/forecast rule is portable; gathering a witness observation or executing a siege is embodied game work. The [package contract](#20-fantasy-world-generator-unreal-package-contract) prevents duplicate authority, formula forks, per-frame sources and regeneration over persistent state. All current outcomes, open taxonomy/balance and conditional branches remain required.
 
 
 
@@ -557,9 +557,9 @@ Implementation: SET tickets (game-repository companion context). Prepared kits, 
 
 ## Repository implementation split
 
-MathLab owns persistent graph state, generic layout/constraint/recipe choices, claims, job progress, resources and logical mutation/repair rules. The game owns direct/wall/district interfaces and resolves the logical component plan into authored geometry, actual terrain joins, collision/navigation and worker actions. Its authored modules publish capabilities/support/material definitions consumed by the plugin; generic solver code does not reach into `/Game` assets.
+FantasyWorldGenerator owns persistent graph state, generic layout/constraint/recipe choices, claims, job progress, resources and logical mutation/repair rules. The game owns direct/wall/district interfaces and resolves the logical component plan into authored geometry, actual terrain joins, collision/navigation and worker actions. Its authored modules publish capabilities/support/material definitions consumed by the plugin; generic solver code does not reach into `/Game` assets.
 
-The current lab's city-layout proposals are useful genesis input, not already-built/funded settlements. Extraction preserves those proposals, then introduces explicit stable live identities and jobs. Imported genesis never overwrites an occupied graph. SET milestones close only after their MathLab and game portions in [the ownership map](#20-mathlab-unreal-package-contract) pass.
+The current lab's city-layout proposals are useful genesis input, not already-built/funded settlements. Extraction preserves those proposals, then introduces explicit stable live identities and jobs. Imported genesis never overwrites an occupied graph. SET milestones close only after their FantasyWorldGenerator and game portions in [the ownership map](#20-fantasy-world-generator-unreal-package-contract) pass.
 
 
 
@@ -681,7 +681,7 @@ Implementation and staged coverage: roadmap (game-repository companion context).
 
 ## Repository implementation split
 
-MathLab implements useful-output/resource accounting, source/emission policy, ecology/equilibrium, independent-creature authority, infrastructure/Well/domain rules, civilization classification and strategic knowledge/response. The game implements real worker/summon models and animations, local jobs/combat, infrastructure interactions, domain effects, readable feedback, ruler dialogue/travel and physical ruins. Released plugin capabilities connect them through stable commands/state/events; neither side infers truth from art or duplicates the other's formulas. All CIV milestones map to the independently runnable ML sequence and consumer GAME sequence in [the package contract](#20-mathlab-unreal-package-contract).
+FantasyWorldGenerator implements useful-output/resource accounting, source/emission policy, ecology/equilibrium, independent-creature authority, infrastructure/Well/domain rules, civilization classification and strategic knowledge/response. The game implements real worker/summon models and animations, local jobs/combat, infrastructure interactions, domain effects, readable feedback, ruler dialogue/travel and physical ruins. Released plugin capabilities connect them through stable commands/state/events; neither side infers truth from art or duplicates the other's formulas. All CIV milestones map to the independently runnable ML sequence and consumer GAME sequence in [the package contract](#20-fantasy-world-generator-unreal-package-contract).
 
 
 
@@ -849,11 +849,11 @@ Cross-cutting acceptance retains the original creator-first two-body gates, inve
 
 | Evidence responsibility | Owner | Examples |
 | --- | --- | --- |
-| Rule/accounting behavior | MathLab | Residue/node thresholds; graph/jobs/resources; ecology/binding/knowledge; bounded step/replay |
-| Reference/native conformance | MathLab | Explicit PRNG/numeric/time semantics, fixtures and versioned intentional differences |
-| Generic Unreal package | MathLab | Compile/load/runtime test in minimal consumer; Editor versus Shipping module separation |
+| Rule/accounting behavior | FantasyWorldGenerator | Residue/node thresholds; graph/jobs/resources; ecology/binding/knowledge; bounded step/replay |
+| Reference/native conformance | FantasyWorldGenerator | Explicit PRNG/numeric/time semantics, fixtures and versioned intentional differences |
+| Generic Unreal package | FantasyWorldGenerator | Compile/load/runtime test in minimal consumer; Editor versus Shipping module separation |
 | Actual game integration | Game / Astra | Accepted hit/cast adapters, save durability, collision/nav, real workers/factions, packaged content |
 | Anime art and player experience | Game / Astra | Both bodies, creator/outfits, motion/fit, buildings/mutations, usable controls and feedback |
 | End-to-end feature closeout | Both scopes must pass | Integrated fortress/civilization branches, package upgrades, state restoration and declared workload |
 
-Original WA01–24 and SA01–36 retain their behavioral intent. Run their pure-rule portions in MathLab and their engine/content/save portions in the game; do not mark an entire mixed test passed from one side's result. PK01–10 in [the package contract](#20-mathlab-unreal-package-contract) add extraction isolation, runtime package, conformance, release locking, transactions and upgrades. Those gates are embedded in both standalone repo plans. Network tests remain future gates, not consequences of package publication.
+Original WA01–24 and SA01–36 retain their behavioral intent. Run their pure-rule portions in FantasyWorldGenerator and their engine/content/save portions in the game; do not mark an entire mixed test passed from one side's result. PK01–10 in [the package contract](#20-fantasy-world-generator-unreal-package-contract) add extraction isolation, runtime package, conformance, release locking, transactions and upgrades. Those gates are embedded in both standalone repo plans. Network tests remain future gates, not consequences of package publication.

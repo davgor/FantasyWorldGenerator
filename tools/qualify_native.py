@@ -46,21 +46,24 @@ def qualify(root,output):
     manifest_hash=verify_sources(root)
     compiler=shutil.which('clang++') or shutil.which('g++')
     if not compiler:raise ValueError('C++17 compiler required; native qualification cannot be skipped')
-    flags=shlex.split(os.environ.get('MATHLAB_CXXFLAGS',''))
+    flags=shlex.split(os.environ.get('FANTASY_WORLD_GENERATOR_CXXFLAGS',''))
     if sys.platform=='darwin':
         sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True).strip()
         headers=Path(sdk)/'usr/include/c++/v1'
         if headers.is_dir():flags+=['-isystem',str(headers)]
-    binary=output/'native-counter'
-    sources=['counter.cpp','json.cpp','numeric.cpp','wire.cpp','tests/wire_driver.cpp']
-    compiled=subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags,
-                             '-I',str(root/'Core'),*(str(root/'Core'/name) for name in sources),'-o',str(binary)],
-                            capture_output=True,text=True,timeout=60)
-    if compiled.returncode:raise ValueError('native compilation failed: '+compiled.stderr)
+    def build(name,sources):
+        path=output/name
+        compiled=subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags,
+                                 '-I',str(root/'Core'),*(str(root/'Core'/source) for source in sources),'-o',str(path)],
+                                capture_output=True,text=True,timeout=60)
+        if compiled.returncode:raise ValueError('native compilation failed ('+name+'): '+compiled.stderr)
+        return path
+    binary=build('native-counter',['counter.cpp','json.cpp','numeric.cpp','wire.cpp','tests/wire_driver.cpp'])
+    genesis=build('native-genesis',['counter.cpp','json.cpp','numeric.cpp','wire.cpp','genesis.cpp','tests/genesis_driver.cpp'])
     checks=[]
-    def run(op,value,expected_error=None):
+    def run(op,value,expected_error=None,program=None):
         raw=json.dumps(value,ensure_ascii=True,separators=(',',':'),allow_nan=False).encode()
-        result=subprocess.run([str(binary),op],input=raw,capture_output=True,timeout=10)
+        result=subprocess.run([str(program or binary),op],input=raw,capture_output=True,timeout=10)
         if expected_error:
             if result.returncode!=2 or json.loads(result.stdout).get('code')!=expected_error:
                 raise ValueError('native failure-code mismatch: '+op)
@@ -70,6 +73,13 @@ def qualify(root,output):
         return result.stdout
     def equal(actual,expected):
         if actual!=expected:raise ValueError('native fixture output mismatch')
+    def rejected(op,value,program):
+        # The fixture declares no stable codes for these bodies, so only refusal is qualified.
+        raw=json.dumps(value,ensure_ascii=True,separators=(',',':'),allow_nan=False).encode()
+        result=subprocess.run([str(program),op],input=raw,capture_output=True,timeout=10)
+        if result.returncode!=2 or json.loads(result.stdout).get('schema')!='fantasy-world-generator.failure':
+            raise ValueError('native request validation accepted an invalid body: '+op)
+        checks.append(op+':rejected')
     numeric=json.loads((root/'Fixtures/kernel-numeric-v1.json').read_text())
     for case in numeric['canonical']:
         equal(run('canonical',case['value']),case['ascii'].encode())
@@ -83,17 +93,25 @@ def qualify(root,output):
     equal(json.loads(run('commit',dict(state=checkpoint,candidate=first))),checkpoint)
     resumed=json.loads(run('evaluate',dict(state=checkpoint,command=f['resume_command'])))
     equal(json.loads(run('commit',dict(state=checkpoint,candidate=resumed))),f['complete'])
+    frame=json.loads((root/'Fixtures/unreal-frame-v1.json').read_text())
+    for case in frame['valid']:
+        equal(json.loads(run('unreal_cm',{key:case[key] for key in ('east_m','up_m','north_m')},program=genesis)),case['expected_cm'])
+    equal(json.loads(run('validate_generate',dict(recipe_version=3,seed=42,overrides=dict(size=65)),program=genesis)),
+          dict(ok=True,recipe_version=3,seed=42))
+    for body in frame['invalid_generate']:
+        rejected('validate_generate',body,genesis)
     cases=json.loads((root/'Fixtures/kernel-contract-v1.json').read_text())
     for case in cases['invalid']:
         if case['kind']=='event':run('event',case['value'],case['code'])
         else:run('evaluate',dict(state=f['initial'],command=case['value']),case['code'])
     # Detect source edits during compilation/execution before recording success.
     if verify_sources(root)!=manifest_hash:raise ValueError('source manifest changed during qualification')
-    return dict(schema='mathlab.native-qualification',schema_version=1,status='passed',
+    return dict(schema='fantasy-world-generator.native-qualification',schema_version=1,status='passed',
                 manifest_sha256=manifest_hash,unreal_qualified=False,
                 compiler=subprocess.check_output([compiler,'--version'],text=True).strip(),
                 platform=platform.system(),architecture=platform.machine(),compiler_flags=['-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags],
-                checks=checks,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest())
+                checks=checks,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
+                genesis_binary_sha256=hashlib.sha256(genesis.read_bytes()).hexdigest())
 
 
 def main():
@@ -103,7 +121,7 @@ def main():
     try:
         report=qualify(ROOT,output);status=0
     except (ValueError,OSError,RecursionError,subprocess.SubprocessError) as error:
-        report=dict(schema='mathlab.native-qualification',schema_version=1,status='failed',unreal_qualified=False,error=str(error))
+        report=dict(schema='fantasy-world-generator.native-qualification',schema_version=1,status='failed',unreal_qualified=False,error=str(error))
         print(str(error),file=sys.stderr);status=1
     temporary=output/'qualification.json.tmp'
     temporary.write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')

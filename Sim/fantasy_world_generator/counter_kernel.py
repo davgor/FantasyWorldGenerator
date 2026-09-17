@@ -14,7 +14,7 @@ def _order(event):
 def initialize(world_id, authority_epoch=0):
     identifier(world_id, 'world')
     integer(authority_epoch, 'authority_epoch')
-    return dict(schema='mathlab.counter-state', schema_version=1, rules_version=1, numeric_version=1,
+    return dict(schema='fantasy-world-generator.counter-state', schema_version=1, rules_version=1, numeric_version=1,
                 world_id=world_id, authority_epoch=authority_epoch, revision=0, time_ms=0,
                 counter=0, receipts=[], pending=None)
 
@@ -22,7 +22,7 @@ def initialize(world_id, authority_epoch=0):
 def validate_snapshot(state):
     exact(state, ('schema','schema_version','rules_version','numeric_version','world_id',
                   'authority_epoch','revision','time_ms','counter','receipts','pending'))
-    header(state, 'mathlab.counter-state')
+    header(state, 'fantasy-world-generator.counter-state')
     version(state['rules_version']); version(state['numeric_version'])
     identifier(state['world_id'], 'world')
     for key in ('authority_epoch','revision','time_ms','counter'):
@@ -184,7 +184,7 @@ def dump_candidate(candidate):
         raise KernelError('INVALID_CANDIDATE', 'expected an immutable candidate')
     base = load_snapshot(candidate.base_state)
     commit(base, candidate)
-    return canonical_bytes(dict(schema='mathlab.counter-candidate', schema_version=1,
+    return canonical_bytes(dict(schema='fantasy-world-generator.counter-candidate', schema_version=1,
                                 base_state=base, command=canonical_loads(candidate.command),
                                 next_state=canonical_loads(candidate.next_state),
                                 effects=canonical_loads(candidate.effects), work_used=candidate.work_used))
@@ -193,7 +193,7 @@ def dump_candidate(candidate):
 def load_candidate(raw):
     document = canonical_loads(raw)
     exact(document, ('schema','schema_version','base_state','command','next_state','effects','work_used'))
-    header(document, 'mathlab.counter-candidate')
+    header(document, 'fantasy-world-generator.counter-candidate')
     candidate = Candidate(*(canonical_bytes(document[key]) for key in ('base_state','command','next_state','effects')),
                           work_used=document['work_used'])
     commit(document['base_state'], candidate)

@@ -1,6 +1,6 @@
 #pragma once
 #include "json.hpp"
-namespace mathlab {
+namespace fantasy_world_generator {
 Event event_value(const json::Value& value,const std::string& world_id);
 Command command_value(const json::Value& value);
 Snapshot snapshot_value(const json::Value& value);

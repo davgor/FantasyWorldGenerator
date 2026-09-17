@@ -1,6 +1,6 @@
 #include "wire.hpp"
 
-namespace mathlab {
+namespace fantasy_world_generator {
 namespace {
 using json::Value;
 const Value& get(const Value& v,const char* key) {return json::field(v,key);}
@@ -33,14 +33,14 @@ Receipt receipt_value(const Value& value,const std::string& world) {
 }
 Event event_value(const json::Value& value,const std::string& world_id) {
     json::exact(value,{"schema","schema_version","world_id","event_id","actor_id","target_id","time_ms","delta"});
-    header(value,"mathlab.counter-event");
+    header(value,"fantasy-world-generator.counter-event");
     Event result{text(value,"schema"),number(value,"schema_version"),text(value,"world_id"),text(value,"event_id"),
                  text(value,"actor_id"),text(value,"target_id"),number(value,"time_ms"),number(value,"delta")};
     validate_event(result,world_id);return result;
 }
 Command command_value(const json::Value& value) {
     json::exact(value,{"schema","schema_version","world_id","authority_epoch","expected_revision","target_time_ms","budget","events"});
-    header(value,"mathlab.counter-command");
+    header(value,"fantasy-world-generator.counter-command");
     std::int64_t budget=0;
     try {budget=number(value,"budget");if(budget<1 || budget>64) throw Error("WORK_BUDGET");}
     catch(const Error&) {throw Error("WORK_BUDGET");}
@@ -54,7 +54,7 @@ Command command_value(const json::Value& value) {
 }
 Snapshot snapshot_value(const json::Value& value) {
     json::exact(value,{"schema","schema_version","rules_version","numeric_version","world_id","authority_epoch","revision","time_ms","counter","receipts","pending"});
-    header(value,"mathlab.counter-state");
+    header(value,"fantasy-world-generator.counter-state");
     Snapshot result;
     result.schema=text(value,"schema");result.schema_version=number(value,"schema_version");
     result.rules_version=number(value,"rules_version");result.numeric_version=number(value,"numeric_version");
@@ -77,7 +77,7 @@ Snapshot snapshot_value(const json::Value& value) {
 }
 Candidate candidate_value(const json::Value& value) {
     json::exact(value,{"schema","schema_version","base_state","command","next_state","effects","work_used"});
-    header(value,"mathlab.counter-candidate");
+    header(value,"fantasy-world-generator.counter-candidate");
     auto base=snapshot_value(get(value,"base_state"));
     try {
         auto command=command_value(get(value,"command"));
@@ -97,13 +97,13 @@ Candidate parse_candidate(const std::string& bytes) {return candidate_value(json
 std::string candidate_json(const Candidate& candidate) {
     commit(candidate.base_state,candidate);
     Value::Array effects;for(const auto& r:candidate.effects) effects.push_back(receipt_document(r));
-    return json::canonical(Value(Value::Object{{"schema",Value("mathlab.counter-candidate")},{"schema_version",Value(std::int64_t{1})},
+    return json::canonical(Value(Value::Object{{"schema",Value("fantasy-world-generator.counter-candidate")},{"schema_version",Value(std::int64_t{1})},
         {"base_state",json::parse(snapshot_json(candidate.base_state))},{"command",command_document(candidate.command)},
         {"next_state",json::parse(snapshot_json(candidate.next_state))},{"effects",Value(std::move(effects))},
         {"work_used",Value(static_cast<std::int64_t>(candidate.work_used))}}));
 }
 std::string failure_json(const Error& error) {
-    return json::canonical(Value(Value::Object{{"schema",Value("mathlab.failure")},{"schema_version",Value(std::int64_t{1})},
+    return json::canonical(Value(Value::Object{{"schema",Value("fantasy-world-generator.failure")},{"schema_version",Value(std::int64_t{1})},
                                               {"code",Value(error.code)},{"message",Value(error.what())}}));
 }
 }

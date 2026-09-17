@@ -6,7 +6,7 @@
 #include <sstream>
 #include <utility>
 
-namespace mathlab {
+namespace fantasy_world_generator {
 namespace {
 void check(bool valid, const char* code="INVALID_INPUT") { if (!valid) throw Error(code); }
 void integer(std::int64_t n) { check(n >= 0 && n <= max_safe); }
@@ -22,7 +22,7 @@ void identifier(const std::string& id, const std::string& kind) {
     for (auto i=prefix.size()+1; i<id.size(); ++i) check(alnum(id[i]) || id[i]=='.' || id[i]=='_' || id[i]=='-');
 }
 void event_valid(const Event& e, const std::string& world) {
-    header(e.schema,e.schema_version,"mathlab.counter-event");
+    header(e.schema,e.schema_version,"fantasy-world-generator.counter-event");
     identifier(e.world_id,"world"); identifier(e.event_id,"event"); identifier(e.actor_id,"actor"); identifier(e.target_id,"counter");
     check(e.world_id == world && e.target_id == "counter:main", "UNKNOWN_ID");
     integer(e.time_ms); integer(e.delta); check(e.delta > 0);
@@ -32,7 +32,7 @@ std::int64_t add(std::int64_t a, std::int64_t b, const char* code="INVALID_INPUT
     check(b <= max_safe-a,code); return a+b;
 }
 void command_valid(const Command& c) {
-    header(c.schema,c.schema_version,"mathlab.counter-command"); identifier(c.world_id,"world");
+    header(c.schema,c.schema_version,"fantasy-world-generator.counter-command"); identifier(c.world_id,"world");
     integer(c.authority_epoch); integer(c.expected_revision); integer(c.target_time_ms);
     check(c.budget >= 1 && c.budget <= 64,"WORK_BUDGET");
     check(c.events.size() <= 64,"STATE_CAPACITY");
@@ -40,7 +40,7 @@ void command_valid(const Command& c) {
 }
 void event_json(std::ostream& out, const Event& e) {
     out << "{\"actor_id\":\"" << e.actor_id << "\",\"delta\":" << e.delta << ",\"event_id\":\"" << e.event_id
-        << "\",\"schema\":\"mathlab.counter-event\",\"schema_version\":1,\"target_id\":\"" << e.target_id
+        << "\",\"schema\":\"fantasy-world-generator.counter-event\",\"schema_version\":1,\"target_id\":\"" << e.target_id
         << "\",\"time_ms\":" << e.time_ms << ",\"world_id\":\"" << e.world_id << "\"}";
 }
 }
@@ -51,7 +51,7 @@ Snapshot initialize(const std::string& world, std::int64_t epoch) {
 void validate_event(const Event& event, const std::string& world_id) { event_valid(event,world_id); }
 void validate_command(const Command& command) { command_valid(command); }
 void validate_snapshot_header(const Snapshot& s) {
-    header(s.schema,s.schema_version,"mathlab.counter-state"); version(s.rules_version); version(s.numeric_version);
+    header(s.schema,s.schema_version,"fantasy-world-generator.counter-state"); version(s.rules_version); version(s.numeric_version);
     identifier(s.world_id,"world"); integer(s.authority_epoch); integer(s.revision); integer(s.time_ms); integer(s.counter);
 }
 void validate_snapshot(const Snapshot& s) {
@@ -152,7 +152,7 @@ std::string snapshot_json(const Snapshot& s) {
         if(i) out << ',';
         out << "{\"counter_after\":" << s.receipts[i].counter_after << ",\"event\":"; event_json(out,s.receipts[i].event); out << '}';
     }
-    out << "],\"revision\":" << s.revision << ",\"rules_version\":1,\"schema\":\"mathlab.counter-state\",\"schema_version\":1,\"time_ms\":"
+    out << "],\"revision\":" << s.revision << ",\"rules_version\":1,\"schema\":\"fantasy-world-generator.counter-state\",\"schema_version\":1,\"time_ms\":"
         << s.time_ms << ",\"world_id\":\"" << s.world_id << "\"}";
     return out.str();
 }

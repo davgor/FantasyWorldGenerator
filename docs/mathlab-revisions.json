@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "ticket": "board/done/LAB-018.md",
-  "authorization": "User requested layered-world implementation (LAB-005), catalogue-driven beast nests (LAB-006), inclusion of the profile-driven city-layout work (LAB-017), and cleanup of the resulting MathLab test regressions (LAB-018). Original source/archive hashes are retained.",
+  "authorization": "User requested layered-world implementation (LAB-005), catalogue-driven beast nests (LAB-006), inclusion of the profile-driven city-layout work (LAB-017), and cleanup of the resulting FantasyWorldGenerator test regressions (LAB-018). Original source/archive hashes are retained.",
   "files": [
     {
       "path": "Sim/README.md",

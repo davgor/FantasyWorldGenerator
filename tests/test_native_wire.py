@@ -23,10 +23,10 @@ class NativeWireTests(unittest.TestCase):
     def setUpClass(cls):
         compiler=shutil.which('clang++') or shutil.which('g++')
         if not compiler: raise unittest.SkipTest('native wire conformance requires a C++17 compiler')
-        cls.directory=tempfile.TemporaryDirectory(prefix='mathlab-wire-')
+        cls.directory=tempfile.TemporaryDirectory(prefix='fantasy-world-generator-wire-')
         cls.addClassCleanup(cls.directory.cleanup)
         cls.binary=Path(cls.directory.name)/'wire'
-        flags=shlex.split(os.environ.get('MATHLAB_CXXFLAGS',''))
+        flags=shlex.split(os.environ.get('FANTASY_WORLD_GENERATOR_CXXFLAGS',''))
         if sys.platform=='darwin':
             sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True).strip()
             headers=Path(sdk)/'usr/include/c++/v1'
@@ -43,7 +43,7 @@ class NativeWireTests(unittest.TestCase):
         if result.returncode:
             self.assertEqual(result.returncode,2,result.stderr)
             failure=json.loads(result.stdout)
-            self.assertEqual(failure['schema'],'mathlab.failure')
+            self.assertEqual(failure['schema'],'fantasy-world-generator.failure')
             raise KernelError(failure['code'])
         return result.stdout
 

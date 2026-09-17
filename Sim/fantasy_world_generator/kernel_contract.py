@@ -14,7 +14,7 @@ class KernelError(ValueError):
         super().__init__(message or code)
 
     def document(self):
-        return {'schema': 'mathlab.failure', 'schema_version': 1,
+        return {'schema': 'fantasy-world-generator.failure', 'schema_version': 1,
                 'code': self.code, 'message': str(self)}
 
 
@@ -49,7 +49,7 @@ def header(value, schema):
 
 def validate_event(event, world_id):
     exact(event, ('schema','schema_version','world_id','event_id','actor_id','target_id','time_ms','delta'))
-    header(event, 'mathlab.counter-event')
+    header(event, 'fantasy-world-generator.counter-event')
     identifier(event['world_id'], 'world')
     identifier(event['event_id'], 'event')
     identifier(event['actor_id'], 'actor')
@@ -63,7 +63,7 @@ def validate_event(event, world_id):
 
 def validate_command(command):
     exact(command, ('schema','schema_version','world_id','authority_epoch','expected_revision','target_time_ms','budget','events'))
-    header(command, 'mathlab.counter-command')
+    header(command, 'fantasy-world-generator.counter-command')
     identifier(command['world_id'], 'world')
     for key in ('authority_epoch','expected_revision','target_time_ms'):
         integer(command[key], key)

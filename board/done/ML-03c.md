@@ -29,7 +29,7 @@ strict metadata validation were corrected. The native binary has no Python
 runtime dependency; Python only orchestrates compilation/tests.
 
 A retained local archive is
-`Artifacts/native/mathlab-native-source-6c35250735d341fe83a77ad05bf0c75cd6c670e55d9f40d4b82c4ca98bdde54a.zip`.
+`Artifacts/native/fantasy-world-generator-native-source-6c35250735d341fe83a77ad05bf0c75cd6c670e55d9f40d4b82c4ca98bdde54a.zip`.
 Its isolated Apple clang 17 / arm64 qualification passes 31 fixture checks in
 `Artifacts/native-evidence-6c35250735d3/qualification.json`. The report has
 `unreal_qualified: false`; the source manifest has `unqualified-source-only`.

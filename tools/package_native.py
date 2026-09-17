@@ -10,19 +10,24 @@ ROOT=Path(__file__).resolve().parents[1]
 SOURCE_FILES=(
     'LICENSE','Core/README.md','Core/counter.hpp','Core/counter.cpp','Core/json.hpp','Core/json.cpp',
     'Core/numeric.hpp','Core/numeric.cpp','Core/wire.hpp','Core/wire.cpp','Core/tests/wire_driver.cpp',
+    'Core/genesis.hpp','Core/genesis.cpp','Core/tests/genesis_driver.cpp',
     'Contracts/kernel-v1.md','Contracts/schemas/counter-kernel.schema.json',
     'Fixtures/kernel-numeric-v1.json','Fixtures/kernel-contract-v1.json','Fixtures/counter-kernel-v1.json',
+    'Fixtures/unreal-frame-v1.json',
     'tools/package_native.py','tools/qualify_native.py',
 )
 
 
 def manifest_metadata():
-    return dict(schema='mathlab.native-source-package',schema_version=1,
+    return dict(schema='fantasy-world-generator.native-source-package',schema_version=1,
                   qualification='unqualified-source-only',license='LICENSE',
-                  contracts=dict(counter_rule=1,counter_state=1,counter_command=1,counter_candidate=1,kernel_numeric=1),
+                  contracts=dict(counter_rule=1,counter_state=1,counter_command=1,counter_candidate=1,kernel_numeric=1,
+                                 unreal_frame=1,world_recipe=3),
                   requires=dict(cpp_standard=17,cpp_exceptions=True,binary64_double=True),
                   limitations=['No Unreal adapter or engine/cooked qualification','No durable storage or external effect delivery',
-                               'No general native world generator','No public redistribution grant'])
+                               'Native genesis validates generate requests and the Unreal centimetre frame only',
+                               'No native world generator, terrain sampling or Landscape export',
+                               'No public redistribution grant'])
 
 
 def bundle_bytes(root=ROOT):
@@ -49,7 +54,7 @@ def main():
     args=parser.parse_args()
     raw=bundle_bytes();digest=hashlib.sha256(raw).hexdigest()
     args.output_dir.mkdir(parents=True,exist_ok=True)
-    path=args.output_dir/('mathlab-native-source-'+digest+'.zip')
+    path=args.output_dir/('fantasy-world-generator-native-source-'+digest+'.zip')
     # A content-addressed file must never silently replace different bytes.
     try:
         with path.open('xb') as stream:stream.write(raw)

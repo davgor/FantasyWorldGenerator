@@ -14,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class NativePackageTests(unittest.TestCase):
     def test_reproducible_source_bundle_and_isolated_consumer(self):
-        with tempfile.TemporaryDirectory(prefix='mathlab-package-') as directory:
+        with tempfile.TemporaryDirectory(prefix='fantasy-world-generator-package-') as directory:
             directory=Path(directory)
             for name in ('first','second'):
                 built=subprocess.run([sys.executable,str(ROOT/'tools/package_native.py'),'--output-dir',str(directory/name)],capture_output=True,text=True,timeout=15)
