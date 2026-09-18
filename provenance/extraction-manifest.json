@@ -195,17 +195,37 @@
       "source": "Sim/icarus_sim/terrain_erosion.py",
       "source_sha256": "27ea45c648ba1d5102888b611ce3a6c7711c117be109c1a17fac8f369b4f5469",
       "destination": "Sim/icarus_sim/terrain_erosion.py",
-      "destination_sha256": "27ea45c648ba1d5102888b611ce3a6c7711c117be109c1a17fac8f369b4f5469",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "13388cbeebcefcfdbd546cd7a8bf3def49aa473038f0c4f9ae0360b2de002fa7",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "27ea45c648ba1d5102888b611ce3a6c7711c117be109c1a17fac8f369b4f5469",
+          "destination_sha256": "13388cbeebcefcfdbd546cd7a8bf3def49aa473038f0c4f9ae0360b2de002fa7",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Output-preserving performance work: sphere_grid memoized on (n, radius). Sixteen call sites rebuilt the same sphere graph about forty times per world; no caller mutates the returned lists, so the grid is shared and every value is unchanged."
+        }
+      ],
+      "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_globe.py",
       "source_sha256": "bf807be788d39e769c9feaafd967713099dd7a54521bbeb7a0eb7a79b22c1af1",
       "destination": "Sim/icarus_sim/terrain_globe.py",
-      "destination_sha256": "bf807be788d39e769c9feaafd967713099dd7a54521bbeb7a0eb7a79b22c1af1",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "ac7f3345de45f77bcb727372d54d7ebafa4498d7f117b0552d85f905370a44d9",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "bf807be788d39e769c9feaafd967713099dd7a54521bbeb7a0eb7a79b22c1af1",
+          "destination_sha256": "ac7f3345de45f77bcb727372d54d7ebafa4498d7f117b0552d85f905370a44d9",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Output-preserving performance work: perlin3 builds its corner hash and blend weights incrementally instead of rebuilding them in the innermost of eight iterations. Same integer sums and same left-to-right float products, so noise values are bit-for-bit unchanged."
+        }
+      ],
+      "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_humans.py",
@@ -333,9 +353,19 @@
       "source": "Sim/icarus_sim/terrain_nests.py",
       "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
       "destination": "Sim/icarus_sim/terrain_nests.py",
-      "destination_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "0b53024bfeca0d1a81e2590ea7e679609040d160b41099e6f292cb1898c48970",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
+          "destination_sha256": "0b53024bfeca0d1a81e2590ea7e679609040d160b41099e6f292cb1898c48970",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Documentation only. An attempt to replace sum(x*y for x,y in zip(a,b)) with explicit addition was reverted: CPython 3.12 sums floats with Neumaier compensation, so the explicit form differs by about one ULP and silently changes generated worlds on some seeds. The comment records why this sum() must stay."
+        }
+      ],
+      "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_patch.py",
@@ -533,7 +563,7 @@
       "source": "Sim/icarus_sim/terrain_society.py",
       "source_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
       "destination": "Sim/icarus_sim/terrain_society.py",
-      "destination_sha256": "122327f2a15c328eac9775f048e84d34d320ac7011049105b1633f79846e6c5e",
+      "destination_sha256": "20cc11f705be6ce4f2bfcc6ec4deab214c7f1d90672939281967c5848c564241",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -565,6 +595,13 @@
           "destination_sha256": "122327f2a15c328eac9775f048e84d34d320ac7011049105b1633f79846e6c5e",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "122327f2a15c328eac9775f048e84d34d320ac7011049105b1633f79846e6c5e",
+          "destination_sha256": "20cc11f705be6ce4f2bfcc6ec4deab214c7f1d90672939281967c5848c564241",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Output-preserving performance work: passable() inlined into the sea-route cost closure, which the routing search calls tens of millions of times per world. Identical comparisons in identical short-circuit order."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -728,9 +765,19 @@
       "source": "Sim/tests/test_terrain_lab.py",
       "source_sha256": "e6f06bd8747d64833793c7de8f9002a9e90ab617eb9fdf69641685363573308c",
       "destination": "Sim/tests/test_terrain_lab.py",
-      "destination_sha256": "e6f06bd8747d64833793c7de8f9002a9e90ab617eb9fdf69641685363573308c",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "51acb507b538607042b23a207a376f5c8e69bc03b38f4189d2d41ca5fe500c1b",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator regression coverage for lab rendering",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "e6f06bd8747d64833793c7de8f9002a9e90ab617eb9fdf69641685363573308c",
+          "destination_sha256": "51acb507b538607042b23a207a376f5c8e69bc03b38f4189d2d41ca5fe500c1b",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
+        }
+      ],
+      "modification": "Asserts the lab ruin icon helper is emitted. Original extraction source hash retained."
     },
     {
       "source": "Sim/tests/test_terrain_magic.py",
@@ -1341,7 +1388,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "44bdb11ba09ea41171f42fea6db097b51738085b3e25dd36fdde9c798c3da371",
+      "destination_sha256": "d9f3409bf8cd9a6b3ddb639533f48b5a982b6c8b4e6b4432ccf827db48b818ba",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1480,6 +1527,13 @@
           "destination_sha256": "44bdb11ba09ea41171f42fea6db097b51738085b3e25dd36fdde9c798c3da371",
           "decision": "docs/castle-planner.md",
           "reason": "Independent castle_plans fortification planner documentation and lab history key; see docs/castle-planner.md."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "44bdb11ba09ea41171f42fea6db097b51738085b3e25dd36fdde9c798c3da371",
+          "destination_sha256": "d9f3409bf8cd9a6b3ddb639533f48b5a982b6c8b4e6b4432ccf827db48b818ba",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
         }
       ]
     },
@@ -1539,7 +1593,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "feee56a21d3f71c4ba4e4a8bbe2b202da661887cf0d47a06e49e86a162dd53de",
+      "destination_sha256": "8885793f094c7214ec58f1600cb40a2abb4e8963baa11d89c5213098212e3d62",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1622,6 +1676,13 @@
           "destination_sha256": "feee56a21d3f71c4ba4e4a8bbe2b202da661887cf0d47a06e49e86a162dd53de",
           "decision": "docs/castle-planner.md",
           "reason": "Castle/hamlet lab preview: openCastlePlan and wall-segment rendering docs/history keys."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "feee56a21d3f71c4ba4e4a8bbe2b202da661887cf0d47a06e49e86a162dd53de",
+          "destination_sha256": "8885793f094c7214ec58f1600cb40a2abb4e8963baa11d89c5213098212e3d62",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
         }
       ]
     },
@@ -1669,7 +1730,7 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
+      "destination_sha256": "4002462e253cb5e222f9f759761b6f48a3e2a424a86cb2cf2a2f4c7d884a0bbe",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1731,6 +1792,13 @@
           "destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "8090d1f5f34090b309c03ad829e2f5dd4f1e4064a27c07aa7e085146501f5beb",
+          "destination_sha256": "4002462e253cb5e222f9f759761b6f48a3e2a424a86cb2cf2a2f4c7d884a0bbe",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
         }
       ]
     }

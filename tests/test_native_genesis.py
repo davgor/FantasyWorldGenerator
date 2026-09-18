@@ -60,3 +60,34 @@ class NativeGenesisTests(unittest.TestCase):
         self.assertEqual(result['ok'], True)
         self.assertEqual(result['recipe_version'], 3)
         self.assertEqual(result['seed'], 42)
+
+
+class GenerateRequestParityTests(unittest.TestCase):
+    """The shared fixture must bind both implementations, not only the native one.
+
+    Needs no compiler, so the Python half of the contract is still enforced on
+    machines where the native tests skip. Native genesis accepted grids of 1 and
+    2 while the Python reference required 3 because only the upper bound had a
+    fixture case.
+    """
+
+    def test_python_reference_rejects_every_invalid_generate_fixture(self):
+        from icarus_sim.terrain_world import generate_request
+        fixtures = json.loads((ROOT / 'Fixtures/unreal-frame-v1.json').read_text())
+        for body in fixtures['invalid_generate']:
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                generate_request(body)
+
+    def test_python_reference_accepts_the_shared_valid_grid_bounds(self):
+        from icarus_sim.terrain_world import registry
+        self.assertEqual(registry(3)['size']['min'], 3)
+        self.assertEqual(registry(3)['size']['max'], 257)
+        genesis = (ROOT / 'Core/genesis.hpp').read_text(encoding='utf-8')
+        self.assertIn('min_grid=3', genesis, 'native grid minimum must match the Python reference')
+        self.assertIn('max_grid=257', genesis, 'native grid maximum must match the Python reference')
+        # ML-03e deletes this mirror by compiling Core directly; until then it is a
+        # third copy of the same rule and drifts independently of Core/genesis.hpp.
+        mirror = (ROOT / 'Unreal/FantasyWorldGenerator/Source/FantasyWorldGenerator/Public'
+                         '/FantasyWorldGeneratorFrame.h').read_text(encoding='utf-8')
+        self.assertIn('MinimumRasterSize = 3', mirror, 'plugin mirror must match Core/genesis.hpp')
+        self.assertIn('MaximumRasterSize = 257', mirror, 'plugin mirror must match Core/genesis.hpp')

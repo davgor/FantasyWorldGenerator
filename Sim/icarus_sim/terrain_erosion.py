@@ -3,9 +3,15 @@
 Closed depressions retain sediment; this does not simulate lake overflow or rain.
 """
 import math
+from functools import lru_cache
 from .terrain_globe import direction
 
 
+# Pure in (n, radius) and rebuilt from scratch by sixteen call sites, roughly forty
+# times per world: at grid 129 that is forty passes over sixteen thousand nodes
+# computing an arc length per neighbour. No caller mutates the returned lists, so
+# the grid is shared. Two entries bound the memory a 257 grid can retain.
+@lru_cache(maxsize=2)
 def sphere_grid(n, radius):
     points=[(0,0)]+[(x,z) for z in range(1,n-1) for x in range(n-1)]+[(0,n-1)]
     lookup={p:i for i,p in enumerate(points)}

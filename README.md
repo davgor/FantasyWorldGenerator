@@ -29,4 +29,13 @@ PYTHONPATH=Sim python3 -m fantasy_world_generator asset-list --output Artifacts/
 PYTHONPATH=Sim python3 -m fantasy_world_generator capabilities --output Artifacts/capabilities.json
 ```
 
+`validate_repo.py` runs every stage by default; `--stage checks|sim-tests|repo-tests|artifacts`
+runs one, which is how CI spreads the suites across parallel jobs.
+
+Exported worlds are compact, contain no wall-clock timings, and omit the browser lab's
+cumulative stage snapshots, so the same seed produces byte-identical output. Add
+`--pretty` for a readable file, `--include-timings` for profiling, and
+`--include-build-stages` to embed the lab's stage inspector data — the last roughly
+triples the file and only the lab reads it.
+
 See [the documentation map](docs/README.md), [extraction provenance](provenance/README.md), and [current ticket board](board/README.md).

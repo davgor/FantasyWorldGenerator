@@ -19,6 +19,9 @@
     {"recipe_version": 3, "seed": -1},
     {"recipe_version": 3, "seed": 4294967296},
     {"recipe_version": 3, "seed": 1, "overrides": {"size": 258}},
+    {"recipe_version": 3, "seed": 1, "overrides": {"size": 2}},
+    {"recipe_version": 3, "seed": 1, "overrides": {"size": 0}},
+    {"recipe_version": 3, "seed": 1, "overrides": {"size": -1}},
     {"recipe_version": 3, "seed": 1, "overrides": {"shape": "plane"}}
   ]
 }

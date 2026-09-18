@@ -42,3 +42,59 @@ docs/terrain-math-lab.md -text whitespace=cr-at-eol
 
 # Preserve reviewed city planner bytes.
 tools/terrain_lab.py -text whitespace=cr-at-eol
+
+# Every remaining provenance-pinned destination. verify_provenance.py hashes
+# working-tree bytes, so a text=auto checkout on Windows rewrote these to CRLF
+# and failed against manifest hashes recorded from the LF originals. The list
+# above was maintained by hand and fell behind; tests/test_provenance_bytes.py
+# now fails when a manifest destination is missing from this file.
+Contracts/catalogues/world-assets.json -text
+Sim/README.md -text
+Sim/icarus_sim/terrain_climate.py -text
+Sim/icarus_sim/terrain_ecology.py -text
+Sim/icarus_sim/terrain_erosion.py -text
+Sim/icarus_sim/terrain_globe.py -text
+Sim/icarus_sim/terrain_patch.py -text
+Sim/icarus_sim/terrain_seed.py -text
+Sim/tests/test_terrain_area.py -text
+Sim/tests/test_terrain_biomes.py -text
+Sim/tests/test_terrain_climate_sites.py -text
+Sim/tests/test_terrain_lab.py -text
+Sim/tests/test_terrain_magic.py -text
+Sim/tests/test_terrain_patch.py -text
+Sim/tests/test_terrain_tectonics.py -text
+Sim/tests/test_terrain_water.py -text
+board/done/LAB-005.md -text
+board/done/LAB-006.md -text
+board/done/LAB-017.md -text
+board/done/LAB-018.md -text
+docs/catalogue/creatures.json -text
+docs/catalogue/world-assets/AUDIT.md -text
+docs/catalogue/world-assets/BUILD-ORDER.md -text
+docs/catalogue/world-assets/COVERAGE.md -text
+docs/catalogue/world-assets/anim.md -text
+docs/catalogue/world-assets/arch.md -text
+docs/catalogue/world-assets/bld.md -text
+docs/catalogue/world-assets/fung.md -text
+docs/catalogue/world-assets/fx.md -text
+docs/catalogue/world-assets/geo.md -text
+docs/catalogue/world-assets/manifest.json -text
+docs/catalogue/world-assets/mat.md -text
+docs/catalogue/world-assets/ppl.md -text
+docs/catalogue/world-assets/prop.md -text
+docs/catalogue/world-assets/role.md -text
+docs/catalogue/world-assets/snd.md -text
+docs/catalogue/world-assets/tree.md -text
+docs/catalogue/world-assets/veg.md -text
+docs/catalogue/world-assets/water.md -text
+docs/decisions/014-mathlab-biome-gate.md -text
+docs/mathlab-revisions.json -text
+provenance/source-reviews/LAB-005.md -text
+provenance/source-reviews/LAB-006.md -text
+provenance/source-reviews/LAB-017.md -text
+provenance/source-reviews/LAB-018.md -text
+
+# Byte-identical mirror of Contracts/catalogues/world-assets.json, which is
+# provenance-pinned above. Both copies must normalize the same way or the
+# packaged and canonical catalogues differ by line endings alone.
+Sim/fantasy_world_generator/world_asset_requirements.json -text

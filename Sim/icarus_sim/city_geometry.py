@@ -59,13 +59,20 @@ def corners(x,z,w,d,angle):
 
 
 def footprint_cells(x,z,w,d,angle,half,cell=4):
+    # Hot path: called roughly a million times per world. Every expression below is
+    # the original one, only hoisted out of the loops it did not depend on, so the
+    # floating-point results are bit-for-bit unchanged.
     points=corners(x,z,w,d,angle);c=math.cos(angle);s=math.sin(angle)
     lo=[math.floor((min(p[k] for p in points)+half)/cell) for k in (0,1)]
     hi=[math.floor((max(p[k] for p in points)+half)/cell) for k in (0,1)]
     cells=set();r=cell/2*(abs(c)+abs(s))
+    half_w=w/2+r-1e-8;half_d=d/2+r-1e-8
+    columns=[-half+(i+.5)*cell-x for i in range(lo[0],hi[0]+1)]
+    add=cells.add
     for j in range(lo[1],hi[1]+1):
-        for i in range(lo[0],hi[0]+1):
-            dx=-half+(i+.5)*cell-x;dz=-half+(j+.5)*cell-z
-            if abs(dx*c+dz*s)<w/2+r-1e-8 and abs(-dx*s+dz*c)<d/2+r-1e-8:
-                cells.add((i,j))
+        dz=-half+(j+.5)*cell-z
+        dz_c=dz*c;dz_s=dz*s
+        for index,dx in enumerate(columns):
+            if abs(dx*c+dz_s)<half_w and abs(-dx*s+dz_c)<half_d:
+                add((lo[0]+index,j))
     return cells

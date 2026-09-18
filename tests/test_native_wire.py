@@ -5,13 +5,15 @@ import json
 import os
 from pathlib import Path
 import random
-import shlex
-import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
 
+ROOT_FOR_IMPORT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_FOR_IMPORT / 'tests'))
+
+from native_cxx import compile_native, compiler_command
 from fantasy_world_generator.kernel_numeric import canonical_bytes, canonical_loads, random_word
 from fantasy_world_generator.counter_kernel import evaluate, dump_candidate, commit, load_candidate
 from fantasy_world_generator.kernel_contract import KernelError
@@ -21,20 +23,15 @@ ROOT=Path(__file__).resolve().parents[1]
 class NativeWireTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        compiler=shutil.which('clang++') or shutil.which('g++')
-        if not compiler: raise unittest.SkipTest('native wire conformance requires a C++17 compiler')
+        # Shared detection covers MSVC as well as clang/g++. A private clang-or-g++
+        # probe here skipped this conformance proof on Windows while the sibling
+        # native tests compiled and ran against Visual Studio.
+        if compiler_command() is None: raise unittest.SkipTest('native wire conformance requires a C++17 compiler')
         cls.directory=tempfile.TemporaryDirectory(prefix='fantasy-world-generator-wire-')
         cls.addClassCleanup(cls.directory.cleanup)
-        cls.binary=Path(cls.directory.name)/'wire'
-        flags=shlex.split(os.environ.get('FANTASY_WORLD_GENERATOR_CXXFLAGS',''))
-        if sys.platform=='darwin':
-            sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True).strip()
-            headers=Path(sdk)/'usr/include/c++/v1'
-            if headers.is_dir(): flags+=['-isystem',str(headers)]
+        cls.binary=Path(cls.directory.name)/('wire.exe' if os.name=='nt' else 'wire')
         sources=['counter.cpp','json.cpp','numeric.cpp','wire.cpp','tests/wire_driver.cpp']
-        built=subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags,'-I',str(ROOT/'Core'),
-                              *(str(ROOT/'Core'/s) for s in sources),'-o',str(cls.binary)],capture_output=True,text=True,timeout=60)
-        if built.returncode: raise AssertionError(built.stdout+built.stderr)
+        compile_native([ROOT/'Core'/name for name in sources],ROOT/'Core',cls.binary)
         cls.fixture=json.loads((ROOT/'Fixtures/counter-kernel-v1.json').read_text())
 
     def run_native(self,operation,value,raw=False):

@@ -41,22 +41,29 @@ def _sampler(world,site,half):
     def direction_at(x,z):
         p=[up[i]+(east[i]*x+north[i]*z)/radius for i in range(3)];length=math.sqrt(sum(v*v for v in p))
         return [v/length for v in p]
+    # Resolved once instead of on every layer read inside sample(); plan_city only
+    # reads these grids, so hoisting them changes no value, just the lookup count.
+    _layers=world['layers']
+    _slope=_layers.get('slope');_water=_layers.get('water_type');_river=_layers.get('river')
+    _flood=_layers.get('flood_risk');_moisture=_layers.get('moisture')
+    _biome=_layers.get('natural_biome');_variant=_layers.get('biome_variant')
+    _has_definition=bool(field.definition)
     def sample(x,z,with_slope=True):
         p=[up[i]+(east[i]*x+north[i]*z)/radius for i in range(3)];length=math.sqrt(sum(v*v for v in p));p=[v/length for v in p]
         gx=round((math.atan2(p[2],p[0])+math.pi)/(2*math.pi)*(n-1))%(n-1)
         gz=max(0,min(n-1,round((math.pi/2-math.asin(p[1]))/math.pi*(n-1))))
-        def get(key,default=0):
-            layer=world['layers'].get(key)
-            return default if layer is None else layer[gz][gx]
         distance=river_distance(x,z)
-        slope=get('slope')
-        if field.definition and with_slope:
+        slope=0 if _slope is None else _slope[gz][gx]
+        if _has_definition and with_slope:
             dx=(field.height(direction_at(x+1,z))-field.height(direction_at(x-1,z)))/2
             dz=(field.height(direction_at(x,z+1))-field.height(direction_at(x,z-1)))/2
             slope=math.degrees(math.atan(math.hypot(dx,dz)))
-        return {'water':get('water_type')!=0 or distance<12,'slope':slope,
-                'flood':int(distance<28) if lines and get('river')>.5 else get('flood_risk'),
-                'height':field.height(p),'moisture':get('moisture',.5),'biome':get('natural_biome',3),'variant':get('biome_variant',-1)}
+        flood=int(distance<28) if lines and (0 if _river is None else _river[gz][gx])>.5 \
+            else (0 if _flood is None else _flood[gz][gx])
+        return {'water':(0 if _water is None else _water[gz][gx])!=0 or distance<12,'slope':slope,
+                'flood':flood,
+                'height':field.height(p),'moisture':.5 if _moisture is None else _moisture[gz][gx],
+                'biome':3 if _biome is None else _biome[gz][gx],'variant':-1 if _variant is None else _variant[gz][gx]}
     return sample,math.pi*radius/(n-1)
 
 
@@ -165,6 +172,10 @@ def plan_city(world,site,nearby_counts=None):
             anchors.append((x,z,angle))
     anchors=sorted(set(anchors),key=lambda p:(p[0]**2+p[1]**2,p))
     occupied=set();access=set();reserved=set();candidate_cache={};housing_reserve=[]
+    # An access corridor depends only on its two endpoints, so every building that
+    # shares a plot depth reuses the same one. Rebuilding it per (width, depth)
+    # made the eleven-step rasterization the hottest call in city planning.
+    corridor_cache={}
     def cells(x,z,w,d,angle=0):return footprint_cells(x,z,w,d,angle,half,CELL)
     def candidates(w,d):
         if (w,d) in candidate_cache:return candidate_cache[(w,d)]
@@ -178,10 +189,16 @@ def plan_city(world,site,nearby_counts=None):
                 if not footprint<=valid or footprint&road:continue
                 # Check the actual interpolated ground, including within coarse raster cells.
                 ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,w,d,angle)]
-                ground += [heights[c] for c in sorted(footprint)]
+                # Only max() and min() are ever read from this list, so the sort was
+                # ordering a few hundred thousand short lists for nothing.
+                ground += [heights[c] for c in footprint]
                 if max(ground)-min(ground)>math.hypot(w,d)*math.tan(math.radians(25)):continue
-                ex=x-dx*d/2;ez=z-dz*d/2;corridor=set()
-                for t in range(11):corridor|=cells(ax+(ex-ax)*t/10,az+(ez-az)*t/10,4,4)
+                ex=x-dx*d/2;ez=z-dz*d/2
+                corridor=corridor_cache.get((ax,az,ex,ez))
+                if corridor is None:
+                    corridor=set()
+                    for t in range(11):corridor|=cells(ax+(ex-ax)*t/10,az+(ez-az)*t/10,4,4)
+                    corridor_cache[(ax,az,ex,ez)]=corridor
                 if corridor<=valid:options.append((x,z,degrees,ax,az,footprint,corridor,ground))
         candidate_cache[(w,d)]=options
         return options

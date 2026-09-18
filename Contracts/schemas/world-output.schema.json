@@ -226,7 +226,7 @@
       ],
       "properties": {
         "version": {
-          "const": 4
+          "const": 6
         },
         "identity": {
           "type": "object"
@@ -281,7 +281,7 @@
                 "type": "object"
               },
               "version": {
-                "const": 4
+                "const": 6
               },
               "terrain": {
                 "type": "object",
@@ -328,6 +328,7 @@
           "const": [
             "map",
             "shape",
+            "fortification",
             "high",
             "high_housing",
             "low",

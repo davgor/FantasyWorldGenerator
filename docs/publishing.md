@@ -2,6 +2,10 @@
 
 Every push to `main` produces one export-only workflow artifact named `fantasy-world-generator-reference`. It contains Python wheel/source distributions, JSON schemas, and `fantasy-world-assets.json`. Pull requests build the same payload and verify that it is reproducible before merge.
 
+Validation runs as four parallel jobs (`checks`, `sim-tests`, `repo-tests`, `artifacts`) selected with `python tools/validate_repo.py --stage <name>`; every stage re-runs the cheap structural and provenance checks first so a partial run still fails fast. The `artifacts` stage proves both the asset list and a generated world are byte-reproducible across two separate runs. World documents are therefore exported compact, without wall-clock `timing_ms` and without the browser lab's `build_stages` snapshots; `fantasy-world generate --include-build-stages`, `--include-timings` and `--pretty` restore each of those when a human or the lab needs them.
+
+Showcase bundles embed a whole world per page and are committed to the portfolio repository on every `main` merge. `tools/export_showcase.py` warns above GitHub's 50 MB advisory file size and refuses to publish above the 100 MB hard limit, because that history is permanent and GitHub Pages caps a site at 1 GB.
+
 The reference payload also contains `contracts/capabilities.json`, emitted by `fantasy-world capabilities`. This versioned descriptor distinguishes supported Python/JSON contracts from unavailable native/editor/cooked capabilities and includes the coordinate/unit conventions. Its canonical source is packaged in the wheel; see [capability negotiation and coordinate fixtures](../Contracts/capabilities-and-coordinates.md).
 
 Portable conformance inputs ship under `contracts/fixtures/`, including the [kernel-v1](../Contracts/kernel-v1.md) numeric, envelope and bounded-counter examples. The root `LICENSE` records private owner-controlled distribution; it does not authorize redistribution of third-party or Epic material. No immutable engine-qualified runtime release is produced by this reference workflow.

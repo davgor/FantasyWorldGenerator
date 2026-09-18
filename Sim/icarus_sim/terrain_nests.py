@@ -37,6 +37,9 @@ def suitability(p, f):
 
 
 def distance(a,b,radius):
+    # Keep sum(): CPython 3.12 sums floats with Neumaier compensation, so an
+    # explicit a[0]*b[0]+a[1]*b[1]+a[2]*b[2] is a different (less accurate) value
+    # by about one ULP and silently changes generated worlds on some seeds.
     return radius*math.acos(max(-1.,min(1.,sum(x*y for x,y in zip(a,b)))))
 
 

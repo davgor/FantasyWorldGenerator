@@ -14,24 +14,40 @@ def direction(x, z, n):
     return (math.cos(lat)*math.cos(lon), math.sin(lat), math.cos(lat)*math.sin(lon))
 
 
+_INV_ROOT2 = 2**-.5
+
+
 def perlin3(x, y, z, seed):
+    # Millions of calls per world, so the corner hash and the blend weights are
+    # built up incrementally instead of from scratch in the innermost loop. The
+    # integer sums and the left-to-right float products are the same ones the
+    # straightforward form evaluates, so results are bit-for-bit identical.
     ix, iy, iz = math.floor(x), math.floor(y), math.floor(z)
-    f = (x-ix,y-iy,z-iz)
-    blend = [v**3*(v*(v*6-15)+10) for v in f]
+    f0, f1, f2 = x-ix, y-iy, z-iz
+    b0 = f0**3*(f0*(f0*6-15)+10)
+    b1 = f1**3*(f1*(f1*6-15)+10)
+    b2 = f2**3*(f2*(f2*6-15)+10)
+    weight0 = (1-b0, b0); weight1 = (1-b1, b1); weight2 = (1-b2, b2)
+    hash_x = ix*374761393; hash_y = iy*668265263; hash_z = iz*2147483647 + seed*1442695041
     value = 0.
-    for a in (0,1):
-        for b in (0,1):
-            for c in (0,1):
-                h = ((ix+a)*374761393+(iy+b)*668265263+(iz+c)*2147483647+seed*1442695041)&0xffffffff
+    for a in (0, 1):
+        hash_a = hash_x + a*374761393 + hash_y
+        offset0 = f0-a
+        blend_a = weight0[a]
+        for b in (0, 1):
+            hash_b = hash_a + b*668265263 + hash_z
+            offset1 = f1-b
+            blend_ab = blend_a*weight1[b]
+            for c in (0, 1):
+                h = (hash_b + c*2147483647)&0xffffffff
                 h = ((h^(h>>13))*1274126177)&0xffffffff
                 h ^= h>>16
                 # Twelve unit edge gradients of a cube.
                 axis = h % 3
                 u, v = (axis+1)%3, (axis+2)%3
-                offsets = (f[0]-a,f[1]-b,f[2]-c)
-                dot = (offsets[u]*(1 if h&4 else -1)+offsets[v]*(1 if h&8 else -1))*2**-.5
-                weight = (blend[0] if a else 1-blend[0])*(blend[1] if b else 1-blend[1])*(blend[2] if c else 1-blend[2])
-                value += dot*weight
+                offsets = (offset0, offset1, f2-c)
+                dot = (offsets[u]*(1 if h&4 else -1)+offsets[v]*(1 if h&8 else -1))*_INV_ROOT2
+                value += dot*(blend_ab*weight2[c])
     return value
 
 

@@ -64,6 +64,19 @@ def main():
                                       seed=seed, recipe=world['recipe'], bytes=len(payloads[filename]),
                                       sha256=hashlib.sha256(payloads[filename]).hexdigest()))
         print(slug, len(payloads[filename]), 'bytes', flush=True)
+    # Every main merge commits these into the portfolio repository, so an
+    # unnoticed growth in payload size becomes permanent history there. GitHub
+    # warns above 50 MB per file, refuses above 100 MB, and Pages caps a site at
+    # 1 GB. Fail before publishing something the destination cannot accept.
+    for world in manifest['worlds']:
+        megabytes = world['bytes'] / 1_000_000
+        if megabytes >= 100:
+            parser.error(f"{world['file']} is {megabytes:.1f} MB; GitHub rejects files at 100 MB. "
+                         'Reduce the showcase grid size or stop embedding build_stages in the bundle.')
+        if megabytes >= 50:
+            print(f"WARNING: {world['file']} is {megabytes:.1f} MB, above GitHub's 50 MB advisory limit; "
+                  'the portfolio repository grows by this much on every main merge.', flush=True)
+
     template = Path(__file__).with_name('fantasy-world-generator-showcase.html').read_text(encoding='utf-8')
     options = ''.join(f'<option value="{w[0]}">{escape(w[1])}</option>' for w in WORLDS)
     descriptions = json.dumps({w[0]: f'{w[4]} Seed {w[2]}.' for w in WORLDS})

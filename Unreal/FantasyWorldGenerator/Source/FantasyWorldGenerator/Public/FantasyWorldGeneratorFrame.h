@@ -68,7 +68,7 @@ namespace FantasyWorldGenerator
 	inline constexpr std::int64_t MaximumSeed = 4294967295;
 
 	/** Regional raster samples per side. */
-	inline constexpr std::int64_t MinimumRasterSize = 1;
+	inline constexpr std::int64_t MinimumRasterSize = 3;
 	inline constexpr std::int64_t MaximumRasterSize = 257;
 
 	enum class EGenerateRequestStatus : std::uint8_t
@@ -126,7 +126,7 @@ namespace FantasyWorldGenerator
 		case EGenerateRequestStatus::SeedOutOfRange:
 			return "seed must be an unsigned 32-bit value";
 		case EGenerateRequestStatus::RasterSizeOutOfRange:
-			return "regional raster size must be 1..257 samples per side";
+			return "regional raster size must be 3..257 samples per side";
 		case EGenerateRequestStatus::RetiredShape:
 			return "recipe 3 generates a tectonic globe; planar shapes are retired";
 		}

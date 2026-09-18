@@ -29,10 +29,16 @@ def water_cost(points,water,depth,hazard,limit,draft):
     lookup={p:i for i,p in enumerate(points)};n=max(z for x,z in points)+1
     def passable(i):return water[i]==1 and depth[i]>=draft and hazard[i]<=limit
     def cost(i,j,d):
-        if not passable(i) or not passable(j):return None
+        # passable() is inlined here: the routing search calls this several million
+        # times per world and the call overhead dominated the three comparisons.
+        if not (water[i]==1 and depth[i]>=draft and hazard[i]<=limit):return None
+        if not (water[j]==1 and depth[j]>=draft and hazard[j]<=limit):return None
         x,z=points[i];xx,zz=points[j]
         if x!=xx and z!=zz and z not in (0,n-1) and zz not in (0,n-1):
-            if not passable(lookup[(x,zz)]) or not passable(lookup[(xx,z)]):return None
+            k=lookup[(x,zz)]
+            if not (water[k]==1 and depth[k]>=draft and hazard[k]<=limit):return None
+            k=lookup[(xx,z)]
+            if not (water[k]==1 and depth[k]>=draft and hazard[k]<=limit):return None
         return d
     return cost
 

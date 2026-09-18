@@ -291,7 +291,12 @@ def generate_history(cfg):
         state={k:copy.deepcopy(result.get(k)) for k in STATE_KEYS if previous_state.get(k)!=result.get(k)}
         snapshots.append({'stage':stage,'title':STAGES[stage-1],'layers':layers,
                           'removed_layers':sorted(set(previous_layers)-set(result['layers'])),'state':state})
-        previous_layers=copy.deepcopy(result['layers']);previous_state={k:copy.deepcopy(result.get(k)) for k in STATE_KEYS}
+        # The snapshot above already holds an independent copy of everything that
+        # changed, and an unchanged entry still equals the copy kept from the stage
+        # that last wrote it. Re-deep-copying every layer and state key here copied
+        # the whole world a second time on each of the sixteen stages.
+        previous_layers={k:(layers[k] if k in layers else previous_layers.get(k)) for k in result['layers']}
+        previous_state={k:(state[k] if k in state else previous_state.get(k)) for k in STATE_KEYS}
     for stage in range(1,cfg.phase+1):
         if stage<=5:
             result=generate_base(replace(cfg,phase=stage))

@@ -1,11 +1,13 @@
 // Headless conformance driver, not a persistent service or production CLI.
 #include "wire.hpp"
+#include "binary_stdio.hpp"
 #include "numeric.hpp"
 #include <iomanip>
 #include <iostream>
 #include <locale>
 
 int main(int argc,char** argv) {
+    fantasy_world_generator::use_binary_stdio();
     using namespace fantasy_world_generator;
     try {
         if(argc!=2) throw Error("INVALID_INPUT");

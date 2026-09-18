@@ -65,7 +65,7 @@ class PluginFrameTests(unittest.TestCase):
         overrides=body.get('overrides',{})
         if body['recipe_version']!=3:return 'UNSUPPORTED_VERSION'
         if not 0<=body['seed']<=4294967295:return 'INVALID_INPUT'
-        if not 1<=overrides.get('size',129)<=257:return 'STATE_CAPACITY'
+        if not 3<=overrides.get('size',129)<=257:return 'STATE_CAPACITY'
         return 'INVALID_INPUT'
 
     def test_generate_request_rejects_retired_recipe_shape_and_out_of_range_seed_or_size(self):
