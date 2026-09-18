@@ -196,7 +196,7 @@ The independent [historical city shapes catalogue](city-shapes.md) supplies sour
 
 ## Final-world city plans
 
-The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The [hamlet planner](hamlet-planner.md) then packs support hamlets into a separate `hamlet_plans` section using dedicated rural building IDs. The exhaustive asset list includes schematic potential identities for city and hamlet structures plus housing profiles; these are not production art. Terrain recipe and algorithm remain unchanged.
+The [city planner](city-planner.md) adds versioned measured plots and worker housing after simulation. The [hamlet planner](hamlet-planner.md) then packs support hamlets into a separate `hamlet_plans` section using dedicated rural building IDs. The [castle planner](castle-planner.md) assembles fortification modules from fortress pins into `castle_plans`. The exhaustive asset list includes schematic potential identities for city, hamlet and castle structures plus housing profiles; these are not production art. Terrain recipe and algorithm remain unchanged.
 
 ### Founding and preview resolution
 

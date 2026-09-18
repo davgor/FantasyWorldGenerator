@@ -15,6 +15,21 @@
     return [bottom,top].flatMap(y=>[[-w,-d],[w,-d],[w,d],[-w,d]].map(([x,z])=>[b.x_m+x*c-z*s,y-datum,b.z_m+x*s+z*c]));
   }
   const faces=[[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]];
+  /** Collect curtain/wall segments from city fortifications or castle wall_networks. */
+  function wallSegments(plan){
+    const rows=[];
+    for(const seg of plan.fortifications?.segments||[])rows.push(seg);
+    for(const network of plan.wall_networks||[])for(const seg of network.segments||[])rows.push(seg);
+    return rows;
+  }
+  function segmentPlot(seg){
+    const a=seg.from_m,b=seg.to_m,dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz)||seg.length_m||1;
+    const thickness=seg.thickness_m??3,height=seg.height_m??7;
+    const angle=seg.rotation_degrees??(Math.atan2(dz,dx)*180/Math.PI);
+    return {x_m:(a[0]+b[0])/2,z_m:(a[1]+b[1])/2,rotation_degrees:angle,
+      dimensions_m:{width:thickness,depth:len,height},
+      ground_elevation_m:seg.ground_elevation_m,foundation_bottom_m:seg.foundation_bottom_m};
+  }
   function geometry(plan,plots){
     const datum=heightAt(plan,0,0),positions=[],colors=[];
     function triangle(a,b,c,color){
@@ -24,7 +39,7 @@
       const shade=.6+.4*Math.max(0,normal[0]*-.35+Math.abs(normal[1])*.8+normal[2]*.45);
       for(const p of [a,b,c]){positions.push(...p);colors.push(...color.map(v=>v*shade));}
     }
-    const lo=plan.bounds_m[0],step=plan.terrain.cell_m,n=plan.terrain.size,roads=new Set(plan.roads.map(c=>c.join(',')));
+    const lo=plan.bounds_m[0],step=plan.terrain.cell_m,n=plan.terrain.size,roads=new Set((plan.roads||[]).map(c=>c.join(',')));
     for(let j=0;j<n;j++)for(let i=0;i<n;i++){
       const x=lo+i*step,z=lo+j*step;
       const points=[[x,z],[x+step,z],[x+step,z+step],[x,z+step]].map(([x,z])=>[x,heightAt(plan,x,z)-datum,z]);
@@ -38,16 +53,24 @@
     }
     function strip(a,b,width,color,lift=.1){const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!length)return;const dx=-(b[1]-a[1])/length*width/2,dz=(b[0]-a[0])/length*width/2;
       const q=[[a[0]+dx,a[1]+dz],[b[0]+dx,b[1]+dz],[b[0]-dx,b[1]-dz],[a[0]-dx,a[1]-dz]].map(([x,z])=>[x,heightAt(plan,x,z)-datum+lift,z]);triangle(q[0],q[2],q[1],color);triangle(q[0],q[3],q[2],color);}
-    for(const c of plan.road_connections||[])if(c.status==='connected')for(let i=1;i<c.local_path_m.length;i++)strip(c.local_path_m[i-1],c.local_path_m[i],4,[.93,.65,.32]);
+    for(const c of plan.road_connections||[])if(c.status==='connected')for(let i=1;i<(c.local_path_m||[]).length;i++)strip(c.local_path_m[i-1],c.local_path_m[i],4,[.93,.65,.32]);
     function box(b,bottom,top,color){const v=boxVertices(b,datum,bottom,top);for(const [a,c,d,e]of faces){triangle(v[a],v[c],v[d],color);triangle(v[a],v[d],v[e],color);}}
+    // Curtain / city-wall segments as extruded metre boxes (brown).
+    for(const seg of wallSegments(plan)){
+      const b=segmentPlot(seg);
+      const floor=b.ground_elevation_m??heightAt(plan,b.x_m,b.z_m);
+      box(b,floor+.02,floor+Math.max(.5,b.dimensions_m.height),[.42,.29,.18]);
+    }
     for(const b of plots){
       const floor=b.ground_elevation_m??heightAt(plan,b.x_m,b.z_m),base=b.foundation_bottom_m??floor;
       if(floor>base+.01)box(b,base,floor,[.4,.41,.4]);
-      box(b,floor+.03,floor+Math.max(.03,b.dimensions_m.height),b.kind==='housing'?[.46,.71,.82]:b.phase==='high'?[.85,.70,.37]:[.74,.60,.80]);
+      const color=b.kind==='housing'?[.46,.71,.82]:b.kind==='gate'||b.kind==='tower'||b.kind==='stair'?[.55,.45,.28]:
+        b.kind==='court'?[.35,.42,.32]:b.kind==='landmark'?[.72,.58,.32]:b.phase==='high'||b.phase==='landmarks'?[.85,.70,.37]:[.74,.60,.80];
+      box(b,floor+.03,floor+Math.max(.03,b.dimensions_m.height||.03),color);
     }
-    return {positions:new Float32Array(positions),colors:new Float32Array(colors),datum};
+    return {positions:new Float32Array(positions),colors:new Float32Array(colors),datum,wall_segment_count:wallSegments(plan).length};
   }
-  const api={heightAt,boxVertices,geometry,terrainColor,magicColor};
+  const api={heightAt,boxVertices,geometry,terrainColor,magicColor,wallSegments,segmentPlot};
   if(typeof window!=='undefined')window.cityTerrainStyle={terrainColor,magicColor};
   if(typeof module!=='undefined')module.exports=api;
   if(typeof window==='undefined')return;
@@ -56,7 +79,7 @@
     const canvas=document.createElement('canvas'),overlay=document.createElement('canvas');
     container.style.cssText='position:relative;width:100%;height:min(52vh,560px);min-height:320px;background:#101f28;touch-action:none';
     for(const c of [canvas,overlay]){c.style.cssText='position:absolute;width:100%;height:100%;left:0;top:0';container.append(c);}
-    overlay.style.pointerEvents='none';overlay.style.background='transparent';canvas.setAttribute('aria-label','3D city terrain and buildings. Drag to orbit; scroll to zoom. Select a building from the list for keyboard access.');
+    overlay.style.pointerEvents='none';overlay.style.background='transparent';canvas.setAttribute('aria-label','3D settlement terrain and buildings. Drag to orbit; scroll to zoom. Select a building from the list for keyboard access.');
     const gl=canvas.getContext('webgl',{antialias:true,alpha:false});if(!gl){container.remove();return null;}
     function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
     const program=gl.createProgram();

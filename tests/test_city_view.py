@@ -39,3 +39,29 @@ assert.ok([...mesh.positions,...mesh.colors].every(Number.isFinite));
 assert.equal(mesh.positions.length/3,6+36+36); // ground, foundation, measured building
 """
         subprocess.run(['node','-e',script],cwd=Path(__file__).resolve().parents[1],check=True,capture_output=True,text=True)
+
+    @unittest.skipUnless(shutil.which('node'), 'Node is required for wall segment geometry')
+    def test_wall_segments_add_extruded_boxes(self):
+        script=r"""
+const assert=require('node:assert/strict');
+const {geometry,wallSegments,segmentPlot}=require('./tools/city_view_3d.js');
+const seg={from_m:[0,0],to_m:[10,0],thickness_m:3,height_m:8,rotation_degrees:0};
+const plot=segmentPlot(seg);
+assert.equal(plot.dimensions_m.width,3);
+assert.equal(plot.dimensions_m.depth,10);
+assert.equal(plot.dimensions_m.height,8);
+const city={bounds_m:[-20,-20,20,20],roads:[],fortifications:{segments:[seg]},
+ terrain:{cell_m:4,size:1,codes:[[0]],surface:{size:2,step_m:40,heights_m:[[100,100],[100,100]]}}};
+const castle={bounds_m:[-20,-20,20,20],roads:[],wall_networks:[{status:'closed',segments:[seg]}],
+ terrain:{cell_m:4,size:1,codes:[[0]],surface:{size:2,step_m:40,heights_m:[[100,100],[100,100]]}}};
+assert.equal(wallSegments(city).length,1);
+assert.equal(wallSegments(castle).length,1);
+const bare=geometry({bounds_m:[-20,-20,20,20],roads:[],terrain:{cell_m:4,size:1,codes:[[0]],
+ surface:{size:2,step_m:40,heights_m:[[100,100],[100,100]]}}},[]);
+const withWalls=geometry(castle,[]);
+assert.equal(withWalls.wall_segment_count,1);
+assert.ok(withWalls.positions.length>bare.positions.length);
+assert.equal((withWalls.positions.length-bare.positions.length)/3,36); // one extruded box
+assert.ok([...withWalls.positions,...withWalls.colors].every(Number.isFinite));
+"""
+        subprocess.run(['node','-e',script],cwd=Path(__file__).resolve().parents[1],check=True,capture_output=True,text=True)

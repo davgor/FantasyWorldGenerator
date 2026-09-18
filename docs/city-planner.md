@@ -2,19 +2,19 @@
 
 The [portable coordinate contract](../Contracts/capabilities-and-coordinates.md) defines city gnomonic coordinates, radial elevation, building-axis orientation and their distinction from curved patch mesh coordinates. No planner or export version changes are introduced by that additive contract helper.
 
-City planner version 5 runs after stage 16 and after the last requested age transition. Earlier simulation snapshots do not contain future city plans. It adds the optional, independently versioned `city_plans` world-output section; recipe 3 now uses generation algorithm 16 for parent-race founding. Planner identity includes both civilization/building registries and the city-shape catalogue hash. Age advancement rejects mismatched identities.
+City planner version 6 runs after stage 16 and after the last requested age transition. Earlier simulation snapshots do not contain future city plans. It adds the optional, independently versioned `city_plans` world-output section; recipe 3 now uses generation algorithm 16 for parent-race founding. Planner identity includes both civilization/building registries and the city-shape catalogue hash. Age advancement rejects mismatched identities.
 
 ## Seven ordered passes
 
 1. Sample the final map around each city anchor in local east/north metres.
 2. Select a compatible historical shape using the world seed, stable city UID and regional threat.
 3. Fit city walls/gates when the class and shape call for a defended perimeter.
-4. Place the civilization size preset's core buildings.
-5. Fill available plots with worker houses for their target staffing.
+4. Reserve street-front worker-house plots for the upcoming staffing budget, then place the civilization size preset's core buildings around those holds.
+5. Fill the reserved (and any remaining) plots with worker houses for their target staffing.
 6. Place eligible optional and specialist buildings, only after core worker housing fits.
 7. Add housing for their additional staff, using spare beds first.
 
-All civilizations use this same path. Guild halls come from their core presets. Missing prerequisites and failed placements remain explicit in `unplaced`; no building is shrunk to force a fit. A partial plan reports missing core facilities and housing shortfalls. A site with no compatible shape is unbuildable. The planner does not relocate the simulation's city anchors.
+All civilizations use this same path. Guild halls come from their core presets. Missing prerequisites and failed placements remain explicit in `unplaced`; no building is shrunk to force a fit. A partial plan reports missing core facilities and housing shortfalls. A site with no compatible shape is unbuildable. The planner does not relocate the simulation's city anchors. Version 6 holds housing frontage before core packing so dense service lists cannot leave workers with zero beds while vacant land remains.
 
 ## Geometry and constraints
 
@@ -26,7 +26,7 @@ Medium and capital cities receive a **single** schematic enceinte by default whe
 
 The terrain mask excludes water, slopes over 25 degrees and coarse flood risk over 0.65. Where routed river lines exist within a river sample, they replace the coarse river flood flag with a provisional 24-metre channel and a 28-metre setback measured from its centreline. These are design assumptions, not simulated flood extents. No bridges are invented. Disconnected street fragments are excluded.
 
-World rasters can be much coarser than a city: land categories use nearest-neighbour samples, while elevations use the final world height field plus canonical local relief. A shared seeded local-relief field adds real elevation detail; see [continuous terrain](continuous-terrain.md). A 4-metre vertex surface in metres is exported under `terrain.surface`; plots export `rotation_degrees`, `ground_elevation_m` (level floor) and `foundation_bottom_m`. Floors sit above sampled plot corner elevations, with schematic plinths rather than simulated earthworks. Version-1–4 city plans require regeneration before age advancement. Groundwater, navigability, bridge feasibility and structural engineering remain unresolved. Buildings requiring unverified prerequisites remain unplaced. Selection currently derives usable area, slope, aridity, woodland and regional threat; specialized shoreline/ridge/island shapes await verified topology inputs. Repetition weights count previously planned cities in stable UID order across the world.
+World rasters can be much coarser than a city: land categories use nearest-neighbour samples, while elevations use the final world height field plus canonical local relief. A shared seeded local-relief field adds real elevation detail; see [continuous terrain](continuous-terrain.md). A 4-metre vertex surface in metres is exported under `terrain.surface`; plots export `rotation_degrees`, `ground_elevation_m` (level floor) and `foundation_bottom_m`. Floors sit above sampled plot corner elevations, with schematic plinths rather than simulated earthworks. Version-1–5 city plans require regeneration before age advancement. Groundwater, navigability, bridge feasibility and structural engineering remain unresolved. Buildings requiring unverified prerequisites remain unplaced. Selection currently derives usable area, slope, aridity, woodland and regional threat; specialized shoreline/ridge/island shapes await verified topology inputs. Repetition weights count previously planned cities in stable UID order across the world.
 
 ## Staffing and housing
 
@@ -36,7 +36,7 @@ Housing serves distinct target workers in successfully placed facilities. It doe
 
 ## Lab and exports
 
-Click a city on the map, atlas, globe, or city-name list to open its separate layout dialog. The default WebGL 3D view shows the terrain surface and rotated cuboids at authored width, depth and height, with no vertical exaggeration. Drag to orbit, scroll to zoom, reset the camera, toggle labels, or use the building selector. A 2D plan remains available and is the fallback when WebGL is unavailable. Both views retain phase filtering (including pre-upgrade houses), selection and statistics. Core services are gold, lower-priority services purple, and housing blue. Phase selection reveals the ordered fill; zoom and building selection expose dimensions, staffing and beds. Stats and unplaced reasons remain visible. Generate through the final stage to obtain plans.
+Click a city on the map, atlas, globe, or city-name list to open its separate layout dialog. The default WebGL 3D view shows the terrain surface, rotated cuboids, and brown extruded wall segments from `fortifications.segments`, with no vertical exaggeration. Drag to orbit, scroll to zoom, reset the camera, toggle labels, or use the building selector. A 2D plan remains available and is the fallback when WebGL is unavailable; it draws wall segments as filled polygons (not centreline-only). Both views retain phase filtering (including pre-upgrade houses), selection and statistics. Core services are gold, lower-priority services purple, and housing blue. Phase selection reveals the ordered fill; zoom and building selection expose dimensions, staffing and beds. Stats and unplaced reasons remain visible. Generate through the final stage to obtain plans.
 
 The exhaustive asset compiler includes all measured city structure IDs plus `building.worker_house` and `building.worker_apartment`, marked schematic, alongside rural hamlet IDs from the same compiler pass. They are potential final states, not a claim that production art or an Unreal importer exists. World coordinates and dimensions remain metres.
 

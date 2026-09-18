@@ -137,7 +137,8 @@ def _production_assets() -> list[dict[str, Any]]:
 
 def _city_planner_assets():
     from icarus_sim.civilization_registry import section
-    rows=[s for library in section('structure_blocks').values() for block in library['blocks'] for s in block['structures']]
+    rows=[s for key, library in section('structure_blocks').items() if key != 'castle'
+          for block in library['blocks'] for s in block['structures']]
     rows+=list(section('housing_profiles').values())
     return [{'id':s['id'],'kind':'building','name':s['name'],'source':'simulation.city_planner',
              'status':'schematic','selectors':{'building_id':s['id']},
@@ -145,9 +146,20 @@ def _city_planner_assets():
                          'rendering':'Labeled rectangle; production art remains unassigned'}} for s in rows]
 
 
+def _castle_planner_assets():
+    from icarus_sim.civilization_registry import section
+    library=section('structure_blocks')['castle']
+    rows=[s for block in library['blocks'] for s in block['structures']]
+    return [{'id':s['id'],'kind':'building','name':s['name'],'source':'simulation.castle_planner',
+             'status':'schematic','selectors':{'building_id':s['id']},
+             'metadata':{'dimensions_m':s['dimensions_m'],'plot_m':s['plot_m'],
+                         'rendering':'Fortification module or bailey shell; production art remains unassigned'}} for s in rows]
+
+
 def compile_asset_list() -> dict[str, Any]:
     """Return a deterministic, normalized potential-state asset catalogue."""
-    assets = _terrain_assets() + _creature_assets() + _building_assets() + _production_assets() + _history_assets() + _city_planner_assets()
+    assets = (_terrain_assets() + _creature_assets() + _building_assets() + _production_assets()
+              + _history_assets() + _city_planner_assets() + _castle_planner_assets())
     assets.sort(key=lambda item: item["id"])
     ids = [item["id"] for item in assets]
     if len(ids) != len(set(ids)):

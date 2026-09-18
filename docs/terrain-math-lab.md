@@ -642,7 +642,9 @@ Local slope and flood risk reduce suitability. Access must obey the road rules,
 slopes must be below 20 degrees, and each fortress must be at least 200 metres
 from existing sites. Exported reasons, protected road node and access path make
 these decisions inspectable. They do not model sight lines, enemies, siegecraft,
-garrison food demand, walls or a guaranteed defensible footprint.
+or garrison food demand. Metre-scale walls, baileys and keeps are produced later by
+the independent [castle planner](castle-planner.md) as `castle_plans`, not by this
+placement stage.
 
 Culture formation works backwards from the city graph: join existing road links
 whose cost is within `culture_link_cost` (default 1,800). Each connected group gets

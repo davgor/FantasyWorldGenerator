@@ -255,7 +255,7 @@ def age_transition(result,cfg,age):
                                     'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests','threat assessment']})
 
 
-STATE_KEYS=('world_scene','terrain_detail','city_plans','hamlet_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins',
+STATE_KEYS=('world_scene','terrain_detail','city_plans','hamlet_plans','castle_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area')
 
@@ -320,8 +320,10 @@ def generate_history(cfg):
         elif stage==16:
             from .city_planner import fill_cities
             from .hamlet_planner import fill_hamlets
+            from .castle_planner import fill_castles
             fill_cities(result)
             fill_hamlets(result)
+            fill_castles(result)
         capture(stage)
     result['generator_version']=16
     result['config']=asdict(cfg);result['effective_config']['world_recipe']=3;result['effective_config']['phase']=cfg.phase
@@ -370,6 +372,10 @@ def validate_age_world(world):
             from .hamlet_planner import planner_identity as hamlet_planner_identity
             if world['hamlet_plans'].get('identity')!=hamlet_planner_identity():
                 raise ValueError('Hamlet planner data changed; regenerate this world')
+        if 'castle_plans' in world:
+            from .castle_planner import planner_identity as castle_planner_identity
+            if world['castle_plans'].get('identity')!=castle_planner_identity():
+                raise ValueError('Castle planner data changed; regenerate this world')
         if set(world['magic']['networks'])!=set(SCHOOLS):raise ValueError('Expected exactly eight networks')
         ages=world['history']['ages']
         if not isinstance(ages,list) or [a['age'] for a in ages]!=list(range(1,len(ages)+1)):
@@ -483,13 +489,16 @@ def advance_age_request(body):
         previous_state={k:copy.deepcopy(baseline.get(k)) for k in STATE_KEYS}
         result.pop('city_plans',None)
         result.pop('hamlet_plans',None)
+        result.pop('castle_plans',None)
         result.pop('world_scene',None)
         age_transition(result,cfg,age)
         if age==start_age+steps:
             from .city_planner import fill_cities
             from .hamlet_planner import fill_hamlets
+            from .castle_planner import fill_castles
             fill_cities(result)
             fill_hamlets(result)
+            fill_castles(result)
         if 'build_stages' in result:
             stage=len(result['build_stages'])+1
             result['build_stages'].append({'stage':stage,'title':f'Age transition {age}','kind':'age',

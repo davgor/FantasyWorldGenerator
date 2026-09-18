@@ -6,6 +6,7 @@
 - [Continuous terrain data](continuous-terrain.md) defines shared physical heights and resolved tile exports.
 - [Final-world city planner](city-planner.md) defines ordered building filling, worker housing and the lab city view.
 - [Final-world hamlet planner](hamlet-planner.md) defines independent rural packing, dedicated hamlet building IDs and lab hamlet view.
+- [Final-world castle planner](castle-planner.md) defines independent fortification modules, wall networks and bailey layouts from fortress pins.
 - [Historical city shapes](city-shapes.md) defines the sourced shape catalogue and location-based planner selection.
 - [Civilization master registry](civilizations.md) is the canonical authoring guide for entities, generation rules and construction libraries.
 - [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
@@ -18,6 +19,7 @@
 - [World asset catalogue](catalogue/world-assets/README.md) contains the inherited production briefs.
 - [Human civilization blocks](catalogue/human-civilization-blocks.md) define non-housing city layout requirements and provisional metre-scale measurements for the later catalogue rebuild.
 - [Hamlet building blocks](catalogue/hamlet-blocks.md) define dedicated rural structure IDs and cottage housing separate from city blocks.
+- [Castle building blocks](catalogue/castle-blocks.md) define fortification modules and bailey services for the independent castle planner.
 - [Extraction provenance](../provenance/README.md) defines source-hash preservation and licensing limitations.
 - [Contracts](../Contracts/README.md) index versioned schemas and generic capability inputs.
 - [Capabilities and coordinates](../Contracts/capabilities-and-coordinates.md) defines producer negotiation, physical units, globe/local projections and portable coordinate fixtures.

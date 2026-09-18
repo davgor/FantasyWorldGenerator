@@ -84,7 +84,7 @@ def build_scene(world):
     scene={'version':1,'unit':'metres','coordinates':'globe-centred XYZ; Y north; X at latitude 0 longitude 0; Z at latitude 0 longitude 90',
            'radius_m':field.radius,'terrain_detail':world.get('terrain_detail'),
            'buildings':[],'streets':[],'junctions':[],'regional_roads':[],
-           'limits':'Regional routes remain coarse transport proposals, including unengineered bridge candidates; local connection failures are explicit. Hamlet entries are tagged settlement_kind=hamlet and remain filterable from city payloads.'}
+           'limits':'Regional routes remain coarse transport proposals, including unengineered bridge candidates; local connection failures are explicit. Hamlet entries are tagged settlement_kind=hamlet and castle entries settlement_kind=castle; both remain filterable from city payloads.'}
     gates={}
     for city in world.get('city_plans',{}).get('cities',[]):
         site=next(s for s in world['settlements']['sites'] if s.get('uid',str(s['id']))==city['city_uid'])
@@ -94,6 +94,10 @@ def build_scene(world):
         site={'x':plan['x'],'z':plan['z'],'id':plan['hamlet_id'],'uid':plan['hamlet_id']}
         _emit_local_plan(scene,world,field,site,plan,settlement_kind='hamlet',uid_field='hamlet_id',
                          uid_value=plan['hamlet_id'])
+    for plan in world.get('castle_plans',{}).get('castles',[]):
+        site={'x':plan['x'],'z':plan['z'],'id':plan['fortress_id'],'uid':plan['fortress_id']}
+        _emit_local_plan(scene,world,field,site,plan,settlement_kind='castle',uid_field='fortress_id',
+                         uid_value=plan['fortress_id'])
     for i,road in enumerate(world.get('roads',{}).get('routes',[])):
         a=gates.get((i,'from'));b=gates.get((i,'to'))
         lo=a['outside_index'] if a else 0;hi=b['outside_index']+1 if b else len(road['nodes'])

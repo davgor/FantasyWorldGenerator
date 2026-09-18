@@ -1,8 +1,8 @@
 {
   "schema": "fantasy-world-generator.building-registry",
   "schema_version": 2,
-  "revision": 4,
-  "description": "Shared building definitions, measurements, staffing, runtime packs and layout libraries. Civilization presets reference these records.",
+  "revision": 5,
+  "description": "Shared building definitions, measurements, staffing, runtime packs and layout libraries. Civilization presets reference these records. Castle fortification IDs live under structure_blocks.castle for the independent castle planner.",
   "building_packs": {
     "schema_version": 3,
     "description": "City building pack catalogue used by settlement generation.",
@@ -6743,6 +6743,655 @@
         "conversion": "Future Unreal adapter converts metres to centimetres by multiplying by 100."
       },
       "library_id": "rural"
+    },
+    "castle": {
+      "schema": "fantasy-world-generator.civilization-blocks",
+      "schema_version": 1,
+      "catalogue_revision": 1,
+      "status": "design_only",
+      "runtime_placement_enabled": false,
+      "scope": "Castle fortification modules and bailey services for the independent castle planner. Not consumed by city or hamlet presets.",
+      "deferred_blocks": [
+        "housing"
+      ],
+      "unit": "metres",
+      "priority_definitions": {
+        "core": "Required by every typology kit that places this module.",
+        "conditional": "Used when a kit requests ditch, postern or barbican features.",
+        "specialist": "Landmark keep and great hall shells."
+      },
+      "scale_policy": {
+        "counts": "Kit recipes own quantities; this library supplies measured shells.",
+        "sharing": "Bailey courts are open compounds; keep tower is the command landmark.",
+        "geometry": "Curtain uses linear_segment depth as repeat length along the wall path.",
+        "world_budget": "Fortresses are few; allow larger wards than hamlets.",
+        "housing": "Garrison beds deferred; not worker-house densification.",
+        "asset_links": "Reuse candidates point at ARCH fortress assemblies where known.",
+        "state": "Schematic potential states only; no Unreal mesh claim."
+      },
+      "blocks": [
+        {
+          "id": "castle_fortification",
+          "name": "Castle fortification modules",
+          "structures": [
+            {
+              "id": "building.curtain_segment",
+              "name": "Curtain wall segment",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "linear_fortification",
+              "purpose": "Walkable curtain run with parapet between fortification nodes.",
+              "placement": "Along closed bailey or ward perimeter.",
+              "requirements": [
+                "Compatible joins at both ends; continuous walkway."
+              ],
+              "reuse_candidates": [
+                "production.arch-012",
+                "building.wall"
+              ],
+              "geometry_type": "linear_segment",
+              "dimensions_m": {
+                "width": 3,
+                "depth": 10,
+                "height": 8
+              },
+              "clearance_m": {
+                "front": 0,
+                "rear": 0,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 7,
+                "depth": 10
+              },
+              "access": {
+                "mode": "service",
+                "minimum_clear_width_m": 1.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [],
+                "notes": "No dedicated roster. Patrols are counted at barracks or gate nodes."
+              }
+            },
+            {
+              "id": "building.corner_tower",
+              "name": "Castle corner tower",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "fortification",
+              "purpose": "Join curtain runs at turns and provide elevated defence.",
+              "placement": "Perimeter turns exceeding the kit corner angle.",
+              "requirements": [
+                "Curtain ends compatible with tower join thickness and height."
+              ],
+              "reuse_candidates": [
+                "production.arch-013",
+                "building.tower"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 8,
+                "depth": 8,
+                "height": 14
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 12,
+                "depth": 12
+              },
+              "access": {
+                "mode": "service",
+                "minimum_clear_width_m": 1.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "tower_watch",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  }
+                ],
+                "notes": "Watch posts only; sleeping deferred."
+              }
+            },
+            {
+              "id": "building.wall_stair",
+              "name": "Wall-walk stair",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "fortification",
+              "purpose": "Connect bailey grade to the curtain walkway.",
+              "placement": "Interior face of a curtain run.",
+              "requirements": [
+                "Walkway continuity through the adjoining segments."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 4,
+                "depth": 6,
+                "height": 8
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 1,
+                "left": 1,
+                "right": 1
+              },
+              "plot_m": {
+                "width": 6,
+                "depth": 9
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 1.2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [],
+                "notes": "No dedicated roster."
+              }
+            },
+            {
+              "id": "building.postern",
+              "name": "Postern gate",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "fortification",
+              "purpose": "Secondary personnel exit opposite the main gate.",
+              "placement": "Outer ring opposite primary approach.",
+              "requirements": [
+                "Closed perimeter; restricted clearance."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 8,
+                "height": 8
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 10,
+                "depth": 14
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 1.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "postern_guard",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 2
+                  }
+                ],
+                "notes": "Guard posts only."
+              }
+            },
+            {
+              "id": "building.barbican",
+              "name": "Barbican gatehouse",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "fortification",
+              "purpose": "Primary defended entrance on the approach road.",
+              "placement": "Outer ring at parent-city approach.",
+              "requirements": [
+                "Gate clearance; curtain joins on both flanks."
+              ],
+              "reuse_candidates": [
+                "production.arch-011",
+                "building.gatehouse"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 14,
+                "depth": 16,
+                "height": 14
+              },
+              "clearance_m": {
+                "front": 8,
+                "rear": 4,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 18,
+                "depth": 28
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "gate_captain",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 2
+                  },
+                  {
+                    "role": "gate_guard",
+                    "minimum": 2,
+                    "target": 4,
+                    "maximum": 6
+                  }
+                ],
+                "notes": "Gate roster; sleeping deferred."
+              }
+            },
+            {
+              "id": "building.drawbridge",
+              "name": "Drawbridge and ditch crossing",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "fortification",
+              "purpose": "Span the outer ditch on the primary approach.",
+              "placement": "Immediately outside the barbican when the kit requests a ditch.",
+              "requirements": [
+                "Outer ditch present; gate clearance."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 6,
+                "depth": 14,
+                "height": 2
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 10,
+                "depth": 18
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 3.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [],
+                "notes": "Operated by gate crew."
+              }
+            },
+            {
+              "id": "building.bailey_court",
+              "name": "Bailey courtyard",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "open_space",
+              "purpose": "Open ward for circulation, musters and service yards inside a ring.",
+              "placement": "Interior of a closed fortification ring.",
+              "requirements": [
+                "Closed wall network."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "open_area",
+              "dimensions_m": {
+                "width": 36,
+                "depth": 44,
+                "height": 0
+              },
+              "clearance_m": {
+                "front": 0,
+                "rear": 0,
+                "left": 0,
+                "right": 0
+              },
+              "plot_m": {
+                "width": 36,
+                "depth": 44
+              },
+              "access": {
+                "mode": "cart",
+                "minimum_clear_width_m": 4
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [],
+                "notes": "Open court; no dedicated roster."
+              }
+            }
+          ]
+        },
+        {
+          "id": "castle_services",
+          "name": "Castle bailey services",
+          "structures": [
+            {
+              "id": "building.keep_tower",
+              "name": "Keep tower",
+              "status": "planned",
+              "priority": "specialist",
+              "module_family": "landmark",
+              "purpose": "Command and refuge tower without an embedded courtyard.",
+              "placement": "Inner ward or motte centre.",
+              "requirements": [
+                "Bailey or motte court available."
+              ],
+              "reuse_candidates": [
+                "production.arch-014",
+                "building.keep"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 16,
+                "depth": 16,
+                "height": 24
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 4,
+                "left": 4,
+                "right": 4
+              },
+              "plot_m": {
+                "width": 24,
+                "depth": 24
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "commander",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  },
+                  {
+                    "role": "keep_guard",
+                    "minimum": 3,
+                    "target": 6,
+                    "maximum": 9
+                  }
+                ],
+                "notes": "Command roster; residential rooms deferred."
+              }
+            },
+            {
+              "id": "building.great_hall",
+              "name": "Castle great hall",
+              "status": "planned",
+              "priority": "specialist",
+              "module_family": "hall",
+              "purpose": "Assembly and household hall inside the bailey.",
+              "placement": "Inner bailey near the keep.",
+              "requirements": [
+                "Bailey court."
+              ],
+              "reuse_candidates": [],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 12,
+                "depth": 24,
+                "height": 10
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 3,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 16,
+                "depth": 31
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "steward",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 2
+                  },
+                  {
+                    "role": "hall_attendant",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 4
+                  }
+                ],
+                "notes": "Household service roster."
+              }
+            },
+            {
+              "id": "building.castle_chapel",
+              "name": "Castle chapel",
+              "status": "planned",
+              "priority": "conditional",
+              "module_family": "landmark",
+              "purpose": "Small chapel for garrison and household rites.",
+              "placement": "Inner bailey.",
+              "requirements": [],
+              "reuse_candidates": [],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 8,
+                "depth": 12,
+                "height": 9
+              },
+              "clearance_m": {
+                "front": 3,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 12,
+                "depth": 17
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 1.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "chaplain",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 1
+                  }
+                ],
+                "notes": "Single chaplain post."
+              }
+            },
+            {
+              "id": "building.castle_barracks",
+              "name": "Castle barracks",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "military_hall",
+              "purpose": "Garrison muster and equipment space inside the bailey.",
+              "placement": "Outer or main bailey near the gate.",
+              "requirements": [],
+              "reuse_candidates": [
+                "building.barracks"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 12,
+                "depth": 18,
+                "height": 7
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 3,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 16,
+                "depth": 25
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "sergeant",
+                    "minimum": 1,
+                    "target": 2,
+                    "maximum": 3
+                  },
+                  {
+                    "role": "garrison_trooper",
+                    "minimum": 4,
+                    "target": 8,
+                    "maximum": 12
+                  }
+                ],
+                "notes": "Muster roster; sleeping deferred."
+              }
+            },
+            {
+              "id": "building.castle_armory",
+              "name": "Castle armory",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "storehouse",
+              "purpose": "Secure arms store for the garrison.",
+              "placement": "Guarded bailey near barracks.",
+              "requirements": [],
+              "reuse_candidates": [
+                "building.armory"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 8,
+                "depth": 12,
+                "height": 7
+              },
+              "clearance_m": {
+                "front": 4,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 12,
+                "depth": 18
+              },
+              "access": {
+                "mode": "service",
+                "minimum_clear_width_m": 1.5
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [
+                  {
+                    "role": "armorer",
+                    "minimum": 1,
+                    "target": 1,
+                    "maximum": 2
+                  }
+                ],
+                "notes": "Armorer post only."
+              }
+            },
+            {
+              "id": "building.castle_well",
+              "name": "Castle well",
+              "status": "planned",
+              "priority": "core",
+              "module_family": "service_yard",
+              "purpose": "Independent water supply inside the defended precinct.",
+              "placement": "Inner bailey or motte yard.",
+              "requirements": [],
+              "reuse_candidates": [
+                "building.well"
+              ],
+              "geometry_type": "building",
+              "dimensions_m": {
+                "width": 3,
+                "depth": 3,
+                "height": 3
+              },
+              "clearance_m": {
+                "front": 2,
+                "rear": 2,
+                "left": 2,
+                "right": 2
+              },
+              "plot_m": {
+                "width": 7,
+                "depth": 7
+              },
+              "access": {
+                "mode": "foot",
+                "minimum_clear_width_m": 1.2
+              },
+              "staffing": {
+                "basis": "distinct_people_all_shifts",
+                "housing_location": "city",
+                "roles": [],
+                "notes": "No dedicated roster."
+              }
+            }
+          ]
+        }
+      ],
+      "measurement_status": "provisional_design_defaults",
+      "measurement_convention": {
+        "axes": "Local X = width across frontage; local Z = depth away from front access edge; Y = height above local grade. Rotate the entire footprint, clearances and access together.",
+        "footprint": "dimensions_m bounds the building, compound or open area. Compound bounds include its named working yard. A height of zero means no enclosing building height.",
+        "plot": "plot_m is the unrotated reservation: width + left + right, depth + front + rear.",
+        "linear": "For curtain segments, width is wall thickness and depth is repeat length along the path.",
+        "access": "Gate and drawbridge use cart clearance; postern and stairs use foot clearance.",
+        "terrain": "No foundation or siegeproofing guarantee is inferred from these boxes.",
+        "variations": "Kit recipes select counts; these are one medium-fortress planning size each.",
+        "conversion": "Future Unreal adapter converts metres to centimetres by multiplying by 100."
+      },
+      "library_id": "castle"
     }
   },
   "housing_profiles": {

@@ -33,7 +33,7 @@ Measured rural IDs live in `structure_blocks.rural` and `housing_profiles.hamlet
 
 ## Lab
 
-Click a hamlet card under “Inspect hamlets and fortresses”, or a nearby map/globe hamlet marker, to open the shared layout dialog via `openHamletPlan`. Phase filtering, 2D and 3D cuboid views match the city inspector.
+Click a hamlet card under “Inspect hamlets and fortresses”, or a nearby map/globe hamlet marker, to open the shared layout dialog via `openHamletPlan`. Phase filtering, 2D and 3D cuboid views match the city inspector. Fortress cards open `openCastlePlan` for independent `castle_plans` (wall segments included).
 
 ## Verification
 

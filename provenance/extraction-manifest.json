@@ -898,33 +898,73 @@
       "source": "board/done/LAB-005.md",
       "source_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
       "destination": "board/done/LAB-005.md",
-      "destination_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "03eed5f99f1cc85c5919deacf81249258048b0c2b9b6823124e60a7491bf63c9",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "0fc21abf0d01260b1b64bad2bf00248b565d18207850a6ad22d5b83eb8975701",
+          "destination_sha256": "03eed5f99f1cc85c5919deacf81249258048b0c2b9b6823124e60a7491bf63c9",
+          "decision": "board/done/LAB-005.md",
+          "reason": "Correct stale provenance destination hash to match committed LAB-005 ticket bytes; no ticket content change in this revision."
+        }
+      ],
+      "modification": "Provenance hash correction to committed destination bytes; original extraction source hash retained."
     },
     {
       "source": "board/done/LAB-006.md",
       "source_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
       "destination": "board/done/LAB-006.md",
-      "destination_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "243fd913919b3c01f509272426d17b8a57ffbef362492382129b19bae3696a87",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "392f5baacd465dfc73d921abcff98e0a748038a90f44285a34ad7fae20db7a67",
+          "destination_sha256": "243fd913919b3c01f509272426d17b8a57ffbef362492382129b19bae3696a87",
+          "decision": "board/done/LAB-006.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "board/done/LAB-017.md",
       "source_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
       "destination": "board/done/LAB-017.md",
-      "destination_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "2a848cafee79537b808856db0267a44cb8f6c5a786aed7a6e8e8dc711ed35797",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "80f5477048674d1341bf081718c2cc7e0ca08d16a9b80b17289d15cc5f91558f",
+          "destination_sha256": "2a848cafee79537b808856db0267a44cb8f6c5a786aed7a6e8e8dc711ed35797",
+          "decision": "board/done/LAB-017.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "board/done/LAB-018.md",
       "source_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
       "destination": "board/done/LAB-018.md",
-      "destination_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "2dcda1696dae6a3fc08cfc084ff78c0ccbc3bd1bbca76cf5229ba9f7af5ab435",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "6cb84df32b65771d38c108e73e7a3a9a9f79a99d9c26528ca2c8e7a645744e13",
+          "destination_sha256": "2dcda1696dae6a3fc08cfc084ff78c0ccbc3bd1bbca76cf5229ba9f7af5ab435",
+          "decision": "board/done/LAB-018.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "docs/catalogue/creatures.json",
@@ -946,10 +986,19 @@
       "source": "docs/catalogue/world-assets/BUILD-ORDER.md",
       "source_sha256": "b39cc19cc068dee5cc981cf0a9089d49692f5d26f342e744ef4fc1325b794f0b",
       "destination": "docs/catalogue/world-assets/BUILD-ORDER.md",
-      "destination_sha256": "903f21914469d14b1429b297f354c9e6b302a27a71521970d110bda4286ecc26",
+      "destination_sha256": "2b3c3e1a5ebdff7db5090fa59a4079e79dd3a2a8d81c83d24d514f5d993a4cdc",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
-      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "903f21914469d14b1429b297f354c9e6b302a27a71521970d110bda4286ecc26",
+          "destination_sha256": "2b3c3e1a5ebdff7db5090fa59a4079e79dd3a2a8d81c83d24d514f5d993a4cdc",
+          "decision": "docs/catalogue/world-assets/BUILD-ORDER.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "docs/catalogue/world-assets/COVERAGE.md",
@@ -1216,24 +1265,43 @@
       "source": "docs/decisions/014-mathlab-biome-gate.md",
       "source_sha256": "54348d5258fa71784c2c1860023923b1d23d254d2be34c1725f5be3146012990",
       "destination": "docs/decisions/014-mathlab-biome-gate.md",
-      "destination_sha256": "59aa69d89d4f5e7dc2b783b031f0f70ac784f7bf8ec61376133e59851cfd314a",
+      "destination_sha256": "e01491be38bc14258c579348730ecdc736758afa6c636072d896efb5a11b2001",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
-      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation."
+      "modification": "Relative game-repository links changed to immutable source-commit URLs for standalone documentation.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "59aa69d89d4f5e7dc2b783b031f0f70ac784f7bf8ec61376133e59851cfd314a",
+          "destination_sha256": "e01491be38bc14258c579348730ecdc736758afa6c636072d896efb5a11b2001",
+          "decision": "docs/decisions/014-mathlab-biome-gate.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "docs/mathlab-revisions.json",
       "source_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
       "destination": "docs/mathlab-revisions.json",
-      "destination_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "2691ea89a45b48076da2216c1086f9d6d3d4353525296cc5cb6c064a186b0a83",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "a68f8a9b583615554e13efc061d953a7220f8f0e44f629dafc04f1e2d5bbac04",
+          "destination_sha256": "2691ea89a45b48076da2216c1086f9d6d3d4353525296cc5cb6c064a186b0a83",
+          "decision": "docs/mathlab-revisions.json",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
+      "destination_sha256": "abe0767c0c698d07d20f4bf2bec01f67068c913391e8ef2b92056c39d17edc86",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -1259,6 +1327,13 @@
           "destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
           "decision": "docs/civilizations.md",
           "reason": "Move shared building definitions to linked buildings.json and document neutral measured IDs and combined replay identity."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "802acae0db000e1f17dd76991cf10f1d76553342f61956b8cebf79e1d048836b",
+          "destination_sha256": "abe0767c0c698d07d20f4bf2bec01f67068c913391e8ef2b92056c39d17edc86",
+          "decision": "docs/castle-planner.md",
+          "reason": "Independent castle_plans fortification planner documentation and lab history key; see docs/castle-planner.md."
         }
       ]
     },
@@ -1266,7 +1341,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
+      "destination_sha256": "44bdb11ba09ea41171f42fea6db097b51738085b3e25dd36fdde9c798c3da371",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1398,6 +1473,13 @@
           "destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
           "decision": "docs/hamlet-planner.md",
           "reason": "Document independent hamlet_plans packing after city planner; rural schematic assets."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "bdc40134074540e008084d6c403e3af3550fa538ffab0def5e48145ddee17bad",
+          "destination_sha256": "44bdb11ba09ea41171f42fea6db097b51738085b3e25dd36fdde9c798c3da371",
+          "decision": "docs/castle-planner.md",
+          "reason": "Independent castle_plans fortification planner documentation and lab history key; see docs/castle-planner.md."
         }
       ]
     },
@@ -1405,9 +1487,19 @@
       "source": "docs/reviews/LAB-005.md",
       "source_sha256": "b996b08f416abb5b22a54e000ab9c402ae83c5c64de22eefc524a62526dc6a15",
       "destination": "provenance/source-reviews/LAB-005.md",
-      "destination_sha256": "b996b08f416abb5b22a54e000ab9c402ae83c5c64de22eefc524a62526dc6a15",
-      "status": "exact",
-      "reason": "Historical source review retained outside the active review namespace"
+      "destination_sha256": "bffd664d0f987c5a98ad05e835457e0d84d4dafe93d866227aa5bd7296e514aa",
+      "status": "modified",
+      "reason": "Historical source review retained outside the active review namespace",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "b996b08f416abb5b22a54e000ab9c402ae83c5c64de22eefc524a62526dc6a15",
+          "destination_sha256": "bffd664d0f987c5a98ad05e835457e0d84d4dafe93d866227aa5bd7296e514aa",
+          "decision": "provenance/source-reviews/LAB-005.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "docs/reviews/LAB-006.md",
@@ -1429,15 +1521,25 @@
       "source": "docs/reviews/LAB-018.md",
       "source_sha256": "ce3a519a240e8873580226d295e055be912cce385c5b87c3536d360ae71a6fb8",
       "destination": "provenance/source-reviews/LAB-018.md",
-      "destination_sha256": "ce3a519a240e8873580226d295e055be912cce385c5b87c3536d360ae71a6fb8",
-      "status": "exact",
-      "reason": "Historical source review retained outside the active review namespace"
+      "destination_sha256": "b231108393cd5ff516f5c5d6f10370c3e86f67f30bcb5c59629c037e3940a6bd",
+      "status": "modified",
+      "reason": "Historical source review retained outside the active review namespace",
+      "modification": "Reviewed destination update; original extraction source hash retained.",
+      "revisions": [
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "ce3a519a240e8873580226d295e055be912cce385c5b87c3536d360ae71a6fb8",
+          "destination_sha256": "b231108393cd5ff516f5c5d6f10370c3e86f67f30bcb5c59629c037e3940a6bd",
+          "decision": "provenance/source-reviews/LAB-018.md",
+          "reason": "Correct stale provenance destination hash to match committed destination bytes; no intentional content change in this revision."
+        }
+      ]
     },
     {
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
+      "destination_sha256": "feee56a21d3f71c4ba4e4a8bbe2b202da661887cf0d47a06e49e86a162dd53de",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1506,6 +1608,20 @@
           "destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
           "decision": "docs/hamlet-planner.md",
           "reason": "Persist hamlet_plans in stage history and open hamlet layout from rural cards."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "64bf245572fa30cb31dc71302110c8d8dc741347548071c95760f2e296447e34",
+          "destination_sha256": "281aa3fbbc04c651d99993d595a64aca508954e0a2b05111a6a4c5e7938db3f3",
+          "decision": "docs/castle-planner.md",
+          "reason": "Independent castle_plans fortification planner documentation and lab history key; see docs/castle-planner.md."
+        },
+        {
+          "date": "2026-09-17",
+          "previous_destination_sha256": "281aa3fbbc04c651d99993d595a64aca508954e0a2b05111a6a4c5e7938db3f3",
+          "destination_sha256": "feee56a21d3f71c4ba4e4a8bbe2b202da661887cf0d47a06e49e86a162dd53de",
+          "decision": "docs/castle-planner.md",
+          "reason": "Castle/hamlet lab preview: openCastlePlan and wall-segment rendering docs/history keys."
         }
       ]
     },

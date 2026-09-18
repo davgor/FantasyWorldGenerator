@@ -8,7 +8,7 @@ from .civilization_registry import city_plan, section, registry_identity
 from .city_shapes import select_shape, load_catalogue
 from .city_fortifications import program_half_m, build_fortifications, wall_and_gate_defs
 
-VERSION=5
+VERSION=6
 CELL=4
 
 
@@ -164,7 +164,7 @@ def plan_city(world,site,nearby_counts=None):
             angle+=math.radians(5*math.sin(x*.13+z*.17+(seed%1000)))
             anchors.append((x,z,angle))
     anchors=sorted(set(anchors),key=lambda p:(p[0]**2+p[1]**2,p))
-    occupied=set();access=set();candidate_cache={}
+    occupied=set();access=set();reserved=set();candidate_cache={};housing_reserve=[]
     def cells(x,z,w,d,angle=0):return footprint_cells(x,z,w,d,angle,half,CELL)
     def candidates(w,d):
         if (w,d) in candidate_cache:return candidate_cache[(w,d)]
@@ -185,12 +185,31 @@ def plan_city(world,site,nearby_counts=None):
                 if corridor<=valid:options.append((x,z,degrees,ax,az,footprint,corridor,ground))
         candidate_cache[(w,d)]=options
         return options
+    def free_frontage(w,d):
+        return sum(1 for x,z,degrees,ax,az,footprint,corridor,ground in candidates(w,d)
+                   if not (footprint&occupied or footprint&access or corridor&occupied or footprint&reserved or corridor&reserved))
+    def reserve_housing(worker_budget):
+        """Hold street-front plots so later service packing cannot starve worker houses."""
+        need=max(0,math.ceil(max(0,worker_budget-sum(p['beds'] for p in result['plots']))/house['worker_beds'])-len(housing_reserve))
+        w,d=house['plot_m']['width'],house['plot_m']['depth']
+        for option in candidates(w,d):
+            if need<=0:break
+            footprint,corridor=option[5],option[6]
+            if footprint&occupied or footprint&access or corridor&occupied:continue
+            if footprint&reserved or corridor&reserved:continue
+            reserved.update(footprint);reserved.update(corridor-footprint)
+            housing_reserve.append(option);need-=1
+        return len(housing_reserve)
     def install(row,phase,kind='service',placement=None):
         w=row['plot_m']['width'];d=row['plot_m']['depth']
         options=[placement] if placement else candidates(w,d)
-        for x,z,degrees,ax,az,footprint,corridor,ground in options:
+        for option in options:
+            x,z,degrees,ax,az,footprint,corridor,ground=option
             if footprint&occupied or footprint&access or corridor&occupied:continue
+            if kind!='housing' and (footprint&reserved or corridor&reserved):continue
             occupied.update(footprint);access.update(corridor-footprint)
+            reserved.difference_update(footprint|corridor)
+            if kind=='housing' and option in housing_reserve:housing_reserve.remove(option)
             plot={'id':f"plot-{len(result['plots'])}",'building_id':row.get('structure_id',row.get('id')),
                   'name':row['name'],'kind':kind,'phase':phase,'x_m':x,'z_m':z,
                   'rotation_degrees':degrees,'ground_elevation_m':round(max(ground),4),
@@ -245,9 +264,14 @@ def plan_city(world,site,nearby_counts=None):
         (high if row['priority']=='core' else low).append(entry)
     def house_workers(phase):
         workers=sum(p['workers'] for p in result['plots']);beds=sum(p['beds'] for p in result['plots'])
-        audit={'phase':phase,'workers':workers,'starting_beds':beds,'houses_placed':0,'upgrades':0,'plots_exhausted':False}
+        audit={'phase':phase,'workers':workers,'starting_beds':beds,'houses_placed':0,'upgrades':0,
+               'plots_exhausted':False,'reserved_slots':len(housing_reserve)}
         while beds<workers:
-            if not install(house,phase,'housing'):
+            placement=housing_reserve[0] if housing_reserve else None
+            if not install(house,phase,'housing',placement):
+                if placement:
+                    # Reserved slot became unusable; drop it and keep seeking free frontage.
+                    housing_reserve.pop(0);reserved.difference_update(placement[5]|placement[6]);continue
                 audit['plots_exhausted']=True;break
             audit['houses_placed']+=1
             beds+=house['worker_beds']
@@ -259,12 +283,20 @@ def plan_city(world,site,nearby_counts=None):
             plot.setdefault('housing_upgrade',{'phase':phase,'previous':{k:plot[k] for k in ('building_id','name','dimensions_m','beds')}})
             beds+=apartment['worker_beds']-plot['beds']
             plot.update(building_id=apartment['id'],name=apartment['name'],dimensions_m=apartment['dimensions_m'],beds=apartment['worker_beds'])
+        # Unused housing holds are released so later lower-priority services may use the land.
+        while housing_reserve:
+            option=housing_reserve.pop();reserved.difference_update(option[5]|option[6])
         audit.update(final_beds=beds,shortfall=max(0,workers-beds))
         result['debug']['housing_passes'].append(audit)
     for priority,rows in (('high',high),('low',low)):
         if priority=='low' and sum(p['workers']-p['beds'] for p in result['plots'])>0:
             result['unplaced'].extend({'building_id':r['structure_id'],'count':r['count'],'reason':'High-priority worker housing must be completed first'} for r in rows)
             break
+        demand=sum(p['workers'] for p in result['plots'])
+        demand+=sum(sum(r['target'] for r in row.get('staffing',{}).get('roles',[]))*row['count'] for row in rows)
+        reserve_housing(demand)
+        result['debug'].setdefault('housing_reservations',[]).append(
+            {'phase':priority,'workers_budgeted':demand,'slots':len(housing_reserve)})
         for row in rows:
             failed=0
             for _ in range(row['count']):
@@ -274,7 +306,7 @@ def plan_city(world,site,nearby_counts=None):
     workers=sum(p['workers'] for p in result['plots']);beds=sum(p['beds'] for p in result['plots'])
     result['debug'].update(shape_safe_cells=len(valid),road_cells=len(road),occupied_cells=len(occupied),access_cells=len(access),
                            vacant_shape_cells=len(valid-road-occupied-access),
-                           housing_frontage_candidates=len(candidates(house['plot_m']['width'],house['plot_m']['depth'])),
+                           housing_frontage_candidates=free_frontage(house['plot_m']['width'],house['plot_m']['depth']),
                            fortification_rings=len(fortifications['rings']),program_half_m=half)
     core_ids={r['structure_id'] for r in preset['buildings'] if r['priority']=='core'}
     failed_core=sum(r['count'] for r in result['unplaced'] if r['building_id'] in core_ids)

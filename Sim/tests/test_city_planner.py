@@ -40,7 +40,7 @@ class CityPlannerTests(unittest.TestCase):
         def crowded(*args):
             preset=original(*args)
             for row in preset['buildings']:
-                for role in row['staffing']['roles']:role['target']*=10
+                for role in row['staffing']['roles']:role['target']*=100
             return preset
         world=fixture()
         with patch('icarus_sim.city_planner.city_plan',side_effect=crowded):
@@ -86,6 +86,22 @@ class CityPlannerTests(unittest.TestCase):
         from icarus_sim.civilization_registry import load_registry,validate_registry
         data=load_registry();data['housing_profiles']['worker_house']['worker_beds']=0
         with self.assertRaises(ValueError):validate_registry(data)
+
+    def test_worker_housing_not_starved_by_core_frontage(self):
+        """Core services must not consume all street frontage before worker houses."""
+        from icarus_sim.terrain_world import generate_request
+        world=generate_request({'seed':42,'overrides':{'size':17,'phase':16}})
+        starved=[]
+        for site in world['settlements']['sites']:
+            plan=next(c for c in world['city_plans']['cities'] if c['city_uid']==site['uid'])
+            if plan['status']=='unbuildable':continue
+            workers=plan['stats']['workers'];beds=plan['stats']['worker_beds']
+            if workers>0 and beds==0:
+                starved.append((site['parent_race_id'],site['population_profile'],site['name'],workers))
+            if workers>0:
+                self.assertTrue(any(p['kind']=='housing' for p in plan['plots']),
+                                msg=f"{site['name']} ({site['parent_race_id']}) placed workers without housing plots")
+        self.assertEqual(starved,[],msg=f'cities with workers but no beds: {starved}')
 
     def test_age_advance_rebuilds_plans_and_rejects_changed_shape_identity(self):
         from icarus_sim.terrain_world import generate_request

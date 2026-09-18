@@ -15,7 +15,9 @@ The exhaustive asset-list schema is **2**, scoped to recipe **3**. Production se
 
 Civilization identity, rules and appearance live in civilizations.json, which links the shared buildings.json libraries. See the [registry contract](../docs/civilizations.md). The former human-block catalogue path is a redirect notice.
 
-Final-stage world exports may include `city_plans` version 5: local metre-scale rotated plots, canonical detailed elevation surfaces, terrain-routed streets, city fortifications, staffing, houses/apartments, ordered placement passes and explicit failures. See [the city planner contract](../docs/city-planner.md). Schema 2 of the world envelope remains compatible through this optional versioned section.
+Final-stage world exports may include `city_plans` version 6: local metre-scale rotated plots, canonical detailed elevation surfaces, terrain-routed streets, city fortifications, staffing, houses/apartments, ordered placement passes, housing-frontage reservation and explicit failures. See [the city planner contract](../docs/city-planner.md). Schema 2 of the world envelope remains compatible through this optional versioned section.
+
+Final-stage exports may also include independent `hamlet_plans` version 1 and `castle_plans` version 1. Castle plans assemble fortification modules from fortress pins and do not share lifecycle with city packing. See [the castle planner contract](../docs/castle-planner.md).
 
 Arctic registry schema 6/revision 11 requires independent crop temperature, founding minima, and economy winter fishing fractions. Population budget 4 exports a map of founding minima; founding report 4 records the same map. Old worlds require regeneration.
 

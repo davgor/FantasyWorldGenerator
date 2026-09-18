@@ -1,0 +1,173 @@
+{
+  "schema": "fantasy-world-generator.castle-registry",
+  "schema_version": 1,
+  "revision": 1,
+  "description": "Independent fortification modules, join rules and typology kits for castle_plans. Does not participate in city or hamlet planner identity.",
+  "unit": "metres",
+  "join_rules": {
+    "max_thickness_delta_m": 0.5,
+    "max_height_delta_m": 1.0,
+    "min_turn_degrees_for_corner": 25,
+    "max_turn_degrees": 135,
+    "segment_depth_m": 10,
+    "walkway_required": true
+  },
+  "modules": {
+    "curtain_segment": {
+      "id": "module.curtain_segment",
+      "structure_id": "building.curtain_segment",
+      "role": "curtain",
+      "end_type": "curtain_end",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 6.0, "max": 10.0, "nominal": 8.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end", "corner_join", "gate_join", "tower_join", "stair_join"]
+    },
+    "corner_join": {
+      "id": "module.corner_join",
+      "structure_id": "building.corner_tower",
+      "role": "node",
+      "end_type": "corner_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 10.0, "max": 18.0, "nominal": 14.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end"]
+    },
+    "gatehouse": {
+      "id": "module.gatehouse",
+      "structure_id": "building.barbican",
+      "role": "node",
+      "end_type": "gate_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 10.0, "max": 16.0, "nominal": 14.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end"]
+    },
+    "postern": {
+      "id": "module.postern",
+      "structure_id": "building.postern",
+      "role": "node",
+      "end_type": "gate_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 6.0, "max": 10.0, "nominal": 8.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end"]
+    },
+    "wall_stair": {
+      "id": "module.wall_stair",
+      "structure_id": "building.wall_stair",
+      "role": "node",
+      "end_type": "stair_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 6.0, "max": 10.0, "nominal": 8.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end"]
+    },
+    "interval_tower": {
+      "id": "module.interval_tower",
+      "structure_id": "building.corner_tower",
+      "role": "node",
+      "end_type": "tower_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 10.0, "max": 18.0, "nominal": 14.0},
+      "walkway": true,
+      "compatible_ends": ["curtain_end"]
+    },
+    "drawbridge": {
+      "id": "module.drawbridge",
+      "structure_id": "building.drawbridge",
+      "role": "node",
+      "end_type": "gate_join",
+      "thickness_m": {"min": 2.5, "max": 4.0, "nominal": 3.0},
+      "height_m": {"min": 1.0, "max": 4.0, "nominal": 2.0},
+      "walkway": false,
+      "compatible_ends": ["gate_join"]
+    },
+    "bailey_court": {
+      "id": "module.bailey_court",
+      "structure_id": "building.bailey_court",
+      "role": "court",
+      "end_type": null,
+      "thickness_m": null,
+      "height_m": {"min": 0.0, "max": 0.0, "nominal": 0.0},
+      "walkway": false,
+      "compatible_ends": []
+    },
+    "keep_tower": {
+      "id": "module.keep_tower",
+      "structure_id": "building.keep_tower",
+      "role": "landmark",
+      "end_type": null,
+      "thickness_m": null,
+      "height_m": {"min": 18.0, "max": 28.0, "nominal": 24.0},
+      "walkway": false,
+      "compatible_ends": []
+    }
+  },
+  "kits": [
+    {
+      "id": "kit.simple_enclosure",
+      "name": "Simple enclosure",
+      "weight": 4,
+      "half_m": 72,
+      "rings": [
+        {"role": "outer", "scale": 1.0, "ditch": false, "gate": "gatehouse", "postern": true, "stairs": 2, "tower_budget": 4}
+      ],
+      "courts": [{"role": "bailey", "ring_role": "outer", "structure_id": "building.bailey_court"}],
+      "landmarks": [{"structure_id": "building.keep_tower", "ring_role": "outer", "offset_scale": 0.0}],
+      "services": [
+        {"structure_id": "building.castle_barracks", "count": 1},
+        {"structure_id": "building.castle_armory", "count": 1},
+        {"structure_id": "building.castle_well", "count": 1},
+        {"structure_id": "building.great_hall", "count": 1}
+      ]
+    },
+    {
+      "id": "kit.motte_bailey",
+      "name": "Motte and bailey",
+      "weight": 3,
+      "half_m": 88,
+      "rings": [
+        {"role": "bailey", "scale": 1.0, "ditch": true, "gate": "gatehouse", "postern": true, "stairs": 2, "tower_budget": 4},
+        {"role": "motte", "scale": 0.38, "ditch": false, "gate": "postern", "postern": false, "stairs": 1, "tower_budget": 2}
+      ],
+      "courts": [
+        {"role": "bailey", "ring_role": "bailey", "structure_id": "building.bailey_court"},
+        {"role": "motte_yard", "ring_role": "motte", "structure_id": "building.bailey_court"}
+      ],
+      "landmarks": [{"structure_id": "building.keep_tower", "ring_role": "motte", "offset_scale": 0.0}],
+      "services": [
+        {"structure_id": "building.castle_barracks", "count": 1},
+        {"structure_id": "building.castle_armory", "count": 1},
+        {"structure_id": "building.castle_well", "count": 1},
+        {"structure_id": "building.castle_chapel", "count": 1},
+        {"structure_id": "building.great_hall", "count": 1},
+        {"structure_id": "building.drawbridge", "count": 1}
+      ]
+    },
+    {
+      "id": "kit.concentric",
+      "name": "Concentric wards",
+      "weight": 2,
+      "half_m": 96,
+      "rings": [
+        {"role": "outer", "scale": 1.0, "ditch": true, "gate": "gatehouse", "postern": true, "stairs": 2, "tower_budget": 6},
+        {"role": "inner", "scale": 0.55, "ditch": false, "gate": "gatehouse", "postern": false, "stairs": 2, "tower_budget": 4}
+      ],
+      "courts": [
+        {"role": "outer_bailey", "ring_role": "outer", "structure_id": "building.bailey_court"},
+        {"role": "inner_ward", "ring_role": "inner", "structure_id": "building.bailey_court"}
+      ],
+      "landmarks": [{"structure_id": "building.keep_tower", "ring_role": "inner", "offset_scale": 0.0}],
+      "services": [
+        {"structure_id": "building.castle_barracks", "count": 1},
+        {"structure_id": "building.castle_armory", "count": 1},
+        {"structure_id": "building.castle_well", "count": 1},
+        {"structure_id": "building.castle_chapel", "count": 1},
+        {"structure_id": "building.great_hall", "count": 1},
+        {"structure_id": "building.barbican", "count": 1},
+        {"structure_id": "building.drawbridge", "count": 1}
+      ]
+    }
+  ]
+}

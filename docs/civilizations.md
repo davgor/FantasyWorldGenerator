@@ -138,7 +138,7 @@ The three Frosthold city blocks use compact independent building counts, shared 
 
 ## Hamlet presets and rural catalogue (revision 12)
 
-Registry revision 12 and building registry revision 4 add `structure_blocks.rural`, `housing_profiles.hamlet_house`, and a required per-entity `hamlet` preset. The [hamlet planner](hamlet-planner.md) exports independent `hamlet_plans` version 1 after final-stage city packing. City planner version and `city_plans` contract are unchanged; regenerate revision-11 worlds before age advancement.
+Registry revision 12 and building registry revision 4 add `structure_blocks.rural`, `housing_profiles.hamlet_house`, and a required per-entity `hamlet` preset. The [hamlet planner](hamlet-planner.md) exports independent `hamlet_plans` version 1 after final-stage city packing. Building registry revision 5 adds `structure_blocks.castle` for the [castle planner](castle-planner.md) (`castle_plans` version 1); city and hamlet contracts are otherwise unchanged. Regenerate older worlds before age advancement.
 
 ## Opt-in hero guild planning
 
