@@ -39,4 +39,4 @@ Dimensions are **width × depth × height**; plots are **width × depth**, metre
 
 ### Housing
 
-- **Hamlet cottage** (`building.hamlet_house`): 5 × 6 × 4 m; plot 9 × 12 m; **2** worker beds. No apartment densification in hamlet planner v1.
+- **Hamlet cottage** (`building.hamlet_house`): 5 × 6 × 4 m; plot 9 × 12 m; **2** worker beds. No apartment densification in the hamlet planner.

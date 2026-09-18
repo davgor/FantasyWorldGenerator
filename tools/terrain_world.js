@@ -151,7 +151,7 @@ if (data.config.world_recipe >= 1) {
       for(let i=1;i<path.length;i++){const a=project(path[i-1]),b=project(path[i]);if(Math.abs(a[0]-b[0])<atlas.width/2){ctx.moveTo(...a);ctx.lineTo(...b);}}ctx.stroke();
     }ctx.globalAlpha=1;
     for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]),radius=s.city_class==='capital'?5:s.city_class==='medium'?4:3;ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-radius,p[1]-radius,2*radius,2*radius);if(s.city_class==='capital'){ctx.strokeStyle='#fff2bc';ctx.strokeRect(p[0]-8,p[1]-8,16,16);}}
-    for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);ctx.strokeStyle='#e7a177';ctx.strokeRect(x-5,y-5,10,10);ctx.fillStyle='#e7a177';ctx.fillText('R',x+7,y+4);}
+    for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);drawRuinIcon(ctx,x,y,16);}
     for(const p of data.fisheries?.ports||[]){const [x,y]=project([p.x,p.z]);ctx.strokeStyle='#8ff6ed';ctx.strokeRect(x-4,y-4,8,8);}
     if($('terrain-icons').checked)for(const f of data.terrain?.features||[]){const [x,y]=project([f.x,f.z]);terrainIcon(ctx,x,y,f.kind,7);}
     for(const landmark of data.regions?.landmarks||[]){const [x,y]=project([landmark.x,landmark.z]);ctx.fillStyle=landmark.kind==='witch_hut'?'#e2a7f1':'#edc17e';ctx.fillText(landmark.kind==='witch_hut'?'W':'T',x,y);}

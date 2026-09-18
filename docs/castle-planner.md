@@ -30,7 +30,7 @@ Each closed ring exports a `wall_networks[]` entry with stable section IDs, poly
 
 ## Lab
 
-Click a fortress card under “Inspect hamlets and fortresses”, or a fortress marker on the map/globe, to open the shared layout dialog via `openCastlePlan`. Curtain segments from `wall_networks` render as brown extruded boxes in 3D and filled polygons in 2D (same path as city `fortifications.segments`). Phase filtering covers perimeter, courts, landmarks and bailey services.
+Click a fortress card under “Inspect hamlets and fortresses”, or a fortress marker on the map/globe, to open the shared layout dialog via `openCastlePlan`. Curtain segments from `wall_networks` render as brown extruded boxes in 3D and filled polygons in 2D (same path as city `fortifications.segments`). 3D boxes follow curtain depth along the wall path. Clipped rings flatten needle vertices. Phase filtering covers perimeter, courts, landmarks and bailey services.
 
 ## Verification
 

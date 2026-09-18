@@ -4,7 +4,7 @@ import math
 import random
 
 
-def grow_roads(valid, height, size, seed, spacing_cells, required=()):
+def grow_roads(valid, height, size, seed, spacing_cells, required=(), branch_floor=12):
     if not valid:return set(),[]
     rng=random.Random(seed)
     root=min(valid,key=lambda c:((c[0]-size/2)**2+(c[1]-size/2)**2,c))
@@ -33,7 +33,7 @@ def grow_roads(valid, height, size, seed, spacing_cells, required=()):
     reachable=sorted(distances)
     # Destinations represent gates and growing districts, never an imposed street grid.
     targets=sorted(set(required)&set(distances))
-    count=max(12,min(36,round(len(valid)/max(12,spacing_cells)**2*1.5)))
+    count=max(branch_floor,min(36,round(len(valid)/max(12,spacing_cells)**2*1.5)))
     candidates=rng.sample(reachable,min(len(reachable),max(256,count*20)))
     for _ in range(count):
         if not candidates:break

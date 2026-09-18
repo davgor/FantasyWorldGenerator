@@ -4,6 +4,42 @@ import math
 VERSION=1
 
 
+def path_turn_degrees(a, b, c):
+    """Signed heading change of polyline a→b→c, degrees in (-180, 180]."""
+    delta=math.degrees(math.atan2(c[1]-b[1], c[0]-b[0])-math.atan2(b[1]-a[1], b[0]-a[0]))
+    while delta<=-180:delta+=360
+    while delta>180:delta-=360
+    return delta
+
+
+def smooth_closed_ring(points, max_turn_degrees=95, radius_factor=1.12, passes=12):
+    """Pull in needle vertices so an enceinte cannot form one giant outward point."""
+    if len(points)<8:
+        return [tuple(p) for p in points]
+    pts=[(float(p[0]), float(p[1])) for p in points]
+    n=len(pts)
+    cx=sum(p[0] for p in pts)/n
+    cz=sum(p[1] for p in pts)/n
+    for _ in range(passes):
+        radii=[math.hypot(p[0]-cx, p[1]-cz) or 1.0 for p in pts]
+        nxt=[]
+        for i,point in enumerate(pts):
+            cap=radius_factor*max(radii[(i-1)%n], radii[(i+1)%n])
+            r=min(radii[i], cap)
+            ux,uz=(point[0]-cx)/radii[i], (point[1]-cz)/radii[i]
+            nxt.append((cx+ux*r, cz+uz*r))
+        pts=nxt
+        nxt=[]
+        for i,point in enumerate(pts):
+            prev,following=pts[(i-1)%n], pts[(i+1)%n]
+            if abs(path_turn_degrees(prev, point, following))>max_turn_degrees:
+                nxt.append(((prev[0]+2*point[0]+following[0])/4, (prev[1]+2*point[1]+following[1])/4))
+            else:
+                nxt.append(point)
+        pts=nxt
+    return [(round(p[0], 2), round(p[1], 2)) for p in pts]
+
+
 def program_half_m(preset,city_class,neighbour_half,house_plot=(12,16),beds_per_house=4):
     """Grow the city crop from class minimum toward program demand, capped by neighbours."""
     base={'small':240,'medium':320,'capital':400}[city_class]
@@ -65,10 +101,10 @@ def _segmentize(polyline,segment_depth_m,structure_id,ring_id):
             end=(round(a[0]+(b[0]-a[0])*t,2),round(a[1]+(b[1]-a[1])*t,2))
             start=path[-1] if path else a
             mid=((start[0]+end[0])/2,(start[1]+end[1])/2)
-            angle=math.degrees(math.atan2(end[1]-start[1],end[0]-start[0]))
+            heading=math.degrees(math.atan2(end[1]-start[1],end[0]-start[0]))
             segments.append({'id':f'{ring_id}-seg-{seg_i}','ring_id':ring_id,'structure_id':structure_id,
                              'from_m':list(start),'to_m':list(end),'center_m':[round(mid[0],2),round(mid[1],2)],
-                             'length_m':round(math.dist(start,end),3),'rotation_degrees':round(angle,4)})
+                             'length_m':round(math.dist(start,end),3),'rotation_degrees':round(heading-90,4)})
             seg_i+=1;path=[end];a=end;edge=math.dist(a,b);carry=0.
         carry+=edge
     return segments,nodes
@@ -113,7 +149,7 @@ def build_fortifications(*,valid,half,cell,rx,rz,family,shape_id,parameters,city
     for ring_i,scale in enumerate(scales):
         ring_id=f'ring-{ring_i}'
         role='outer' if ring_i==rings_wanted-1 else 'inner' if ring_i==0 else 'middle'
-        points=_boundary_points(valid,half,cell,rx,rz,scale,family)
+        points=smooth_closed_ring(_boundary_points(valid,half,cell,rx,rz,scale,family))
         if len(points)<8:
             report['unplaced'].append({'building_id':wall_structure['id'],'ring_id':ring_id,
                                        'reason':'Perimeter could not close on buildable land'})

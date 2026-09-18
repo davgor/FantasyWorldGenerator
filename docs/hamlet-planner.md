@@ -1,6 +1,6 @@
 # Final-world hamlet planner
 
-Hamlet planner version 1 runs after stage 16 (and after the last requested age transition), immediately after the [city planner](city-planner.md). Earlier simulation snapshots do not contain hamlet plans. It adds the optional, independently versioned `hamlet_plans` world-output section so Unreal and lab consumers can tinker with rural layouts without depending on `city_plans`.
+Hamlet planner version 2 runs after stage 16 (and after the last requested age transition), immediately after the [city planner](city-planner.md). Earlier simulation snapshots do not contain hamlet plans. It adds the optional, independently versioned `hamlet_plans` world-output section so Unreal and lab consumers can tinker with rural layouts without depending on `city_plans`.
 
 Planner identity includes the linked civilization/building registry hash. Age advancement rejects mismatched identities.
 
@@ -13,7 +13,7 @@ Planner identity includes the linked civilization/building registry hash. Age ad
 5. Place eligible conditional buildings only after core housing fits.
 6. Add cottages for their additional staff.
 
-Missing prerequisites and failed placements remain in `unplaced`. No building is shrunk to force a fit. Apartment densification is **not** used for hamlets in v1.
+Missing prerequisites and failed placements remain in `unplaced`. No building is shrunk to force a fit. Apartment densification is **not** used for hamlets.
 
 ## Role filters
 
@@ -25,7 +25,11 @@ Simulation roles drive placement conditions:
 
 ## Geometry and roads
 
-The provisional window is about 200 metres across (100 m half-extent), capped by neighbouring anchors. Streets grow with the same 4-metre least-cost tree as cities. Required gates come from the hamlet's `access_nodes` path toward its parent city (window-boundary crossing). Regional MST edges are not invented here. See [unified globe scene](unified-world-scene.md) for tagged `settlement_kind: hamlet` globe exports.
+The provisional window is about 200 metres across (100 m half-extent). Neighbouring cities and hamlets clip windows to half the metre distance minus an 8 m gap, so packed footprints do not overlap. Version 1 used the city 0.28 distance crop, which left clustered rural sites too small for cottages.
+
+Streets grow as a 4-metre least-cost tree **inside the ellipse**, with a rural branch floor of 2 instead of the city 12-district floor. Required gates come from the hamlet's `access_nodes` path toward its parent city when that crossing lies in the ellipse. Regional MST edges are not invented here. See [unified globe scene](unified-world-scene.md) for tagged `settlement_kind: hamlet` globe exports.
+
+Standing water and local slopes above 25 degrees still block cells. Coarse regional `flood_risk` does **not** empty a hamlet: coastal support pins often sit on flood_risk=1 cells that are otherwise dry at schematic scale. River channels remain reserved through the water sampler's 12 m setback.
 
 ## Catalogue
 
@@ -37,4 +41,4 @@ Click a hamlet card under “Inspect hamlets and fortresses”, or a nearby map/
 
 ## Verification
 
-`Sim/tests/test_hamlet_planner.py` covers replay, pass order, role filters, rural ID exclusivity, support-road gates, final-stage visibility, age identity rejection and asset coverage. Run `python3 tools/validate_repo.py` before release.
+`Sim/tests/test_hamlet_planner.py` covers replay, pass order, role filters, rural ID exclusivity, support-road gates, nearby-window packing, coastal flood_risk, final-stage visibility, age identity rejection and asset coverage. Run `python3 tools/validate_repo.py` before release.

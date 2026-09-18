@@ -67,6 +67,7 @@ class TerrainLabTests(unittest.TestCase):
         html = report(result)
         self.assertNotIn('__DATA__', html)
         self.assertIn('const live=false', html)
+        self.assertIn('function drawRuinIcon', html)
 
     def test_globe_seam_poles_and_reproducibility(self):
         cfg = Config(size=17, shape='globe')

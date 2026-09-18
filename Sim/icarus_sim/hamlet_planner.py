@@ -5,8 +5,9 @@ from .city_geometry import grow_roads, corners, footprint_cells
 from .city_planner import _sampler, CELL
 from .civilization_registry import hamlet_plan, section, registry_identity
 
-VERSION=1
+VERSION=2
 HALF_DEFAULT=100  # 200 m across; smaller than small-city 480 m
+NEIGHBOUR_GAP=8  # metres reserved between facing hamlet windows
 
 
 def planner_identity():
@@ -87,7 +88,7 @@ def plan_hamlet(world,hamlet):
         lat1=math.pi/2-math.pi*hamlet['z']/(n-1);lat2=math.pi/2-math.pi*other['z']/(n-1)
         dl=2*math.pi*(other['x']-hamlet['x'])/(n-1)
         distance=radius*math.acos(max(-1,min(1,math.sin(lat1)*math.sin(lat2)+math.cos(lat1)*math.cos(lat2)*math.cos(dl))))
-        half=min(half,distance*.28)
+        half=min(half,max(CELL,distance*.5-NEIGHBOUR_GAP))
     half=max(CELL,int(half/CELL)*CELL);size=2*half//CELL
     sample,resolution=_sampler(world,hamlet,half)
     terrain=[];biomes=[];mutations=[];valid=set();slopes=[];woods=0;heights={}
@@ -96,7 +97,8 @@ def plan_hamlet(world,hamlet):
         for i in range(size):
             v=sample(-half+(i+.5)*CELL,-half+(j+.5)*CELL)
             heights[(i,j)]=v['height']
-            code=1 if v['water'] else 2 if v['slope']>25 or v['flood']>.65 else 0
+            # Coarse flood_risk is a regional layer, not a local inundation mask; coasts would otherwise be empty.
+            code=1 if v['water'] else 2 if v['slope']>25 else 0
             row.append(code);biome_row.append(v['biome']);mutation_row.append(v['variant'])
             if code==0:valid.add((i,j));slopes.append(v['slope']);woods+=v['biome'] in (4,7,15)
         terrain.append(row);biomes.append(biome_row);mutations.append(mutation_row)
@@ -124,7 +126,8 @@ def plan_hamlet(world,hamlet):
             'passes':[{'id':key,'placed':0} for key in ('map','shape','high','high_housing','low','low_housing')],
             'warnings':['Schematic rural packing; groundwater and structural feasibility are not resolved.',
                         'Hamlet cottages use dedicated rural housing IDs, not city worker houses.',
-                        'Compact elliptical boundary is provisional; historical village morphology is future work.'],
+                        'Compact elliptical boundary is provisional; historical village morphology is future work.',
+                        'Regional flood_risk does not empty hamlet plots; standing water and slopes above 25 degrees still block cells.'],
             'source_resolution_m':round(resolution,2),'status':'unbuildable','stats':{},
             'debug':{'terrain_safe_cells':len(valid),'total_cells':size*size,'housing_passes':[],
                      'apartment_policy':'hamlet_houses_only'}}
@@ -141,7 +144,6 @@ def plan_hamlet(world,hamlet):
     wobble=0.08+0.04*((seed%1000)/1000)
     def inside(x,z):
         return (x/(rx*(1+wobble*math.sin(x*.07+seed))))**2+(z/(rz*(1+wobble*math.cos(z*.09+seed))))**2<1
-    terrain_valid=set(valid)
     valid={c for c in valid if inside(-half+(c[0]+.5)*CELL,-half+(c[1]+.5)*CELL)}
     if len(valid)<8:
         result['unplaced']=[{'building_id':r['structure_id'],'count':r['count'],'reason':'No compatible buildable footprint'} for r in preset['buildings']]
@@ -149,7 +151,9 @@ def plan_hamlet(world,hamlet):
         return result
     entries=result['road_connections']
     for c in entries:c['cell']=[max(0,min(size-1,math.floor((v+half)/CELL))) for v in c['gate_local_m']]
-    road,paths=grow_roads(terrain_valid if entries else valid,heights.__getitem__,size,seed,spacing/CELL,[tuple(c['cell']) for c in entries])
+    # Rural streets stay inside the ellipse with a low branch floor; city 12-district growth fills a 100 m window.
+    gates=[tuple(c['cell']) for c in entries if tuple(c['cell']) in valid]
+    road,paths=grow_roads(valid,heights.__getitem__,size,seed,spacing/CELL,gates,branch_floor=2)
     for c in entries:
         cell=tuple(c['cell']);gate=c['gate_local_m'];point=[-half+(v+.5)*CELL for v in cell]
         v=sample(*gate);length=math.dist(point,gate)

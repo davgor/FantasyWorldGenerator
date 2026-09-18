@@ -1,6 +1,8 @@
 """Castle wall-ring geometry: joins, segmentation and perimeter polylines (metres)."""
 import math
 
+from .city_fortifications import smooth_closed_ring
+
 VERSION = 1
 
 
@@ -77,7 +79,7 @@ def clip_ring_to_valid(points, valid, half, cell, max_slope_deg, height_fn, slop
             break
         if best:
             snapped.append(best)
-    return snapped
+    return smooth_closed_ring(snapped) if len(snapped) >= 8 else snapped
 
 
 def segmentize(polyline, segment_depth_m, structure_id, ring_id, thickness_m, height_m):
@@ -100,7 +102,8 @@ def segmentize(polyline, segment_depth_m, structure_id, ring_id, thickness_m, he
             end = (round(a[0] + (b[0] - a[0]) * t, 2), round(a[1] + (b[1] - a[1]) * t, 2))
             start = path[-1] if path else a
             mid = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
-            angle = math.degrees(math.atan2(end[1] - start[1], end[0] - start[0]))
+            heading = math.degrees(math.atan2(end[1] - start[1], end[0] - start[0]))
+            angle = heading - 90
             segments.append({
                 'id': f'{ring_id}-seg-{seg_i}',
                 'ring_id': ring_id,

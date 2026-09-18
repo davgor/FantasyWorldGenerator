@@ -71,6 +71,26 @@ class HamletPlannerTests(unittest.TestCase):
         self.assertEqual(plan['plots'],[])
         self.assertEqual(plan['status'],'unbuildable')
 
+    def test_coarse_coastal_flood_risk_does_not_empty_hamlet(self):
+        world=fixture('harbor + fishing')
+        n=world['config']['size']
+        world['layers']['flood_risk']=[[1]*n for _ in range(n)]
+        plan=plan_hamlet(world,world['humans']['hamlets'][0])
+        self.assertTrue(plan['plots'], plan['unplaced'])
+        self.assertNotEqual(plan['status'],'unbuildable')
+        self.assertTrue(any(p['building_id']=='building.hamlet_well' for p in plan['plots']))
+
+    def test_nearby_hamlets_keep_core_plots(self):
+        world=fixture()
+        neighbour=dict(world['humans']['hamlets'][0])
+        neighbour.update(id='hamlet-1',x=10.02,node=2)
+        world['humans']['hamlets'].append(neighbour)
+        plan=plan_hamlet(world,world['humans']['hamlets'][0])
+        self.assertLess(plan['bounds_m'][2],100)
+        self.assertTrue(plan['plots'], plan['debug'])
+        self.assertTrue(any(p['building_id']=='building.hamlet_well' for p in plan['plots']))
+        self.assertGreater(plan['debug']['shape_safe_cells'],plan['debug']['road_cells'])
+
     def test_final_generation_exports_hamlet_plans_and_assets(self):
         from icarus_sim.terrain_world import generate_request
         from icarus_sim.terrain_history import materialize_stage
@@ -78,12 +98,14 @@ class HamletPlannerTests(unittest.TestCase):
         world=generate_request({'seed':42,'overrides':{'size':17,'phase':16,'hamlets_per_core':2}})
         self.assertIn('hamlet_plans',world)
         self.assertNotIn('hamlet_plans',materialize_stage(world,15))
-        self.assertEqual(world['hamlet_plans']['version'],1)
+        self.assertEqual(world['hamlet_plans']['version'],2)
         self.assertEqual(len(world['hamlet_plans']['hamlets']),len(world['humans']['hamlets']))
         ids={a['id'] for a in compile_asset_list()['assets']}
         for plan in world['hamlet_plans']['hamlets']:
             self.assertTrue(all(p['building_id'] in ids for p in plan['plots']))
             self.assertTrue(all(p['building_id'].startswith('building.hamlet_') for p in plan['plots']))
+            if any(cell==0 for row in plan['terrain']['codes'] for cell in row):
+                self.assertTrue(plan['plots'], plan['hamlet_id'])
         self.assertTrue(any(b.get('settlement_kind')=='hamlet' for b in world['world_scene']['buildings']) or
                         all(p['status']=='unbuildable' for p in world['hamlet_plans']['hamlets']))
 

@@ -1,6 +1,8 @@
 import math
 import unittest
-from icarus_sim.city_fortifications import program_half_m, build_fortifications, ring_count_for
+from icarus_sim.city_fortifications import (
+    program_half_m, build_fortifications, ring_count_for, smooth_closed_ring, path_turn_degrees,
+)
 from icarus_sim.city_planner import plan_city
 
 
@@ -54,6 +56,16 @@ class FortificationTests(unittest.TestCase):
              'regional_threat':0.1,'defense_priority':0.1}
         low_rank={r['id']:r for r in rank_shapes(low,'capital')}
         self.assertGreater(ranked['concentric_enceintes']['weight'],low_rank['concentric_enceintes']['weight'])
+
+    def test_smooth_closed_ring_removes_a_needle_point(self):
+        ring=[(12,0),(8.5,8.5),(0,12),(-8.5,8.5),(-12,0),(-8.5,-8.5),(0,-12),(8.5,-8.5)]
+        spiked=list(ring);spiked[2]=(0,80)
+        out=smooth_closed_ring(spiked)
+        self.assertEqual(len(out),len(spiked))
+        self.assertLess(math.hypot(*out[2]),28)
+        n=len(out)
+        for i in range(n):
+            self.assertLessEqual(abs(path_turn_degrees(out[i-1],out[i],out[(i+1)%n])),96)
 
     def test_closed_ring_geometry(self):
         valid={(i,j) for i in range(5,35) for j in range(5,35)}

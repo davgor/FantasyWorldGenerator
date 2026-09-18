@@ -25,7 +25,9 @@
   function segmentPlot(seg){
     const a=seg.from_m,b=seg.to_m,dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz)||seg.length_m||1;
     const thickness=seg.thickness_m??3,height=seg.height_m??7;
-    const angle=seg.rotation_degrees??(Math.atan2(dz,dx)*180/Math.PI);
+    const heading=Math.atan2(dz,dx)*180/Math.PI;
+    // Authored curtain depth runs along the wall; box +Z must follow from_m→to_m or the box becomes a giant spike.
+    const angle=heading-90;
     return {x_m:(a[0]+b[0])/2,z_m:(a[1]+b[1])/2,rotation_degrees:angle,
       dimensions_m:{width:thickness,depth:len,height},
       ground_elevation_m:seg.ground_elevation_m,foundation_bottom_m:seg.foundation_bottom_m};
