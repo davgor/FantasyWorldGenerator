@@ -1,60 +1,72 @@
 # FantasyWorldGenerator plugin
 
 Runtime Unreal code plugin owned by FantasyWorldGenerator and consumed by sibling
-**UnrealWorldGen** (Unreal 5.8, Win64). See [decision 018](../../docs/decisions/018-unrealworldgen-dev-consumer.md)
-and [Unreal integration](../../docs/unreal-integration.md) for the canonical boundary.
+**UnrealWorldGen** (Unreal 5.8, Win64). See [decision 018](../../docs/decisions/018-unrealworldgen-dev-consumer.md),
+[decision 019](../../docs/decisions/019-runtime-surface-not-landscape.md) and
+[Unreal integration](../../docs/unreal-integration.md) for the canonical boundary.
 
 ## What exists
 
-- `FantasyWorldGenerator.uplugin`: one `Runtime` module, `Win64` allow list, `EnabledByDefault` false,
-  `CanContainContent` false. No `/Game` path, content directory or game-specific reference.
-- `Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorFrame.h`: engine-independent source-to-Unreal frame
-  (`U = (east, north, up) * 100`, unit axes permuted but unscaled) and generate-request
-  validation (recipe 3, uint32 seed, raster 1..257, tectonic globe) reporting the Core
-  failure codes `UNSUPPORTED_VERSION`, `STATE_CAPACITY` and `INVALID_INPUT`.
-- `Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorSubsystem.h`: `UFantasyWorldGeneratorSubsystem`, a thin
-  `UEngineSubsystem` wrapper exposing the conversion, validation and a status struct.
-- `Source/FantasyWorldGenerator/Private/FantasyWorldGeneratorCoreContract.cpp`: static asserts tying the mirror's
-  constants to `Core/genesis.hpp` whenever Core is reachable.
-- `Tests/frame_driver.cpp`: headless consumer for the frame rules, outside `Source/` so
-  UnrealBuildTool does not compile it. Driven by `tests/test_plugin_frame.py`.
+- `FantasyWorldGenerator.uplugin`: one `Runtime` module, `Win64` allow list,
+  `EnabledByDefault` false, `CanContainContent` false. No `/Game` path, content
+  directory or game-specific reference in the code.
+- `Source/FantasyWorldGenerator/FantasyWorldGeneratorCore/` **in a packaged archive**:
+  the engine-independent `Core/` sources, vendored by `tools/package_plugin.py` so
+  UnrealBuildTool compiles world genesis, sampling, the coordinate frame and the
+  registry loader into the module. The counter kernel is excluded: it is not on the
+  generate path and its `check()` helper collides with the Unreal macro.
+- `Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorTypes.h`: engine-facing
+  value types (status, world summary, surface unwrap, asset binding, surface sample).
+  These carry data; they restate no generator rule.
+- `Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorSubsystem.h`: the API below.
+- `Data/unreal-asset-registry-v1.json`: the catalogue-complete asset-ID to object-path
+  table, added as a `RuntimeDependency` so a cooked build carries it.
+
+The frame mirror that used to restate the Core rules in the module is deleted;
+`tests/test_plugin_frame.py` fails if a second copy of a Core constant reappears.
+
+## API
+
+`UFantasyWorldGeneratorSubsystem` (engine subsystem, no Python runtime, sidecar
+process, embedded interpreter or JSON world file anywhere in the path):
+
+- `GenerateWorld(Seed, RegionalRasterSize, Summary, Diagnostic)` — recipe-3 world in
+  process. A rejected request leaves the previous world intact and says why.
+- `SampleHeightCentimetres(Lat, Lon)` / `SampleSurface(Lat, Lon)` — the authoritative
+  detailed surface in Unreal centimetres, the same function foundations, roads and
+  nests must read.
+- `BuildSurfaceUnwrap(LatitudeRows, Surface, Diagnostic)` — positions, per-vertex
+  biome identities, water types, lab colours and reverse-wound triangles for the
+  rectangular tangent unwrap, centred on the origin.
+- `ResolveAsset(AssetId)` — the binding table. A missing binding is reported with a
+  reason, never replaced by an anonymous mesh.
+- `LocalMetresToUnreal` / `LocalUnitAxisToUnreal` — the frame conversion.
+- `GetStatus()` — what is actually linked and loaded: Core linked, native generate
+  available, registry rows and unbound count, asset-list digest, contract versions.
+
+Frame: X is source east, Y is source north, Z is source radial up. Lengths scale by
+100 exactly once, inside the module. Unit axes only permute. Copied triangle winding
+reverses for Unreal's left-handed frame.
 
 ## What does not exist
 
-No world generate, on-demand surface sampling, Landscape, water overlay, hub, asset-ID
-registry materialization, or cooked-runtime claim. Those are [ML-03d](../../board/backlog/ML-03d.md)
-and [ML-03e](../../board/backlog/ML-03e.md). `UFantasyWorldGeneratorSubsystem::GetStatus` reports
-`bNativeGenerateAvailable` and `bUnrealQualified` as false so a host cannot mistake an
-enabled plugin for a working generator.
-
-This plugin has **not** been compiled by Unreal Build Tool, loaded by an editor, or cooked.
-Source existence is not runtime acceptance.
-
-## Core wrapping
-
-`Core/` stays free of Unreal and UObject types. `FantasyWorldGenerator.Build.cs` resolves a Core
-directory (vendored `Source/FantasyWorldGenerator/FantasyWorldGeneratorCore`, else `<plugin>/../../Core`), adds it
-as a private include path, and reports `FANTASY_WORLD_GENERATOR_CORE_DIRECTORY_PRESENT` /
-`FANTASY_WORLD_GENERATOR_CORE_GENESIS_PRESENT`. It compiles and links no Core translation unit, so the frame
-and validation rules in `FantasyWorldGeneratorFrame.h` are a **temporary private mirror** of
-`Core/genesis.{hpp,cpp}` and `Fixtures/unreal-frame-v1.json`. `FantasyWorldGeneratorCoreContract.cpp`
-static-asserts Core's recipe, seed, grid and centimetre constants so the two cannot drift
-silently.
-
-ML-03e should compile the Core sources excluding `Core/tests` into this module and forward
-`FantasyWorldGeneratorFrame.h` to Core rather than keeping two copies. Two things are needed first:
-
-1. Core's request boundary is JSON-value based and transports offsets as exact whole metres or
-   bounded decimal strings (`fantasy_world_generator::source_centimetres`), deliberately keeping floats out of
-   the centimetre frame. An adapter converting sampled Landscape/foundation heights needs a
-   numeric Core entry point rather than formatting a decimal string per vertex.
-2. Core translation units must be verified to compile inside an Unreal module. The module
-   already sets `bEnableExceptions` because Core reports failures as `fantasy_world_generator::Error`.
+Settlement, road, city-plan and nest placement are not in the native envelope yet
+([ML-03d](../../board/backlog/ML-03d.md)), so this plugin materializes no building,
+street or nest. `bUnrealQualified` stays false: an enabled plugin is not a
+qualification, and cooked-runtime evidence lives with
+[ML-03e](../../board/backlog/ML-03e.md).
 
 ## Use from UnrealWorldGen
 
-1. Build the archive: `python tools/package_plugin.py`.
-2. Extract `FantasyWorldGenerator/` into `UnrealWorldGen/Plugins/`.
-3. Enable `FantasyWorldGenerator` in `UnrealWorldGen.uproject`, then regenerate project files and build.
+```
+python tools/package_plugin.py --install <path to the consumer project>
+```
 
-Step 3 has not been performed; it waits on the Unreal MCP editor owner (acceptance A3).
+That writes the content-addressed archive to `Artifacts/unreal/` and replaces
+`<project>/Plugins/FantasyWorldGenerator` with its contents, vendored Core and registry
+table included. Enable `FantasyWorldGenerator` in the `.uproject`, then build the Win64
+target. The consumer project must be a C++ project; a Blueprint-only project cannot
+compile the module.
+
+`tools/cook_consumer.py` cooks that project for Win64, runs the packaged executable and
+records the package digest with the run's own reported numbers.

@@ -121,7 +121,11 @@ class LeylineTests(unittest.TestCase):
         old=copy.deepcopy(w['settlements']['sites'])
         node_count=len(w['magic']['networks']['weave']['nodes'])
         fate={'cause':'self_magic','reason':'Test magical catastrophe','evidence':{},'probability':1.,'roll':0.,'new_node_school':'weave'}
-        with patch('icarus_sim.terrain_history.city_fate',return_value=fate):
+        # Wars are silenced so this stays a test of the fate path: a city lost to a
+        # neighbour takes the war's own key-point rule instead of the patched fate, and
+        # would leave the school its ground already held rather than a Weave node.
+        with patch('icarus_sim.terrain_wars.resolve_wars',return_value=([],{})), \
+             patch('icarus_sim.terrain_history.city_fate',return_value=fate):
             age_transition(w,Config(**w['config']),1)
         self.assertEqual(len(w['ruins']),len(old))
         self.assertEqual(len(w['magic']['networks']['weave']['nodes']),node_count+len(old))

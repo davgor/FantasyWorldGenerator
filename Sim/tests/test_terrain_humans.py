@@ -1,4 +1,5 @@
 import json
+import math
 import unittest
 from dataclasses import replace
 from icarus_sim.terrain_lab import Config, generate
@@ -94,3 +95,36 @@ class HumanHinterlandTests(unittest.TestCase):
         for kwargs in ({'hamlets_per_core':9},{'fortress_count':-1},{'support_reach':0},
                        {'culture_link_cost':float('nan')},{'urban_food_demand':-1}):
             with self.assertRaises(ValueError):Config(**kwargs)
+
+    def _fortress_world(self,**overrides):
+        from icarus_sim.terrain_world import generate_request
+        request={'size':33,'phase':12}
+        request.update(overrides)
+        return generate_request({'recipe_version':3,'seed':42,'overrides':request})
+
+    def test_fortress_demand_comes_from_roads_not_a_static_count(self):
+        """The route network proposes route defence; nothing pins it to four."""
+        world=self._fortress_world()
+        routes=world['roads']['routes'];demand=world['humans']['fortress_demand']
+        crossings={tuple(sorted(edge)) for road in routes for edge in road['river_crossings']}
+        proposed=math.floor(sum(road['length_m'] for road in routes)
+                            /world['effective_config']['support_reach'])+len(crossings)
+        self.assertEqual(demand['proposed'],proposed)
+        self.assertEqual(demand['city_ceiling'],len(world['settlements']['sites']))
+        self.assertEqual(demand['limit'],min(proposed,demand['city_ceiling']))
+        self.assertLessEqual(len(world['humans']['fortresses']),demand['limit'])
+        # This world's roads ask for more defence than the retired constant allowed,
+        # and the terrain admits it, so the count has to move off four.
+        self.assertGreater(demand['limit'],4)
+        self.assertGreater(len(world['humans']['fortresses']),4)
+
+    def test_requested_fortress_count_still_caps_the_world(self):
+        """An explicit ceiling is a maximum, never a guarantee or a floor."""
+        world=self._fortress_world(fortress_count=2)
+        demand=world['humans']['fortress_demand']
+        self.assertEqual(demand['requested_ceiling'],2)
+        self.assertEqual(demand['limit'],2)
+        self.assertLessEqual(len(world['humans']['fortresses']),2)
+        empty=self._fortress_world(fortress_count=0)
+        self.assertEqual(empty['humans']['fortresses'],[])
+        self.assertEqual(empty['humans']['fortress_demand']['limit'],0)

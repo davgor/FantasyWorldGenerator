@@ -157,7 +157,7 @@
       ],
       "properties": {
         "version": {
-          "const": 14
+          "const": 15
         },
         "sites": {
           "type": "array",
@@ -195,6 +195,42 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1
+              },
+              "war_history": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "war_id",
+                    "age",
+                    "kind",
+                    "outcome",
+                    "opponent_uid"
+                  ],
+                  "properties": {
+                    "war_id": {
+                      "type": "string"
+                    },
+                    "age": {
+                      "type": "integer"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "outcome": {
+                      "type": "string"
+                    },
+                    "opponent_uid": {
+                      "type": "string"
+                    },
+                    "opponent_civilization_id": {
+                      "type": "string"
+                    },
+                    "opponent_parent_race_id": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             }
           }

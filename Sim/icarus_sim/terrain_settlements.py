@@ -778,11 +778,26 @@ def add_settlements(result,cfg):
     for species,p in profiles.items():
         footprints[species]=sum(areas[i]*score_sets[species][i] for i in habitats[species])/1e6
         capacity=city_capacity(footprints[species],allowances[species],p)
-        quotas[species]=min(24,capacity) if inferred else min(capacity,cfg.settlement_count)
+        quotas[species]=capacity if inferred else min(capacity,cfg.settlement_count)
     if not cfg.auto_parameters and cfg.settlement_count==0:quotas={p:0 for p in profiles}
-    # Apply the shared computation ceiling after assessing every entity, so early
-    # registry entries cannot exhaust the budget before later species are assessed.
-    limit=min(24,cfg.settlement_count) if not cfg.auto_parameters else 24
+    # The shared ceiling is the ground itself: cities must stand a settlement spacing
+    # apart, so habitable land divided by the densest packing of that separation is
+    # how many can exist at all. It is applied after every entity is assessed, so an
+    # early registry entry cannot exhaust the budget before a later one is considered.
+    habitable=set()
+    for candidates in habitats.values():habitable.update(candidates)
+    habitable_km2=sum(areas[i] for i in habitable)/1e6
+    per_city_km2=math.sqrt(3)/2*(cfg.settlement_spacing/1000)**2
+    packing=int(math.floor(habitable_km2/per_city_km2)) if per_city_km2>0 else 0
+    # A world that infers its own quotas is ceilinged by its ground, not by a count
+    # the caller never set: the quota line above already reads `inferred`, and the two
+    # have to agree or a recipe world silently keeps the settlement_count default.
+    #
+    # Asking for no cities is not the same as asking for no ceiling, and it outranks
+    # the ground: a caller who wants an empty world gets one, inferred or not.
+    if not cfg.auto_parameters and cfg.settlement_count==0:limit=0
+    elif inferred:limit=packing
+    else:limit=min(packing,cfg.settlement_count)
     while sum(quotas.values())>limit:
         key=max(quotas,key=lambda p:(quotas[p],p));quotas[key]-=1
     if cfg.world_recipe:scores=score_sets[species_ids[0]]
@@ -801,13 +816,13 @@ def add_settlements(result,cfg):
         result['population_budget']={'version':4,'world_cap':cap,'allowances':allowances,
             'shares':{p:allowances[p]/cap if cap else 0 for p in profiles},
             'weighted_habitat_km2':footprints,'requested_cities':quotas,
-            'calibration':{'residents_per_productive_km2':100,'minimum_city_region_residents':{k:p['minimum_founding_residents'] for k,p in profiles.items()},'lab_city_ceiling':24},
+            'calibration':{'residents_per_productive_km2':100,'minimum_city_region_residents':{k:p['minimum_founding_residents'] for k,p in profiles.items()},'spacing_city_ceiling':packing,'habitable_km2':habitable_km2},
             'method':'Capacity integrates area-weighted farming potential, climate, freshwater/irrigation, slope, biome and mutation penalties. Dwarven productive hinterland may extend beyond mineral uplands only over safe terrain routes within support reach. Overlapping peoples split each cell capacity. Provisional 100 residents per fully productive km2, not validated agricultural yields; access and trade can reduce realized support. Cities require habitat footprint and their civilization-specific minimum regional residents; no species count or majority guarantee. Diaspora can waive a city-count footprint quota for an unused civilization with its required supported residents, once per parent; habitat and spacing still apply. Unsettled capacity remains unused.'}
         for species,field in potentials.items():layers['life_capacity_'+species]=node_grid(field,points,n)
         if cfg.auto_parameters:
             result['config']['settlement_count']=sum(quotas.values())
             result['effective_config']['settlement_count']=sum(quotas.values())
-            result['derivation']['settings']['settlement_count']={'value':sum(quotas.values()),'source':'quality-weighted eligible habitat and productive capacity per people; no minimum; lab ceiling 24'}
+            result['derivation']['settings']['settlement_count']={'value':sum(quotas.values()),'source':'quality-weighted eligible habitat and productive capacity per people; no minimum; ceiling is the densest packing of the settlement spacing over habitable land'}
     for species,field in score_sets.items():layers['suitability_'+species]=node_grid(field,points,n)
     names=['Alder','Bracken','Cedar','Dunlin','Ember','Fern','Glen','Hazel','Ivy','Juniper','Kestrel','Larch',
            'Mallow','Nettle','Oak','Pine','Quartz','Reed','Sage','Thistle','Umber','Vale','Willow','Yarrow']
@@ -851,7 +866,9 @@ def add_settlements(result,cfg):
         for site in sites:
             old=previous.get(site['node'])
             if old and old['population_profile']==site['population_profile']:
-                for key in ('uid','source_culture','founded_age','name'):
+                # war_history travels with the city: a survivor that rebuilds its
+                # hinterland is still the city that fought, and its forts answer to that.
+                for key in ('uid','source_culture','founded_age','name','war_history'):
                     if key in old:site[key]=old[key]
     if 'population_budget' in result:
         budget=result['population_budget']
@@ -880,7 +897,7 @@ def add_settlements(result,cfg):
                    'freshwater_distance':node_grid([v if math.isfinite(v) else -1 for v in distances],points,n)})
     classify_cities(sites)
     result['civilizations']=civilization_report(sites)
-    result['settlements']={'version':14,'founding':founding,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
+    result['settlements']={'version':15,'founding':founding,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
         'method':'Candidate sites, not built cities or population simulation. Resources are seeded potential, flood risk a proximity/height proxy. Outposts can accept poor conditions; water cells and slopes beyond the selected population limit remain excluded. City assets are selected from deterministic data-driven building packs.'}
     site_end=perf_counter();result['timing_ms']['settlements']=(site_end-started)*1000
     if cfg.phase>=8:

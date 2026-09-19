@@ -85,9 +85,5 @@ class GenerateRequestParityTests(unittest.TestCase):
         genesis = (ROOT / 'Core/genesis.hpp').read_text(encoding='utf-8')
         self.assertIn('min_grid=3', genesis, 'native grid minimum must match the Python reference')
         self.assertIn('max_grid=257', genesis, 'native grid maximum must match the Python reference')
-        # ML-03e deletes this mirror by compiling Core directly; until then it is a
-        # third copy of the same rule and drifts independently of Core/genesis.hpp.
-        mirror = (ROOT / 'Unreal/FantasyWorldGenerator/Source/FantasyWorldGenerator/Public'
-                         '/FantasyWorldGeneratorFrame.h').read_text(encoding='utf-8')
-        self.assertIn('MinimumRasterSize = 3', mirror, 'plugin mirror must match Core/genesis.hpp')
-        self.assertIn('MaximumRasterSize = 257', mirror, 'plugin mirror must match Core/genesis.hpp')
+        # The plugin no longer restates these bounds: it compiles Core. That absence is
+        # asserted by tests/test_plugin_frame.py rather than by a third copy here.

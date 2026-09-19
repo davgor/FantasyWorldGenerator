@@ -16,10 +16,16 @@ def spec(default, low, high, group, description, units='relative'):
 
 
 OPTIONS = {
-    'nest_limit': spec(120, 0, 500, 'Beast nests', 'Maximum habitat anchors across species', 'anchors'),
-    'nest_density': spec(1., 0., 3., 'Beast nests', 'Species occurrence multiplier; zero disables nests'),
-    'nest_fantasy': spec(1., 0., 3., 'Beast nests', 'Fantasy species occurrence multiplier; zero leaves real animals'),
-    'nest_per_species': spec(2, 1, 8, 'Beast nests', 'Maximum anchors per species', 'anchors'),
+    # Counts come from density over habitable ground, so the limit is a safety valve
+    # rather than the thing that decides how full a world is: zero means systemic.
+    'nest_limit': spec(0, 0, 20000, 'Beast nests', 'Hard cap on habitat anchors per pass; zero lets the ground decide', 'anchors'),
+    'animal_density': spec(4.5, 0., 40., 'Beast nests', 'Tier one animal groups per square kilometre of land, and again per square kilometre of water; higher tiers follow the pyramid', 'groups/km2'),
+    'monster_density': spec(.53, 0., 40., 'Beast nests', 'Tier one monster lairs per square kilometre of land, and again per square kilometre of water; higher tiers follow the pyramid', 'lairs/km2'),
+    'animal_tier_falloff': spec(4., 1.5, 8., 'Beast nests', 'How much rarer each animal danger tier is than the one below it'),
+    'monster_tier_falloff': spec(2., 1.5, 8., 'Beast nests', 'How much rarer each monster danger tier is; gentler than the animal pyramid so a greater lair is an event rather than a rumour, and the smallest world can still hold one', ),
+    'nest_density': spec(1., 0., 3., 'Beast nests', 'Overall creature density multiplier; zero empties the world'),
+    'nest_fantasy': spec(1., 0., 3., 'Beast nests', 'Monster density multiplier; zero leaves only animals'),
+    'nest_per_species': spec(0, 0, 64, 'Beast nests', 'Cap on anchors for one species; zero lets density decide', 'anchors'),
     'nest_min_suitability': spec(.3, .05, .95, 'Beast nests', 'Minimum weighted habitat suitability'),
     'nest_spacing': spec(1., .25, 4., 'Beast nests', 'Same-species territory spacing multiplier'),
     'nest_settlement_clearance': spec(250., 0., 3000., 'Beast nests', 'Minimum distance from settled anchors on the same layer', 'm'),
@@ -120,22 +126,23 @@ def registry(version=3):
             'moisture_bias':(-1,1),'wind_bearing':(0,360),'rain_passes':(1,128),'rain_strength':(0,3),
             'erosion_passes':(0,40),'erosion_strength':(0,1),'ley_nodes':(3,24),'ley_width':(10,2000),
             'magic_instability':(0,1),'human_magic_limit':(0,1),'college_count':(0,12),
-            'hamlets_per_core':(0,8),'fortress_count':(0,24),'settlement_count':(0,24),
+            'hamlets_per_core':(0,8),'fortress_count':(0,1024),'settlement_count':(0,24),
             'support_reach':(100,10000),'culture_link_cost':(1,100000),'urban_food_demand':(0,10000),
             'human_adaptation':(0,1),'settlement_spacing':(10,10000),'stubbornness':(0,1),
             'road_max_grade':(.01,1),'bridge_cost':(0,10000),'river_threshold_km2':(.001,100),
             'world_scale':(.001,1000),'globe_radius':(.01,1e7),'extent':(.01,1e7),
             'amplitude':(0,1e7),'wavelength':(.01,1e7),'depth':(0,1e7),'width':(.01,1e7),
             'meander':(0,1e7),'radius':(.01,1e7),'tectonic_relief':(0,1e7),'sea_level':(-1e7,1e7),
-            'ridge':(0,1),'octaves':(1,10)}
+            'ridge':(0,1),'octaves':(1,10),'orogeny':(0,20)}
     for key,(low,high) in bounds.items():
         if key in result:result[key].update(min=low,max=high)
-    for group,keys in {'Terrain':'plate_count layout_variation detail_variation crust_bias belt_width tectonic_relief mountain_detail sea_level amplitude wavelength octaves ridge radius world_scale',
+    for group,keys in {'Terrain':'plate_count layout_variation detail_variation crust_bias belt_width tectonic_relief mountain_detail orogeny sea_level amplitude wavelength octaves ridge radius world_scale',
                        'Climate':'temperature_offset moisture_bias wind_bearing rain_passes rain_strength',
                        'Drainage':'erosion_passes erosion_strength river_threshold_km2',
                        'Communities':'population_profile human_magic_limit college_count hamlets_per_core fortress_count support_reach culture_link_cost settlement_count settlement_spacing stubbornness road_max_grade bridge_cost'}.items():
         for key in keys.split():result[key]['group']=group
     result['settlement_count']['description']='Maximum surface cities; actual counts require habitat and productive capacity'
+    result['fortress_count']['description']='Maximum route-defence fortresses; road length, crossings and city count ask for fewer unless this is lowered'
     result.update(OPTIONS)
     return result
 

@@ -10,9 +10,11 @@ FANTASYWORLDGENERATOR_API DECLARE_LOG_CATEGORY_EXTERN(LogFantasyWorldGenerator, 
 /**
  * Runtime module for the FantasyWorldGenerator engine boundary.
  *
- * This module currently exposes the source-to-Unreal frame and generate-request
- * validation only. It does not generate a world, build a Landscape, resolve the
- * asset-ID registry or provide any cooked-runtime guarantee.
+ * When the packaged plugin vendors Core/, its translation units are compiled into this
+ * module and UFantasyWorldGeneratorSubsystem generates a recipe-3 world in process,
+ * samples the detailed surface and resolves asset identities through the registry
+ * table shipped in Data/. No Python runtime, sidecar or embedded interpreter is used.
+ * A cooked-runtime guarantee still depends on a recorded packaged Win64 digest.
  */
 class FFantasyWorldGeneratorModule : public IModuleInterface
 {

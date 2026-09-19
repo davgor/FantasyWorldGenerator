@@ -37,9 +37,15 @@ class PluginPackageTests(unittest.TestCase):
             names=archive.namelist()
         for required in ('FantasyWorldGenerator/FantasyWorldGenerator.uplugin','FantasyWorldGenerator/LICENSE','manifest.json',
                          'FantasyWorldGenerator/Source/FantasyWorldGenerator/FantasyWorldGenerator.Build.cs',
-                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorFrame.h',
+                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorTypes.h',
                          'FantasyWorldGenerator/Source/FantasyWorldGenerator/Public/FantasyWorldGeneratorSubsystem.h',
-                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/Private/FantasyWorldGeneratorSubsystem.cpp'):
+                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/Private/FantasyWorldGeneratorSubsystem.cpp',
+                         # The world generator itself travels as source and is compiled by
+                         # UnrealBuildTool into the runtime module.
+                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/FantasyWorldGeneratorCore/world.cpp',
+                         'FantasyWorldGenerator/Source/FantasyWorldGenerator/FantasyWorldGeneratorCore/tectonics.cpp',
+                         'FantasyWorldGenerator/Data/unreal-asset-registry-v1.json',
+                         'FantasyWorldGenerator/Data/native-catalogues-v1.json'):
             self.assertIn(required,names)
         for name in names:
             path=Path(name)
@@ -49,6 +55,9 @@ class PluginPackageTests(unittest.TestCase):
             self.assertFalse(name.startswith('Sim/'),name)
             self.assertNotIn('Sim/fantasy_world_generator',name)
             self.assertNotIn(path.suffix,('.py','.pyc','.uasset','.umap','.dll','.lib','.pdb','.exe'),name)
+        # A cooked consumer must not need the counter kernel, and its check() helper
+        # collides with the Unreal macro of the same name.
+        self.assertNotIn('FantasyWorldGenerator/Source/FantasyWorldGenerator/FantasyWorldGeneratorCore/counter.cpp',names)
 
     def test_manifest_flags_do_not_claim_generate_or_engine_qualification(self):
         consumer=self.root/'consumer'
@@ -57,14 +66,19 @@ class PluginPackageTests(unittest.TestCase):
         manifest=json.loads((consumer/'manifest.json').read_text(encoding='utf-8'))
         self.assertEqual(manifest['schema'],'fantasy-world-generator.unreal-plugin-package')
         self.assertEqual(manifest['genesis'],'native-core')
-        self.assertEqual(manifest['native_generate'],'incomplete')
+        self.assertEqual(manifest['native_generate'],'available')
         self.assertEqual(manifest['engine']['version'],'5.8')
         self.assertEqual(manifest['engine']['platforms'],['Win64'])
         self.assertEqual(manifest['module_type'],'Runtime')
         self.assertEqual(manifest['qualification'],'unqualified-source-only')
         self.assertFalse(manifest['unreal_qualified'])
         self.assertFalse(manifest['unreal_cooked_runtime'])
-        self.assertFalse(manifest['core_vendored'])
+        self.assertTrue(manifest['core_vendored'])
+        self.assertEqual(manifest['asset_registry']['version'],1)
+        self.assertEqual(manifest['catalogues']['version'],1)
+        self.assertGreaterEqual(manifest['catalogues']['profiles'],12)
+        self.assertEqual(len(manifest['catalogues']['registry_sha256']),64)
+        self.assertGreater(manifest['asset_registry']['rows'],1000)
         self.assertFalse(manifest['python_runtime_required'])
         self.assertEqual(manifest['license'],'LICENSE')
         self.assertTrue(manifest['limitations'])
@@ -95,6 +109,11 @@ class PluginPackageTests(unittest.TestCase):
         staged=self.root/'staged'
         (staged/'Unreal').mkdir(parents=True,exist_ok=True)
         shutil.copytree(ROOT/'Unreal/FantasyWorldGenerator',staged/'Unreal/FantasyWorldGenerator',dirs_exist_ok=True)
+        # The archive also vendors Core and the registry table, so a staged root needs both.
+        shutil.copytree(ROOT/'Core',staged/'Core',dirs_exist_ok=True)
+        (staged/'Contracts/catalogues').mkdir(parents=True,exist_ok=True)
+        for table in ('unreal-asset-registry-v1.json','native-catalogues-v1.json'):
+            shutil.copyfile(ROOT/'Contracts/catalogues'/table,staged/'Contracts/catalogues'/table)
         shutil.copyfile(ROOT/'LICENSE',staged/'LICENSE')
         self.assertTrue(package_plugin.bundle_bytes(staged))
         asset=staged/'Unreal/FantasyWorldGenerator/Content/Placeholder.uasset'

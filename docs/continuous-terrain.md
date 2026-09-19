@@ -10,6 +10,14 @@ Every unit sphere direction evaluates the same seeded 3D Perlin field. Three pro
 
 Water, river and flood masks suppress detail; near sea level a smooth 20-metre elevation ramp protects coastlines. This is intentionally conservative around coarse water samples. Regional hydrology is not rerun at metre scale; local depressions are not simulated ponds, and fine streams are not invented. Regional roads and founding still use regional geography; city streets use detailed elevations and local grades. No new asset identity is introduced.
 
+## Surface labels
+
+A surface sample reports the natural biome at the point asked for, not the label of the raster cell it falls in. It evaluates the same classification the regional labels use — elevation above sea level, slope, temperature and moisture — from the continuous height, the analytic temperature and the interpolated climate moisture, then applies the marsh and cold-habitat overrides in the order the label and ecology passes apply them. At a raster node this reproduces the regional label exactly; between nodes it answers where the raster has no value, which is what stops a presented coastline or treeline from following the grid.
+
+Two parts stay cell-addressed on purpose. Which body of water a cell belongs to is topology from the flood fill, so the body's identity comes from the cell, while whether a point lies beneath that body's surface is geometry and is decided against the sampled height, keeping a painted shore on the drawn shore. Marsh is defined by a wetland catchment rather than by one position, so it also keeps the cell's answer before the cold habitats overwrite it.
+
+Sampling density is a presentation choice and never changes the labels: the same direction returns the same identity at any resolution. Regional settlement, habitat and food rules continue to read the regional raster, so refining the presented surface does not move a city.
+
 ## Resolved tile export
 
 `python tools/export_height_tile.py WORLD.json TILE.json --level 14 --x 16000 --z 8000 --cells 64`

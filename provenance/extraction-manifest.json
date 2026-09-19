@@ -231,7 +231,7 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "7d78e12b9aa883a24c7042c77e4308c68d1cde4eeeb8a21448ea48b3b3a18ef9",
+      "destination_sha256": "4491cd755a49480cd82876a476ce5565f971fc87f61f2e215c139e3bb83b6698",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -264,6 +264,20 @@
           "destination_sha256": "7d78e12b9aa883a24c7042c77e4308c68d1cde4eeeb8a21448ea48b3b3a18ef9",
           "decision": "docs/civilizations.md",
           "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "7d78e12b9aa883a24c7042c77e4308c68d1cde4eeeb8a21448ea48b3b3a18ef9",
+          "destination_sha256": "f03736d58cc433b7c567dd016e3172260821649dc56f9bfe883ec098c9c33455",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "f03736d58cc433b7c567dd016e3172260821649dc56f9bfe883ec098c9c33455",
+          "destination_sha256": "4491cd755a49480cd82876a476ce5565f971fc87f61f2e215c139e3bb83b6698",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
         }
       ]
     },
@@ -271,7 +285,7 @@
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "ae181ad260925764b5376e88bae70cf24293a904eb96e47863c7b4e0e77c40e2",
+      "destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -298,6 +312,20 @@
           "destination_sha256": "ae181ad260925764b5376e88bae70cf24293a904eb96e47863c7b4e0e77c40e2",
           "decision": "docs/decisions/017-civilization-master-registry.md",
           "reason": "Move civilization definitions, rule parameters, presentation and construction libraries to the validated master registry; synchronize consumers, tests and authoring documentation."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "ae181ad260925764b5376e88bae70cf24293a904eb96e47863c7b4e0e77c40e2",
+          "destination_sha256": "afe4e10bd6414843d6ab18d91bf477a23cb64dabede9ea5a545e98b01bac035e",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Adds the orogeny control: gain on collision uplift alone, so mountains come out of the tectonic phase rather than being imposed on it."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "afe4e10bd6414843d6ab18d91bf477a23cb64dabede9ea5a545e98b01bac035e",
+          "destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
         }
       ]
     },
@@ -345,15 +373,32 @@
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
       "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
       "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
-      "destination_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "a62f2a298d45a22021429625602ac9b6da978cd550fafc32fad99092c79f3320",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
+          "destination_sha256": "2921c3f0f1d7359baa912269253e85377f6bf2c44f278cbf69f3a4a01f187094",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Every creature gained an authored class, danger tier and feeding role, and the file gained a roles section holding the biome range map each role shares. `size` had been acting as a de-facto tier in lock-step with spacing and occurrence, which is why a gray wolf and a European rabbit carried identical placement rules."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "2921c3f0f1d7359baa912269253e85377f6bf2c44f278cbf69f3a4a01f187094",
+          "destination_sha256": "a62f2a298d45a22021429625602ac9b6da978cd550fafc32fad99092c79f3320",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Profile document version 2: 32 monsters re-tiered against the tier definitions (drakes are not dragons, fodder undead can hurt rather than kill, liches and the great sea monsters are campaign threats) and 257 species added, 141 monsters and 116 animals weighted to the harmless end, so the catalogue is a pyramid like the placement budget it is divided into. Every monster family now spans all five tiers. Placement moves for every seed because the tier budget is shared among whoever qualifies."
+        }
+      ],
+      "modification": "Diverged from the pinned extraction; see revisions."
     },
     {
       "source": "Sim/icarus_sim/terrain_nests.py",
       "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
       "destination": "Sim/icarus_sim/terrain_nests.py",
-      "destination_sha256": "0b53024bfeca0d1a81e2590ea7e679609040d160b41099e6f292cb1898c48970",
+      "destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
       "revisions": [
@@ -363,6 +408,13 @@
           "destination_sha256": "0b53024bfeca0d1a81e2590ea7e679609040d160b41099e6f292cb1898c48970",
           "decision": "docs/terrain-math-lab.md",
           "reason": "Documentation only. An attempt to replace sum(x*y for x,y in zip(a,b)) with explicit addition was reverted: CPython 3.12 sums floats with Neumaier compensation, so the explicit form differs by about one ULP and silently changes generated worlds on some seeds. The comment records why this sum() must stay."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "0b53024bfeca0d1a81e2590ea7e679609040d160b41099e6f292cb1898c48970",
+          "destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Habitat placement split into two independent passes, animals then monsters, each a thinned point process over the ground rather than a lottery under a fixed anchor cap. Tier carries the ecology: density falls geometrically with danger, and the pyramid is a per-medium world budget so a tier cannot forfeit its share by being habitat-specialised. Settlement clearance is folded into the intensity instead of rejecting a draw after it. Counts now scale with habitable area, which the 120 cap prevented."
         }
       ],
       "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
@@ -501,7 +553,7 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "5e1a5713a4d983bb010d1e97a262c14a292a35221362a977396a7ecc02e1fdb6",
+      "destination_sha256": "e44d4ae9089031a4c26f205d36c5e956effaa5df95bb7b1c84c45ff4fc67eb8c",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -556,6 +608,27 @@
           "destination_sha256": "5e1a5713a4d983bb010d1e97a262c14a292a35221362a977396a7ecc02e1fdb6",
           "decision": "docs/civilizations.md",
           "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "5e1a5713a4d983bb010d1e97a262c14a292a35221362a977396a7ecc02e1fdb6",
+          "destination_sha256": "e1ba6ead6eb5cd53514799735dcdb173c6126b66b826775897039f5d86027a58",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "The city ceiling is the ground's own packing limit rather than a constant 24, so a larger world supports more cities instead of the same two dozen."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "e1ba6ead6eb5cd53514799735dcdb173c6126b66b826775897039f5d86027a58",
+          "destination_sha256": "76b07c7610eddd99b6a5e0c0de3047a0dabc69641e8bcc2173e0468654edcbc4",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Asking for no cities outranks the systemic ceiling. Making the ceiling the ground's packing had let settlement_count zero mean \"no ceiling\" rather than \"no cities\", and the diaspora bonus -- which exists to waive a zero quota -- then settled worlds that two tests require to stay empty."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "76b07c7610eddd99b6a5e0c0de3047a0dabc69641e8bcc2173e0468654edcbc4",
+          "destination_sha256": "e44d4ae9089031a4c26f205d36c5e956effaa5df95bb7b1c84c45ff4fc67eb8c",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
         }
       ]
     },
@@ -610,9 +683,19 @@
       "source": "Sim/icarus_sim/terrain_tectonics.py",
       "source_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
       "destination": "Sim/icarus_sim/terrain_tectonics.py",
-      "destination_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "eed5c84aa31f166d1f6a5bed5d1bea6bc6db008b4dbce45f4a5683b977ec146e",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "9be1cc523c2fc1735640bbb59409e5d12f8a4c3de7af4e7ff47618376c649758",
+          "destination_sha256": "eed5c84aa31f166d1f6a5bed5d1bea6bc6db008b4dbce45f4a5683b977ec146e",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Collision uplift reads the orogeny gain. At the default of one the expression is unchanged, so existing worlds are bit-identical."
+        }
+      ],
+      "modification": "Diverged from the pinned extraction; see revisions."
     },
     {
       "source": "Sim/icarus_sim/terrain_water.py",
@@ -626,7 +709,7 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "4f48ca404e74a01200487677787cbaacc367e0d66dcd0b3d0e6d9a2510f7aac9",
+      "destination_sha256": "b4dea982bdda6c815cfe808b0404180ec7e32871945160b64723488dc2320dd7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -653,6 +736,20 @@
           "destination_sha256": "4f48ca404e74a01200487677787cbaacc367e0d66dcd0b3d0e6d9a2510f7aac9",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "4f48ca404e74a01200487677787cbaacc367e0d66dcd0b3d0e6d9a2510f7aac9",
+          "destination_sha256": "dd8aab01f6ca58794e54491683e6782b6fc58d64bb735e3a53e66c295226a01e",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Beast nest options restated for the two passes: per-medium densities and tier falloffs replace the single density, and the anchor ceilings default to zero, meaning the ground decides. Also adds the orogeny bound."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "dd8aab01f6ca58794e54491683e6782b6fc58d64bb735e3a53e66c295226a01e",
+          "destination_sha256": "b4dea982bdda6c815cfe808b0404180ec7e32871945160b64723488dc2320dd7",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
         }
       ]
     },
@@ -676,7 +773,7 @@
       "source": "Sim/tests/test_terrain_city_layout.py",
       "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
       "destination": "Sim/tests/test_terrain_city_layout.py",
-      "destination_sha256": "b3c1fcc9042939648b43699c2a8d57965a2222a306508d032bca96a7f6d3588e",
+      "destination_sha256": "de29b7257cf02078ab52daf65c6f756c9b22c639513966878565b50e3f5c1da7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -722,6 +819,13 @@
           "destination_sha256": "b3c1fcc9042939648b43699c2a8d57965a2222a306508d032bca96a7f6d3588e",
           "decision": "docs/civilizations.md",
           "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "b3c1fcc9042939648b43699c2a8d57965a2222a306508d032bca96a7f6d3588e",
+          "destination_sha256": "de29b7257cf02078ab52daf65c6f756c9b22c639513966878565b50e3f5c1da7",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -746,7 +850,7 @@
       "source": "Sim/tests/test_terrain_humans.py",
       "source_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
       "destination": "Sim/tests/test_terrain_humans.py",
-      "destination_sha256": "c5cd91ad47ad5de8af98dab2e0cab688a4f23076bff2891768cf948f3bd9f65e",
+      "destination_sha256": "fd9b773e1d50b7fe8a7c37301068f21796832b9529df9473809657c2e6c3ae50",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -757,6 +861,13 @@
           "destination_sha256": "c5cd91ad47ad5de8af98dab2e0cab688a4f23076bff2891768cf948f3bd9f65e",
           "decision": "docs/decisions/016-standalone-civilizations.md",
           "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "c5cd91ad47ad5de8af98dab2e0cab688a4f23076bff2891768cf948f3bd9f65e",
+          "destination_sha256": "fd9b773e1d50b7fe8a7c37301068f21796832b9529df9473809657c2e6c3ae50",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -801,7 +912,7 @@
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "407362beab7d16c14e6d70724f7ca82876489b19de89d279797989a678cfac42",
+      "destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -811,6 +922,20 @@
           "destination_sha256": "407362beab7d16c14e6d70724f7ca82876489b19de89d279797989a678cfac42",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "407362beab7d16c14e6d70724f7ca82876489b19de89d279797989a678cfac42",
+          "destination_sha256": "bddb3e29ea7a96987ab6b46d6c3093f25b95301ea928fc59c4e56dcef71fd601",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Rewritten against the two-pass contract: the pyramid, per-medium budgets, animal territoriality within a species, monster dominance by rank, and population scaling with area, which the removed 120-anchor cap had made untestable."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "bddb3e29ea7a96987ab6b46d6c3093f25b95301ea928fc59c4e56dcef71fd601",
+          "destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Added the catalogue-shape test: both books widest at tier one, tiers one and two outnumbering four and five, and every monster family spanning all five tiers."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -1017,9 +1142,19 @@
       "source": "docs/catalogue/creatures.json",
       "source_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
       "destination": "docs/catalogue/creatures.json",
-      "destination_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
-      "status": "exact",
-      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence"
+      "destination_sha256": "64d13355a8ebb1ce2a238a9d5ac44f091497990280b40f558107bbdb006304a7",
+      "status": "modified",
+      "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
+      "revisions": [
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
+          "destination_sha256": "64d13355a8ebb1ce2a238a9d5ac44f091497990280b40f558107bbdb006304a7",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Gained a name and description for each of the 257 species added in profile document version 2; the coverage test requires the two files to name the same creatures."
+        }
+      ],
+      "modification": "Diverged from the pinned extraction; see revisions."
     },
     {
       "source": "docs/catalogue/world-assets/AUDIT.md",
@@ -1348,7 +1483,7 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "abe0767c0c698d07d20f4bf2bec01f67068c913391e8ef2b92056c39d17edc86",
+      "destination_sha256": "1c7748409c589826c735ff05a812595206197c66e0efb93029c8e9e675ed8ac8",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -1381,6 +1516,13 @@
           "destination_sha256": "abe0767c0c698d07d20f4bf2bec01f67068c913391e8ef2b92056c39d17edc86",
           "decision": "docs/castle-planner.md",
           "reason": "Independent castle_plans fortification planner documentation and lab history key; see docs/castle-planner.md."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "abe0767c0c698d07d20f4bf2bec01f67068c913391e8ef2b92056c39d17edc86",
+          "destination_sha256": "1c7748409c589826c735ff05a812595206197c66e0efb93029c8e9e675ed8ac8",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
         }
       ]
     },
@@ -1388,7 +1530,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "d9f3409bf8cd9a6b3ddb639533f48b5a982b6c8b4e6b4432ccf827db48b818ba",
+      "destination_sha256": "81db97b9c85b5ead2b5d09cb1d084b098634968d1c591d6bb9fa7f5c2c15213e",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1534,6 +1676,34 @@
           "destination_sha256": "d9f3409bf8cd9a6b3ddb639533f48b5a982b6c8b4e6b4432ccf827db48b818ba",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "d9f3409bf8cd9a6b3ddb639533f48b5a982b6c8b4e6b4432ccf827db48b818ba",
+          "destination_sha256": "769f74204da002c50cf47d699243cb08c147acea4667282e67763e96ec857954",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Documents the two habitat passes, tier semantics, the per-medium budget and the tier-graded city threat weight."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "769f74204da002c50cf47d699243cb08c147acea4667282e67763e96ec857954",
+          "destination_sha256": "69a40626287072657c7584a41a1f692bcd846e6de37a6dcf0844e4a4d57344ca",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "69a40626287072657c7584a41a1f692bcd846e6de37a6dcf0844e4a4d57344ca",
+          "destination_sha256": "7f658b41d6d9d1f5518fa0861d3edcfbce9425ec32d9c3e53c9032e9ec921e0a",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "7f658b41d6d9d1f5518fa0861d3edcfbce9425ec32d9c3e53c9032e9ec921e0a",
+          "destination_sha256": "81db97b9c85b5ead2b5d09cb1d084b098634968d1c591d6bb9fa7f5c2c15213e",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Habitat section records profile document version 2: the reviewed re-tiers, the tier spreads before and after, and that a catalogue change moves every seed."
         }
       ]
     },
@@ -1730,7 +1900,7 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "4002462e253cb5e222f9f759761b6f48a3e2a424a86cb2cf2a2f4c7d884a0bbe",
+      "destination_sha256": "9b4b6d5b9ae9068fb1c56a1b66613ccdad3e74ebb3677f66f93bdf679724b138",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1799,6 +1969,13 @@
           "destination_sha256": "4002462e253cb5e222f9f759761b6f48a3e2a424a86cb2cf2a2f4c7d884a0bbe",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "4002462e253cb5e222f9f759761b6f48a3e2a424a86cb2cf2a2f4c7d884a0bbe",
+          "destination_sha256": "9b4b6d5b9ae9068fb1c56a1b66613ccdad3e74ebb3677f66f93bdf679724b138",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "The lab atlas reads both habitat passes and shows danger tier, range and den; the removed per-anchor reason and sample count are gone from the UI with them."
         }
       ]
     }

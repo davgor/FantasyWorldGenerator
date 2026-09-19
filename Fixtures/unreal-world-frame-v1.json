@@ -1,0 +1,47 @@
+{
+  "description": "Cardinal, elevation, seam and pole checks for the source-to-Unreal world frame. Hand-authored from the coordinate contract, not captured from an Unreal session. A tangent origin (latitude, longitude, origin height) turns a globe point in metres into Unreal centimetres: X follows east, Y follows north, Z follows radial up, lengths scale by 100 once and unit axes only permute. Numeric agreement between the native core and the Python oracle: relative 1e-12, absolute 1e-9.",
+  "coordinate_version": 1,
+  "origin": {"latitude_degrees": 12.5, "longitude_degrees": -37.25, "radius_m": 1774.4123532462844, "origin_height_m": 8.0},
+  "sign_cases": [
+    {
+      "name": "a point east of the origin has Unreal X greater than zero",
+      "offset_east_m": 250.0, "offset_up_m": 0.0, "offset_north_m": 0.0,
+      "expect": {"x_cm": "positive", "y_cm": "zero", "z_cm": "zero"}
+    },
+    {
+      "name": "a point north of the origin has Unreal Y greater than zero",
+      "offset_east_m": 0.0, "offset_up_m": 0.0, "offset_north_m": 250.0,
+      "expect": {"x_cm": "zero", "y_cm": "positive", "z_cm": "zero"}
+    },
+    {
+      "name": "greater radial height has Unreal Z greater, never Y",
+      "offset_east_m": 0.0, "offset_up_m": 42.0, "offset_north_m": 0.0,
+      "expect": {"x_cm": "zero", "y_cm": "zero", "z_cm": "positive"}
+    },
+    {
+      "name": "west and south and below invert every axis",
+      "offset_east_m": -250.0, "offset_up_m": -42.0, "offset_north_m": -250.0,
+      "expect": {"x_cm": "negative", "y_cm": "negative", "z_cm": "negative"}
+    }
+  ],
+  "axis_cases": [
+    {"name": "a width axis that is source east aligns with Unreal +X", "axis_east_up_north": [1.0, 0.0, 0.0], "expected_axis": [1.0, 0.0, 0.0]},
+    {"name": "a source up axis is Unreal +Z and is not scaled", "axis_east_up_north": [0.0, 1.0, 0.0], "expected_axis": [0.0, 0.0, 1.0]},
+    {"name": "a source north axis is Unreal +Y", "axis_east_up_north": [0.0, 0.0, 1.0], "expected_axis": [0.0, 1.0, 0.0]}
+  ],
+  "identity_cases": [
+    {
+      "name": "the seam at longitude 180 resolves to the same direction as -180",
+      "kind": "seam", "latitude_degrees": -14.0, "longitude_degrees": 180.0, "mirror_longitude_degrees": -180.0
+    },
+    {
+      "name": "the north pole up axis is the globe +Y axis for every longitude",
+      "kind": "pole", "latitude_degrees": 90.0, "longitude_degrees": 73.0, "expected_up": [0.0, 1.0, 0.0]
+    },
+    {
+      "name": "the south pole up axis is the globe -Y axis for every longitude",
+      "kind": "pole", "latitude_degrees": -90.0, "longitude_degrees": -161.0, "expected_up": [0.0, -1.0, 0.0]
+    }
+  ],
+  "winding": "reverse source triangle indices when copying them into a left-handed Unreal index buffer"
+}

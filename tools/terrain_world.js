@@ -57,18 +57,26 @@ if (data.config.world_recipe >= 1) {
   const speciesLabel=make('label','Species ',nestPanel),speciesSelect=make('select',undefined,speciesLabel);speciesSelect.id='world-nest-species';
   const nestSelect=make('select',undefined,nestPanel);nestSelect.id='world-nest-select';nestSelect.setAttribute('aria-label','Nest location');
   const nestInfo=make('p','',nestPanel);nestInfo.id='world-nest-info';
-  function visibleNests(){return (data.beast_nests?.sites||[]).filter(s=>!speciesSelect.value||s.species_id===speciesSelect.value);}
+  // Animals and monsters are two independent passes; the atlas shows both at once.
+  const TIERS=['','harmless','can hurt you','kills the careless','kills the prepared','campaign threat'];
+  function habitat(){return [data.wildlife,data.beast_nests].filter(Boolean);}
+  function allNests(){return habitat().flatMap(h=>h.sites||[]);}
+  function allProfiles(){return habitat().flatMap(h=>h.profiles||[]);}
+  function allDiagnostics(){return habitat().flatMap(h=>h.diagnostics||[]);}
+  function visibleNests(){return allNests().filter(s=>!speciesSelect.value||s.species_id===speciesSelect.value);}
   function inspectNest(){
-    const nest=(data.beast_nests?.sites||[]).find(s=>s.id===nestSelect.value);
-    const profile=(data.beast_nests?.profiles||[]).find(p=>p.id===(nest?.species_id||speciesSelect.value));
-    const diagnostic=(data.beast_nests?.diagnostics||[]).find(d=>d.species_id===profile?.id);
-    nestInfo.textContent=profile?`${profile.name} / ${profile.family} / ${profile.kind}. Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.reason}; same-species spacing ${nest.spacing_m.toFixed(0)} m.`:`${diagnostic?.reason||''}; ${diagnostic?.eligible_samples||0} suitable sampled locations.`}`:'Select a species or map marker. Cyan circles: real animals; coral: fantasy. No simulated creature population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
+    const nest=allNests().find(s=>s.id===nestSelect.value);
+    const profile=allProfiles().find(p=>p.id===(nest?.species_id||speciesSelect.value));
+    const diagnostic=allDiagnostics().find(d=>d.species_id===profile?.id);
+    const tier=nest?.tier??profile?.tier;
+    const danger=tier?` Tier ${tier} (${TIERS[tier]}).`:'';
+    nestInfo.textContent=profile?`${profile.name} / ${profile.role||profile.family} / ${profile.kind}.${danger} Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.den?'den':'range'} over ${nest.range_m.toFixed(0)} m.`:`no habitat placed (${diagnostic?.placed??0} anchors).`}`:'Select a species or map marker. Cyan circles: animals; coral: monsters. Habitat anchors are static proposals, not a simulated population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
   }
   function rebuildNests(){
-    const nests=data.beast_nests;
-    nestSummary.textContent=nests?`${nests.sites.length} anchors / ${nests.catalogue_count} candidate species; ${nests.sample_count} sampled surface cells. ${nests.limits}`:data.build_stages?'Beasties and animals appear at stage 13.':'Nests appear from settlement stage 7 onward.';
+    const animals=data.wildlife,monsters=data.beast_nests;
+    nestSummary.textContent=monsters?`${animals?.sites.length||0} animal hunting grounds and ${monsters.sites.length} monster territories over ${allDiagnostics().length} candidate species. ${monsters.limits}`:data.build_stages?'Beasties and animals appear at stage 13.':'Nests appear from settlement stage 7 onward.';
     const old=speciesSelect.value;speciesSelect.replaceChildren();make('option','All species',speciesSelect).value='';
-    for(const d of nests?.diagnostics||[])make('option',`${d.name} (${d.placed})`,speciesSelect).value=d.species_id;
+    for(const d of allDiagnostics())make('option',`${d.name} t${d.tier} (${d.placed})`,speciesSelect).value=d.species_id;
     if([...speciesSelect.options].some(o=>o.value===old))speciesSelect.value=old;
     rebuildNestLocations();
   }

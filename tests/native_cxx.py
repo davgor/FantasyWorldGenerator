@@ -49,7 +49,13 @@ def compile_native(sources: list[Path], include: Path, output: Path) -> None:
         raise FileNotFoundError('no C++17 compiler')
     args = list(command)
     if Path(command[0]).name.lower() == 'cl.exe':
-        args += [f'/I{include}', f'/Fe{output}', '/Fo' + str(output.parent) + '\\']
+        # /MD, not the default static CRT. CPython calls ucrtbase.dll, and the static
+        # CRT's pow() disagrees with it by one ulp on a small fraction of inputs.
+        # perlin3 evaluates pow(f, 3.0) three times per noise sample, so a /MT build
+        # drifts terrain heights in the last couple of digits -- inside this suite's
+        # numeric tolerance, which is why it went unnoticed, but not bit-exact. A
+        # byte-for-byte comparison of a planned city record catches it immediately.
+        args += ['/MD', f'/I{include}', f'/Fe{output}', '/Fo' + str(output.parent) + '\\']
         args += [str(path) for path in sources]
         env = msvc_env(command[0])
     else:

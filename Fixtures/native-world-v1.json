@@ -1,0 +1,15 @@
+{
+  "description": "Numeric contract between the native world genesis in Core/ and the Python reference world for the same seed. Both evaluate the same operations in the same order, including CPython's compensated float sum() and its scaled hypot; the only divergence observed is the platform pow() differing from the interpreter's in the last ulp, which cancellation can amplify by a few orders. Identity layers must be equal, never close.",
+  "version": 1,
+  "identity_layers": [
+    "plates", "land", "water_type", "river", "rain_river", "biome", "natural_biome", "landform"
+  ],
+  "relative_tolerance": 1e-09,
+  "absolute_tolerance": 1e-06,
+  "observed": {
+    "seed 42 size 33": {"worst_relative": 4.94e-15, "layers_differing": 4, "surface_samples_exact": "400/400"},
+    "seed 7 size 65": {"worst_relative": 4.5e-13, "layers_differing": 21, "surface_samples_exact": "398/400"}
+  },
+  "divergence_source": "pow(x, y): CPython and the MSVC C++ runtime disagree in roughly one call in two thousand by one unit in the last place. Everything else, including the Mersenne Twister stream, the plate layout, the spherical noise, the compensated sums and the vector norm, is bit-for-bit identical.",
+  "note": "A layer that is an integer identity in the reference world is compared exactly, so a tolerance can never hide a reclassified cell, a moved river or a different plate."
+}

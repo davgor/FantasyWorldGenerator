@@ -1904,6 +1904,1291 @@
       "name": "Drowned titans",
       "real": false,
       "desc": "Colossal undead creature. Reanimated giants stride along the seabed and disturb coastal waters as they approach flooded ruins."
+    },
+    {
+      "name": "Sand lizard",
+      "real": true,
+      "desc": "A small ground lizard that basks on heaths and dunes and shelters in burrows."
+    },
+    {
+      "name": "Fire salamander",
+      "real": true,
+      "desc": "A black-and-yellow woodland salamander that breeds in cool streams."
+    },
+    {
+      "name": "Bullfrog",
+      "real": true,
+      "desc": "A large pond frog that eats anything it can swallow and calls loudly at night."
+    },
+    {
+      "name": "Tree frog",
+      "real": true,
+      "desc": "A small climbing frog that choruses in wet forest after rain."
+    },
+    {
+      "name": "Golden jackal",
+      "real": true,
+      "desc": "An opportunistic canid that scavenges kills and hunts small prey on grassland edges."
+    },
+    {
+      "name": "Marabou stork",
+      "real": true,
+      "desc": "A tall bald stork that scavenges carcasses and refuse near water."
+    },
+    {
+      "name": "Hooded crow",
+      "real": true,
+      "desc": "A gray-and-black crow that picks over shorelines, fields and middens."
+    },
+    {
+      "name": "Bearded vulture",
+      "real": true,
+      "desc": "A mountain vulture that drops bones onto rocks to reach the marrow."
+    },
+    {
+      "name": "Common pheasant",
+      "real": true,
+      "desc": "A ground-feeding game bird of hedgerows and field margins."
+    },
+    {
+      "name": "Wild turkey",
+      "real": true,
+      "desc": "A large ground bird that forages in open woodland and roosts in trees."
+    },
+    {
+      "name": "Indian peafowl",
+      "real": true,
+      "desc": "A showy ground bird of forest edges that roosts high and calls at dawn."
+    },
+    {
+      "name": "Emu",
+      "real": true,
+      "desc": "A tall flightless bird that ranges across dry plains in loose groups."
+    },
+    {
+      "name": "Southern cassowary",
+      "real": true,
+      "desc": "A heavy flightless rainforest bird that kicks with a dagger-like claw."
+    },
+    {
+      "name": "Raccoon",
+      "real": true,
+      "desc": "A masked nocturnal forager that raids nests, streams and stores."
+    },
+    {
+      "name": "American black bear",
+      "real": true,
+      "desc": "A forest bear that feeds on mast, berries and carrion and dens through winter."
+    },
+    {
+      "name": "Chimpanzee",
+      "real": true,
+      "desc": "A forest ape that lives in large troops and defends its range aggressively."
+    },
+    {
+      "name": "Mandrill",
+      "real": true,
+      "desc": "A brightly faced ground monkey of dense forest that forages in large troops."
+    },
+    {
+      "name": "Honey badger",
+      "real": true,
+      "desc": "A fearless burrowing mustelid that raids hives and fights animals many times its size."
+    },
+    {
+      "name": "Crested porcupine",
+      "real": true,
+      "desc": "A large nocturnal rodent armed with quills that forages for roots and bark."
+    },
+    {
+      "name": "Nine-banded armadillo",
+      "real": true,
+      "desc": "An armored burrowing insectivore of scrub and grassland."
+    },
+    {
+      "name": "Common pipistrelle",
+      "real": true,
+      "desc": "A tiny bat that roosts in roofs and hollow trees and hunts midges at dusk."
+    },
+    {
+      "name": "European adder",
+      "real": true,
+      "desc": "A shy heathland viper whose bite is painful but rarely fatal."
+    },
+    {
+      "name": "King cobra",
+      "real": true,
+      "desc": "A long forest snake whose bite kills quickly; it hunts other snakes and guards its nest."
+    },
+    {
+      "name": "Black mamba",
+      "real": true,
+      "desc": "A fast, nervous savanna snake with a lethal bite that shelters in termite mounds."
+    },
+    {
+      "name": "Nile monitor",
+      "real": true,
+      "desc": "A large semi-aquatic lizard that raids nests and scavenges along rivers."
+    },
+    {
+      "name": "Komodo dragon",
+      "real": true,
+      "desc": "A giant monitor lizard that stalks deer and pigs on dry islands and scrub."
+    },
+    {
+      "name": "Nile crocodile",
+      "real": true,
+      "desc": "A huge riverine crocodile that ambushes animals drinking at the bank."
+    },
+    {
+      "name": "Saltwater crocodile",
+      "real": true,
+      "desc": "A massive estuarine crocodile that hunts coasts, river mouths and mangroves."
+    },
+    {
+      "name": "African wild dog",
+      "real": true,
+      "desc": "A painted pack hunter that runs prey to exhaustion across open savanna."
+    },
+    {
+      "name": "Dhole",
+      "real": true,
+      "desc": "A red forest dog that hunts deer in whistling packs."
+    },
+    {
+      "name": "Hippopotamus",
+      "real": true,
+      "desc": "A massive river grazer that is fiercely territorial in water and dangerous on land."
+    },
+    {
+      "name": "African elephant",
+      "real": true,
+      "desc": "A vast savanna grazer that moves in matriarch-led herds and flattens what blocks it."
+    },
+    {
+      "name": "White rhinoceros",
+      "real": true,
+      "desc": "A heavy grassland grazer that charges when startled."
+    },
+    {
+      "name": "Giraffe",
+      "real": true,
+      "desc": "A towering browser of open woodland that kicks hard when cornered."
+    },
+    {
+      "name": "Western gorilla",
+      "real": true,
+      "desc": "A great forest ape that lives in family groups and bluff-charges intruders."
+    },
+    {
+      "name": "Giant otter",
+      "real": true,
+      "desc": "A river otter the length of a man that hunts fish in noisy family groups."
+    },
+    {
+      "name": "Electric eel",
+      "real": true,
+      "desc": "A river fish that stuns prey and waders with electric discharges."
+    },
+    {
+      "name": "Red-bellied piranha",
+      "real": true,
+      "desc": "A schooling river fish with razor teeth that swarms wounded animals."
+    },
+    {
+      "name": "Walrus",
+      "real": true,
+      "desc": "A tusked pinniped that hauls out in dense herds on ice and rocky shores."
+    },
+    {
+      "name": "Northern elephant seal",
+      "real": true,
+      "desc": "A huge seal that breeds on remote beaches and dives deep for squid."
+    },
+    {
+      "name": "Sea otter",
+      "real": true,
+      "desc": "A coastal otter that rafts in kelp beds and cracks shellfish on its chest."
+    },
+    {
+      "name": "Eurasian oystercatcher",
+      "real": true,
+      "desc": "A pied wading bird that prises shellfish from rocky shores."
+    },
+    {
+      "name": "Marine iguana",
+      "real": true,
+      "desc": "A seaweed-grazing lizard that basks in crowds on volcanic shores."
+    },
+    {
+      "name": "Banded sea krait",
+      "real": true,
+      "desc": "A banded sea snake that hunts eels on reefs and rests ashore."
+    },
+    {
+      "name": "Green sea turtle",
+      "real": true,
+      "desc": "A seagrass-grazing turtle that nests on warm beaches."
+    },
+    {
+      "name": "Blue-ringed octopus",
+      "real": true,
+      "desc": "A tiny reef octopus whose bite carries a paralyzing venom."
+    },
+    {
+      "name": "Narwhal",
+      "real": true,
+      "desc": "A tusked arctic whale that travels the pack-ice edge in pods."
+    },
+    {
+      "name": "Humpback whale",
+      "real": true,
+      "desc": "A long-finned whale that feeds in cold seas and sings on its breeding grounds."
+    },
+    {
+      "name": "Leopard seal",
+      "real": true,
+      "desc": "A solitary polar seal that hunts penguins and other seals along the ice edge."
+    },
+    {
+      "name": "Emperor penguin",
+      "real": true,
+      "desc": "A flightless diving bird that breeds on sea ice through the polar winter."
+    },
+    {
+      "name": "Barrow rats",
+      "real": false,
+      "desc": "Tiny undead creature. Bone-thin vermin nest in burial mounds and gnaw through grave offerings."
+    },
+    {
+      "name": "Grave candles",
+      "real": false,
+      "desc": "Tiny undead creature. Drifting corpse-lights mark where the unquiet dead lie and draw the curious closer."
+    },
+    {
+      "name": "Coffin beetles",
+      "real": false,
+      "desc": "Tiny undead creature. Swarm out of disturbed coffins and strip exposed flesh."
+    },
+    {
+      "name": "Lantern ghosts",
+      "real": false,
+      "desc": "Tiny undead creature. Faint spirits hover over drowned roads and mislead night travelers."
+    },
+    {
+      "name": "Bone gulls",
+      "real": false,
+      "desc": "Small undead creature. Salt-bleached gull skeletons wheel above wreck-strewn beaches."
+    },
+    {
+      "name": "Bone crows",
+      "real": false,
+      "desc": "Small undead creature. Skeletal carrion birds circle old battlefields and call other dead to the scene."
+    },
+    {
+      "name": "Cairn wolves",
+      "real": false,
+      "desc": "Small undead creature. Frost-preserved wolves rise from cairns to run the old passes."
+    },
+    {
+      "name": "Grave worms",
+      "real": false,
+      "desc": "Small undead creature. Bloated carrion worms tunnel between graves and collapse the ground beneath them."
+    },
+    {
+      "name": "Marsh corpses",
+      "real": false,
+      "desc": "Medium undead creature. Bog-preserved dead rise from peat cuttings and drag in anyone who wades."
+    },
+    {
+      "name": "Mourning shades",
+      "real": false,
+      "desc": "Medium undead creature. Grief-bound spirits cling to abandoned homes and sap the will of visitors."
+    },
+    {
+      "name": "Hanged sentinels",
+      "real": false,
+      "desc": "Medium undead creature. Executed criminals keep watch at crossroads gallows and seize passing riders."
+    },
+    {
+      "name": "Tomb wardens",
+      "real": false,
+      "desc": "Large undead creature. Armored ancestors guard sealed vaults and answer only to their bloodline."
+    },
+    {
+      "name": "Ghost galleons",
+      "real": false,
+      "desc": "Huge undead creature. Crewed wrecks sail against the wind and board vessels that cross their lanes."
+    },
+    {
+      "name": "Sulphur gnats",
+      "real": false,
+      "desc": "Tiny infernal creature. Swarm over fumaroles and blind anything that lingers in the fumes."
+    },
+    {
+      "name": "Hearth sprites",
+      "real": false,
+      "desc": "Tiny infernal creature. Nest in cold hearths and coax fires to spread beyond the grate."
+    },
+    {
+      "name": "Slag beetles",
+      "real": false,
+      "desc": "Small infernal creature. Chew through smelter waste and leave glowing trails between forges."
+    },
+    {
+      "name": "Tallow imps",
+      "real": false,
+      "desc": "Small infernal creature. Render stolen fat into candles that summon larger fiends."
+    },
+    {
+      "name": "Ember hounds",
+      "real": false,
+      "desc": "Small infernal creature. Yapping fire-eyed dogs harry travelers toward hellhound ranges."
+    },
+    {
+      "name": "Cinder jackals",
+      "real": false,
+      "desc": "Small infernal creature. Scavenge burned ground and set fresh fires to flush out prey."
+    },
+    {
+      "name": "Brimstone bats",
+      "real": false,
+      "desc": "Small infernal creature. Roost in vent caves and scatter burning guano across the slopes below."
+    },
+    {
+      "name": "Pitch crawlers",
+      "real": false,
+      "desc": "Medium infernal creature. Tar-bodied lurkers foul pools and drag animals under."
+    },
+    {
+      "name": "Toll fiends",
+      "real": false,
+      "desc": "Medium infernal creature. Squat at fords and bridges to extract payment in blood or oaths."
+    },
+    {
+      "name": "Scorch lizards",
+      "real": false,
+      "desc": "Medium infernal creature. Bask on lava crusts and spit sparks at anything approaching the vents."
+    },
+    {
+      "name": "Kiln dancers",
+      "real": false,
+      "desc": "Medium infernal creature. Draw workers into hypnotic circuits around their furnaces."
+    },
+    {
+      "name": "Furnace bulls",
+      "real": false,
+      "desc": "Large infernal creature. Trample and burn cropland to clear grazing for infernal herds."
+    },
+    {
+      "name": "Chapel mice",
+      "real": false,
+      "desc": "Tiny holy creature. Nest beneath altars and warn the faithful of intruders with their singing."
+    },
+    {
+      "name": "Vigil moths",
+      "real": false,
+      "desc": "Tiny holy creature. Gather on consecrated lamps and keep them lit through the night."
+    },
+    {
+      "name": "Psalm crickets",
+      "real": false,
+      "desc": "Tiny holy creature. Chorus at dusk around old shrines and fall silent when the unholy approach."
+    },
+    {
+      "name": "Shrine foxes",
+      "real": false,
+      "desc": "Small holy creature. Guide lost pilgrims back to marked roads and steal offerings from the unworthy."
+    },
+    {
+      "name": "Bell hares",
+      "real": false,
+      "desc": "Small holy creature. Ring as they run, scattering minor curses from consecrated meadows."
+    },
+    {
+      "name": "Alms hounds",
+      "real": false,
+      "desc": "Small holy creature. Escort beggars and bite hands that refuse them."
+    },
+    {
+      "name": "Hymn owls",
+      "real": false,
+      "desc": "Small holy creature. Hunt night-walking undead and carry warnings between chapels."
+    },
+    {
+      "name": "Cloister spiders",
+      "real": false,
+      "desc": "Small holy creature. Weave wards across sanctuary doorways that hold back the profane."
+    },
+    {
+      "name": "Font salamanders",
+      "real": false,
+      "desc": "Small holy creature. Keep springs and wells pure and scald anyone who poisons them."
+    },
+    {
+      "name": "Ward cranes",
+      "real": false,
+      "desc": "Medium holy creature. Stand vigil at sacred pools and drive off anything unclean that drinks."
+    },
+    {
+      "name": "Vow hounds",
+      "real": false,
+      "desc": "Medium holy creature. Track oath-breakers by scent across any distance."
+    },
+    {
+      "name": "Reliquary bears",
+      "real": false,
+      "desc": "Large holy creature. Sleep beneath mountain shrines and wake to defend them."
+    },
+    {
+      "name": "Aegis rams",
+      "real": false,
+      "desc": "Large holy creature. Butt trespassers from consecrated high pastures."
+    },
+    {
+      "name": "Tithe mites",
+      "real": false,
+      "desc": "Tiny unholy creature. Infest stored offerings and spoil the tithe before it reaches the altar."
+    },
+    {
+      "name": "Candle worms",
+      "real": false,
+      "desc": "Tiny unholy creature. Feed on votive wax and leave shrines dark."
+    },
+    {
+      "name": "Sackcloth rats",
+      "real": false,
+      "desc": "Small unholy creature. Nest in penitents' rags and carry curses between beggars."
+    },
+    {
+      "name": "Ash crows",
+      "real": false,
+      "desc": "Small unholy creature. Gather over burned chapels and peck out the eyes of the praying."
+    },
+    {
+      "name": "Chancel toads",
+      "real": false,
+      "desc": "Small unholy creature. Croak blasphemies from flooded crypts and sour the water."
+    },
+    {
+      "name": "Bile hounds",
+      "real": false,
+      "desc": "Small unholy creature. Sniff out the pious and foul their wells."
+    },
+    {
+      "name": "Litany worms",
+      "real": false,
+      "desc": "Small unholy creature. Whisper endless perversions of scripture from within church walls."
+    },
+    {
+      "name": "Hollow acolytes",
+      "real": false,
+      "desc": "Medium unholy creature. Empty-robed shapes perform inverted rites to draw greater corruption."
+    },
+    {
+      "name": "Vestment mimics",
+      "real": false,
+      "desc": "Medium unholy creature. Wear stolen priestly robes to lead congregations astray."
+    },
+    {
+      "name": "Flagellant swarms",
+      "real": false,
+      "desc": "Medium unholy creature. Mobs of self-scourging thralls spread their affliction by touch."
+    },
+    {
+      "name": "Desecrated bulls",
+      "real": false,
+      "desc": "Large unholy creature. Sacrificial cattle returned wrong, goring the keepers of the old herds."
+    },
+    {
+      "name": "Static fleas",
+      "real": false,
+      "desc": "Tiny aberrant creature. Leap between hosts and scramble the senses for a moment."
+    },
+    {
+      "name": "Mirror snails",
+      "real": false,
+      "desc": "Tiny aberrant creature. Reflect nearby scenes on their shells with small, unsettling differences."
+    },
+    {
+      "name": "Drift polyps",
+      "real": false,
+      "desc": "Tiny aberrant creature. Translucent colonies pulse with light and numb whatever brushes them."
+    },
+    {
+      "name": "Tally wasps",
+      "real": false,
+      "desc": "Tiny aberrant creature. Count and mark every creature that passes their nest."
+    },
+    {
+      "name": "Blink hares",
+      "real": false,
+      "desc": "Small aberrant creature. Vanish and reappear a few paces away, leading dogs off cliffs."
+    },
+    {
+      "name": "Gutter tongues",
+      "real": false,
+      "desc": "Small aberrant creature. Prehensile lurkers in drains and wells grasp at ankles and buckets."
+    },
+    {
+      "name": "Eyeless owls",
+      "real": false,
+      "desc": "Small aberrant creature. Hunt by senses no one can name and leave prey unable to remember the attack."
+    },
+    {
+      "name": "Knuckle crabs",
+      "real": false,
+      "desc": "Small aberrant creature. Assembled from too many joints, scuttle the tideline and pinch off fingers."
+    },
+    {
+      "name": "Stitch wolves",
+      "real": false,
+      "desc": "Medium aberrant creature. Packs that share one body's wounds and heal by taking flesh from others."
+    },
+    {
+      "name": "Cellar mouths",
+      "real": false,
+      "desc": "Medium aberrant creature. Grow inside abandoned buildings as rooms that digest visitors."
+    },
+    {
+      "name": "Hollow deer",
+      "real": false,
+      "desc": "Large aberrant creature. Empty-skinned grazers move in perfect unison and swallow whole what they surround."
+    },
+    {
+      "name": "Wandering geometries",
+      "real": false,
+      "desc": "Large aberrant creature. Impossible shapes drift over the ground and fold the space they cross."
+    },
+    {
+      "name": "Dust hoppers",
+      "real": false,
+      "desc": "Tiny fantastic beast. Desert grasshoppers that shed a choking chalk when startled."
+    },
+    {
+      "name": "Ember newts",
+      "real": false,
+      "desc": "Tiny fantastic beast. Glow in warm springs and singe the fingers that try to catch them."
+    },
+    {
+      "name": "Glow snails",
+      "real": false,
+      "desc": "Tiny fantastic beast. Light forest floors at night and leave luminous trails to their feeding grounds."
+    },
+    {
+      "name": "Tinder mice",
+      "real": false,
+      "desc": "Tiny fantastic beast. Nest in dry thatch and spark small fires when they quarrel."
+    },
+    {
+      "name": "Mirror finches",
+      "real": false,
+      "desc": "Small fantastic beast. Repeat any call they hear and lead hunters in circles."
+    },
+    {
+      "name": "Silver salmon",
+      "real": false,
+      "desc": "Small fantastic beast. Fish whose scales hold moonlight, fought over by every fisher upriver."
+    },
+    {
+      "name": "Ridge goats",
+      "real": false,
+      "desc": "Small fantastic beast. Climb sheer cliffs on sticky hooves and knock loose stones onto climbers."
+    },
+    {
+      "name": "Thorn boars",
+      "real": false,
+      "desc": "Small fantastic beast. Bristle-backed pigs that charge from hedgerows and leave barbs in the wound."
+    },
+    {
+      "name": "Dune hounds",
+      "real": false,
+      "desc": "Small fantastic beast. Pale pack dogs run down travelers who stray from the caravan wells."
+    },
+    {
+      "name": "Giant beetles",
+      "real": false,
+      "desc": "Medium fantastic beast. Armored beetles the size of hounds undermine granaries and gnaw timber."
+    },
+    {
+      "name": "Sky rays",
+      "real": false,
+      "desc": "Medium fantastic beast. Glide on mountain updrafts and snatch lambs from high pastures."
+    },
+    {
+      "name": "Giant bats",
+      "real": false,
+      "desc": "Medium fantastic beast. Roost in cave mouths and hunt across the fields at dusk."
+    },
+    {
+      "name": "Frost owls",
+      "real": false,
+      "desc": "Small fantastic beast. Silent white hunters whose wingbeats freeze the breath of their prey."
+    },
+    {
+      "name": "Giant leeches",
+      "real": false,
+      "desc": "Medium fantastic beast. Drain wading cattle in the reed beds."
+    },
+    {
+      "name": "Giant eagles",
+      "real": false,
+      "desc": "Large fantastic beast. Nest on high crags and carry off goats, dogs and the occasional shepherd."
+    },
+    {
+      "name": "Burrow hulks",
+      "real": false,
+      "desc": "Large fantastic beast. Armored diggers surface beneath herds and drag them under."
+    },
+    {
+      "name": "Giant centipedes",
+      "real": false,
+      "desc": "Large fantastic beast. Hunt in damp ruins and cave mouths with a venom that stops the heart."
+    },
+    {
+      "name": "Reef stalkers",
+      "real": false,
+      "desc": "Large fantastic beast. Camouflaged hunters lie along reef walls and take divers and dolphins alike."
+    },
+    {
+      "name": "Woolly mammoths",
+      "real": false,
+      "desc": "Huge fantastic beast. Tusked grazing herds trample the tundra and gore hunters who come too close."
+    },
+    {
+      "name": "Cave bears",
+      "real": false,
+      "desc": "Large fantastic beast. Enormous bears den in mountain caves and hold whole valleys as their range."
+    },
+    {
+      "name": "Phoenixes",
+      "real": false,
+      "desc": "Large fantastic beast. Fire-birds nest on volcanic peaks and burn the slopes around their eyries."
+    },
+    {
+      "name": "Behemoths",
+      "real": false,
+      "desc": "Colossal fantastic beast. Mountain-shouldered grazers flatten forests and cannot be turned by any wall."
+    },
+    {
+      "name": "Scale mites",
+      "real": false,
+      "desc": "Tiny draconic creature. Infest dragon roosts and spread to any stable warm enough."
+    },
+    {
+      "name": "Ember geckos",
+      "real": false,
+      "desc": "Tiny draconic creature. Warm-blooded lizards nest in chimneys and hoard bright pebbles."
+    },
+    {
+      "name": "Glass-wing dragonets",
+      "real": false,
+      "desc": "Small draconic creature. Hover over flowering meadows and snap at bees and birds."
+    },
+    {
+      "name": "Cliff drakes",
+      "real": false,
+      "desc": "Small draconic creature. Nest in cliff crevices and dive on climbers and goats."
+    },
+    {
+      "name": "Ash drakes",
+      "real": false,
+      "desc": "Small draconic creature. Bask on cooling lava and hiss sparks at intruders."
+    },
+    {
+      "name": "Snow drakes",
+      "real": false,
+      "desc": "Small draconic creature. Burrow through drifts and ambush from beneath the snow."
+    },
+    {
+      "name": "Tide drakes",
+      "real": false,
+      "desc": "Small draconic creature. Hunt the shallows in packs and steal from fishing nets."
+    },
+    {
+      "name": "Thicket drakes",
+      "real": false,
+      "desc": "Small draconic creature. Hedge-dwelling hunters that take lambs and hens from the field edge."
+    },
+    {
+      "name": "Ridge drakes",
+      "real": false,
+      "desc": "Medium draconic creature. Wingless climbers hold the passes and roll stones onto travelers."
+    },
+    {
+      "name": "Bog wyrmlings",
+      "real": false,
+      "desc": "Medium draconic creature. Young marsh dragons hunt from flooded reed beds before claiming a domain."
+    },
+    {
+      "name": "Spire drakes",
+      "real": false,
+      "desc": "Medium draconic creature. Roost on ruined towers and contest the air with griffons."
+    },
+    {
+      "name": "Salt drakes",
+      "real": false,
+      "desc": "Medium draconic creature. Salt-crusted coastal hunters raid seal colonies and beached wrecks."
+    },
+    {
+      "name": "Iron drakes",
+      "real": false,
+      "desc": "Large draconic creature. Ore-eating hunters lair in mine shafts and drive off the miners."
+    },
+    {
+      "name": "Spark motes",
+      "real": false,
+      "desc": "Tiny primordial creature. Drift as living static over storm-touched hills."
+    },
+    {
+      "name": "Dew sprites",
+      "real": false,
+      "desc": "Tiny primordial creature. Condense on meadows at dawn and vanish when trodden."
+    },
+    {
+      "name": "Silt wisps",
+      "real": false,
+      "desc": "Tiny primordial creature. Cloud the shallows and nip at the toes of waders."
+    },
+    {
+      "name": "Frost sprites",
+      "real": false,
+      "desc": "Tiny primordial creature. Rime the eaves and nip exposed skin on still nights."
+    },
+    {
+      "name": "Cinder hoppers",
+      "real": false,
+      "desc": "Small primordial creature. Leap from vent to vent and scorch the grass between."
+    },
+    {
+      "name": "Clay hounds",
+      "real": false,
+      "desc": "Small primordial creature. Shaped from river mud, chase anything that crosses their bank."
+    },
+    {
+      "name": "Gust foxes",
+      "real": false,
+      "desc": "Small primordial creature. Ride the wind across open steppe and unseat riders in sudden squalls."
+    },
+    {
+      "name": "Brine sprites",
+      "real": false,
+      "desc": "Small primordial creature. Ride the tide line and foul fresh water carried on boats."
+    },
+    {
+      "name": "Moss golems",
+      "real": false,
+      "desc": "Medium primordial creature. Slow guardians of old groves that crush what breaks the trees."
+    },
+    {
+      "name": "Geyser serpents",
+      "real": false,
+      "desc": "Medium primordial creature. Rise with the scalding water and strike anything at the pool's edge."
+    },
+    {
+      "name": "Hail wolves",
+      "real": false,
+      "desc": "Medium primordial creature. Packs run inside blizzards and leave frozen prey behind."
+    },
+    {
+      "name": "Sandstone stalkers",
+      "real": false,
+      "desc": "Medium primordial creature. Rock-skinned hunters wait motionless among desert outcrops."
+    },
+    {
+      "name": "Kelp wardens",
+      "real": false,
+      "desc": "Large primordial creature. Woven from living kelp, entangle boats and divers in the forests below."
+    },
+    {
+      "name": "Hedge sprites",
+      "real": false,
+      "desc": "Tiny fey creature. Tangle the hair and bootlaces of anyone who sleeps under their hedge."
+    },
+    {
+      "name": "Moss hares",
+      "real": false,
+      "desc": "Small fey creature. Green-furred and shy, they lead children deeper into the wood."
+    },
+    {
+      "name": "Acorn folk",
+      "real": false,
+      "desc": "Small fey creature. Tiny oak-dwelling people pelt intruders with hard fruit."
+    },
+    {
+      "name": "Hob cats",
+      "real": false,
+      "desc": "Small fey creature. Sleek shapeshifting cats trade favors for cream and secrets."
+    },
+    {
+      "name": "Brownies",
+      "real": false,
+      "desc": "Small fey creature. Do chores for households that leave offerings and wreck those that forget."
+    },
+    {
+      "name": "Will-o'-wisps",
+      "real": false,
+      "desc": "Tiny fey creature. Marsh lights lure travelers into deep water."
+    },
+    {
+      "name": "Toadstool imps",
+      "real": false,
+      "desc": "Small fey creature. Sprout from fairy rings and spoil milk and memory alike."
+    },
+    {
+      "name": "Bramble hounds",
+      "real": false,
+      "desc": "Small fey creature. Thorn-coated dogs hunt poachers through the undergrowth."
+    },
+    {
+      "name": "Spriggans",
+      "real": false,
+      "desc": "Medium fey creature. Guardians of buried treasure who swell to giant size when robbed."
+    },
+    {
+      "name": "Fauns",
+      "real": false,
+      "desc": "Medium fey creature. Pipe-playing goat folk draw revelers into dances that last for days."
+    },
+    {
+      "name": "Selkies",
+      "real": false,
+      "desc": "Medium fey creature. Seal-folk haul out on remote beaches and bargain over stolen skins."
+    },
+    {
+      "name": "Leshy",
+      "real": false,
+      "desc": "Large fey creature. Forest lords lead woodcutters astray and swap the paths behind them."
+    },
+    {
+      "name": "Green knights",
+      "real": false,
+      "desc": "Large fey creature. Challenge travelers at fords and take heads from those who refuse."
+    },
+    {
+      "name": "Thorn stags",
+      "real": false,
+      "desc": "Large fey creature. Antlered with living bramble, charge riders who cross the court's meadows."
+    },
+    {
+      "name": "Drowned lanterns",
+      "real": false,
+      "desc": "Tiny undead creature. Corpse-lights drift above wreck fields and draw salvagers onto the rocks."
+    },
+    {
+      "name": "Barnacle dead",
+      "real": false,
+      "desc": "Small undead creature. Shell-crusted drowned sailors crawl the shallows and cling to passing hulls."
+    },
+    {
+      "name": "Sulphur eels",
+      "real": false,
+      "desc": "Small infernal creature. Nest around undersea vents and scald the nets that pass over them."
+    },
+    {
+      "name": "Beacon jellies",
+      "real": false,
+      "desc": "Tiny holy creature. Glow beneath safe channels and dim over reefs and wrecks."
+    },
+    {
+      "name": "Bilge worms",
+      "real": false,
+      "desc": "Tiny unholy creature. Breed in befouled holds and spread rot from hull to hull across a harbor."
+    },
+    {
+      "name": "Eyestalk shoals",
+      "real": false,
+      "desc": "Small aberrant creature. Schools of watching stalks turn as one to follow passing boats."
+    },
+    {
+      "name": "Glass shrimp",
+      "real": false,
+      "desc": "Tiny fantastic beast. Near-invisible swarms strip bait from lines and nets."
+    },
+    {
+      "name": "Bladefish",
+      "real": false,
+      "desc": "Small fantastic beast. Fin-edged shoals slash the legs of waders and swimmers."
+    },
+    {
+      "name": "Moon carp",
+      "real": false,
+      "desc": "Small fantastic beast. Pale pond fish that surface on bright nights and are said to grant small wishes."
+    },
+    {
+      "name": "Pond dragonets",
+      "real": false,
+      "desc": "Small draconic creature. Newt-sized dragonets bask on lily pads and snap at dragonflies."
+    },
+    {
+      "name": "Foam sprites",
+      "real": false,
+      "desc": "Tiny primordial creature. Ride the surf line and hiss in the wake of boats."
+    },
+    {
+      "name": "Pond sprites",
+      "real": false,
+      "desc": "Tiny fey creature. Tangle fishing lines or mend nets, depending on their mood."
+    },
+    {
+      "name": "Wreck merrows",
+      "real": false,
+      "desc": "Small fey creature. Sly sea-folk trade wreck salvage for songs and secrets."
+    },
+    {
+      "name": "Lantern jellies",
+      "real": false,
+      "desc": "Tiny fantastic beast. Drift in glowing swarms that mark the tide's turn and sting bare skin."
+    },
+    {
+      "name": "Wreck crabs",
+      "real": false,
+      "desc": "Small fantastic beast. Scuttle over sunken hulls and strip the drowned of buckles and rings."
+    },
+    {
+      "name": "Singing shoals",
+      "real": false,
+      "desc": "Tiny fantastic beast. Silver fish whose massed chorus carries through hulls on still nights."
+    },
+    {
+      "name": "Anchor eels",
+      "real": false,
+      "desc": "Medium fantastic beast. Coil around anchor lines and moorings and pull swimmers under."
+    },
+    {
+      "name": "Snapping pike",
+      "real": false,
+      "desc": "Medium fantastic beast. Log-length pike that take ducks, dogs and the hands of fishermen."
+    },
+    {
+      "name": "Brown rat",
+      "real": true,
+      "desc": "A burrowing rat that thrives around granaries, docks and middens and breeds all year."
+    },
+    {
+      "name": "Black rat",
+      "real": true,
+      "desc": "A climbing rat that nests in roofs, ships and warehouses."
+    },
+    {
+      "name": "House mouse",
+      "real": true,
+      "desc": "A small mouse that lives inside walls and stores wherever people keep grain."
+    },
+    {
+      "name": "Bank vole",
+      "real": true,
+      "desc": "A rusty-backed vole of hedgerows and woodland floors."
+    },
+    {
+      "name": "Common shrew",
+      "real": true,
+      "desc": "A tiny, restless insect-eater that hunts through leaf litter day and night."
+    },
+    {
+      "name": "Eastern chipmunk",
+      "real": true,
+      "desc": "A striped ground squirrel that hoards nuts in burrows under stone walls."
+    },
+    {
+      "name": "Groundhog",
+      "real": true,
+      "desc": "A heavy burrowing marmot of field edges that sleeps through winter."
+    },
+    {
+      "name": "Eastern gray squirrel",
+      "real": true,
+      "desc": "A bushy-tailed tree squirrel of parks and broadleaf woods that buries acorns."
+    },
+    {
+      "name": "Eastern cottontail",
+      "real": true,
+      "desc": "A short-eared rabbit of brush and field edges that freezes, then bolts."
+    },
+    {
+      "name": "Virginia opossum",
+      "real": true,
+      "desc": "A nocturnal marsupial that raids bins and nests and plays dead when caught."
+    },
+    {
+      "name": "Common brushtail possum",
+      "real": true,
+      "desc": "A tree-dwelling marsupial that dens in hollows and roofs and strips garden fruit."
+    },
+    {
+      "name": "European wildcat",
+      "real": true,
+      "desc": "A stocky striped cat that hunts rodents along woodland edges."
+    },
+    {
+      "name": "Feral cat",
+      "real": true,
+      "desc": "A free-living domestic cat that hunts birds and rodents around farms and towns."
+    },
+    {
+      "name": "Serval",
+      "real": true,
+      "desc": "A long-legged spotted cat that leaps on rodents in tall savanna grass."
+    },
+    {
+      "name": "Bobcat",
+      "real": true,
+      "desc": "A tufted-eared cat of scrub and rocky woodland that takes rabbits and fawns."
+    },
+    {
+      "name": "Cougar",
+      "real": true,
+      "desc": "A lean mountain lion that stalks deer through canyons and forested slopes."
+    },
+    {
+      "name": "Leopard",
+      "real": true,
+      "desc": "A spotted cat that hauls kills into trees and hunts anything from rats to antelope."
+    },
+    {
+      "name": "Clouded leopard",
+      "real": true,
+      "desc": "A long-tailed forest cat that hunts monkeys and deer from the canopy."
+    },
+    {
+      "name": "Dingo",
+      "real": true,
+      "desc": "A wild dog of dry scrub and plains that hunts alone or in small family groups."
+    },
+    {
+      "name": "Feral dog",
+      "real": true,
+      "desc": "A loose pack of ownerless dogs that scavenges settlement edges and worries livestock."
+    },
+    {
+      "name": "Raccoon dog",
+      "real": true,
+      "desc": "A short-legged canid of wet woodland that eats frogs, fruit and carrion."
+    },
+    {
+      "name": "Maned wolf",
+      "real": true,
+      "desc": "A tall, solitary red canid of open grassland that hunts rodents and fruit."
+    },
+    {
+      "name": "Bat-eared fox",
+      "real": true,
+      "desc": "A small savanna fox that listens for termites with enormous ears."
+    },
+    {
+      "name": "Striped skunk",
+      "real": true,
+      "desc": "A black-and-white forager that digs for grubs and sprays when cornered."
+    },
+    {
+      "name": "Least weasel",
+      "real": true,
+      "desc": "A tiny slender hunter that follows voles down their own tunnels."
+    },
+    {
+      "name": "Stoat",
+      "real": true,
+      "desc": "A white-in-winter weasel that kills rabbits larger than itself."
+    },
+    {
+      "name": "European polecat",
+      "real": true,
+      "desc": "A dark musky mustelid of hedgerows and barns that hunts rats and frogs."
+    },
+    {
+      "name": "Banded mongoose",
+      "real": true,
+      "desc": "A social mongoose that forages in noisy troops for beetles and eggs."
+    },
+    {
+      "name": "Meerkat",
+      "real": true,
+      "desc": "A sentry-posting mongoose of dry plains that lives in large burrow colonies."
+    },
+    {
+      "name": "Common genet",
+      "real": true,
+      "desc": "A spotted, cat-like hunter of rocky scrub that takes rodents and birds at night."
+    },
+    {
+      "name": "White-nosed coati",
+      "real": true,
+      "desc": "A ring-tailed forager that travels in bands and digs for grubs and fruit."
+    },
+    {
+      "name": "Giant anteater",
+      "real": true,
+      "desc": "A long-snouted grassland forager that rips open termite mounds and defends itself with its claws."
+    },
+    {
+      "name": "Ground pangolin",
+      "real": true,
+      "desc": "A scaled, ant-eating mammal that rolls into an armored ball."
+    },
+    {
+      "name": "Aardvark",
+      "real": true,
+      "desc": "A nocturnal burrower that digs out termite mounds across the savanna."
+    },
+    {
+      "name": "Common warthog",
+      "real": true,
+      "desc": "A tusked savanna pig that grazes on its knees and backs into burrows."
+    },
+    {
+      "name": "Red river hog",
+      "real": true,
+      "desc": "A bristly forest pig that roots along rivers in family groups."
+    },
+    {
+      "name": "Koala",
+      "real": true,
+      "desc": "A slow tree-dwelling marsupial that eats only eucalyptus leaves."
+    },
+    {
+      "name": "Common wombat",
+      "real": true,
+      "desc": "A stout burrowing marsupial that grazes at night and blocks its tunnel with its rump."
+    },
+    {
+      "name": "Red kangaroo",
+      "real": true,
+      "desc": "A tall hopping grazer of dry plains that boxes and kicks when cornered."
+    },
+    {
+      "name": "Red-necked wallaby",
+      "real": true,
+      "desc": "A small hopping grazer of scrub and forest edge."
+    },
+    {
+      "name": "Giant panda",
+      "real": true,
+      "desc": "A black-and-white bear of mountain bamboo forest that feeds for most of the day."
+    },
+    {
+      "name": "Red panda",
+      "real": true,
+      "desc": "A rust-colored tree-dweller of cool mountain forest that eats bamboo and berries."
+    },
+    {
+      "name": "Sloth bear",
+      "real": true,
+      "desc": "A shaggy forest bear that sucks up termites and charges when surprised."
+    },
+    {
+      "name": "Sun bear",
+      "real": true,
+      "desc": "A small rainforest bear that climbs for honey and fruit."
+    },
+    {
+      "name": "Spectacled bear",
+      "real": true,
+      "desc": "A cloud-forest bear that builds feeding platforms in trees."
+    },
+    {
+      "name": "Rhesus macaque",
+      "real": true,
+      "desc": "A bold troop monkey that raids fields and temples and bites when crowded."
+    },
+    {
+      "name": "Olive baboon",
+      "real": true,
+      "desc": "A large ground-dwelling monkey that moves in big troops and mobs predators."
+    },
+    {
+      "name": "White-faced capuchin",
+      "real": true,
+      "desc": "A clever forest monkey that uses stones to crack nuts and steals from camps."
+    },
+    {
+      "name": "Ring-tailed lemur",
+      "real": true,
+      "desc": "A striped-tailed primate of dry forest that sunbathes in troops."
+    },
+    {
+      "name": "Hanuman langur",
+      "real": true,
+      "desc": "A gray leaf-eating monkey that lives around villages and temples in large troops."
+    },
+    {
+      "name": "Gibbon",
+      "real": true,
+      "desc": "A long-armed singing ape that swings through the high canopy in pairs."
+    },
+    {
+      "name": "Fallow deer",
+      "real": true,
+      "desc": "A spotted parkland deer that grazes in herds at woodland edges."
+    },
+    {
+      "name": "White-tailed deer",
+      "real": true,
+      "desc": "A common woodland deer that browses field margins and flags its tail when alarmed."
+    },
+    {
+      "name": "Elk",
+      "real": true,
+      "desc": "A large bugling deer of mountain meadows whose bulls fight in autumn."
+    },
+    {
+      "name": "Sika deer",
+      "real": true,
+      "desc": "A spotted forest deer that whistles when alarmed."
+    },
+    {
+      "name": "Mouflon",
+      "real": true,
+      "desc": "A wild sheep of rocky hills with curled horns."
+    },
+    {
+      "name": "Markhor",
+      "real": true,
+      "desc": "A corkscrew-horned wild goat of high crags."
+    },
+    {
+      "name": "Dromedary camel",
+      "real": true,
+      "desc": "A one-humped desert camel that ranges between wells and browses thorn scrub."
+    },
+    {
+      "name": "Guanaco",
+      "real": true,
+      "desc": "A wild llama of high dry plains that spits and lives in family herds."
+    },
+    {
+      "name": "Onager",
+      "real": true,
+      "desc": "A wild ass of desert steppe that runs in small herds."
+    },
+    {
+      "name": "Okapi",
+      "real": true,
+      "desc": "A striped-legged forest giraffe that browses alone in deep rainforest."
+    },
+    {
+      "name": "Asian elephant",
+      "real": true,
+      "desc": "A forest elephant that moves in small herds and flattens crops on its routes."
+    },
+    {
+      "name": "Black rhinoceros",
+      "real": true,
+      "desc": "A hook-lipped browsing rhino of thorn scrub with a short temper."
+    },
+    {
+      "name": "Indian rhinoceros",
+      "real": true,
+      "desc": "An armored one-horned rhino of tall wet grassland."
+    },
+    {
+      "name": "Water buffalo",
+      "real": true,
+      "desc": "A heavy wetland bovine that wallows in mud and charges when its herd is threatened."
+    },
+    {
+      "name": "Gaur",
+      "real": true,
+      "desc": "A massive forest bison of hill country that grazes in herds."
     }
   ]
 }

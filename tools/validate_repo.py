@@ -40,6 +40,9 @@ def checks(env) -> None:
         "pyproject.toml",
         "Contracts/schemas/world-output.schema.json",
         "Contracts/schemas/asset-list.schema.json",
+        "Contracts/catalogues/unreal-asset-registry-v1.json",
+        "Contracts/catalogues/native-catalogues-v1.json",
+        "Fixtures/native-world-v1.json",
         "Sim/icarus_sim/terrain_world.py",
         "Sim/fantasy_world_generator/world_asset_requirements.json",
         "provenance/extraction-manifest.json",
@@ -53,6 +56,12 @@ def checks(env) -> None:
     documented_catalogue = ROOT / "Contracts/catalogues/world-assets.json"
     if packaged_catalogue.read_bytes() != documented_catalogue.read_bytes():
         raise ValueError("packaged and canonical world asset requirements differ")
+    # The Unreal asset registry is generated from the exhaustive catalogue, so a
+    # new identity must not reach a consumer without a binding slot.
+    run(sys.executable, "tools/build_asset_registry.py", "--check", env=env)
+    # The native catalogue is generated from the authoring registries; a trait edit that
+    # never reaches the generator would otherwise pass unnoticed.
+    run(sys.executable, "tools/export_catalogues.py", "--check", env=env)
     run(sys.executable, "tools/verify_provenance.py", env=env)
     run(sys.executable, "-m", "compileall", "-q", "Sim/icarus_sim", "Sim/fantasy_world_generator", "tools", env=env)
 

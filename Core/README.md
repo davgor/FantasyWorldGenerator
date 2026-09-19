@@ -1,10 +1,38 @@
-# Headless native counter core
+# Headless native core
 
 `counter.hpp/cpp` implements the bounded ML-02 transition in standard C++17.
 `json.hpp/cpp`, `numeric.hpp/cpp` and `wire.hpp/cpp` add strict canonical JSON,
 SHA-256 indexed streams, snapshot/command loading and candidate transport.
-`genesis.hpp/cpp` adds the Unreal centimetre frame and generate-request
-validation only; it does not generate a world.
+`genesis.hpp/cpp` holds the generate-request rules and the whole-centimetre offset
+transport.
+
+## World genesis
+
+`world.hpp/cpp` generates a recipe-3 world from a seed and samples its detailed
+surface. It is the Unreal generate API: no engine type, no interpreter, no file.
+
+- `pyrandom` — the reference Mersenne Twister stream (`random`, `uniform`, `gauss`)
+  and the SHA-256 child seeds. Plate layout only replays a Python seed while this
+  stream matches bit for bit.
+- `globe` — grid directions, spherical gradient noise, bilinear sampling, the
+  eight-point geodesic ring measurement, CPython's compensated float `sum` and its
+  scaled vector norm. Both of those exist because the reference interpreter uses
+  them; plain summation and libm `hypot` drift by an ulp and the drift compounds.
+- `tectonics` — plate distribution, blended boundary relief, ocean island shaping,
+  surface noise.
+- `hydrology` — unique spherical nodes, downhill erosion, connected ocean and
+  equilibrium lake spill routing.
+- `history` — the second tectonic epoch and the incision of abandoned waterways.
+- `climate` — steady-wind moisture transport, rainfall, runoff, rivers.
+- `biomes` — temperature, moisture, natural biome and landform labels, cold
+  habitats, salinity, freshwater distance and the flood-risk proxy.
+- `frame` — the coordinate-contract oracle: tangent frames, globe and local
+  positions, and the source-to-Unreal centimetre permutation.
+- `registry` — the asset-ID to Unreal object-path table loader; every catalogue
+  identity resolves or reports an explicit reason.
+
+`tests/test_native_world.py` compares all of it against the Python reference world.
+Settlements, roads, city plans and nest anchors are not ported yet.
 There are no Unreal, Python-runtime, third-party JSON/crypto library or game-asset
 dependencies. Original project source follows the root private distribution policy.
 The public semantic boundary is [`Contracts/kernel-v1.md`](../Contracts/kernel-v1.md).
@@ -150,3 +178,60 @@ engine-CI qualification, and an immutable runtime artifact channel. The native
 world generate API is likewise only started: request validation and the Unreal
 centimetre frame exist, and generation, surface sampling and Landscape do not. The
 Python producer's qualified native/Unreal capability requests remain unsupported.
+
+## Reusing this core in another game
+
+`Core/` already has the properties that make reuse possible: standard C++17 with no
+engine, interpreter or third-party dependency; layers that compile and are verified
+independently; data-driven identities through
+[the asset registry](../Contracts/catalogues/unreal-asset-registry-v1.json) and
+[the authoring catalogue](../Contracts/catalogues/native-catalogues-v1.json); and
+determinism proven against the Python reference rather than asserted.
+
+**Surface sampling is continuous, including labels.** `sample_surface` evaluates the
+reference's own biome classification at the direction asked for rather than returning
+the nearest raster cell's label, so a consumer's coastlines and treelines follow the
+ground instead of the grid. It reproduces the regional label exactly at every raster
+node; see [continuous terrain](../docs/continuous-terrain.md) for what stays
+cell-addressed and why.
+
+**What it covers today, precisely.** The native world is the reference's **finished
+world**: terrain, water, climate, labels, ecology and the thirteen regional fields, the
+eight leyline networks, per-species settlement fields, the population budget, founded
+cities and their layout plans, regional roads, hinterlands (hamlets, fortresses,
+cultures), coastal landings, specialist landmarks, creature habitat anchors, and then
+both age transitions, which settle the wars contested neighbours fight, rescale every
+leyline, ruin the cities that do not survive and rebuild what is left around them. Wars
+are ported in full, in `wars.cpp`: the same contention, the same seeded draw, the same
+war history on both sides and the same extra fortresses a veteran city asks for, because
+which cities a war removes decides every later stage of that world. It does **not** include plot geometry: a planned
+building is a reserved grid node with an identity, not a footprint, and there are no
+streets or walls, because the reference derives those in its city-planner stage.
+[ML-03d](../board/backlog/ML-03d.md) records the dependency chain those stages sit
+behind. A game can build on what is here — every field listed above is compared against
+the Python reference, most of them bit-for-bit — as long as it does not assume a
+finished history.
+
+Five things are still missing before calling it a package, and none of them require
+the layering to change:
+
+1. **A façade.** `WorldEnvelope` exposes `Layers`, an internal representation with
+   dozens of named grids. A package needs a narrow versioned header — generate,
+   sample, query, resolve — with the internals private. The structs here are not a
+   stable binary ABI and should not become one by accident.
+2. **A build.** There is no CMake target; the tests compile the sources ad hoc and the
+   plugin vendors them. A static-library target plus the conformance tests would let a
+   non-Unreal consumer link it.
+3. **A configuration surface.** `WorldConfig` carries resolved recipe-3 values and
+   `GenerateRequest` accepts only seed, size and shape, so the option overrides the
+   Python producer supports are unreachable natively.
+4. **A second platform.** The numeric contract records a `pow()` difference between
+   the interpreter and the MSVC runtime. A shared package should run its conformance
+   suite on a second platform rather than assuming the contract holds there.
+
+5. **The remaining history.** A second consumer that wants ruins, nests or city plans
+   needs the stages above, not a new layer. Until they land, the package's version
+   should say stage nine rather than letting a consumer infer a finished world.
+
+Error reporting is exceptions (`fantasy_world_generator::Error`); a host that forbids
+them needs an error-code façade, which is a wrapper, not a rewrite.

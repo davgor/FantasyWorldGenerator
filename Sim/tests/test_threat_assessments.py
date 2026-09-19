@@ -37,7 +37,7 @@ class ThreatAssessmentTests(unittest.TestCase):
         from icarus_sim.terrain_lab import Config, generate
         world=generate_request({'recipe_version':3,'seed':42,'overrides':{'size':17}})
         self.assertIn('threat_assessments',world)
-        self.assertEqual(world['threat_assessments']['version'],1)
+        self.assertEqual(world['threat_assessments']['version'],2)
         self.assertEqual(world['threat_assessments']['evaluated_after'],'age')
         self.assertEqual(world['threat_assessments']['age'],2)
         uids={c['uid'] for c in world['settlements']['sites']}

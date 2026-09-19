@@ -113,11 +113,16 @@ LEY_DESTRUCTION={'weave':'An arcane surge tore the city apart.', 'umbral':'Necro
                  'fire':'A fire leyline engulfed the city in flames.', 'water':'A water leyline drowned or froze the city.',
                  'earth':'An earth leyline let roots and stone reclaim the city.',
                  'air':'An air leyline shattered the city with storms and force.'}
-THREAT_ASSESSMENT_VERSION=1
+THREAT_ASSESSMENT_VERSION=2
 
 
 def fantasy_nest_threats(city,nests,radius):
-    """Standing fantasy nest pressure. Shared by age fate and regional threat assessment."""
+    """Standing monster pressure. Shared by age fate and regional threat assessment.
+
+    Weight scales with the danger tier, so a greater lair at the gates is the reason a
+    city falls and a tier one nuisance is not; tier five keeps the flat .55 the single
+    fixed weight used to give every monster alike.
+    """
     threats=[]
     for nest in sorted(nests,key=lambda n:n['id']):
         if nest.get('layer','surface')!='surface' or nest.get('real',True):continue
@@ -125,9 +130,9 @@ def fantasy_nest_threats(city,nests,radius):
         dangerous=dragon or nest.get('family') in ('infernal','undead','aberrant')
         if not dangerous:continue
         distance=radius*math.acos(max(-1.,min(1.,sum(a*b for a,b in zip(city['direction'],nest['direction'])))))
-        reach=min(radius*.5,max(350.,nest.get('spacing_m',350.)*2))
+        reach=min(radius*.5,max(350.,nest.get('range_m',nest.get('spacing_m',350.))*2))
         if distance>reach:continue
-        threats.append({'kind':'dragon' if dragon else 'monster','weight':.55*(1-distance/reach),
+        threats.append({'kind':'dragon' if dragon else 'monster','weight':.11*nest.get('tier',5)*(1-distance/reach),
                         'reason':nest['name']+' drove the inhabitants away.',
                         'nest_id':nest['id'],'name':nest['name'],'family':nest.get('family'),
                         'distance_m':distance,'reach_m':reach})
@@ -142,16 +147,23 @@ def ley_threat_pressure(city,layers):
 
 
 def assess_city_threat(city,layers,nests,radius):
+    from .terrain_wars import veteran_wars
     nests=fantasy_nest_threats(city,nests,radius)
     nest_pressure=sum(t['weight'] for t in nests)
     ley_pressure,ley=ley_threat_pressure(city,layers)
+    # A city that has already been to war expects the next one. This is why a veteran
+    # builds heavier walls: the city planner reads regional_threat as defense_priority.
+    fought=veteran_wars(city)
+    war_pressure=min(.4,.15*fought)
     contributors=[{'kind':t['kind'],'weight':round(t['weight'],6),'nest_id':t['nest_id'],'name':t['name'],
                    'family':t['family'],'distance_m':round(t['distance_m'],4),'reach_m':round(t['reach_m'],4)}
                   for t in nests]
     if ley:contributors.append({'kind':'ley','weight':round(ley_pressure,6),**ley})
+    if war_pressure:contributors.append({'kind':'war','weight':round(war_pressure,6),'wars_fought':fought})
     return {'city_uid':city['uid'],'city_name':city.get('name'),'site_id':city.get('id'),
-            'regional_threat':round(min(1.,nest_pressure+ley_pressure),6),
+            'regional_threat':round(min(1.,nest_pressure+ley_pressure+war_pressure),6),
             'nest_pressure':round(nest_pressure,6),'ley_pressure':round(ley_pressure,6),
+            'war_pressure':round(war_pressure,6),'wars_fought':fought,
             'contributors':contributors,'ley':ley}
 
 
@@ -215,18 +227,35 @@ def civilization(result,cfg,phase=9):
     remember_cities(result,result.get('_age',0))
 
 
+RUIN_KEYS=('uid','name','node','x','z','direction','height_m','population_profile','civilization_id',
+           'city_class','source_culture','founded_age','war_history')
+
+
 def age_transition(result,cfg,age):
     from .terrain_nests import add_nests
+    from .terrain_wars import participation, resolve_wars
     add_nests(result,replace(cfg,phase=9))
     result['beast_nests']['evaluated_age']=age-1
     cities=copy.deepcopy(result['settlements']['sites'])
     ruins=result.setdefault('ruins',[]);events=[];survivors=[]
     radius=result['effective_config']['globe_radius']
+    # Wars are settled before any other fate. They are decided between cities out of the
+    # ground and supply the finished age left them, and a city a neighbour has already
+    # taken cannot also be eaten by a dragon; its ruin records the war that ended it.
+    wars,war_fates=resolve_wars(cities,result.get('humans',{}).get('cores',[]),
+                                result.get('roads',{}).get('routes',[]),result['layers'],
+                                radius,cfg.settlement_spacing,cfg.seed,age,
+                                magic_enabled=bool(cfg.magic_enabled))
+    by_uid={city['uid']:city for city in cities}
+    # Both sides carry the war, so a survivor's history says what it has already fought.
+    for war in wars:
+        for uid in war['participants']:
+            by_uid[uid].setdefault('war_history',[]).append(participation(war,uid))
     for city in cities:
-        fate=city_fate(city,result['layers'],result.get('beast_nests',{}).get('sites',[]),radius,cfg.seed,age,
+        fate=war_fates.get(city['uid']) or city_fate(city,result['layers'],result.get('beast_nests',{}).get('sites',[]),radius,cfg.seed,age,
                        magic_enabled=bool(cfg.magic_enabled))
         if not fate:survivors.append(city);continue
-        ruin={k:copy.deepcopy(city[k]) for k in ('uid','name','node','x','z','direction','height_m','population_profile','civilization_id','city_class','source_culture','founded_age')}
+        ruin={k:copy.deepcopy(city[k]) for k in RUIN_KEYS if k in city}
         ruin.update(id='ruin-'+city['uid'],kind='ruins',destroyed_age=age,asset_id='marker.city_ruins',**fate)
         ruins.append(ruin);events.append(copy.deepcopy(ruin))
     # Death decisions all use the pre-transition fields. Only then evolve the ley inputs.
@@ -251,11 +280,12 @@ def age_transition(result,cfg,age):
     add_threat_assessments(result,'age',age)
     old_ids={s['uid'] for s in survivors}
     new=[s['uid'] for s in result['settlements']['sites'] if s['uid'] not in old_ids]
-    result['history']['ages'].append({'age':age,'events':events,'surviving_city_ids':sorted(old_ids),
-                                    'new_city_ids':new,'order':['nests before fates','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests','threat assessment']})
+    result['history']['ages'].append({'age':age,'events':events,'wars':copy.deepcopy(wars),
+                                    'surviving_city_ids':sorted(old_ids),
+                                    'new_city_ids':new,'order':['nests before fates','wars','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests','threat assessment']})
 
 
-STATE_KEYS=('world_scene','terrain_detail','city_plans','hamlet_plans','castle_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins',
+STATE_KEYS=('world_scene','terrain_detail','wildlife','city_plans','hamlet_plans','castle_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area')
 
@@ -303,7 +333,7 @@ def generate_history(cfg):
             # Climate/biome inspection belongs to stage 8 in this recipe.
             result.pop('terrain',None)
             for key in ('temperature','moisture','biome','natural_biome','landform'):result['layers'].pop(key,None)
-            result['history']={'version':1,'ages':[]};result['ruins']=[]
+            result['history']={'version':2,'ages':[]};result['ruins']=[]
         elif stage==6:old_water=tectonic_transition(result,cfg)
         elif stage==7:carve_relics(result,cfg,old_water)
         elif stage==8:
@@ -357,10 +387,15 @@ def validate_age_world(world):
             raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=257')
         if world['terrain']['version']!=6 or world['generator_version']!=16 or world['recipe']['version']!=3:
             raise ValueError('Retired world contract; regenerate with recipe_version 3')
-        if world['magic']['version']!=4 or world['history']['version']!=1:
+        if world['magic']['version']!=4 or world['history']['version']!=2:
             raise ValueError('Unsupported magic or history state version')
-        if world['settlements']['version']!=14 or world['civilizations']['version']!=2:
+        if world['settlements']['version']!=15 or world['civilizations']['version']!=2:
             raise ValueError('Unsupported civilization or settlement version')
+        # A rural report older than 7 pinned its fortresses to a static count. Advancing
+        # it would rebuild the hinterland under the derived demand and hand back a world
+        # whose two ages disagree about how much route defence it ever wanted.
+        if world['humans']['version']!=8:
+            raise ValueError('Retired rural report; regenerate for the derived fortress demand and war history')
         from .civilization_registry import registry_identity
         if world['civilizations']['registry']!=registry_identity():
             raise ValueError('Civilization registry changed; regenerate or explicitly migrate this world')

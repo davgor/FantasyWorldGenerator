@@ -19,41 +19,55 @@ public class FantasyWorldGenerator : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			// IPluginManager locates the registry table that ships beside this module.
+			"Projects",
 		});
 
-		// Core/ is engine-independent and must stay free of UObject types. Only an include
-		// path is published here: Private/FantasyWorldGeneratorCoreContract.cpp reads genesis.hpp to
-		// static-assert the shared constants, and no Core translation unit is compiled or
-		// linked yet. TODO(ML-03e): compile the Core sources excluding Core/tests into this
-		// module and delete the private mirror in Public/FantasyWorldGeneratorFrame.h.
-		string CoreDirectory = ResolveFantasyWorldGeneratorCoreDirectory();
+		// Core/ is engine-independent and must stay free of UObject types. The packaged
+		// plugin vendors it under FantasyWorldGeneratorCore/, where UnrealBuildTool compiles
+		// the translation units with this module; an in-repository checkout resolves the
+		// sibling Core/ tree for includes so the header contract still compiles there.
+		string CoreDirectory = ResolveFantasyWorldGeneratorCoreDirectory(out bool Vendored);
 		bool GenesisPresent = CoreDirectory != null && File.Exists(Path.Combine(CoreDirectory, "genesis.cpp"));
 		if (CoreDirectory != null)
 		{
 			PrivateIncludePaths.Add(CoreDirectory);
 		}
 
-		// Reported by the subsystem so a host can log what is actually linked instead of
-		// assuming that an enabled plugin means native generate exists.
+		// The asset-ID registry travels with the plugin and must be staged into a cooked
+		// build: a missing table is a diagnostic, never an anonymous placeholder spawn.
+		foreach (string DataFile in new string[] {"unreal-asset-registry-v1.json", "native-catalogues-v1.json"})
+		{
+			string Staged = Path.Combine(PluginDirectory, "Data", DataFile);
+			if (File.Exists(Staged))
+			{
+				RuntimeDependencies.Add(Staged);
+			}
+		}
+
+		// Reported by the subsystem so a host logs what is linked instead of assuming that
+		// an enabled plugin means native generate exists.
 		PrivateDefinitions.Add("FANTASY_WORLD_GENERATOR_CORE_DIRECTORY_PRESENT=" + (CoreDirectory != null ? "1" : "0"));
 		PrivateDefinitions.Add("FANTASY_WORLD_GENERATOR_CORE_GENESIS_PRESENT=" + (GenesisPresent ? "1" : "0"));
+		PrivateDefinitions.Add("FANTASY_WORLD_GENERATOR_CORE_LINKED=" + (Vendored && GenesisPresent ? "1" : "0"));
 	}
 
-	/// Vendored copy first, so a plugin copied into a project without the generator
-	/// checkout still resolves; then the in-repository sibling tree at <plugin>/../../Core.
-	private string ResolveFantasyWorldGeneratorCoreDirectory()
+	/// Vendored copy first: those translation units are inside the module and are compiled
+	/// and linked. Otherwise the in-repository sibling tree at <plugin>/../../Core supplies
+	/// headers only, which is enough to check the contract but not to generate a world.
+	private string ResolveFantasyWorldGeneratorCoreDirectory(out bool Vendored)
 	{
-		string[] Candidates =
+		string VendoredDirectory = Path.Combine(ModuleDirectory, "FantasyWorldGeneratorCore");
+		if (File.Exists(Path.Combine(VendoredDirectory, "numeric.hpp")))
 		{
-			Path.Combine(ModuleDirectory, "FantasyWorldGeneratorCore"),
-			Path.Combine(PluginDirectory, "..", "..", "Core"),
-		};
-		foreach (string Candidate in Candidates)
+			Vendored = true;
+			return Path.GetFullPath(VendoredDirectory);
+		}
+		Vendored = false;
+		string SiblingDirectory = Path.Combine(PluginDirectory, "..", "..", "Core");
+		if (File.Exists(Path.Combine(SiblingDirectory, "numeric.hpp")))
 		{
-			if (File.Exists(Path.Combine(Candidate, "numeric.hpp")))
-			{
-				return Path.GetFullPath(Candidate);
-			}
+			return Path.GetFullPath(SiblingDirectory);
 		}
 		return null;
 	}

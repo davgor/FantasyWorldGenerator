@@ -7,7 +7,10 @@ Planner identity hashes [`castles.json`](../Sim/icarus_sim/castles.json) and the
 ## Independence
 
 - No imports from `city_planner.py`.
-- Consumes `humans.fortresses` pins only.
+- Consumes `humans.fortresses` pins only. How many pins exist is the simulation's
+  call, not the planner's: see `humans.fortress_demand` in
+  [simulation and world layers](terrain-world-layers.md). One castle is planned per
+  pin, so a world whose roads ask for more defence plans more castles.
 - Does not write into `city_plans` or change `defended_perimeter` city packing.
 - Own module join rules, typology kits, tests and documentation.
 

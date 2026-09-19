@@ -636,7 +636,10 @@ proxy, not a market-price, road-capacity or currency simulation.
 
 ### Fortresses and culture regions
 
-Up to four fortresses are proposed near city-road nodes. Junctions and river
+Fortresses are proposed near city-road nodes, as many as the world asks for:
+road length / support reach plus distinct river crossings, never more than the
+city count, and under any `fortress_count` ceiling a caller sets. The retired
+static four is gone. Junctions and river
 crossings add strategic weight; positive TPI adds an elevated-surroundings bonus.
 Local slope and flood risk reduce suitability. Access must obey the road rules,
 slopes must be below 20 degrees, and each fortress must be at least 200 metres
@@ -864,7 +867,7 @@ The factor 100 residents per fully productive km2 is an explicit provisional yie
 
 City capacity per people is the smaller of (a) floor of quality-weighted eligible habitat area divided by the profile's land-per-city footprint and (b) floor of resident allowance / 40 regional residents. The 40-person threshold is a provisional minimum viable community size, not a city-count target. Candidate placement must still pass shared spacing and habitat tests. The lab retains a disclosed total computation ceiling of 24 cities, applied in human/dwarf/elf order, so very large experimental worlds can be truncated. No minimum or minority ceiling of two exists.
 
-Actual cities divide their people's allowance. City estimates include about 55% urban and 45% rural dependants; hamlets, forts and colleges are locations inside those figures, not extra residents. Unplaced peoples leave their allowance unused. Hamlet ceilings follow each city's rural residents / 40 (maximum 8), fortress ceilings follow road length/support reach and unique crossing edges (maximum 24), and college ceilings follow safe dense magical area and urban residents / 100 (maximum 12). These remain candidates constrained by usable sites/access, not guaranteed institutions. The numerical thresholds are model calibration and lab limits, not extra normal UI controls.
+Actual cities divide their people's allowance. City estimates include about 55% urban and 45% rural dependants; hamlets, forts and colleges are locations inside those figures, not extra residents. Unplaced peoples leave their allowance unused. Hamlet ceilings follow each city's rural residents / 40 (maximum 8), fortress ceilings follow road length/support reach and unique crossing edges bounded by the city count (a `fortress_count` request lowers that; the legacy `auto_parameters` derivation keeps its own maximum of 24), and college ceilings follow safe dense magical area and urban residents / 100 (maximum 12). These remain candidates constrained by usable sites/access, not guaranteed institutions. The numerical thresholds are model calibration and lab limits, not extra normal UI controls.
 
 `settlements` schema 8 and `population_budget` schema 2 expose habitat footprints, per-people allowances, requested capacities, actual counts and calibration. In addition to the city location/viability fields, each city now carries `building_pack_id`, `building_pack_seed`, and `building_pack_version` so engine-side placement can instantiate approved building families deterministically from a data-driven catalogue.
 Cities also include `city_layout`, a per-city planning payload generated from the selected city layout profile:

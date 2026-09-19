@@ -73,6 +73,96 @@ This ticket, decision 018, Unreal integration, publishing, parent ML-03.
 - Placeholders are not production art; they must still be the production **binding mechanism**.
 - No `.uasset` binary edits in the producer repo.
 
+## Progress — 2026-09-18
+
+- The archive is source-inclusive: it vendors `Core/` into the module, so
+  UnrealBuildTool compiles world genesis into `FantasyWorldGenerator` and the frame
+  mirror is deleted (PK10). `Data/unreal-asset-registry-v1.json` is a runtime
+  dependency, so a cooked build carries the binding table.
+- The consumer is now a C++ project. Its Win64 **game** target compiles the plugin and
+  the hub: capsule pawn, one interactable station, loading line, HUD report, lighting
+  spawned in code on `/Engine/Maps/Entry`, and no authored `.uasset` in either tree.
+- Materialize builds the rectangular tangent unwrap from the plugin's detailed samples
+  as a runtime procedural mesh with collision, one section per natural biome, painted
+  by registry-bound materials, with rivers coloured on the same surface. The
+  Landscape-actor wording is settled by
+  [decision 019](../../docs/decisions/019-runtime-surface-not-landscape.md).
+- The materializer reports its own contact error: the largest disagreement between a
+  drawn vertex and a fresh height sample, shown on the HUD and logged.
+- Registry proof: `building.guildhall` and `terrain.biome.004` are bound to object
+  paths that differ from their kind placeholders, so a mesh swap and a material swap
+  are exercised; unresolved identities are logged and skipped, never replaced by an
+  anonymous cube.
+- **The cook:** `Build.bat` refuses to build any target while Live Coding is active, so
+  the Unreal Editor must be closed. `tools/cook_consumer.py` then cooks Win64, runs the
+  packaged executable with `-FWGSeed`, records the package digest and writes
+  `Artifacts/unreal/packaged-run.json`.
+- **In the packaged world as of 2026-09-18:** cities, regional roads, planned building
+  slots, and both habitat passes — animal hunting grounds and monster territory, each
+  carrying its danger tier and range. The registry probe placeholders remain labelled as
+  a registry demonstration, not generated settlement content.
+
+## Packaged evidence — 2026-09-18
+
+Cooked with `tools/cook_consumer.py --replay`: UnrealBuildTool + UAT `BuildCookRun`,
+Win64, Development, engine 5.8, no editor in the loop and no Python in the game. This
+run replaces the 2026-09-18 eleven-kilometre evidence it supersedes: that one was cooked
+from a copy of the project, and this one is the canonical checkout.
+
+- **Package digest** `fa8888706d567542d4af910a573c258638b90081824857fba898e698a1c9decb`
+  over 50 staged files and 1,070,670,793 bytes, excluding what the run itself writes
+  under `Saved/`.
+- **Executable** `UnrealWorldGen.exe`, exit code 0, 27.0 s of wall clock for three runs.
+- **Generate to materialize**, seed 20260918, sixty kilometre map, regional raster 193,
+  unwrap 513 latitude rows: 525,825 vertices in 14 biome sections (318,319 of them
+  water), heights -51012..47868 cm, generate 15,457 ms and materialize 2,862 ms.
+  Generate is the whole native world: terrain, climate, ecology, leylines, settlement
+  fields, founded cities, roads and both habitat passes.
+- **Civilizations**: 481 cities and 468 regional roads, 230,142 ribbon vertices, and
+  2,568 planned building slots with none unbound. The city count is the ground's own
+  packing ceiling rather than the old constant 24.
+- **Habitat**, the two passes the game reports for itself:
+  - 6,791 animal hunting grounds, tiers one to five **5078 / 1290 / 352 / 71 / 0**.
+    Successive ratios 3.94, 3.66 and 4.96 against the authored falloff of 4, so the
+    trophic pyramid survives placement rather than only existing in the constant.
+  - 527 monster territories, tiers **289 / 86 / 90 / 41 / 21**. Twenty-one campaign
+    threats on a sixty kilometre world, and tier three slightly exceeding tier two is
+    habitat and draw noise at these counts, not an inverted pyramid.
+  - Widest hunting ground 375 m, widest monster territory 1,750 m.
+  - **1,424 hunting grounds fall inside a monster territory.** The two passes never
+    read each other, so this overlap is the design being observed, not a collision:
+    the monsters hunt the same game.
+- **Frame checks from the shipped plugin**: east is +X, north is +Y, radial up is +Z,
+  metres scale by 100 exactly once, unit axes permute without scaling — all pass.
+- **Contact**: drawn vertex against a fresh height sample, 0.000000 cm. Collision
+  against the drawn surface, 0.066970 cm over 253 line traces at stride 1, so what the
+  player stands on is what the generator reported. Between vertices the flat triangle
+  differs from the true sampled height by up to 1246.3 cm at this display resolution;
+  that is the honest cost of 513 rows over sixty kilometres, and it is why a foundation
+  must read the sampling function rather than the drawn mesh.
+- **Registry**: 494 identities resolved, 0 missing, 1 resolved to a concrete bound
+  object rather than its kind placeholder, and the deliberate unbound identity reported
+  itself instead of spawning anything. Of 8,986 world markers, 7,351 carry a registry
+  identity and none are unbound. The staged table is the catalogue-complete 1,184-row
+  file.
+- **Replay**: the same seed twice produces an identical reported world. Seed 20260919
+  differs throughout — 384.58 km2 of land against 510.64, 412 cities against 481, 6,747
+  animals against 6,791 and 365 monster territories against 527, with its own tier
+  spreads of 5106/1233/325/83/0 and 179/67/66/36/17. A player generating many worlds
+  gets different ecologies, and the same seed always returns the same one.
+- **Capture**: `Saved/Screenshots/Windows/FWGPackagedRun.png` and `FWGPackagedRegion.png`
+  inside the package. Habitat anchors draw as instanced boxes scaled by danger tier,
+  animals green and monsters red; at map scale the emissive debug material washes them
+  to white points, so the legend is legible close up and the counts above are the
+  evidence at altitude.
+
+**The Unreal Editor must be closed, and `UnrealMCP` must be disabled.** That plugin uses
+`ANY_PACKAGE`, removed in UE 5.5, so it cannot compile against 5.8 and its failure stops
+the editor build that cooking requires. It is an editor-side bridge the packaged game
+never loads. The cook does not disable it for you: turn it off in `UnrealWorldGen.uproject`
+for the cook and turn it back on afterwards.
+
 ## Handoff
 
-Starts after ML-03d. Finish line for asset-focused work: cooked digest + registry coverage, not PIE boxes. Immutable hosted release automation can remain a parent ML-03 follow-up.
+Finish line for asset-focused work: cooked digest + registry coverage, not PIE boxes.
+Immutable hosted release automation can remain a parent ML-03 follow-up.

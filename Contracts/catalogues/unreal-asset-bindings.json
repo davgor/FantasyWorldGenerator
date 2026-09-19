@@ -1,0 +1,15 @@
+{
+ "schema": "fantasy-world-generator.unreal-asset-bindings",
+ "version": 1,
+ "note": "Concrete Unreal object paths that replace a kind placeholder. Art lands here; adapters never hardcode a path. Every identity named must exist in the exhaustive asset list.",
+ "bindings": {
+  "building.guildhall": {
+   "path": "/Engine/BasicShapes/Cylinder.Cylinder",
+   "note": "Representative mesh swap: a different object path than the building placeholder, proving registry-driven geometry, pivot and metre dimensions. Production art replaces this path."
+  },
+  "terrain.biome.004": {
+   "path": "/Engine/EngineMaterials/GizmoMaterial.GizmoMaterial",
+   "note": "Representative material swap: a different material asset than the surface placeholder, so one natural biome visibly renders through its own binding instead of the kind default. A bound material is used as authored, never tinted. Production art replaces this path."
+  }
+ }
+}

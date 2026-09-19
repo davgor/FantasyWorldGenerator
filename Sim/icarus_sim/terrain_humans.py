@@ -178,22 +178,39 @@ def add_humans(result,cfg):
         h['delivered_food']+=100*area*food[i]*delivery*(1 if h['role']=='farming' else .25)
         h['delivered_materials']+=100*area*resource[i]*delivery*(1 if h['role']=='resource' else .25)
     # Route junctions/crossings and elevated surroundings suggest defensive sites.
-    route_neighbors={};crossings=set()
+    route_neighbors={};crossings=set();crossing_edges=set()
     for road in result['roads']['routes']:
         for i,j in zip(road['nodes'],road['nodes'][1:]):
             route_neighbors.setdefault(i,set()).add(j);route_neighbors.setdefault(j,set()).add(i)
-        for edge in road['river_crossings']:crossings.update(edge)
+        for edge in road['river_crossings']:
+            crossings.update(edge);crossing_edges.add(tuple(sorted(edge)))
+    # The road network asks for its own defence: one watch per support reach of road
+    # plus one per distinct crossing. A civilization cannot raise more forts than it
+    # has cities to raise them, and cfg.fortress_count is a caller's ceiling over
+    # both -- it has always been a maximum here, never a target or a guarantee.
+    #
+    # A city that has fought a war wants more watching its roads, so its wars raise both
+    # what the world asks for and how much it is allowed. A world that has never been to
+    # war keeps exactly the road-and-city answer.
+    from .terrain_wars import veteran_wars
+    veteran={site['id']:min(3,veteran_wars(site)) for site in sites}
+    veteran_demand=sum(veteran.values())
+    road_length=sum(road['length_m'] for road in result['roads']['routes'])
+    proposed=math.floor(road_length/cfg.support_reach)+len(crossing_edges)+veteran_demand
+    fortress_limit=min(cfg.fortress_count,proposed,len(sites)+veteran_demand)
     strategic={}
     for node,links in route_neighbors.items():
         base=1+min(2,max(0,len(links)-2))+(1 if node in crossings else 0)
         for i,d in [(node,0.)]+graph[node]:
             if water[i] or slope[i]>=node_profiles[i]['work_slope_limit'] or owner[i]<0 or distance[i]>cfg.support_reach:continue
             if i!=node and cost(node,i,d) is None:continue
-            value=base+max(-.5,min(1,tpi[i]/30))-.5*flood[i]-slope[i]/40-d/500
+            # Ground belonging to a city that has fought outranks equally defensible
+            # ground belonging to one that has not.
+            value=base+max(-.5,min(1,tpi[i]/30))-.5*flood[i]-slope[i]/40-d/500+.5*veteran.get(owner[i],0)
             if value>strategic.get(i,(-math.inf,None))[0]:strategic[i]=(value,node)
     forts=[]
     for i,(score,route_node) in sorted(strategic.items(),key=lambda item:(-item[1][0],item[0])):
-        if len(forts)>=cfg.fortress_count:break
+        if len(forts)>=fortress_limit:break
         if separated(i,200):
             fort=record(i,'fortress',len(forts),'Nearby city road; junction/crossing importance and elevated surroundings')
             fort.update({'defence_score':score,'protected_route_node':route_node})
@@ -212,12 +229,18 @@ def add_humans(result,cfg):
     layers.update({'food_potential':node_grid(food,points,n),'natural_food_potential':node_grid(natural,points,n),
                    'irrigation_benefit':node_grid([b-a for a,b in yields],points,n),'culture_region':node_grid(region,points,n),
                    'hamlet_catchment':node_grid(farm_owner,points,n)})
-    result['humans']={'version':6,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
+    result['humans']={'version':8,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
+        'fortress_demand':{'proposed':proposed,'city_ceiling':len(sites)+veteran_demand,
+                           'requested_ceiling':cfg.fortress_count,'limit':fortress_limit,
+                           'veteran_demand':veteran_demand,
+                           'veteran_cities':sum(1 for v in veteran.values() if v),
+                           'road_length_m':road_length,
+                           'crossings':len(crossing_edges),'support_reach':cfg.support_reach},
         'method':'All primary pins are cities. Rural sites share exclusive reachable catchments. Food/material values are relative exportable potential units, not historical yields or population capacity. Irrigation requires nearby mapped freshwater; water extraction capacity and groundwater are not simulated. Cities can buy finite surplus over roads using material potential, with transport loss; remaining shortages stay visible.',
         'culture_method':'Existing road links below a cost threshold form single-link interaction groups. Culture IDs are seed-local, not inferred ethnicities or political borders; architecture style keys identify standalone civilizations. Territory stops at the support reach; wilderness remains unassigned.',
-        'defence_method':'Fortresses are spaced route-defence proposals, not a siege or visibility simulation. Garrison demand is not yet budgeted.'}
+        'defence_method':'Fortresses are spaced route-defence proposals, not a siege or visibility simulation. How many a world asks for follows its own road length, support reach and distinct river crossings, ceilinged by its city count; fortress_count caps that and never raises it. Usable defensible ground and the 200 m spacing decide how many of the requested forts exist. Garrison demand is not yet budgeted.'}
     if 'magic' in result:
-        result['humans']['version']=6
+        result['humans']['version']=8
         result['humans']['method']+=' Mutation and the selected population biome food multipliers reduce crop surplus. Rural access cannot cross unsafe magic.'
     result['warnings'].extend([result['humans']['method'],result['humans']['culture_method'],result['humans']['defence_method']])
     elapsed=(perf_counter()-started)*1000;result['timing_ms']['human_hinterlands']=elapsed;result['timing_ms']['total']+=elapsed

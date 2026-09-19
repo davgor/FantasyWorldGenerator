@@ -131,7 +131,7 @@ def relief_at(c,distance,conv,div,ci,cj,cfg,along=0,across=0):
     if cfg.world_recipe:
         from .terrain_world import options
         abundance=options(cfg)['mountain_abundance']
-    uplift=2*collision*math.exp(-(d/(abundance*(1+.25*cfg.mountain_detail*math.tanh(across))))**2)*mountain_modulation(along,across,cfg.mountain_detail)
+    uplift=getattr(cfg,'orogeny',1.)*2*collision*math.exp(-(d/(abundance*(1+.25*cfg.mountain_detail*math.tanh(across))))**2)*mountain_modulation(along,across,cfg.mountain_detail)
     volcanic=subduction*math.exp(-((d-.8)/.5)**2) *overriding
     trench=-1.2*subduction*math.exp(-((d-.25)/.25)**2) *(1-overriding)
     rift=-.7*div*c*belt

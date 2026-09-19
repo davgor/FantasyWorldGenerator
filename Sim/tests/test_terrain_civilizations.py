@@ -83,7 +83,7 @@ class CivilizationTests(unittest.TestCase):
         a=generate_request(request);b=generate_request(request)
         self.assertEqual(a['settlements'],b['settlements'])
         self.assertEqual(a['generator_version'],16)
-        self.assertEqual(a['settlements']['version'],14)
+        self.assertEqual(a['settlements']['version'],15)
         self.assertEqual(a['civilizations']['version'],2)
         all_sites=a['settlements']['sites']+a.get('sky',{}).get('settlements',[])
         self.assertTrue(all(s['population_profile'] not in ('human','highland','woodland') for s in all_sites))

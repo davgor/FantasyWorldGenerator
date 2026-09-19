@@ -23,7 +23,9 @@ class Config:
     human_magic_limit: float = 0.45
     college_count: int = 2
     hamlets_per_core: int = 3
-    fortress_count: int = 4
+    # A ceiling, not a count. The default sits at the bound so it never binds and
+    # the generated road network decides how much route defence a world asks for.
+    fortress_count: int = 1024
     support_reach: float = 1000.0
     culture_link_cost: float = 1800.0
     urban_food_demand: float = 10.0
@@ -48,6 +50,11 @@ class Config:
     belt_width: float = 0.08
     tectonic_relief: float = 800.0
     mountain_detail: float = 0.65
+    # Gain on collision uplift alone. The hypsometric profile puts ocean floor far
+    # below continental platform, as Earth's does, so raising tectonic_relief deepens
+    # basins as fast as it raises peaks. This lifts orogenic belts without touching
+    # the basins, which is how a world gets mountains that answer to its oceans.
+    orogeny: float = 1.0
     sea_level: float = 0.0
     world_scale: float = 0.17744123532462844
     seed: int = 42
@@ -79,7 +86,7 @@ class Config:
             if type(getattr(self,key)) is not int or not low<=getattr(self,key)<=high:raise ValueError(f'{key} must be an integer {low}..{high}')
         for key,low,high in (('ley_width',10,2000),('magic_instability',0,1),('human_magic_limit',0,1)):
             if not math.isfinite(getattr(self,key)) or not low<=getattr(self,key)<=high:raise ValueError(f'{key} must be {low}..{high}')
-        for key,high in (('hamlets_per_core',8),('fortress_count',24)):
+        for key,high in (('hamlets_per_core',8),('fortress_count',1024)):
             if type(getattr(self,key)) is not int or not 0<=getattr(self,key)<=high:
                 raise ValueError(f'{key} must be an integer 0..{high}')
         for key,low,high in (('support_reach',100,10000),('culture_link_cost',1,100000),('urban_food_demand',0,10000),('human_adaptation',0,1)):
@@ -103,6 +110,8 @@ class Config:
             raise ValueError('erosion_strength must be 0..1')
         if not math.isfinite(self.mountain_detail) or not 0<=self.mountain_detail<=1:
             raise ValueError('mountain_detail must be 0..1')
+        if not math.isfinite(self.orogeny) or not 0<=self.orogeny<=20:
+            raise ValueError('orogeny must be 0..20')
         if not math.isfinite(self.sea_level) or not -1e7<=self.sea_level<=1e7:
             raise ValueError('sea_level must be finite within ±10,000,000 metres')
         if not math.isfinite(self.world_scale) or not .001<=self.world_scale<=1000:

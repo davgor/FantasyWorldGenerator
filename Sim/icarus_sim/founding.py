@@ -3,7 +3,12 @@ import random
 from .terrain_tectonics import child_seed
 
 
-def found_cities(seed, parents, owners, quotas, candidates, scores, distance, spacing, world_reach, survivors=(), forbidden=(), years_per_round=250, origin_min_separation_degrees=90, start_year=0, diaspora_interval_years=1000, diaspora_bonus_per_parent=1, food_allowances=None, city_limit=24, diaspora_bonus_used=(), used_civilizations=(), magic_enabled=True, minimum_residents=None):
+def found_cities(seed, parents, owners, quotas, candidates, scores, distance, spacing, world_reach, survivors=(), forbidden=(), years_per_round=250, origin_min_separation_degrees=90, start_year=0, diaspora_interval_years=1000, diaspora_bonus_per_parent=1, food_allowances=None, city_limit=None, diaspora_bonus_used=(), used_civilizations=(), magic_enabled=True, minimum_residents=None):
+    # `city_limit` is None for no ceiling and a count otherwise, including zero. It
+    # used to be zero-for-none, which collided with a caller asking for no cities at
+    # all: quotas went to zero, and the diaspora bonus -- whose whole purpose is to
+    # waive a zero quota -- then had nothing left to stop it and settled the world
+    # anyway.
     sites=[dict(s) for s in survivors];blocked=set(forbidden);events=[]
     quotas=dict(quotas);bonus_used=set(diaspora_bonus_used);ever_used=set(used_civilizations)|{s['population_profile'] for s in sites}
     if food_allowances is not None:
@@ -17,12 +22,13 @@ def found_cities(seed, parents, owners, quotas, candidates, scores, distance, sp
         return [(key,node) for key in owners if owners[key]==race and counts[key]<quotas[key]
                 for node in candidates[key] if node not in blocked and all(node!=s['node'] and distance(node,s['node'])>=spacing for s in sites)]
     def diaspora_candidates():
-        if food_allowances is None or len(sites)>=city_limit:return {}
+        if food_allowances is None or (city_limit is not None and len(sites)>=city_limit):return {}
         options={}
         for key,race in owners.items():
             if key in ever_used or food_allowances.get(key,0)<(minimum_residents or {}).get(key,40):continue
             bonus=quotas[key]==0
-            if bonus and (not diaspora_bonus_per_parent or race in bonus_used or target>=city_limit):continue
+            if bonus and (not diaspora_bonus_per_parent or race in bonus_used
+                          or (city_limit is not None and target>=city_limit)):continue
             if len(sites)>=target and not bonus:continue
             members=[s for s in sites if s['parent_race_id']==race]
             pool=[node for node in candidates[key] if node not in blocked and all(node!=s['node'] and distance(node,s['node'])>=spacing for s in sites)]
