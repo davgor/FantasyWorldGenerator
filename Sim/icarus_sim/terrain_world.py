@@ -281,10 +281,19 @@ def generate_request(body):
     # scaling. Do not restate it as a metre figure for one planet: a reader on another
     # radius recomputes and gets crossovers this generator will never produce for them.
     #
-    # At the default plate count that admits 0 of 5 octaves at size 17, 1 at 33, 2 at 65,
-    # 3 at 129, 4 at 257 and all 5 at 513. 1025 adds no octave over 513 -- it buys a finer
-    # cell step at four times the cells -- so 513 is the size to validate terrain at, and
-    # nothing needs a 1025 run to resolve its terrain.
+    # The ladder depends on plate_count, so name the band rather than "the default".
+    # Swept over the legal range 3..48 with terrain_scale.resolved_octaves:
+    #
+    #   plate_count    17   33   65  129  257  513  1025   octaves of 5
+    #        3-4        1    2    3    4    5    5     5
+    #        5-16       0    1    2    3    4    5     5   <- contains the default 12
+    #       17-48       0    0    1    2    3    4     5
+    #
+    # 34 of the 46 legal plate counts do not follow the middle row, a full octave either
+    # way at the ends. In the default band 513 resolves everything and 1025 only buys a
+    # finer cell step at four times the cells -- but above plate_count 16, 513 stops at
+    # four and 1025 is the first size that resolves all five. So "1025 adds no octave" is
+    # true for the default and false for most of the legal range.
     if type(raw['size']) is not int or raw['size']>1025:raise ValueError('Grid maximum is 1025')
     raw['world_options']=json.dumps(extra,sort_keys=True)
     cfg=Config(**raw)
