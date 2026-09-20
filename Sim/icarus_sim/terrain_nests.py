@@ -3,7 +3,7 @@
 Both are thinned point processes over the ground rather than a fixed anchor budget.
 For a species `s` in cell `c` the intensity is
 
-    lambda = density(tier) * occurrence * area_km2 * suitability * biome_weight
+    lambda = density(tier) * occurrence * area_km2 * suitability * biome_weight * danger_ramp
 
 so the expected count is an integral over habitable land and doubling the land doubles
 the creatures, with no cap anywhere. A cell places `floor(lambda) + [u < frac(lambda)]`
@@ -13,7 +13,7 @@ and a cumulative weighted pick.
 
 Tier is danger to a player, one to five, and it does the ecological work: density falls
 geometrically with it, so prey are many and apex creatures are few, and territory and
-settlement clearance grow with it.
+settlement clearance grow with it, and `danger_ramp` slides it outward from people.
 
 The two passes never read each other. Animals hold hunting grounds; monsters hold
 territory over the same ground, and a monster is excluded only by an equal or greater
@@ -29,8 +29,19 @@ from .terrain_tectonics import child_seed
 from .terrain_world import options
 from .terrain_erosion import sphere_grid
 from .terrain_globe import direction
+from .terrain_scale import reach_scale
 
 MEDIA=('land','shore','marine','freshwater')
+
+# How far out the danger ramp turns over, in reference-world metres. Authored against
+# the 11.15 km reference like every other reach in this repo and scaled by
+# circumference, because an absolute metre constant is sub-cell on a 200 km world and
+# ramps nothing. See `danger_ramp`.
+NEST_DANGER_SPAN_M=300.
+# The share of the rate that survives at the wrong end of the ramp. Nothing may become
+# impossible: a floor of zero would make a tier five species unplaceable on the doorstep
+# of a town and a tier one species unplaceable in the wilderness, and neither is true.
+NEST_DANGER_FLOOR=.2
 
 
 def clamp(v):
@@ -54,6 +65,12 @@ def profiles():
             raise ValueError('Creature needs class animal or monster and tier 1..5: '+p['name'])
         if p['class']=='animal' and p.get('role') not in roles():
             raise ValueError('Animal needs a known role: '+p['name'])
+        # Monsters have no feeding role, so a monster without its own table falls
+        # through `biome_weight` to 1. and is equally at home on a glacier and in a
+        # rainforest. That fallback was the whole of the monster half's opinion about
+        # biome until the 2026-09-20 ruling; refuse it rather than let it come back.
+        if p['class']=='monster' and not p.get('biome_weights'):
+            raise ValueError('Monster needs its own biome_weights: '+p['name'])
     return rows
 
 
@@ -68,6 +85,14 @@ def biome_weight(p,biome_id):
 
     Keys are decimal strings of natural biome ids, matching how civilization biome
     preferences are authored. An absent biome is habitat the species does not use.
+
+    An animal resolves its table through its feeding role; a monster carries its own,
+    authored from a family template with per-species deltas, and `profiles()` refuses a
+    monster that has none. So the bare `return 1.` is unreachable for the shipped
+    catalogue: it survives only for a caller passing a hand-built profile. Every monster
+    table names every live biome for the same reason -- an absent key is exclusion, not
+    neutrality, so a five-key table silently forbids a quarter of the catalogue the
+    ground it was measured on.
     """
     table=p.get('biome_weights')
     if table is None and p.get('role'):table=roles()[p['role']].get('biome_weights')
@@ -111,6 +136,37 @@ def tier_density(base,falloff,tier):
     return base*falloff**(1-tier)
 
 
+def danger_ramp(tier,clear_of,span):
+    """Rate multiplier that slides danger outward from settled ground.
+
+    The clearance below is a hard floor and stays one: nothing lairs in the town
+    square. But a cutoff is the wrong shape for a difficulty gradient and cannot make
+    one at any resolution -- scaling `clearance * tier` up digs a wider hole around
+    every settlement rather than ramping anything, and measured on a 200 km world it
+    left a tier five apex monster and a tier one prey animal at the same median 6.45 km
+    from the nearest town against a source comment declaring a 3:1 intent.
+
+    So the ramp is continuous and lives in the rate. `near` is 1 on a settlement's
+    doorstep and falls to a half one span out; a tier one species is drawn towards it
+    and a tier five species away from it, in proportion to danger. `span` grows with
+    circumference, and a floor keeps every tier possible on every ground.
+
+    A ratio of squares rather than an exponential: no `pow`, no `exp`, nothing whose
+    last bit depends on the libm the native build links against. Squared because the
+    plain ratio is too gentle to be worth having -- the usable band on a settled world
+    is about one span wide, and across it `span/(span+d)` swings by a factor of two
+    however low the floor goes, which is not a gradient a player would notice.
+
+    The tier's total is untouched. `budget` renormalises by `tier_room`, which sums the
+    same factor, so this redistributes a tier over the ground and never changes how many
+    of it a world holds.
+    """
+    reach=span*span;out=clear_of*clear_of
+    near=reach/(reach+out)
+    danger=(tier-1)/4.
+    return NEST_DANGER_FLOOR+(1-NEST_DANGER_FLOOR)*(danger*(1-near)+(1-danger)*near)
+
+
 def habitat_cells(result,cfg,points,areas):
     """Every cell's habitat description, in grid order: the ground both passes read."""
     l=result['layers'];n=cfg.size;cells=[]
@@ -152,6 +208,11 @@ def _place(kind_of,catalogue,result,cfg,cells,settled,radius,domain,density,fall
     # the density asked for.
     nearest=[min((distance(cell['direction'],s,radius) for s in settled),default=float('inf'))
              for cell in cells]
+    # ...and how far out a cell is decides how dangerous the ground is, continuously.
+    # The clearance below still refuses the doorstep outright; this is the ramp between
+    # the doorstep and the wilderness. Authored against the reference world, so it means
+    # the same thing at every width.
+    span=NEST_DANGER_SPAN_M*reach_scale(2*math.pi*radius)
     # Where each species can live and how much room it has there. `room` is what the
     # species would claim if nothing else existed: how common it is, how well the
     # ground suits it, and how much ground there is.
@@ -174,7 +235,7 @@ def _place(kind_of,catalogue,result,cfg,cells,settled,radius,domain,density,fall
             if weight<=0:continue
             score,_=suitability(p,cell['fields'])
             if score<o['nest_min_suitability']:continue
-            room=p['occurrence']*score*weight*cell['area_km2']
+            room=p['occurrence']*score*weight*danger_ramp(p['tier'],clear_of,span)*cell['area_km2']
             if room<=0:continue
             here.append((p,wet,room,score))
             tier_room[(p['tier'],wet)]=tier_room.get((p['tier'],wet),0.)+room

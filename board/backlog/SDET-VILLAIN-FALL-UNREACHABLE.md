@@ -198,3 +198,28 @@ Found by the red-team SDET session while taking the coordinator's "villain fall 
 real age transition" assignment. The assignment assumed the fall was rare; it is impossible.
 The second defect was a suspicion `VILLAIN-FALL-UNRECORDED.md` recorded and could not
 confirm, and it is confirmed here by a route that card did not consider.
+
+## A third stranding route, found and fixed 2026-09-20: a villain's own well
+
+The card considers two ways a villain can be stranded. There is a third, it is
+deterministic, and it fired for every villain bound to a school god.
+
+`sink_well` appends a ley node at the villain's own seat direction. `_held_node` picks the
+nearest ley node to that seat. So the moment a villain sinks its well, the well becomes the
+nearest node and `regions()` re-anchors the region onto it. `advance` then looks the villain
+up by the old anchor and misses, the accumulated tier is orphaned under a key no region
+reports, and the reign ends on the age it began without ever passing through the fall branch.
+
+The symptom was visible in the output and had been read past: a `villain_rise: 1.0` world
+seated one villain and published `outlook.standing: 1` with **zero** regions marked `seated`.
+The roster and the outlook were describing different worlds.
+
+Fixed by excluding `well-` prefixed nodes from anchor selection, on the principle that a
+region must be anchored to ground the world laid down rather than ground the villain did.
+After the fix a default world reports standing 4 against 4 regions seated, and
+`Sim/tests/test_super_villains.py` asserts the two agree and that no region anchor is a well.
+
+**What this does not establish:** whether the fall branch is reachable now. That is still the
+card's own question. Promotion seats at exactly `SUPER_TIER` and `villain_hold` defaults to
+0.7, so a fall still needs a region to lose three tenths of its concentration, which no
+generated world has been observed to do.

@@ -129,7 +129,15 @@ std::vector<LeyNetwork> generate_networks(const WorldConfig& cfg) {
         LeyNetwork network;
         network.name=school_names()[index];
         network.strength=option.strength;
-        network.width_m=option.width;
+        // Authored school widths are a reach on the reference world (design radius 10000
+        // at the recipe scale, 1774.4 m physical), so magic must cover the same share of
+        // the world at every circumference. Left absolute, a 110 m Gaussian on a 200 km
+        // world falls entirely between raster cells and every ley field, magic density,
+        // biome variant, college and magic-gated habitat collapses to zero. This mirrors
+        // terrain_leyline_history.py:101; the reference radius is written as the decimal
+        // literal the reference uses, because 10000.*0.17744123532462844 evaluates one ulp
+        // lower and the categorical layers downstream are compared exactly.
+        network.width_m=option.width*(cfg.globe_radius*cfg.world_scale/1774.4123532462844);
         network.instability=option.instability;
         network.seed=child_seed(static_cast<std::uint64_t>(cfg.seed),"history-ley-"+network.name,
                                 static_cast<std::uint64_t>(option.variation));

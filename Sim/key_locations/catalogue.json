@@ -1,8 +1,11 @@
 {
   "schema": "fantasy-world-generator.key-locations-catalogue",
   "schema_version": 1,
-  "revision": 2,
+  "revision": 3,
   "note": "Archetypes are data. Adding one is a catalogue edit, not a code change; if a new kind of place needs new code, the placement engine is underspecified and that is the bug to fix. Thresholds are percentile-relative against each world's own distribution, with an absolute floor where 'the best available' should still not qualify on a world that has none of the thing. Spacing is in cell multiples of a fixed reference raster, never the raster in hand, so it is a physical distance that scales with the world and does not change when the same world is sampled more finely.",
+  "gate_rule": "A requires term must name a layer that carries data inside the archetype's own domain. Three archetypes did not: salt_mine and salt_pans gated on salinity and whaling_station on fishing_productivity, all three domain land, and both layers are ocean quantities reading identically 0.0 on every land cell at sizes 17, 33, 65, 129 and 257. They were unplaceable by construction at every raster rather than merely unlucky. A shore archetype that genuinely needs the sea asks a derived coastal_ field, which carries the neighbouring water's value onto the land cell; anything else asks a land field. No static lint can catch this because only a world knows what a layer holds, so the guard is a measured one: Sim/tests/test_key_locations.py audits every archetype's every requires term against its own domain and fails if any field is constant there.",
+  "rate_rule": "per_1000_km2 is a rate, never a count, and it may not be zero for a node-placed archetype. budget() takes floor(expected) plus one Bernoulli draw on the remainder, so a fractional expectation is a chance rather than a silent zero - but zero times any area is still zero. The five tier-3 wonders declared 0.0 with max_count 1, which reads as 'at most one' and means 'never one', and they reported wanted: 0 against 15 to 78 qualifying cells on every world ever generated. They now declare 0.15, which against the roughly 2500 to 4300 km2 of land this planet carries at any raster is an expectation near 0.4: each wonder appears in something under half of worlds, a typical world has one or two of the five, and max_count keeps a large continent from growing a second of the same one.",
+  "floor_rule": "A requires term's absolute floor must be the value below which the field means NONE OF THE THING, with the reason recorded here; a floor chosen from inside the field's own distribution is tuning, and untraceable tuning is the defect class this catalogue keeps rediscovering. Two of the three floors added with the class-A re-gating pass that test and both say the same thing - the cell touches water at all - in their own field's units. coastal_exposure is a cell's water-neighbour count over its neighbour count, and terrain_erosion.sphere_grid (Sim/icarus_sim/terrain_erosion.py:15) gives every non-polar cell six or eight neighbours at sizes 17 through 257 (only the two poles differ, and readers.cells excludes them), so the smallest positive value the field can take is 1/8 and salt_pans' min 0.125 admits exactly the cells with a water neighbour. fishing_productivity is clamp(0.12 + ...) wherever water exists and 0.0 on land (Sim/icarus_sim/terrain_ecology.py:104), so whaling_station's min 0.12 on the derived coastal_fishing_productivity field is the same statement. Both floors are load-bearing, and it is measured rather than predicted. The zero share of each field on land climbs with the raster - 2.1, 28.7 and 49.9 per cent at sizes 17, 33 and 65 for coastal_exposure - and the nearest-rank cut falls with it: p55 resolves to 0.500 at size 17, 0.375 at 33 and exactly 0.125 at 65, where it has reached the smallest positive value the field can hold and equals the floor. coastal_fishing_productivity is the same story, p60 resolving to exactly 0.12 at size 65. One raster further and the cut is zero and the floor is the whole gate: the cut is zero once more than about 55 per cent of the domain reads zero (verified against placement.percentile at n = 100, 268, 1174 and 4870 - positive at 54 per cent zero, zero at 56), and size 65 is already at 49.9. That is the fail-open shape gate_rule describes, one step away. The third floor did not survive the test: salt_mine carried metal_richness min 0.3, a level inside a field that runs about 0.15 to 0.68 on land, with no reason written anywhere - and on a field that is an ore proxy, clamp(0.45 + 0.7*perlin + 0.2*volcanic) at Sim/icarus_sim/terrain_ecology.py:108, while the archetype's reason says evaporite. The gate and the reason have to agree, so the term went and salt_mine now asks for dry ground (rainfall) in ground that sits low relative to its surroundings (tpi), which is what a dried sea basin is. whaling_station's other floor, coastal_exposure min 0.03, predates this pass and never binds, because the field has no positive value below 0.125.",
   "families": {
     "subterranean": {
       "name": "Subterranean",
@@ -840,15 +843,24 @@
       "domain": "land",
       "requires": [
         {
-          "layer": "salinity",
-          "above_percentile": 0.8,
-          "min": 0.02
+          "layer": "rainfall",
+          "below_percentile": 0.35
+        },
+        {
+          "layer": "tpi",
+          "below_percentile": 0.35
         }
       ],
       "prefers": [
         {
-          "layer": "salinity",
-          "weight": 1.0
+          "layer": "rainfall",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.6,
+          "invert": true
         },
         {
           "layer": "road_distance",
@@ -885,7 +897,7 @@
         "the salt halls at {near}",
         "the white workings"
       ],
-      "reason": "Rock salt near enough the surface to cut, and salt is worth a road."
+      "reason": "A sea dried here long ago and left rock salt under dry ground, and salt is worth a road."
     },
     {
       "id": "quarry",
@@ -942,9 +954,9 @@
       "domain": "land",
       "requires": [
         {
-          "layer": "salinity",
-          "above_percentile": 0.7,
-          "min": 0.02
+          "layer": "coastal_exposure",
+          "above_percentile": 0.55,
+          "min": 0.125
         },
         {
           "layer": "slope",
@@ -953,8 +965,9 @@
       ],
       "prefers": [
         {
-          "layer": "salinity",
-          "weight": 1.0
+          "layer": "rainfall",
+          "weight": 1.0,
+          "invert": true
         },
         {
           "layer": "coastal_exposure",
@@ -983,7 +996,7 @@
         "the salt flats at {near}",
         "the white pans"
       ],
-      "reason": "Flat brine ground that dries faster than it fills."
+      "reason": "Flat open coast where the sea comes in and dries faster than it fills."
     },
     {
       "id": "charcoal_camp",
@@ -1130,14 +1143,14 @@
           "min": 0.03
         },
         {
-          "layer": "fishing_productivity",
+          "layer": "coastal_fishing_productivity",
           "above_percentile": 0.6,
-          "min": 0.02
+          "min": 0.12
         }
       ],
       "prefers": [
         {
-          "layer": "fishing_productivity",
+          "layer": "coastal_fishing_productivity",
           "weight": 1.0
         },
         {
@@ -3719,7 +3732,7 @@
           "weight": 0.5
         }
       ],
-      "per_1000_km2": 0.0,
+      "per_1000_km2": 0.15,
       "min_count": 0,
       "max_count": 1,
       "spacing_cells": 8.0,
@@ -3761,7 +3774,7 @@
           "weight": 0.5
         }
       ],
-      "per_1000_km2": 0.0,
+      "per_1000_km2": 0.15,
       "min_count": 0,
       "max_count": 1,
       "spacing_cells": 8.0,
@@ -3814,7 +3827,7 @@
           "weight": 0.6
         }
       ],
-      "per_1000_km2": 0.0,
+      "per_1000_km2": 0.15,
       "min_count": 0,
       "max_count": 1,
       "spacing_cells": 8.0,
@@ -3856,7 +3869,7 @@
           "weight": 0.6
         }
       ],
-      "per_1000_km2": 0.0,
+      "per_1000_km2": 0.15,
       "min_count": 0,
       "max_count": 1,
       "spacing_cells": 8.0,
@@ -3898,7 +3911,7 @@
           "weight": 0.6
         }
       ],
-      "per_1000_km2": 0.0,
+      "per_1000_km2": 0.15,
       "min_count": 0,
       "max_count": 1,
       "spacing_cells": 8.0,

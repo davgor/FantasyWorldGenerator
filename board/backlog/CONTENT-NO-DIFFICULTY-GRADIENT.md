@@ -274,13 +274,54 @@ something other than clearance is pinning the distribution and this card's mecha
 incomplete.** Either result is worth having, and it is the one place the analysis can still be
 wrong. The statistic is already written and runs unchanged against any document.
 
-What is *not* established:
+## The `key_locations` half, now read the same way — a different mechanism, same flat result
 
-- **The same mechanism claim for `key_locations`.** The threat-vs-distance table above is
-  measured, but I have not read that block's placement the way I read `terrain_nests._place`, and
-  `key_locations` gates on percentiles rather than absolute fields
-  (`Sim/key_locations/__init__.py:47`), so its cause may be different. Do not assume one fix
-  covers both.
+Filled in by the content-placement lane, which was in that package anyway. The card was right to
+refuse to assume one fix covers both: the two blocks fail for **different reasons**, and only one
+of them is the unscaled constant.
+
+**`key_locations` placement never sees danger at all.** `threat` is computed in
+`Sim/key_locations/core/succession.py` *after* a site is placed, from its state, its occupant, the
+nearest nest and the nearest villain holding. Nothing in `placement.py` or `fields.py` reads it.
+So the threat-vs-distance flatness above is not a weak repulsion failing to bite — **there is no
+term to bite.** A site's danger is decided by what happened to be near the ground it was already
+standing on, which is close to the definition of no gradient.
+
+**The per-archetype clearance that does exist is monotone in `tier`, and `tier` here is not
+danger.** Measured over the 90 scattered archetypes, `settlement_clearance_cells` × the fixed
+3,125 m reference cell:
+
+| archetype tier | n | median clearance | ÷ cell at 17 | ÷ 33 | ÷ 65 | ÷ 129 |
+|---|---|---|---|---|---|---|
+| 0 | 10 | 625 m | 0.09 | 0.18 | 0.36 | 0.71 |
+| 1 | 51 | 1,250 m | 0.19 | 0.37 | 0.72 | 1.43 |
+| 2 | 24 | 1,875 m | 0.28 | 0.55 | 1.08 | 2.14 |
+| 3 | 5 | 4,688 m | 0.71 | 1.37 | 2.70 | 5.36 |
+
+Cell edge is the same `2r√π / n` this card uses for nests, so the two tables are comparable.
+
+Two things follow, and they cut in opposite directions.
+
+**This clearance *does* scale with the world**, which is the one place the two blocks genuinely
+differ in kind. `spacing_cells` and `settlement_clearance_cells` resolve against a **fixed
+reference raster of 65**, never the raster in hand, so they are absolute metres tied to the
+world's circumference. The nest constant is 250 m regardless of anything. So the key-location
+clearance crosses one cell at size 33 for tier 3 and by 129 for every tier, where the nest one
+does not reach tier 1 until 513. The unscaled-constant diagnosis is **specific to
+`terrain_nests`** and must not be carried over.
+
+**And it still cannot produce a difficulty gradient**, for the reason this card already
+establishes and for one more. It is a binary cutoff, so it makes nested donuts rather than a ramp
+— unchanged. And it is keyed on `tier`, which in this package is **scale, not danger**:
+`docs/key-locations.md` says so outright, that a tier-3 wonder can be harmless and a tier-1 barrow
+lethal. A ladder built on scale answers "how big is it", and pushing big things away from towns is
+a sensible siting rule that says nothing about how dangerous they are.
+
+So the fix shape this card proposes — a distance factor in suitability, signed by danger — is the
+right one here too, but it has to be keyed on something placement can know *before* it places,
+and `threat` today is not. That is a real dependency and it is not a tuning question.
+
+What is *not* established:
 - **Whether a gradient is what this world wants.** Unchanged from the first draft and still the
   decision that should precede any tuning. The alternative — danger tracking corruption, ley
   instability and ruins, with *those* distributed relative to settlement — is a coherent design

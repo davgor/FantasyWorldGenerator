@@ -127,7 +127,25 @@ def add_environment(result,cfg):
             for j,d in graph[i]:
                 if j in unvisited:unvisited.remove(j);component.append(j);stack.append(j)
         component_area=sum(areas[i] for i in component)
-        for i in component:islandness[i]=float(component_area<min(3e6,land_total*.15))
+        # A component is an island when it is small RELATIVE TO THIS WORLD'S LAND. The
+        # dropped min(3e6,...) arm was 3 km2 in absolute metres, authored for the 11.15 km
+        # reference world where every raster cell is under 0.25 km2. At the 200 km default
+        # the smallest sphere-grid cell is 15.217 km2 at size 17, so at THE DEFAULT RASTER
+        # no component of any seed can reach the floor and island_habitat is identically
+        # zero -- a published layer that had become a constant.
+        #
+        # Scoped to size 17 deliberately: an earlier revision of this comment claimed the
+        # layer was zero at EVERY raster and that is false. Cells shrink to 1.914 km2 at
+        # size 33 and 0.240 km2 at size 65, so a one-cell polar component can clear the
+        # 3 km2 floor. Measured at phase 12 on the 200 km default: under the old arm seed
+        # 40 reads 1 island cell at size 33 and 6 at size 65 and seed 43 reads 1 at size
+        # 65, against 29 / 167 / 166 under the fraction arm. Zero at the default raster,
+        # all but zero above it -- not a mathematical constant there.
+        #
+        # The fraction arm is the one that bound on every world on disk (the 3e6
+        # arm never bound at any raster there), so dropping the metre arm reproduces all
+        # twelve archived worlds cell-for-cell while restoring the layer at 200 km.
+        for i in component:islandness[i]=float(component_area<land_total*.15)
     l['island_habitat']=node_grid(islandness,points,n)
     # Return categorical edits to the duplicate seam and unique poles.
     for z in range(n):

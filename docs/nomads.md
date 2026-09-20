@@ -137,12 +137,19 @@ generation after every downstream block has already read the settlements it prod
 Raid pressure is added *after* the threat assessment was evaluated, so it widens
 `regional_threat` without having influenced anything that already read it.
 
-**The `pending_ley_edits` applier contract was agreed with a session that has since
-closed** and will never be confirmed by its author. What a future reader would need to
-re-derive if `terrain_corruption` disagrees is recorded in the module docstring of
-`terrain_nomad_effects.py`: entries keyed by node id and never by index, hidden schools
-only, intensity bounded zero to four, and the applier sorting by `(school, id)` so two
-bands requesting in a different order cannot produce two different worlds.
+**Every cult writes its own ground, hidden school or known.** There used to be a
+`pending_ley_edits` queue here, on the grounds that an age advance would refuse a
+hidden-school node; that was tested and is false — the refusal applies to leyline edits a
+caller hands to an age-advance request, not to the world's own networks — so the queue was
+removed rather than given the applier it never had. Order independence is unaffected: the
+pass iterates bands by `uid`, so two bands requesting in a different order cannot produce
+two different worlds.
+
+What a cult can do is narrow, and deliberately so: it **deepens** a node that already
+exists, lifting it by a fixed fraction of its current charge toward a ceiling of four. It
+never opens new ground. A band whose circuit names no ley node, or names one that is not in
+its school's network, writes nothing at all. Only the corruption API puts a node into a
+hidden network in the first place.
 
 Cult prevalence is a function of how violent the world's history was, not an authored
 constant. Every destroyed city leaves a ley key point at intensity 3.5 to 4.0, so a bloody

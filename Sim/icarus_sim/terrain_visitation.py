@@ -9,6 +9,10 @@ of settlement spacing, never a metre constant or a raster cell, so world scale a
 raster size cannot turn a local visitation into a regional one.
 """
 import copy
+from .terrain_history import adopt_world
+from .terrain_errors import (cross_field, missing_block, over_capacity,
+                             refused_by_world, unknown_field, unsupported_api,
+                             wrong_type)
 import math
 import random
 from time import perf_counter
@@ -20,6 +24,8 @@ from .terrain_ruins import ruin_legacy
 from .terrain_religion import gods_by_id, catalogue_identity, add_religion, VERSION as RELIGION_VERSION
 
 API_VERSION = 1
+VISITATION_FIELDS = ('api_version', 'world', 'god_id', 'target', 'wrath',
+                     'variation', 'depart', 'day')
 MAX_VISITATIONS = 8
 RING_POINTS = 4
 RING_SPACINGS = .5
@@ -70,39 +76,69 @@ def god_schools(god_id, world, day):
 def validate_visitation(body):
     """Reject anything the age boundary would, plus every way a summons can be malformed."""
     from .terrain_history import validate_age_world
-    if not isinstance(body, dict) or set(body) - {'api_version', 'world', 'god_id', 'target', 'wrath', 'variation', 'depart', 'day'}:
-        raise ValueError('Expected api_version, world, god_id, target, optional wrath, variation, day and depart')
+    if not isinstance(body, dict):
+        raise wrong_type('request', body, {'type': 'object'})
+    if set(body) - set(VISITATION_FIELDS):
+        raise unknown_field(sorted(set(body) - set(VISITATION_FIELDS))[0], VISITATION_FIELDS,
+                            noun='request field')
     if type(body.get('api_version')) is not int or body['api_version'] != API_VERSION:
-        raise ValueError('Unsupported visitation API version')
+        raise unsupported_api('api_version', body.get('api_version'), (API_VERSION,))
     world = body.get('world')
     cfg = validate_age_world(world)
     for key in ('astrology', 'lunar_almanac', 'religion'):
         if not isinstance(world.get(key), dict) or world[key].get('version') != 1:
-            raise ValueError('World lacks the ' + key + ' contract; regenerate')
+            raise missing_block(key, 'This world lacks the ' + key + ' contract at version 1. '
+                                'It is written during generation, so a world exported before '
+                                'that contract has to be regenerated rather than migrated.')
     if world['religion']['catalogue'] != catalogue_identity():
-        raise ValueError('Pantheon catalogue changed; regenerate or explicitly migrate this world')
+        raise missing_block('religion.catalogue',
+                            'This world was built against a different pantheon catalogue. '
+                            'The gods it names may not exist here, so it must be regenerated '
+                            'or explicitly migrated rather than summoned into.')
     god_id = body.get('god_id')
     god = next((g for g in world['religion']['gods'] if g['id'] == god_id), None)
     if god is None:
-        raise ValueError('Unknown god')
+        raise unknown_field(god_id, [g['id'] for g in world['religion']['gods']], noun='god')
     depart = body.get('depart', False)
     if type(depart) is not bool:
-        raise ValueError('depart must be a boolean')
+        raise wrong_type('depart', depart, {'type': 'boolean'})
     if depart:
         if god['status'] != 'walking':
-            raise ValueError('Only a walking god can depart')
+            raise refused_by_world('god_id', god_id, 'Only a walking god can depart; %s is %s.'
+                                   % (god_id, god['status']))
+        # `status` alone is not the precondition `depart_god` actually needs: it needs an
+        # undeparted visitation record. A god revealed by `terrain_corruption._reveal`
+        # walks without one, and would otherwise reach depart_god's `next()` and raise a
+        # bare StopIteration. `.get`, not subscripts - records in the wild are not all
+        # complete, and a validator must not raise KeyError on the input it is judging.
+        if not any(v.get('god_id') == god_id and v.get('departed_age') is None
+                   for v in (world['religion'].get('visitations', []) or [])):
+            raise refused_by_world('god_id', god_id,
+                                   'That god does not walk by visitation and cannot depart; '
+                                   'a god revealed by corruption is opposed through its '
+                                   'corruption, not sent home.')
         if set(body) & {'target', 'wrath'}:
-            raise ValueError('A departure takes no target or wrath')
+            raise cross_field('A departure takes no target or wrath; those describe a '
+                              'summons. Send depart on its own.',
+                              sorted(set(body) & {'target', 'wrath'}) + ['depart'])
         return cfg, god, None, 0., 0
     if god['status'] == 'walking':
-        raise ValueError('That god already walks the world')
+        raise refused_by_world('god_id', god_id, '%s already walks the world; summon another '
+                               'god or send this one home first.' % god_id)
     if god['status'] not in ('manifest', 'sleeping'):
-        raise ValueError('An absent god cannot be summoned; it does not exist in this world')
+        raise refused_by_world('god_id', god_id, 'An absent god cannot be summoned; %s does '
+                               'not exist in this world.' % god_id,
+                               alternatives=[g['id'] for g in world['religion']['gods']
+                                             if g['status'] in ('manifest', 'sleeping')])
     if len(world['religion'].get('visitations', [])) >= MAX_VISITATIONS:
-        raise ValueError(f'At most {MAX_VISITATIONS} visitations per world')
+        raise over_capacity('visitations', len(world['religion'].get('visitations', [])),
+                            MAX_VISITATIONS, 'per-world visitation')
     target = body.get('target')
-    if not isinstance(target, dict) or len(target) != 1 or not set(target) <= {'city_uid', 'node'}:
-        raise ValueError('target must be {"city_uid": ...} or {"node": ...}')
+    if not isinstance(target, dict):
+        raise wrong_type('target', target, {'type': 'object'})
+    if len(target) != 1 or not set(target) <= {'city_uid', 'node'}:
+        raise cross_field('target names exactly one place, as {"city_uid": ...} or '
+                          '{"node": ...}.', ('city_uid', 'node'))
     points = world['water']['nodes']
     if 'city_uid' in target:
         city = next((s for s in world['settlements']['sites'] if s['uid'] == target['city_uid']), None)
@@ -340,7 +376,14 @@ def summon(result, cfg, god, node, wrath, variation, day=None):
 def depart_god(result, cfg, god_id, age=None, rebuild=True):
     """The god leaves: cluster collapses to a footprint, rivals recover, the theophany becomes a pilgrimage."""
     religion = result['religion']
-    record = next(v for v in reversed(religion['visitations']) if v['god_id'] == god_id and v['departed_age'] is None)
+    # Defaulted deliberately: a bare `next()` here raised StopIteration with no message out
+    # of two validated request APIs, and inside a caller's generator expression that reads
+    # as a normal stop rather than as a failure.
+    record = next((v for v in reversed(religion.get('visitations', []) or [])
+                   if v.get('god_id') == god_id and v.get('departed_age') is None), None)
+    if record is None:
+        raise ValueError('No undeparted visitation for ' + str(god_id) + '; that god does not '
+                         'walk by visitation')
     cluster = set(record['cluster'])
     for school, net in result['magic']['networks'].items():
         if not any(n['id'] in cluster for n in net['nodes']):
@@ -397,9 +440,7 @@ def visitation_request(body):
     cfg, god, node, wrath, variation = validate_visitation(body)
     world = body['world']
     started = perf_counter()
-    result = copy.deepcopy({k: v for k, v in world.items() if k != 'build_stages'})
-    if 'build_stages' in world:
-        result['build_stages'] = list(world['build_stages'])
+    result = adopt_world(world)
     if body.get('depart', False):
         STATE_KEYS = state_keys()
         previous_layers = copy.deepcopy(result['layers'])

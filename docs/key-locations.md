@@ -28,7 +28,8 @@ and the world produces them: `state` and `occupant` are derived from what the si
 already recorded — whether a ruin sits nearby, whether the ground is remote, how unstable
 the local weave is, what lives next door, how many ages have passed.
 
-Ninety archetypes across eleven families ship in the catalogue.
+Ninety-seven archetypes across eleven families ship in the catalogue: 12 tier 0, 56 tier 1,
+24 tier 2 and 5 tier 3.
 
 ## Tiers — scale, never danger
 
@@ -54,7 +55,7 @@ also sets reach in metres, `terrain_villains.py`), and hero tier (a string enum,
 | Family | Driver | Examples |
 |---|---|---|
 | `subterranean` | lithology proxies, slope, volcanism, relict incision | karst cave, lava tube, sea cave, glacier cave |
-| `extractive` | metal richness, salinity, roads, ruins | iron/silver/gem/salt mine, quarry, salt pans |
+| `extractive` | metal richness, aridity, coast, roads, ruins | iron/silver/gem/salt mine, quarry, salt pans |
 | `fortification` | borders, roads, topographic prominence | border fort, watchtower, hillfort, dyke |
 | `funerary` | ruins, culture, plague and war causes | barrow, mausoleum, necropolis, plague pit |
 | `sacred` | religion, ley field, prominence | monastery, standing stones, holy well, drowned temple |
@@ -90,19 +91,83 @@ top eight per cent of volcanism travels between worlds; the absolute floor besid
 whether the best available is good enough at all. A world with no volcanism gets **no lava
 tubes and a diagnostic row saying so**, not its least-quiet hillside.
 
+**A gate must name a field that varies where the archetype is allowed to stand, and the two
+halves of a gate fail in opposite directions.** An absolute floor over an empty field admits
+no cell: the archetype disappears and the diagnostics say so, which is loud and cheap to
+find. A percentile over an empty field computes a cut equal to the one value present, every
+cell clears it, and the gate silently admits the whole domain while reporting `placed` — the
+archetype's defining requirement is voided and nothing in the output says so. So **an
+absolute floor on an empty field fails closed; a percentile on an empty field fails open**,
+and the open one is the dangerous half because it looks like success.
+
+A percentile term over a field with no variation inside the domain therefore resolves to
+nothing, with a diagnostic naming the field and the domain. This is the same line
+`normalisers` already draws for scoring — a constant field carries no information about where
+to put anything — applied to the harder question of whether a cell may stand at all.
+
+The corollary is a rule about the catalogue rather than about any world: **a `requires` term
+must name a layer that carries data inside the archetype's own `domain`.** Three archetypes
+did not. `salt_mine` and `salt_pans` were `domain: land` gated on `salinity`, and
+`whaling_station` on `fishing_productivity`; both layers are ocean quantities, reading
+identically 0.0 on every land cell at sizes 17, 33, 65, 129 and 257. They were unplaceable by
+construction — not unlucky, not mistuned, and unrescuable by any seed or raster. A shore
+archetype that genuinely needs the sea asks a derived `coastal_` field instead, which carries
+the best neighbouring water value onto the land cell; that is a different query, not a
+lowered threshold.
+
+Each of the three now asks a question its own ground can answer, and the question has to be
+the one the archetype's `reason` already claims. `salt_pans` asks `coastal_exposure`, the
+share of a cell's neighbours that carry water, and `whaling_station` asks the derived
+`coastal_fishing_productivity`. `salt_mine` is not a shore building at all — its reason is an
+evaporite basin, *"a sea dried here long ago"* — so it asks for dry ground (`rainfall`) that
+sits low relative to what surrounds it (`tpi`). An intermediate revision of this fix gated it
+on `metal_richness`, which is an ore proxy —
+`clamp(0.45 + 0.7·perlin + 0.2·volcanic)` at
+`Sim/icarus_sim/terrain_ecology.py:108` — and carries no information about rock salt at
+all. **A gate that does not mean what the archetype's reason
+says places the right noun for the wrong cause**, and nothing downstream can tell.
+
+**An absolute floor must be the value below which the field means *none of the thing*, and
+the reason has to sit beside it.** A floor picked from inside the field's own distribution is
+tuning, and untraceable tuning is the defect this page keeps rediscovering. The two floors
+that survive that test say why in the catalogue's `floor_rule`, and both turn out to be the
+same statement — *touches water at all* — written in each field's own units.
+`coastal_exposure` is a count of a cell's water neighbours over its neighbour count, and on
+the sphere grid every non-polar cell has six or eight neighbours (`terrain_erosion.sphere_grid`
+at sizes 17 to 257: degrees 6 and 8 everywhere except the two poles, which `readers.cells`
+excludes), so the smallest positive value the field can take is 1/8 and `min: 0.125` admits
+exactly the cells that touch water. `fishing_productivity` is `clamp(0.12 + …)` wherever
+water exists and 0.0 on land
+(`Sim/icarus_sim/terrain_ecology.py:104`), so `min: 0.12` on the derived shore field says
+the same thing. Neither is a level. The third floor, `metal_richness ≥ 0.3`, *was*
+a level — it sat inside a distribution that runs 0.15 to 0.68 on land — and it went out with
+the term it was attached to.
+
+**And the floors are one raster step from being the whole gate.** The share of land reading zero
+climbs with the raster — 2.1 per cent at size 17, 28.7 at 33, **49.9 at 65** — and because
+`percentile` is nearest-rank, the cut falls with it: the `coastal_exposure` p55 cut resolves to
+0.500, then 0.375, then **exactly 0.125 at size 65**, which is the smallest positive value the
+field can hold and is the floor. `coastal_fishing_productivity`'s p60 cut is **exactly 0.12** at
+size 65 for the same reason. Once more than about **55 per cent** of the domain reads zero the
+cut is zero, every inland cell clears the gate and the archetype's defining requirement is voided
+— and size 65 is already at 49.9. So the floors are not decoration and not a hypothetical: at the
+finest raster measured the percentile has already fallen to meet them, and past 129 they are all
+that is left of the gate.
+
 Selection is greedy over jittered suitability. The jitter matters: pure greed piles every
 site on the single best ridge and the map reads as a gradient, while pure randomness ignores
 the suitability field the archetype just declared.
 
-Four derived fields the world does not publish are computed per run — `road_distance`,
-`settlement_distance`, `ruin_distance`, `nest_distance` (multi-source cell sweeps) and
-`frontier` (where `culture_region` owners differ across a step, since territory here is a
-raster frontier and not a polygon).
+Seven derived fields the world does not publish are computed per run — `road_distance`,
+`settlement_distance`, `ruin_distance`, `nest_distance` and `villain_distance` (multi-source
+cell sweeps), `frontier` (where `culture_region` owners differ across a step, since territory
+here is a raster frontier and not a polygon), and `coastal_fishing_productivity` (the best
+`fishing_productivity` among a land cell's water neighbours, zero inland and zero at sea).
 
 ### Density, and why it is denominated in area
 
-Counts are `per_1000_km2` of land, scaled from the world's own measured land area. Two
-things about that are easy to get wrong and both were, before they were fixed.
+Counts are `per_1000_km2` of land, scaled from the world's own measured land area. Three
+things about that are easy to get wrong and all three were, before they were fixed.
 
 **A fractional expectation is a chance, not a zero.** Rounding the expected count to the
 nearest integer looks harmless. It is not: on a small world every archetype's expectation
@@ -113,6 +178,20 @@ The budget now takes the floor and draws for the remainder — the same thinned 
 `terrain_nests` uses for creature anchors — so a tiny island grows one or two notable places
 instead of none, and a continent is unaffected.
 
+**A rate of zero is not a rate, and the thinned draw cannot rescue it.** The five tier-3
+wonders declared `per_1000_km2: 0.0` beside `max_count: 1`. That pair reads as "at most one of
+these in a world" and means "none, in any world, ever", because the expected count is the rate
+times the land area and zero times any area is zero at every raster and every seed. They
+reported `wanted: 0` against 15 to 78 qualifying cells on every world ever generated, and the
+absence was invisible because a missing archetype looks exactly like an unlucky one. Note that
+this is *not* the rounding trap above — that one was already fixed and the draw was working
+correctly; the number it was handed was the zero. Wonders now declare `0.15`, which against
+the roughly 2,500 km² of land this planet carries at size 17 and 4,300 km² at size 257 is an
+expectation near 0.4: each wonder appears in something under half of worlds, a typical world
+carries one or two of the five, and `max_count` stops a large continent growing a second of
+the same one. `catalogue.lint` now refuses a scattered archetype with a non-positive rate, so
+it cannot return through a catalogue edit.
+
 **Spacing is a property of the world, not of the raster.** `spacing_cells` resolves against
 a fixed reference raster, never the raster in hand. Tied to the actual raster, "two cells
 apart" would mean 25 km at size 17 and 6 km at size 129 — the same world spacing its caves
@@ -120,10 +199,41 @@ differently depending only on how finely it was sampled.
 
 **At coarse rasters the node grid binds before density does.** No two locations share a node,
 so a size-17 world with 47 land cells cannot hold the ~196 locations its area implies, however
-generous the catalogue. That is honest rather than hidden — the per-archetype diagnostics say
-which ran out of ground — but it means size 17 is the sparse end of the range and **size 33 or
-finer is representative**. Seed 42 on a 200 km world: 10 locations at size 17, 91 at size 33
-(24 of them tier 2, 13 with a hostile occupant).
+generous the catalogue. It is worse than the bare cell count suggests: **16 of those 47 land
+cells already carry a ruin, nest or religion site before key locations are placed at all**, so
+thirty-one are free, and every placement takes one more. Count that *intersection*, never the
+length of the claim list: the same world claims 94 nodes in all, and 78 of them are water, pole
+or seam nodes — mostly sea nests — which never enter a `domain: land` archetype's candidate list.
+An earlier revision of this page said 30 from the bare length and the number was wrong in both
+directions at once. That is honest rather than hidden — the per-archetype diagnostics name the
+count, as *"no room: 16 of 24 qualifying cells already carry another feature"* — but it means
+size 17 is the sparse end of the range and **size 33 or finer is representative**.
+
+**A coarse raster also fails to resolve a tail, and that is not a reason to lower a floor.**
+`geyser_basin` requires `volcanic >= 0.05`. On seed 42 the land maximum is 0.0286 at size 17 and
+0.1524 from size 33 up, so the archetype has **no qualifying ground at all** at 17, **8 qualifying
+cells** at 33 and **20** at 65. It places none at 33 — six of those eight already carry another
+feature and spacing refused the other two, which the diagnostic says in those words — and three at
+65. Ground and room are two different limits and a placement count alone cannot tell them apart:
+the raster fixes the first and only enlarges the second. The percentile half of that gate
+resolves to about 0.0018 at every size, two orders of magnitude below the floor, so the floor is
+the whole gate and it is doing its job. Lowering it to 0.0286 to rescue size 17 would take geyser
+ground on a size-257 world from 1.5% of land to 3.4% and still admit exactly one cell at 17.
+**The answer to an unresolved tail is a finer raster, not a looser threshold**, because the raster
+is per-run and the threshold is permanent.
+
+Seed 42 on a 200 km world at phase 16, counting only the scattered locations and not the chained
+waystone runs: **22 at size 17, 100 at size 33 and 287 at size 65** — 13, 25 and 26 of them tier
+2, and 2 tier-3 wonders at every raster. Totals including chains and clusters are 111, 255 and
+491. These counts move
+with the terrain the world grows underneath them — the river-threshold scaling fix alone moved
+every size-17 figure on this page — so treat them as a reading rather than a contract; the
+invariant is the ratio, not the number. **And they are a reading of a specific world.** The lab's
+bare default is not it: `default_config(3)` leaves `globe_radius` at 10000, which resolves to the
+legacy 11.15 km planet with about 6 km² of land and 39 land cells at size 17, while the 200 km
+`world_size: small` preset these numbers come from is resolved by `generate_request`. Two analyses
+of "seed 42 at size 17" that disagree about the land-cell count are usually looking at those two
+different worlds.
 
 Tier 0 was empty at every raster before the composition pass, because markers were placed last
 and lost every remaining cell to the larger tiers. That was the symptom of a design error

@@ -43,6 +43,47 @@ class NestRulesTests(unittest.TestCase):
         # An absent biome is ground the species does not use, not neutral ground.
         self.assertEqual(biome_weight(wolf,17),0.)
 
+    def test_every_monster_names_every_live_biome(self):
+        # A monster has no feeding role to fall back on, so before the 2026-09-20 ruling
+        # every one of them scored 1.0 everywhere. They now carry their own tables --
+        # and the key set has to be the whole live roster, not a subset. An absent key
+        # is exclusion, not neutrality, and a hand-authored five-key table was measured
+        # to forbid a quarter of the catalogue the ground it was tuned on.
+        from icarus_sim.terrain_biome_catalogue import NATURAL_BIOMES
+        # 1 tundra and 6 snow are overwritten by terrain_ecology.cold_habitat before any
+        # nest pass runs, so no creature may claim them.
+        live={str(bid) for bid in NATURAL_BIOMES}-{'1','6'}
+        monsters=[p for p in profiles() if p['class']=='monster']
+        self.assertTrue(monsters)
+        for p in monsters:
+            table=p.get('biome_weights')
+            self.assertEqual(set(table or {}),live,p['name'])
+            for biome,weight in table.items():self.assertTrue(0<weight<=1,(p['name'],biome))
+        # Not one table, 369 of them: a family multiplier cancels within its family, so
+        # a single shared shape would leave the species that own a tier owning it still.
+        self.assertGreater(len({tuple(sorted(p['biome_weights'].items())) for p in monsters}),11)
+
+    def test_danger_ramps_with_distance_instead_of_stepping(self):
+        from icarus_sim.terrain_nests import danger_ramp,NEST_DANGER_FLOOR
+        span=5000.
+        far=[d*1000. for d in range(0,40)]
+        # Tier five is drawn outward and tier one inward, monotonically, and the two
+        # cross exactly once. A binary clearance can do neither.
+        apex=[danger_ramp(5,d,span) for d in far]
+        prey=[danger_ramp(1,d,span) for d in far]
+        self.assertEqual(apex,sorted(apex))
+        self.assertEqual(prey,sorted(prey,reverse=True))
+        self.assertLess(apex[0],prey[0])
+        self.assertGreater(apex[-1],prey[-1])
+        # Nothing becomes impossible: every tier keeps a share of its rate everywhere,
+        # including on ground with no settlement anywhere on the planet.
+        for tier in (1,2,3,4,5):
+            for d in far+[float('inf')]:
+                self.assertGreaterEqual(danger_ramp(tier,d,span),NEST_DANGER_FLOOR)
+                self.assertLessEqual(danger_ramp(tier,d,span),1.)
+        # Tier three sits in the middle of the ramp and therefore does not move at all.
+        self.assertEqual({round(danger_ramp(3,d,span),12) for d in far},{round((1+NEST_DANGER_FLOOR)/2,12)})
+
     def test_the_book_is_a_pyramid_too(self):
         import collections
         # A tier is a share of the world divided among its species, so the catalogue

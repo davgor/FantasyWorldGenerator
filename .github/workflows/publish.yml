@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        stage: [checks, sim-tests, repo-tests, artifacts]
+        stage: [checks, sim-tests, repo-tests, consumers, artifacts]
     steps:
       - uses: actions/checkout@v4
         with:

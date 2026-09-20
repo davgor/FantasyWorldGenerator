@@ -8,7 +8,9 @@ from importlib.resources import files
 import json
 from typing import Any
 
-from icarus_sim.terrain_biome_catalogue import natural_catalogue, biome_catalogue
+from icarus_sim.terrain_biome_catalogue import (natural_catalogue, biome_catalogue,
+                                                reachable_natural_catalogue,
+                                                reachable_biome_catalogue, UNREACHABLE_BIOMES)
 
 
 SCHEMA = "fantasy-world-generator.asset-list"
@@ -20,13 +22,22 @@ def _load(package: str, name: str) -> Any:
 
 
 def _terrain_assets() -> list[dict[str, Any]]:
+    """One identity per natural surface, tombstoned ones included but marked.
+
+    A tombstoned biome keeps its identity here rather than losing it. The native asset registry
+    binds one slot per identity and every world document still names all thirteen in
+    terrain['biomes'], so dropping the row would be the first case in this repo of a world naming
+    an identity the registry cannot bind. What the tombstone changes is the claim: `unreachable`
+    says do not commission art for this surface, which is the whole of user ruling 0.2.
+    """
+    reachable = {biome["id"] for biome in reachable_natural_catalogue()}
     return [
         {
             "id": biome["asset_id"],
             "kind": "terrain_surface",
             "name": biome["name"],
             "source": "simulation.biomes",
-            "status": "supported",
+            "status": "supported" if biome["id"] in reachable else "unreachable",
             "selectors": {"biome_ids": [biome["id"]]},
             "metadata": {"display_color_rgb": biome["color"]},
         }
@@ -37,9 +48,11 @@ def _terrain_assets() -> list[dict[str, Any]]:
 
 def _history_assets() -> list[dict[str, Any]]:
     from icarus_sim.terrain_history import biome_catalogue
+    reachable = {biome['id'] for biome in reachable_biome_catalogue()}
     result = [{
         'id': biome['asset_id'], 'kind': 'terrain_surface', 'name': biome['name'],
-        'source': 'simulation.biome_mutations', 'status': 'supported',
+        'source': 'simulation.biome_mutations',
+        'status': 'supported' if biome['id'] in reachable else 'unreachable',
         'selectors': {'core_biome_id': biome['core_biome_id'], 'core': biome['core'], 'magic_school': biome['magic_school']},
         'metadata': {'display_color_rgb': biome['color'], 'group': biome['group'], 'recipe_version': 3},
     } for biome in biome_catalogue()]
@@ -111,10 +124,20 @@ def _production_assets() -> list[dict[str, Any]]:
         raise ValueError("Production catalogue requires schema 2")
     natural_ids = {b["id"] for b in natural_catalogue()}
     variant_ids = {b["id"] for b in biome_catalogue()}
+    # Validation stays against the full thirteen: a tombstoned id is still a legal selector,
+    # because a row that names it alongside reachable ground still places. What is rejected is a
+    # brief whose ONLY ground is tombstoned, which is a commission for a surface no world renders.
+    unreachable_cores = {b["core"] for b in natural_catalogue() if b["id"] in UNREACHABLE_BIOMES}
     for item in catalogue["assets"]:
         for field, allowed, kind in (("biome_ids", natural_ids, int), ("biome_variant_ids", variant_ids, str)):
             if field in item and (not isinstance(item[field], list) or any(type(v) is not kind or v not in allowed for v in item[field])):
                 raise ValueError("Invalid production biome selector: " + item["id"] + "." + field)
+        selected_natural = set(item.get("biome_ids") or ())
+        selected_variant = set(item.get("biome_variant_ids") or ())
+        if (selected_natural or selected_variant) and not (
+                (selected_natural - UNREACHABLE_BIOMES)
+                or {v for v in selected_variant if v.split(".")[0] not in unreachable_cores}):
+            raise ValueError("Production asset targets only unreachable ground: " + item["id"])
         metadata = {key: value for key, value in item.items() if key not in {"id", "name", "kind", "status", "biome_ids", "biome_variant_ids", "people", "settlement_role"}}
         selectors = {
             key: item[key]

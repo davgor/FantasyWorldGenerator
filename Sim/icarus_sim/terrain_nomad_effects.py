@@ -3,26 +3,38 @@
 Four write-backs, in the order they are safe to apply:
 
   cultist leylines   a pilgrimage circuit is worship, and worship on charged ground leaves
-                     a mark. Cults of a known school edit the network directly; cults of a
-                     hidden god cannot, so they queue their intent instead
+                     a mark. Every cult edits its network directly, known school or hidden
   raid pressure      a lair within strike of a town is a thing the town knows about, and it
                      belongs beside the nest, ley and war pressures already recorded
   caravan trade      a road a caravan actually rides carries more than a road nobody walks
   survivor camps     a band that reached safety and stayed is where a hamlet comes from
 
-The ley split is not a stylistic choice. `advance_age_request` rejects any leyline edit
-whose school is outside `KNOWN_SCHOOLS`, so a blood cult writing its own node would be
-refused at the next age boundary. Hidden-school intent therefore goes into a generic
-`pending_ley_edits` block that the corruption pass drains, and it is deliberately NOT
-nested inside `nomads` so that the applier never has to understand what a nomad is.
+There used to be a ley split here, and it rested on a premise that was tested and is false.
+It held that `advance_age_request` rejects any leyline edit whose school is outside
+`KNOWN_SCHOOLS`, so a blood cult writing its own node would be refused at the next age
+boundary; hidden-school intent therefore went into a `pending_ley_edits` block that a
+corruption-side applier was supposed to drain. No applier was ever written.
 
-**That applier contract was agreed with the super-villains session, which has since
-closed.** It will never be confirmed by its author. What a future reader would need to
-re-derive if `terrain_corruption` disagrees: entries are keyed by node id and never by
-index, because a node removed between write and apply renumbers every later edge; only
-hidden schools appear, because known ones are written directly here; intensity is bounded
-zero to four; and the applier sorts by `(school, id)` before applying so that two bands
-requesting in a different order cannot produce two different worlds.
+The gate at `terrain_history.py:741` validates only the caller-supplied
+`body['leyline_edits']` of an age-advance request. It never looks at the world's own
+networks. `validate_age_world` was run against a world carrying a hidden-school node, both
+newly created and intensified, and accepted both - it asserts the twelve networks exist and
+never asks which network a node sits in. This pass writes through `edit_network` directly
+and never passes through that validator at all, exactly as the known-school half already
+did. The queue was working around a gate that did not apply to it, so it is gone.
+
+The invariant that does hold, and that the code enforces rather than merely states: a cult
+may only **deepen** a hidden node that already exists, never create one. Only the corruption
+API creates a node in a hidden network. That is `current = next((n for n in net['nodes'] if
+n['id'] == basis_node), None)` followed by `if current is None: continue`, plus the
+`if not net or not basis_node: continue` above it, which now covers hidden schools too.
+
+One number is worth recording, because it is the strongest argument against ever rebuilding
+the queue: the direct write is `current['intensity'] * 1.18` - absolute, shrine count
+ignored - while the queued value was `DEVOTION_GAIN * shrines`. On a node at 3.0 with three
+shrines those are 3.54 and 0.54, and `edit_network` SETS intensity rather than adding to it,
+so an applier reading the queue the obvious way would have cut the node by 82% in the act of
+deepening it.
 """
 from time import perf_counter
 from .terrain_leyline_history import KNOWN_SCHOOLS, edit_network
@@ -45,33 +57,25 @@ def _clamp_intensity(value):
 
 
 def apply_cultist_leylines(result, cfg):
-    """Let cults deepen the ground they walk, or queue the intent when they cannot."""
+    """Let cults deepen the ground they walk. Deepen only: corruption is what creates."""
     bands = [b for b in (result.get('nomads', {}).get('groups', []) or [])
              if b['classification'] == 'cultists' and b.get('school')]
     if not bands or not cfg.magic_enabled:
         return result, 0, 0
     networks = result.get('magic', {}).get('networks', {}) or {}
-    pending = result.get('pending_ley_edits', []) or []
-    direct = queued = 0
+    direct = hidden = 0
     # Sorted so two bands touching the same node cannot produce two different worlds
     # depending on which happened to be placed first.
     for band in sorted(bands, key=lambda b: b['uid']):
         school = band['school']
-        node_ids = [c['id'] for c in band.get('camps', []) if c['kind'] == 'shrine']
         basis_node = band['basis'].get('ley_node_id')
-        if school not in KNOWN_SCHOOLS:
-            # Only the corruption pass may touch a hidden network, so record the intent.
-            pending.append({
-                'school': school, 'kind': 'intensity', 'id': basis_node,
-                'intensity': round(DEVOTION_GAIN * max(1, len(node_ids)), 6),
-                'requested_by': band['uid'], 'god_id': band.get('god_id'),
-                'age': band['origin']['age'],
-            })
-            queued += 1
-            continue
         net = networks.get(school)
+        # A claim-derived or shrine-derived band carries no `ley_node_id`, so there is
+        # nothing to deepen. This guard used to cover only known schools, which is why the
+        # hidden branch could queue an entry naming no node at all.
         if not net or not basis_node:
             continue
+        # Deepen, never create. Only the corruption API seats a node in a hidden network.
         current = next((n for n in net['nodes'] if n['id'] == basis_node), None)
         if current is None:
             continue
@@ -79,12 +83,11 @@ def apply_cultist_leylines(result, cfg):
         if lifted == current['intensity']:
             continue
         networks[school] = edit_network(net, node_id=basis_node, intensity=lifted)
-        direct += 1
-    if pending:
-        # Emitted only when non-empty, so its presence means something is genuinely queued
-        # rather than "here is a buffer, interpret it".
-        result['pending_ley_edits'] = sorted(pending, key=lambda e: (e['school'], str(e['id'])))
-    return result, direct, queued
+        if school in KNOWN_SCHOOLS:
+            direct += 1
+        else:
+            hidden += 1
+    return result, direct, hidden
 
 
 def apply_raid_pressure(result, cfg):
@@ -186,23 +189,24 @@ def apply_nomad_effects(result, cfg):
     if not cfg.world_recipe or cfg.phase < 16 or not result.get('nomads'):
         return result
     started = perf_counter()
-    result, direct, queued = apply_cultist_leylines(result, cfg)
+    result, direct, hidden = apply_cultist_leylines(result, cfg)
     result, towns = apply_raid_pressure(result, cfg)
     result, roads = apply_caravan_trade(result, cfg)
     result, seeds = seed_survivor_camps(result, cfg)
     result['nomads']['effects'] = {
-        'version': VERSION, 'leyline_edits': direct, 'leyline_edits_queued': queued,
+        'version': VERSION, 'leyline_edits': direct, 'leyline_edits_hidden': hidden,
         'towns_under_raid_pressure': towns, 'roads_ridden': roads,
         'settlement_candidates': seeds,
-        'method': 'Cults of a known school deepen their circuit node directly through edit_network; cults of a '
-                  'hidden god queue the same intent into pending_ley_edits for the corruption pass, because '
-                  'advance_age_request refuses a leyline edit outside KNOWN_SCHOOLS. Raiders add a '
+        'method': 'Every cult deepens its circuit node directly through edit_network, hidden school or known, by '
+                  'the same multiplicative lift. A cult can only deepen a node that already exists; only the '
+                  'corruption API creates one in a hidden network, so a hidden lift counts separately. Raiders add a '
                   'distance-weighted nomad_pressure beside the nest, ley and war pressures a town already '
                   'tracks. Roads a caravan actually rides record their riders and a throughput share. Refugee '
                   'bands that reached safety are recorded as settlement candidates.',
-        'limits': 'The pending_ley_edits applier contract was agreed with a session that has since closed and '
-                  'will never be confirmed by its author; the module docstring records what a future reader '
-                  'would need to re-derive if terrain_corruption disagrees. Survivor camps are candidates, not '
+        'limits': 'A cult deepens ground, it does not open it: a band naming a node that does not exist in its '
+                  'network writes nothing, and a band with no ley node in its basis writes nothing at all. This '
+                  'pass runs on every nomad_request as well as every age advance, so a node a cult holds ratchets '
+                  'toward the 4.0 ceiling across calls rather than settling. Survivor camps are candidates, not '
                   'settlements: founding one here would mean re-running settlement generation after every '
                   'downstream block has read the settlements it produced. Caravan throughput is a share of '
                   'nodes ridden, not a modelled cargo volume, and nothing consumes it yet. Raid pressure is '

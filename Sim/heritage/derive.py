@@ -28,6 +28,28 @@ def merge_traits(base, delta, label='people'):
     return merged
 
 
+def merge_appearance(base, delta, label='people'):
+    """Depth two: a block, then a key. A key's value replaces its inherited value whole.
+
+    Deeper than `merge_traits` because a body has internal structure - a height band is four
+    numbers and a palette is a list of swatches - and no deeper than two, which is the same
+    bound `apply_overrides` keeps so the merge rule stays statable in one sentence. A
+    subrace that restates what it inherits is an authoring error here exactly as it is
+    there: the delta is meant to read as the difference from its archetype.
+    """
+    merged = copy.deepcopy(base)
+    for block, keys in delta.items():
+        if block not in merged:
+            raise ValueError(f'{label} extends unknown appearance block {block!r}')
+        for key, value in keys.items():
+            if key not in merged[block]:
+                raise ValueError(f'{label} extends unknown key {block}.{key}')
+            if merged[block][key] == value:
+                raise ValueError(f'{label} extends {block}.{key} with its inherited value')
+            merged[block][key] = copy.deepcopy(value)
+    return merged
+
+
 def _apply_rule(rule, traits):
     if 'copy' in rule:
         return traits[rule['copy']]
@@ -247,6 +269,15 @@ def _resolve(civ_id, parent_race_id):
     # what keeps a registry test that injects a synthetic entity working.
     delta = traits_doc['peoples'].get(civ_id, {})
     traits = merge_traits(base, delta, f'people {civ_id!r}')
+    # Appearance is authored the same way traits are - a complete race base extended by a
+    # sparse subrace delta - rather than derived, because a skin range or an ear form is new
+    # information and not a restatement of the seventeen axes. What it must agree with is
+    # checked once the body is whole: a delta alone cannot be measured against an envelope.
+    appearance_doc = policies['appearance']
+    appearance = merge_appearance(appearance_doc['races'][parent_race_id],
+                                  appearance_doc['peoples'].get(civ_id, {}),
+                                  f'people {civ_id!r}')
+    policy.check_resolved_appearance(appearance, traits, f'people {civ_id!r}')
     culture = derive_culture(traits, policies['derivation'])
     culture, culture_touched = apply_overrides(
         culture, policies['overrides'].get('culture', {}).get(civ_id, {}), civ_id)
@@ -258,6 +289,7 @@ def _resolve(civ_id, parent_race_id):
         'id': civ_id,
         'parent_race_id': parent_race_id,
         'traits': traits,
+        'appearance': appearance,
         'culture': culture,
         'genome': genome,
         'provenance': {

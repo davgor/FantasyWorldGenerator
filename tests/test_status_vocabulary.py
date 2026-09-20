@@ -1,17 +1,23 @@
 """`status` across the published contracts: one field name, seven namespaces.
 
 Enumerated by walking every `*.schema.json` in `Contracts/` for a property literally named
-`status`, rather than by reading them. Twelve declaration sites, five distinct enums, one
-unconstrained, and one more emitted into the world with no schema at all:
+`status`, rather than by reading them. Fourteen declaration sites, seven distinct enums:
 
     heroes / npcs / story_web / key_locations / key_location_plans
                                  block-level   ok | failed
     heroes.people[], heroes.dreads[]           living | legend
     npcs.people[]                              alive | dead
+    villains.people[]                          living | fallen
     key_location_plans.plans[]                 complete | empty
     city / hamlet / castle plan items          complete | partial | unbuildable
-    asset_list.assets[]                        any string -- no enum at all
-    villains.people[]                          living | fallen -- declared nowhere
+    asset_list.assets[]                        supported | unreachable | schematic | not_started
+
+Two of the three defects this module was written against have since been closed, and the
+count above is where it shows: `asset_list.assets[].status` was a free `string` with no enum
+at all, and `villains.people[].status` was emitted into the world with no schema anywhere.
+`Contracts/schemas/villains.schema.json` and the asset-list enum closed both, which is why
+`test_every_status_a_block_emits_is_constrained_by_its_contract` now passes. It also added
+`living` to a second vocabulary, so the overload finding below grew rather than shrank.
 
 Two things follow, and they are separate defects.
 
@@ -27,10 +33,13 @@ builder at `Sim/npc_roster/__init__.py:190`:
 That expression is the mapping. It is published nowhere, so every downstream consumer
 rediscovers it or gets it wrong.
 
-**And one token already means two things.** `complete` is in `key_location_plans.plans[]`,
-where it says a plan has contents, and in the city/hamlet/castle plan items, where it says
-an item was fully placed. A consumer matching `status == 'complete'` across plan blocks is
-comparing two different questions and will never be told.
+**And two tokens already mean two things each.** `complete` is in
+`key_location_plans.plans[]`, where it says a plan has contents, and in the city/hamlet/castle
+plan items, where it says an item was fully placed. A consumer matching
+`status == 'complete'` across plan blocks is comparing two different questions and will never
+be told. `living` joined it when the villains schema was published: it is a hero who has not
+become a legend and a villain who has not fallen, and the complement differs, so a consumer
+that learned `living` from `hero-generator.schema.json` learned the wrong other half.
 
 **Scope, stated so this is not read as more than it is.** `status` is a *required* property
 of a person in both `hero-generator.schema.json` and `npc-roster.schema.json`, so no valid
@@ -125,6 +134,42 @@ def villain_status_tokens():
     return seated | {p['status'] for p in world['villains']['people']}
 
 
+def textual_status_sites():
+    """A second count of the `status` declarations, taken from raw text rather than a walk.
+
+    `status_sites` descends the parsed document. This counts the literal `"status": {` in
+    the bytes. Two routes to the same number, so a walker that starts annexing
+    `route_status` -- the near-miss a `path.endswith('status')` test would have made, and
+    `"route_status": {` does not contain `"status": {` -- or one that stops descending into
+    a container disagrees with this immediately.
+
+    This is what the control below asserts instead of a literal total. A total is a fact
+    about how many schemas `Contracts/` happens to hold today, and it is wrong the moment
+    someone legitimately adds one.
+    """
+    return sum(path.read_text(encoding='utf-8').count('"status": {')
+               for path in sorted(SCHEMAS.glob('*.schema.json')))
+
+
+# The sites the module docstring reasons about, named rather than counted. A site appearing
+# here and not in the walk is a harness failure; a site in the walk and not here is a schema
+# somebody added, which is not this control's business.
+REASONED_ABOUT = (
+    'asset-list.schema.json/properties/assets/items/properties/status',
+    'hero-generator.schema.json/properties/status',
+    'hero-generator.schema.json/$defs/person/properties/status',
+    'hero-generator.schema.json/$defs/dread/properties/status',
+    'key-location-plans.schema.json/properties/status',
+    'key-location-plans.schema.json/properties/plans/items/properties/status',
+    'key-locations.schema.json/properties/status',
+    'npc-roster.schema.json/properties/status',
+    'npc-roster.schema.json/$defs/person/properties/status',
+    'story-web.schema.json/properties/status',
+    'world-output.schema.json/properties/city_plans/properties/cities/items/properties/status',
+    'world-output.schema.json/properties/hamlet_plans/properties/hamlets/items/properties/status',
+    'world-output.schema.json/properties/castle_plans/properties/castles/items/properties/status',
+)
+
 LIVE = {'heroes': 'living', 'npcs': 'alive', 'villains': 'living'}
 ENDED = {'heroes': 'legend', 'npcs': 'dead', 'villains': 'fallen'}
 PEOPLE_SCHEMAS = {'heroes': 'hero-generator.schema.json', 'npcs': 'npc-roster.schema.json'}
@@ -144,11 +189,23 @@ class HarnessControlTests(unittest.TestCase):
 
     def test_the_sites_this_module_reasons_about_are_all_present(self):
         rows = published()
-        # Thirteen sites, twelve of them with an enum; the thirteenth is the free `string`
-        # in asset-list. Both numbers are asserted because the gap between them is one of
-        # the two findings, and a control that counted only the enums would hide it.
-        self.assertEqual((len(rows), sum(1 for r in rows if r[2])), (13, 12),
-                         f'the status surface moved: {[(r[0] + r[1], r[2]) for r in rows]}')
+        # This asserted `(len(rows), sum(...with an enum...)) == (13, 12)` and it fired for
+        # the wrong reason the first time it was touched: publishing
+        # `Contracts/schemas/villains.schema.json`, which board/backlog/VILLAINS-NO-SCHEMA.md
+        # asks for, made the surface (14, 14) and turned a control that guards the HARNESS
+        # into a control that guards the size of `Contracts/`. That is the defect
+        # board/backlog/SDET-CEILING-SENTINELS.md describes: a literal that is correct on
+        # the day it is written and wrong, silently or noisily, the day the thing it counts
+        # legitimately moves. So the total is derived from the schema files by a second
+        # route, and the sites are named instead of tallied. Adding a fifteenth `status`
+        # anywhere in `Contracts/` is expected to leave this green.
+        self.assertEqual(len(rows), textual_status_sites(),
+                         'the structural walk and a raw-text count of `"status": {` disagree, so '
+                         'one of them is answering a different question than the other: '
+                         f'{[(r[0] + r[1], r[2]) for r in rows]}')
+        missing = [site for site in REASONED_ABOUT if site not in {r[0] + r[1] for r in rows}]
+        self.assertEqual(missing, [],
+                         f'the walk no longer finds sites this module argues about: {missing}')
         for block in PEOPLE_SCHEMAS:
             self.assertTrue(person_tokens(block), f'{block}: person status enum moved')
         self.assertEqual(villain_status_tokens(), {'living', 'fallen'})
@@ -216,13 +273,18 @@ class StatusVocabularyTests(unittest.TestCase):
                          'them without first deciding what a legend is.')
 
     def test_every_status_a_block_emits_is_constrained_by_its_contract(self):
-        """Two ways to be undescribed: no enum, and no schema.
+        """Two ways to be undescribed: no enum, and no schema. NOW PASSES -- both are closed.
 
-        `asset_list.assets[].status` is declared as a free `string`, so the contract permits
-        any value and describes none. `villains.people[].status` has no schema at all, so a
-        consumer cannot discover that `fallen` is a value it must handle -- nor that, as
-        `test_villain_fall_reachability` shows, no world it will ever be given can contain
-        one, which makes a handler for it dead code that looks defensive.
+        It was written failing. `asset_list.assets[].status` was a free `string`, so the
+        contract permitted any value and described none, and `villains.people[].status` had
+        no schema at all, so a consumer could not discover that `fallen` is a value it must
+        handle. An asset-list enum and `Contracts/schemas/villains.schema.json` closed both.
+
+        It stays because the two ways of being undescribed are permanent shapes, not
+        one-off mistakes: the next block published without an enum, or emitted without a
+        schema, fails here without anyone having to notice it. The assertion is over the
+        whole surface, not over those two sites, so it does not need editing to cover a
+        fifteenth.
         """
         unconstrained = sorted({f'{name}{where}' for name, where, tokens, kind in published()
                                 if not tokens})

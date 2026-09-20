@@ -4,6 +4,8 @@ import math
 from dataclasses import asdict
 from functools import lru_cache
 from .terrain_profiles import civilization_ids, profile_options
+from .terrain_errors import (RequestError, cross_field, invalid_choice, out_of_range,
+                             over_capacity, retired_version, unknown_field, wrong_type)
 
 NETWORKS = ('weave', 'umbral', 'infernal', 'radiant', 'fire', 'water', 'earth', 'air')
 # The hidden schools carry the same six options, because generate_networks reads them for
@@ -71,9 +73,13 @@ OPTIONS = {
     'moon_spin_days': spec(0, 0, 63, 'Moon', 'Spin cycle in days (which meridian faces the world); zero lets the seed choose 15..63', 'days'),
     'moon_nod_days': spec(0, 0, 37, 'Moon', 'Nod cycle in days (which hemisphere leans in); zero lets the seed choose 17..37', 'days'),
     'moon_tilt_degrees': spec(0., 0., 35., 'Moon', 'Maximum lean of the moon toward the world; zero lets the seed choose 10..35', 'degrees'),
-    # Super villains. Zero raises none, which is the default, so an untouched world is
-    # exactly the world it was before they existed.
-    'villain_rise': spec(0., 0., 1., 'Communities', "Share of a region's concentrated turmoil that becomes villain tier each age; zero raises none"),
+    # Super villains. A default world now ends with antagonists standing in it: a
+    # generation runs two age transitions, and at seed 42 size 17 the most concentrated
+    # region reaches tier 1.198 only at rise 1.0, so nothing below 0.834536 seats anybody
+    # by accumulation alone. The rate is therefore the campaign ramp and
+    # terrain_villains.promote() is the arrival, running on the final age of a generation
+    # and of an advance. Zero is still a real off switch: no block is written at all.
+    'villain_rise': spec(.5, 0., 1., 'Communities', "Share of a region's concentrated turmoil that becomes villain tier each age; zero raises none and writes no villains block"),
     'villain_hold': spec(.7, 0., 1., 'Communities', 'Tier a seated villain falls below to lose the world; under the rise band, so a reign is long once established'),
     'villain_density': spec(3., 1., 12., 'Communities', 'Cultural regions per villain permitted at or above the band; the rest stall just beneath it', 'regions'),
     # Nomads. Bands are placed per unit area of habitable land, so the count follows the
@@ -107,24 +113,30 @@ for name in ZONES:
 
 @lru_cache(maxsize=64)
 def validate_options(raw, version=3):
-    if type(version) is not int or version not in (0,3):raise ValueError('Retired world options version')
+    if type(version) is not int or version not in (0,3):
+        raise retired_version('world_options version',version,(0,3))
     definitions = OPTIONS
     try:
         values = json.loads(raw)
     except (TypeError, ValueError) as exc:
-        raise ValueError('world_options must be a JSON object') from exc
+        raise RequestError('INVALID_INPUT','world_options must be a JSON object; '
+                           'received text that is not valid JSON.',
+                           field='world_options',received=raw) from exc
     if not isinstance(values, dict) or set(values)-set(definitions):
-        raise ValueError('Unknown world option')
+        raise unknown_field(sorted(set(extra)-set(OPTIONS))[0],OPTIONS,noun='world option')
     result = {key: item['default'] for key,item in definitions.items()}
     for key,value in values.items():
         s=definitions[key]
         if type(value) not in (int,float) or not math.isfinite(value) or not s['min']<=value<=s['max']:
-            raise ValueError(f'{key} must be {s["min"]}..{s["max"]}')
+            raise out_of_range(key,value,s)
         if s['type']=='integer' and type(value) is not int:
-            raise ValueError(f'{key} must be an integer')
+            raise wrong_type(key,value,s)
         result[key]=value
     if sum(result[k] for k in ('volcanic_island_weight','atoll_weight','continental_island_weight','cold_island_weight'))<=0:
-        raise ValueError('At least one ocean island character weight must be positive')
+        raise cross_field('At least one ocean island character weight must be positive; '
+                          'all four are zero, so no cluster can take a character.',
+                          ('volcanic_island_weight','atoll_weight',
+                           'continental_island_weight','cold_island_weight'))
     return result
 
 
@@ -133,7 +145,8 @@ def options(cfg):
 
 
 def default_config(version=3):
-    if type(version) is not int or version != 3:raise ValueError('Retired recipe; regenerate with recipe_version 3')
+    if type(version) is not int or version != 3:
+        raise retired_version('recipe version',version,(3,))
     from .terrain_lab import Config
     return Config(world_recipe=version, phase=16 if version==3 else 9, shape='globe', tectonics=1, auto_parameters=0,
                   population_profile='mixed', amplitude=1100., wavelength=4300.,
@@ -152,13 +165,91 @@ WORLD_SIZE_CIRCUMFERENCE_KM={'small':200.,'medium':400.,'large':600.}
 # mountains. Ground-level drama is the detail sampler's job, not the relief budget's.
 DEFAULT_RELIEF_M=1667.
 DEFAULT_OROGENY=10.
+# Largest catchment threshold `terrain_lab.Config` and `registry()` admit. The recipe
+# default 0.15 km2 is authored for the 11.15 km reference world and scales as the square
+# of the width, so this bound is what decides the widest world the recipe can resolve:
+# 0.15*(c/11.148961626795008)**2 reaches 10000 km2 at 2878.6 km. The three presets need
+# 48.27, 193.08 and 434.44 km2, so all of them clear it with two orders of magnitude to
+# spare. Raise both this and the Config bound together if a wider world is ever wanted.
+RIVER_THRESHOLD_MAX_KM2=10000.
+RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM=2878.6
+
+
+# Every published control's unit and description, in one table so a control cannot ship
+# with a bound and no meaning. `registry()` asserts the table is total, so adding a knob
+# without saying what it does fails at import rather than reaching a consumer.
+#
+# The audience is the packaged orchestrator: a local model handed a player's intent that
+# has to choose a control and a value without a second call. Describe the effect on the
+# world, not the field.
+CONTROL_PROSE={
+ # World shape and identity.
+ 'seed':('seed','Master uint32 seed. Every subsystem derives its own stream from this, so one seed reproduces the whole world; the *_variation controls reroll a single layer without disturbing the rest.'),
+ 'size':('cells','Sampling grid along one edge of the sphere. This is a content control as much as a detail control: settlement count tracks cells rather than land area, so raising it yields a fuller world rather than the same world sampled finer.'),
+ 'phase':('stage','How far through the sixteen generation stages to run. A lower phase stops early and omits every block a later stage would have written.'),
+ 'shape':('','World topology. Recipe 3 requires a globe.'),
+ 'world_size':('','Preset physical scale: small, medium or large, resolving to 200, 400 or 600 km of circumference. Sets globe_radius and the terms derived from it unless circumference_km or an explicit override is supplied.'),
+ 'world_scale':('ratio','Design-space to metre conversion for the heightfield. Rescales the planet geometry without changing which world the seed draws.'),
+ 'globe_radius':('m','Planet radius in design space. Derived from the physical width; setting it directly bypasses circumference_km and the world_size preset entirely.'),
+ 'radius':('m','Feature radius for the retired non-tectonic experiment path; recipe 3 does not read it.'),
+ 'population_profile':('','Which civilization founds the first cities, or mixed to let every eligible profile compete for ground.'),
+ # Terrain.
+ 'plate_count':('plates','Tectonic plates the globe is divided into. Fewer means wider continents and longer collision belts; more means a fragmented world. It also sets the detail wavelength, so with grid size it decides how many noise octaves can resolve.'),
+ 'layout_variation':('seed','Rerolls plate layout and crust distribution without changing the master seed, so the same world can be given a different continental arrangement.'),
+ 'detail_variation':('seed','Rerolls surface noise without changing the master seed or the continents beneath it.'),
+ 'crust_bias':('relative','Shifts the continental against oceanic balance of newly drawn crust. Negative sinks more of the world under ocean; positive raises more land.'),
+ 'belt_width':('radius fraction','Angular half-width of the collision belts raised where plates meet. Wider belts give broad cordillera; narrow ones give sharp isolated ranges.'),
+ 'tectonic_relief':('m','Total relief budget from ocean floor to continental platform. The hypsometric profile puts the floor far below the platform, so raising this deepens basins as fast as it raises peaks.'),
+ 'mountain_detail':('relative','How strongly collision uplift is modulated along and across a belt. Higher values break a smooth ridge into distinct massifs.'),
+ 'orogeny':('gain','Gain on collision uplift alone. Unlike tectonic_relief it lifts orogenic belts without deepening the basins, which is how a world gets mountains that answer to its oceans.'),
+ 'sea_level':('m','Datum offset applied to the finished heightfield. Raising it drowns coastline; lowering it exposes shelf.'),
+ 'amplitude':('m','Peak-to-trough amplitude of the surface noise laid over the tectonic base.'),
+ 'wavelength':('m','Base wavelength of the surface noise. Octave k is admitted only while wavelength/2**k stays at least twice the cell step, so this and grid size together decide how much detail survives.'),
+ 'octaves':('octaves','How many halvings of the base wavelength to accumulate. Octaves finer than the grid can represent are discarded rather than aliased; resolved_octaves reports how many survived.'),
+ 'ridge':('relative','Blends the surface noise between rounded hills at 0 and sharp ridgelines at 1.'),
+ # Climate.
+ 'temperature_offset':('C','Uniform shift applied to the latitude and elevation temperature model. Negative cools the whole world toward ice.'),
+ 'moisture_bias':('relative','Uniform shift applied to modelled rainfall before biomes are classified. Negative dries the world toward desert.'),
+ 'wind_bearing':('degrees','Prevailing wind direction carrying moisture inland, clockwise from north.'),
+ 'rain_passes':('passes','How many transport steps the rainfall model takes. More passes carry moisture further inland and sharpen rain shadows.'),
+ 'rain_strength':('relative','Multiplier on the moisture each transport pass carries.'),
+ # Drainage.
+ 'erosion_passes':('passes','How many hydraulic erosion steps run over the finished heightfield.'),
+ 'erosion_strength':('relative','How much material each erosion pass moves.'),
+ 'river_threshold_km2':('km2','Upstream catchment a cell must drain before it counts as a river. It is an area, so it scales as the square of world width; left absolute on a wide world every land cell becomes a river and freshwater distance collapses to zero everywhere.'),
+ # Communities.
+ 'college_count':('colleges','Maximum magical colleges seated across the world.'),
+ 'hamlets_per_core':('hamlets','Maximum support hamlets packed around each core city.'),
+ 'human_magic_limit':('relative','Highest magical hazard a road or settlement tolerates. Ground above it is routed around and never settled.'),
+ 'support_reach':('m','How far a city reaches for the rural land feeding it. Authored against the reference world and scaled with world width.'),
+ 'culture_link_cost':('m','Road cost budget within which two cities count as one cultural region.'),
+ 'settlement_spacing':('m','Minimum separation enforced between founded cities.'),
+ 'road_max_grade':('grade','Steepest gradient a road segment may climb. Steeper ground is routed around or left unconnected.'),
+ 'bridge_cost':('cost','Extra traversal cost charged when a road segment crosses a river.'),
+ # Read only by the retired automatic-parameter path, which recipe 3 forbids at
+ # terrain_lab.Config.__post_init__. It validates, it is published, and it changes
+ # nothing. Say so rather than letting a caller spend a request finding out.
+ # Flags and ceilings. The two counts carried a description and no unit, set ad hoc after
+ # the table was built; they live here now so every control is described in one place.
+ 'tectonics':('flag','Whether plate tectonics run. Recipe 3 requires them, so this is fixed at 1 and rejects any other value.'),
+ 'magic_enabled':('flag','Whether leylines, magical biomes and every system reading them run at all. Zero yields a mundane world.'),
+ 'settlement_count':('cities','Maximum surface cities; actual counts require habitat and productive capacity.'),
+ 'fortress_count':('fortresses','Maximum route-defence fortresses; road length, crossings and city count ask for fewer unless this is lowered.'),
+ 'stubbornness':('relative','Willingness to settle difficult ground. Read only by the retired automatic-parameter path, which recipe 3 forbids, so on this recipe the control is accepted and has no effect.'),
+}
+# The thirteen regional characters share one shape: occurrence decides whether a region
+# appears, extent how far it reaches, intensity how strongly it reads once placed.
+for _zone in ZONES:
+    CONTROL_PROSE[_zone+'_intensity']=('relative','How strongly the '+_zone.replace('_',' ')
+        +' character is expressed where it manifests. Paired with '+_zone+'_occurrence, which '
+        'decides whether it appears at all, and '+_zone+'_extent, which sets how far it reaches.')
 
 
 def registry(version=3):
     cfg=asdict(default_config(version))
     inactive={'world_recipe','world_options','auto_parameters','ley_nodes','ley_width','magic_instability',
               'extent','depth','width','meander','urban_food_demand','human_adaptation'}
-    result={k:dict(default=v,group='World',description=k.replace('_',' '),
+    result={k:dict(default=v,group='World',description='',
                    type='integer' if type(v) is int else 'number' if type(v) is float else 'string',units='')
             for k,v in cfg.items() if k not in inactive}
     for key,choices in {'world_size':['small','medium','large'], 'shape':['globe'],
@@ -182,7 +273,7 @@ def registry(version=3):
             'hamlets_per_core':(0,8),'fortress_count':(0,1024),'settlement_count':(0,24),
             'support_reach':(100,100000),'culture_link_cost':(1,100000),'urban_food_demand':(0,10000),
             'human_adaptation':(0,1),'settlement_spacing':(10,100000),'stubbornness':(0,1),
-            'road_max_grade':(.01,1),'bridge_cost':(0,10000),'river_threshold_km2':(.001,100),
+            'road_max_grade':(.01,1),'bridge_cost':(0,10000),'river_threshold_km2':(.001,10000),
             'world_scale':(.001,1000),'globe_radius':(.01,1e7),'extent':(.01,1e7),
             'amplitude':(0,1e7),'wavelength':(.01,1e7),'depth':(0,1e7),'width':(.01,1e7),
             'meander':(0,1e7),'radius':(.01,1e7),'tectonic_relief':(0,1e7),'sea_level':(-1e7,1e7),
@@ -194,36 +285,63 @@ def registry(version=3):
                        'Drainage':'erosion_passes erosion_strength river_threshold_km2',
                        'Communities':'population_profile human_magic_limit college_count hamlets_per_core fortress_count support_reach culture_link_cost settlement_count settlement_spacing stubbornness road_max_grade bridge_cost'}.items():
         for key in keys.split():result[key]['group']=group
-    result['settlement_count']['description']='Maximum surface cities; actual counts require habitat and productive capacity'
-    result['fortress_count']['description']='Maximum route-defence fortresses; road length, crossings and city count ask for fewer unless this is lowered'
     result.update(OPTIONS)
+    # Prose last, so it wins over whatever a definition carried, and total, so a control
+    # added without a description fails here instead of reaching a consumer as its own name.
+    for key,(units,description) in CONTROL_PROSE.items():
+        if key in result:
+            result[key]['description']=description
+            if units:result[key]['units']=units
+    undescribed=sorted(k for k,v in result.items() if not v.get('description'))
+    if undescribed:
+        raise ValueError('controls published with no description: '+', '.join(undescribed)
+                         +'. Add them to CONTROL_PROSE; a control whose description is its '
+                         'own name tells a caller nothing it did not already have.')
     return result
 
 
 def generate_request(body):
     from .terrain_lab import Config, generate
     if not isinstance(body,dict) or set(body)-{'seed','recipe_version','overrides'}:
-        raise ValueError('Expected seed, recipe_version and optional overrides')
+        if isinstance(body,dict):
+            raise unknown_field(sorted(set(body)-{'seed','recipe_version','overrides'})[0],
+                                ('seed','recipe_version','overrides'),noun='request field')
+        raise RequestError('INVALID_INPUT','A generate request is an object with seed, '
+                           'recipe_version and optional overrides.',received=type(body).__name__)
     if type(body.get('recipe_version',3)) is not int or body.get('recipe_version',3) != 3:
-        raise ValueError('Retired or unsupported recipe_version; regenerate with recipe_version 3')
+        raise retired_version('recipe_version',body.get('recipe_version'),(3,))
     version=body.get('recipe_version',3)
     option_defs=OPTIONS
     seed=body.get('seed',42)
-    if type(seed) is not int or not 0<=seed<2**32:raise ValueError('Invalid uint32 seed')
+    if type(seed) is not int:
+        raise wrong_type('seed',seed,{'type':'integer'})
+    if not 0<=seed<2**32:
+        raise out_of_range('seed',seed,{'type':'integer','min':0,'max':4294967295,'units':'seed'})
     overrides=body.get('overrides',{})
-    if not isinstance(overrides,dict) or set(overrides)-set(registry(version)):raise ValueError('Unknown override')
-    if 'seed' in overrides:raise ValueError('Supply seed at the top level, not inside overrides')
+    if not isinstance(overrides,dict):
+        raise wrong_type('overrides',overrides,{'type':'object'})
+    definitions=registry(version)
+    if set(overrides)-set(definitions):
+        raise unknown_field(sorted(set(overrides)-set(definitions))[0],definitions)
+    if 'seed' in overrides:
+        raise RequestError('INVALID_INPUT','Supply seed at the top level of the request, '
+                           'not inside overrides.',field='seed',received=overrides['seed'],
+                           expected={'location':'request root'},
+                           suggestion={'kind':'none'})
     raw=asdict(default_config(version)); extra={}; definitions=registry(version)
     for key,value in overrides.items():
         definition=definitions[key]
         kind=definition['type']
         if kind=='string':
-            if not isinstance(value,str):raise ValueError(f'{key} must be text')
-            if 'choices' in definition and value not in definition['choices']:raise ValueError(f'Invalid {key}')
+            if not isinstance(value,str):raise wrong_type(key,value,definition)
+            if 'choices' in definition and value not in definition['choices']:
+                raise invalid_choice(key,value,definition)
         else:
-            if type(value) not in (int,float) or not math.isfinite(value):raise ValueError(f'{key} must be finite numeric')
-            if kind=='integer' and type(value) is not int:raise ValueError(f'{key} must be an integer')
-            if not definition.get('min',-math.inf)<=value<=definition.get('max',math.inf):raise ValueError(f'{key} outside allowed range')
+            if type(value) not in (int,float) or not math.isfinite(value):
+                raise wrong_type(key,value,definition)
+            if kind=='integer' and type(value) is not int:raise wrong_type(key,value,definition)
+            if not definition.get('min',-math.inf)<=value<=definition.get('max',math.inf):
+                raise out_of_range(key,value,definition)
         if key in option_defs:extra[key]=value
         else:raw[key]=value
     raw['seed']=seed
@@ -246,13 +364,51 @@ def generate_request(body):
         # world and have to grow with it. derive_population would have scaled them, but it
         # is unreachable on recipe 3 (auto_parameters is forbidden there), so they are
         # derived here instead. Left absolute, the rural layer disappears completely.
-        from .terrain_scale import reach_scale
+        from .terrain_scale import reach_scale,runoff_scale
         factor=reach_scale(circumference)
         for key,ceiling in (('settlement_spacing',100000.),('support_reach',100000.),
                             ('culture_link_cost',100000.)):
             if key not in overrides:raw[key]=min(ceiling,raw[key]*factor)
+        # river_threshold_km2 is an AREA, not a reach, so it takes the SQUARE of the same
+        # factor. Left absolute it stopped spanning anything: at the 200 km default every
+        # land cell drains more than 0.15 km2, so every land cell is a river, every land
+        # cell is its own freshwater source, freshwater_distance is 0 across all land and
+        # flood_risk saturates at 1. Three published layers had become constants.
+        #
+        # TARGET this was calibrated to: a land-river fraction that is neither saturated
+        # nor empty at sizes 17, 33 and 65, and that does not drift with world width.
+        # Measured (phase 9, seed 42, land-river fraction at 17/33/65):
+        #     0.15 km2 unscaled, 200/400/600 km:  100/99.6/85.2, 100/100/93.8, 100/100/96.6
+        #     scaled,            200/400/600 km:  68.1/47.8/16.0 at ALL THREE widths
+        # Width-invariance is exact because runoff follows cell area exactly at a fixed
+        # raster (measured ratios 4.000000 and 9.000000 at 2x and 3x width). See
+        # terrain_scale.runoff_scale for the measurement and for what is NOT claimed.
+        #
+        # Re-derive rather than transcribe: sweeping the factor at 200 km gives 17/33/65
+        # fractions of 91.5/63.8/33.1 at 100x, 78.7/53.7/21.8 at 220x, 68.1/47.8/16.0 at
+        # the 321.8x this resolves, 59.6/29.9/0.9 at 1000x and 2.1/0.0/0.0 at 10000x. The
+        # band that satisfies the target at every raster is roughly 100x to 1000x.
+        if 'river_threshold_km2' not in overrides:
+            scaled=raw['river_threshold_km2']*runoff_scale(circumference)
+            # Do NOT clamp. A silent ceiling here is the same defect class being fixed:
+            # it would quietly stop scaling past a width and re-saturate the rivers.
+            if scaled>RIVER_THRESHOLD_MAX_KM2:
+                raise RequestError(
+                    'STATE_CAPACITY',
+                    f'A {circumference/1000:g} km world resolves river_threshold_km2 to '
+                    f'{scaled:g} km2, above the {RIVER_THRESHOLD_MAX_KM2:g} km2 maximum; '
+                    f'widths above {RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM:.0f} km need that '
+                    f'bound raised in terrain_lab.Config and in registry(), or an explicit '
+                    f'river_threshold_km2 override',
+                    field='river_threshold_km2',received=scaled,
+                    expected={'max':RIVER_THRESHOLD_MAX_KM2,
+                              'max_circumference_km':RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM},
+                    suggestion={'kind':'clamp','value':RIVER_THRESHOLD_MAX_KM2})
+            raw['river_threshold_km2']=scaled
     elif relief>0:
-        raise ValueError('relief_m needs circumference_km; a relief budget alone cannot size a world')
+        raise cross_field('relief_m needs circumference_km; a relief budget alone cannot '
+                          'size a world. Give both, or neither and take the world_size preset.',
+                          ('relief_m','circumference_km'))
     # Explicit requests for stronger regions bias prerequisites. Direct prerequisite
     # overrides always win, and the original requested overrides remain auditable.
     biases={}
@@ -267,7 +423,9 @@ def generate_request(body):
             if target in option_defs:extra[target]=value
             else:raw[target]=value
             biases[target]={'value':value,'source':zone+' request biases suitable conditions; placement remains conditional'}
-    if raw['shape']!='globe' or raw['tectonics']!=1:raise ValueError('World recipe requires a tectonic globe')
+    if raw['shape']!='globe' or raw['tectonics']!=1:
+        raise cross_field('Recipe 3 requires a tectonic globe: shape must be globe and '
+                          'tectonics must be 1.',('shape','tectonics'))
     # 257 stays the INTERACTIVE ceiling (tools/terrain_lab.py), not the world's: larger
     # grids are for offline worlds and cost roughly the square of the size. Age
     # advancement accepts the same 1025 generation does, so a world can hold both its
@@ -294,7 +452,10 @@ def generate_request(body):
     # finer cell step at four times the cells -- but above plate_count 16, 513 stops at
     # four and 1025 is the first size that resolves all five. So "1025 adds no octave" is
     # true for the default and false for most of the legal range.
-    if type(raw['size']) is not int or raw['size']>1025:raise ValueError('Grid maximum is 1025')
+    if type(raw['size']) is not int:
+        raise wrong_type('size',raw['size'],{'type':'integer'})
+    if raw['size']>1025:
+        raise over_capacity('size',raw['size'],1025,'grid')
     raw['world_options']=json.dumps(extra,sort_keys=True)
     cfg=Config(**raw)
     result=generate(cfg)

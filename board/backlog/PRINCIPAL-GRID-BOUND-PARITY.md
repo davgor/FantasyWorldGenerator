@@ -94,10 +94,42 @@ rejected as invalid by a green test at a consumer.
 Done when every site agrees on 1025, the fixture regains a real upper-bound case, a version has
 moved, and `tools/validate_repo.py --stage repo-tests` terminates.
 
-### Live status, re-verified 2026-09-20 after the ruling — HALF LANDED, STILL BLOCKING
+### Live status, re-measured 2026-09-20 by the native-parity lane — CODE SIDE CLOSED
 
-Re-checked against the working tree at `422f9c3` plus uncommitted changes, because the fix was
-landing while this card was open. **The producer side is done; the test and fixture side is not, and
+Measured against the working tree at `7d94bf5` plus the wave-1 and wave-2 uncommitted changes, by
+running the tests rather than reading the constants. **All four enforcement points now agree on
+1025, the fixture carries a case that is genuinely invalid under it, and the parity test compares
+values instead of matching text.**
+
+- `Sim/icarus_sim/terrain_world.py` — `bounds`/guard/`registry` at `1025` (the original widening)
+- `Sim/icarus_sim/terrain_history.py` — age advancement admits `1025`
+- `Sim/icarus_sim/terrain_patch.py` — guard and message at `1025`
+- `Core/genesis.hpp:8` — `max_grid=1025`
+- `Fixtures/unreal-frame-v1.json:21` — the upper-bound case is now `{"size": 1026}`, genuinely
+  invalid under 1025, so the `invalid_generate` sweep in
+  `test_python_reference_rejects_every_invalid_generate_fixture` raises instead of building a
+  258-grid world and hanging
+- `tests/test_native_genesis.py:94-97` — the native half now parses `(min_grid|max_grid)=([0-9]+)`
+  out of `Core/genesis.hpp` into integers and compares them against the Python `bounds`, so the
+  text-match loophole that let a one-sided widening pass is gone. The source comment at :89 records
+  why: `'max_grid=257'` is a substring of a hypothetical `max_grid=2570`.
+- `Sim/tests/test_terrain_patch.py:61` — the rejection case moved to `1026`
+
+Ran, not read: `python -m unittest -v tests.test_native_genesis` → **Ran 5 tests in 4.487s, OK**,
+including both halves of the parity test and the invalid-fixture sweep that used to hang.
+
+**What is still open is not the ceiling.** The version marker the acceptance line asks for has not
+moved: `docs/conformance/version-bindings.json` carries no binding for the grid range, and every
+generated world still publishes `recipe.parameters.size.max` without a version that says the range
+changed. That is the general defect, and by the agreement recorded above it belongs to
+`PRODUCT-CAPABILITY-RANGE-DIVERGENCE` rather than here. This card's own scope — one ceiling,
+enforced consistently, with the tests terminating — is met.
+
+### Historical: status when this card was last written — HALF LANDED, STILL BLOCKING
+
+Kept because it names the two traps that caught the widening, both now closed. Re-checked at the
+time against the working tree at `422f9c3` plus uncommitted changes, because the fix was landing
+while this card was open. **The producer side is done; the test and fixture side is not, and
 the non-termination survives.**
 
 Landed (uncommitted, by the performance session):

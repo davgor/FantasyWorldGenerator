@@ -336,11 +336,22 @@ int main(int argc,char** argv) {
         WorldEnvelope world=generate_world(request);
         const PopulatedWorld populated=populate_world(world,catalogues);
         const Humans& humans=populated.humans;
-        for(const RuralSite& site:humans.hamlets)
-            std::printf("HAMLET\t%s\t%zu\t%s\t%s\t%s\t%.17g\t%.17g\t%.17g\t%.17g\t%.17g\n",
+        // The access path is emitted alongside the access cost, and it is the field that
+        // tells the two kinds of access_cost divergence apart. `access_cost` is a Dijkstra
+        // total, so the additions run strictly along the settled path: an identical path
+        // gives an identical double. A differing cost with an IDENTICAL path is therefore
+        // arithmetic inside one edge; a differing cost with a DIFFERING path is a routing
+        // divergence wearing a small number's clothes. Six hamlets currently differ by one
+        // to three ulp and nothing on either side recorded which of those it was.
+        for(const RuralSite& site:humans.hamlets) {
+            std::string path;
+            for(std::size_t node:site.access_nodes)
+                path+=(path.empty() ? "" : ",")+std::to_string(node);
+            std::printf("HAMLET\t%s\t%zu\t%s\t%s\t%s\t%.17g\t%.17g\t%.17g\t%.17g\t%.17g\t%s\n",
                 site.id.c_str(),site.node,site.role.c_str(),site.population_profile.c_str(),
                 site.culture_id.c_str(),site.access_cost,site.worked_area_km2,site.delivered_food,
-                site.delivered_materials,site.irrigation_benefit);
+                site.delivered_materials,site.irrigation_benefit,path.c_str());
+        }
         for(const RuralSite& site:humans.fortresses)
             std::printf("FORTRESS\t%s\t%zu\t%s\t%.17g\t%zu\t%.17g\n",site.id.c_str(),site.node,
                 site.population_profile.c_str(),site.defence_score,site.protected_route_node,
@@ -950,6 +961,32 @@ int main(int argc,char** argv) {
         emit_grid("dominant_magic",layers.dominant_magic);
         emit_grid("ley_holy",layers.ley_holy);
         emit_grid("ley_primordial",layers.ley_primordial);
+        return 0;
+    }
+    if(operation=="networks") {
+        // The resolved ley network parameters, with no world built at all. Cheap on
+        // purpose: `resolve_config` plus `generate_networks` is milliseconds, where
+        // `stage9` is a whole world, so a parity suite can pin these numbers without
+        // paying for a raster.
+        //
+        // `width_m` is the reason this operation exists. It is authored as an absolute
+        // reach on the 11.15 km reference world and has to be scaled by the world's own
+        // circumference (Core/magic.cpp, mirroring terrain_leyline_history.py:101). Left
+        // unscaled it was a flat 110 m against a kilometres-wide cell, which is a
+        // divergence with no visible edge: every ley field, every instability field and
+        // every categorical layer downstream of them collapses, and the failure surfaces
+        // as fifty-five mismatched grids rather than as one wrong number. One tagged row
+        // per school turns that back into one wrong number.
+        GenerateRequest request;
+        request.seed=std::stoll(argv[2]);
+        request.size=std::stoll(argv[3]);
+        apply_scale(request,argc,argv);
+        const WorldConfig cfg=resolve_config(request);
+        for(const LeyNetwork& network:generate_networks(cfg)) {
+            std::printf("NETWORK\t%s\t%.17g\t%.17g\t%.17g\t%lld\t%d\n",network.name.c_str(),
+                network.width_m,network.strength,network.instability,
+                static_cast<long long>(network.nodes.size()),network.enabled ? 1 : 0);
+        }
         return 0;
     }
     if(operation=="selection") {

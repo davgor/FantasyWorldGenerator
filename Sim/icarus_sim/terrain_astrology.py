@@ -10,6 +10,8 @@ Numeric contract: only sin, cos, products, sums, min and max, and integer modulo
 integer days. No pow, so the C++ mirror in Core/astrology.cpp can reproduce it.
 """
 import math
+from .terrain_errors import (cross_field, missing_block, out_of_range, unknown_field,
+                             unsupported_api, wrong_type)
 import random
 from time import perf_counter
 from .terrain_tectonics import child_seed
@@ -194,6 +196,7 @@ LIMITS = ('The moon is artistic astronomy: one body reduced to phase, rise hour,
           'exported leyline grids are the base field.')
 
 
+MOON_FIELDS = ('api_version', 'world', 'day', 'year', 'month', 'day_of_month', 'hour')
 MOON_API_VERSION = 1
 
 
@@ -204,21 +207,35 @@ def lunar_request(body):
     hour; both give the same closed-form answer the exported formulas describe, so an
     orchestrator can drive a clock from this and stay bit-consistent with the almanac.
     """
-    if not isinstance(body, dict) or set(body) - {'api_version', 'world', 'day', 'year', 'month', 'day_of_month', 'hour'}:
-        raise ValueError('Expected api_version, world and a time as day or year/month/day_of_month/hour')
+    if not isinstance(body, dict):
+        raise wrong_type('request', body, {'type': 'object'})
+    if set(body) - set(MOON_FIELDS):
+        raise unknown_field(sorted(set(body) - set(MOON_FIELDS))[0], MOON_FIELDS,
+                            noun='request field')
     if type(body.get('api_version')) is not int or body['api_version'] != MOON_API_VERSION:
-        raise ValueError('Unsupported moon API version')
+        raise unsupported_api('api_version', body.get('api_version'), (MOON_API_VERSION,))
     world = body.get('world')
-    if not isinstance(world, dict) or not isinstance(world.get('astrology'), dict) or world['astrology'].get('version') != 1:
-        raise ValueError('World lacks the astrology contract; regenerate')
+    if not isinstance(world, dict):
+        raise wrong_type('world', world, {'type': 'object'})
+    if not isinstance(world.get('astrology'), dict) or world['astrology'].get('version') != 1:
+        raise missing_block('astrology', 'This world lacks the astrology contract at version '
+                            '1. The moon is seeded during generation, so a world exported '
+                            'before that contract has to be regenerated rather than '
+                            'migrated.')
     moon = world['astrology']['moon']
     almanac_now = world.get('lunar_almanac', {})
     if 'day' in body:
         if any(k in body for k in ('year', 'month', 'day_of_month', 'hour')):
-            raise ValueError('Give day or a calendar time, not both')
+            raise cross_field('Give an absolute day or a calendar time, not both. They are '
+                              'two spellings of one instant and this call cannot tell which '
+                              'you meant.',
+                              ('day', 'year', 'month', 'day_of_month', 'hour'))
         t = body['day']
-        if type(t) not in (int, float) or not math.isfinite(t) or t < 0:
-            raise ValueError('day must be a finite number of days >= 0')
+        if type(t) not in (int, float) or not math.isfinite(t):
+            raise wrong_type('day', t, {'type': 'number'})
+        if t < 0:
+            raise out_of_range('day', t, {'type': 'number', 'min': 0, 'units': 'days since '
+                                          'founding year 0'})
         year, remainder = divmod(int(t), DAYS_PER_YEAR)
         month, day_of_month = divmod(remainder, DAYS_PER_MONTH)
         hour = (t - int(t)) * HOURS_PER_DAY
@@ -229,12 +246,26 @@ def lunar_request(body):
         month = body.get('month', 1)
         day_of_month = body.get('day_of_month', 1)
         hour = body.get('hour', 0)
-        if type(year) is not int or year < 0 or type(month) is not int or not 1 <= month <= MONTHS_PER_YEAR:
-            raise ValueError('year must be an integer >= 0 and month 1..12')
-        if type(day_of_month) is not int or not 1 <= day_of_month <= DAYS_PER_MONTH:
-            raise ValueError('day_of_month must be 1..30')
-        if type(hour) not in (int, float) or not math.isfinite(hour) or not 0 <= hour <= HOURS_PER_DAY:
-            raise ValueError('hour must be 0..24')
+        if type(year) is not int:
+            raise wrong_type('year', year, {'type': 'integer'})
+        if year < 0:
+            raise out_of_range('year', year, {'type': 'integer', 'min': 0, 'units': 'years'})
+        if type(month) is not int:
+            raise wrong_type('month', month, {'type': 'integer'})
+        if not 1 <= month <= MONTHS_PER_YEAR:
+            raise out_of_range('month', month, {'type': 'integer', 'min': 1,
+                                                'max': MONTHS_PER_YEAR, 'units': 'months'})
+        if type(day_of_month) is not int:
+            raise wrong_type('day_of_month', day_of_month, {'type': 'integer'})
+        if not 1 <= day_of_month <= DAYS_PER_MONTH:
+            raise out_of_range('day_of_month', day_of_month,
+                               {'type': 'integer', 'min': 1, 'max': DAYS_PER_MONTH,
+                                'units': 'days'})
+        if type(hour) not in (int, float) or not math.isfinite(hour):
+            raise wrong_type('hour', hour, {'type': 'number'})
+        if not 0 <= hour <= HOURS_PER_DAY:
+            raise out_of_range('hour', hour, {'type': 'number', 'min': 0,
+                                              'max': HOURS_PER_DAY, 'units': 'hours'})
         t = year * DAYS_PER_YEAR + (month - 1) * DAYS_PER_MONTH + (day_of_month - 1)
         if hour:
             t = t + hour / HOURS_PER_DAY

@@ -1,6 +1,8 @@
 # TIME-LIVENESS - one predicate for "is this person still here"
 
-Owner: unassigned. State: scoped, not started. Split out of `TIME-ADVANCE.md`.
+Owner: local. State: **delivered** 2026-09-20 as `Sim/icarus_sim/terrain_liveness.py`.
+Split out of `TIME-ADVANCE.md` and deliberately held until the fall pair landed, so the
+villain arm was written against the real export rather than a predicted one.
 
 ## Observed behavior
 
@@ -20,10 +22,9 @@ report flag, not a person's liveness, and is out of scope.)
 
 Two traps a naive adapter walks into:
 
-- **`status` means two different things in one block.** `hero_generator/__init__.py:79`
-  and `:147` set a block-level `status` of `'failed'` or `'ok'`; `:148` reads a
-  *person-level* `status` of `'living'` or `'legend'` from the same key name at a
-  different depth. A predicate that matches on the string alone will read a failed block
+- **`status` means two different things in one block.** `hero_generator` sets a
+  block-level `status` of `'failed'` or `'ok'` and reads a *person-level* `status` of
+  `'living'` or `'legend'` from the same key name at a different depth. A predicate that matches on the string alone will read a failed block
   as a living person. This repository already has `tier` meaning four things; this is the
   same shape.
 - **Absent means living.** `terrain_villains.is_standing` reads a missing status as
@@ -58,7 +59,7 @@ change to any published contract.
 - **The fall pair has landed**, so the villain arm can now be written against the real
   export rather than a predicted one: `villains.people` retains the fallen with
   `status: 'fallen'` and a `fell_age`, `villains.fallen[]` holds durable marks, and
-  `is_standing` (`terrain_villains.py:47`) is the filter. This card was deliberately held
+  `is_standing` is the filter. This card was deliberately held
   until that shape existed - an adapter written on 2026-09-19 would have encoded "villains
   are always living", which was true by construction then and is false now.
 - Whether `key_locations` can consume the adapter at all: it is a leaf package and cannot
@@ -80,6 +81,21 @@ New module, claimed by the `TIME-ADVANCE` conformance record or its own. No edit
 - No behavior change anywhere: the same worlds serialise to the same bytes before and
   after.
 
+## Delivered
+
+`Sim/icarus_sim/terrain_liveness.py`: `liveness(record, block)`, `is_present`, `present`
+and `census`. Dispatch is on the block name, never on the record's shape, and a record
+carrying `people`, `quest_hooks` or `policy_revision` raises rather than being answered -
+that is the block/person `status` collision caught loudly instead of silently. The villain
+arm delegates to `terrain_villains.is_standing` rather than restating it. Absent status
+resolves to present. Nothing writes; no vocabulary was migrated.
+
+Covered by the `LivenessTests` class in `Sim/tests/test_time_advance.py`: seven tests,
+including every vocabulary, the absent-status case per block, both block-shaped inputs, an
+unknown block, and an agreement check against `is_standing`.
+
 ## Handoff
 
-Not started. Verification is centralised on the agent coordinator.
+Delivered. One thing deliberately not done: `key_locations` still reads the stamped
+`holder_status` and `influence` off the claim rather than importing this, because it is a
+leaf package and the fall pair stamped those fields precisely so it would not need a join.

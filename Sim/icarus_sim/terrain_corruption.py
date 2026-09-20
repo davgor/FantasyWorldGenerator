@@ -14,6 +14,10 @@ The corrupted node, not the villain, is the thing that persists. Killing a holde
 them and leaves the nodes; an unheld node is a spawner.
 """
 import copy
+from .terrain_history import adopt_world
+from .terrain_errors import (cross_field, missing_block, out_of_range, over_capacity,
+                             refused_by_world, unknown_field, unsupported_api,
+                             wrong_type)
 import math
 from time import perf_counter
 
@@ -115,37 +119,56 @@ def watching(world, encounters):
 def validate_corruption(body):
     from .terrain_history import validate_age_world
     allowed = {'api_version', 'world', 'encounters', 'variation', 'villain_uid'}
-    if not isinstance(body, dict) or set(body) - allowed:
-        raise ValueError('Expected api_version, world, encounters, optional variation and villain_uid')
+    if not isinstance(body, dict):
+        raise wrong_type('request', body, {'type': 'object'})
+    if set(body) - allowed:
+        raise unknown_field(sorted(set(body) - allowed)[0], sorted(allowed),
+                            noun='request field')
     if type(body.get('api_version')) is not int or body['api_version'] != API_VERSION:
-        raise ValueError('Unsupported corruption API version')
+        raise unsupported_api('api_version', body.get('api_version'), (API_VERSION,))
     world = body.get('world')
     cfg = validate_age_world(world)
     religion = world.get('religion')
     if not isinstance(religion, dict) or religion.get('version') != RELIGION_VERSION:
-        raise ValueError('World lacks the religion contract; regenerate')
+        raise missing_block('religion', 'This world lacks the religion contract at version '
+                            '%d. It is written during generation, so a world exported before '
+                            'it has to be regenerated.' % RELIGION_VERSION)
     if religion.get('catalogue') != catalogue_identity():
-        raise ValueError('Pantheon catalogue changed; regenerate or explicitly migrate this world')
+        raise missing_block('religion.catalogue',
+                            'This world was built against a different pantheon catalogue, so '
+                            'the gods it names may not exist here. Regenerate or explicitly '
+                            'migrate it.')
     encounters = body.get('encounters', 0)
-    if type(encounters) is not int or not 0 <= encounters < 2**32:
-        raise ValueError('encounters must be a uint32')
+    if type(encounters) is not int:
+        raise wrong_type('encounters', encounters, {'type': 'integer'})
+    if not 0 <= encounters < 2**32:
+        raise out_of_range('encounters', encounters,
+                           {'type': 'integer', 'min': 0, 'max': 4294967295,
+                            'units': 'encounters across playthroughs'})
     variation = body.get('variation', 0)
-    if type(variation) is not int or not 0 <= variation < 2**32:
-        raise ValueError('variation must be a uint32')
+    if type(variation) is not int:
+        raise wrong_type('variation', variation, {'type': 'integer'})
+    if not 0 <= variation < 2**32:
+        raise out_of_range('variation', variation,
+                           {'type': 'integer', 'min': 0, 'max': 4294967295, 'units': 'seed'})
     villain_uid = body.get('villain_uid')
     if villain_uid is not None and not isinstance(villain_uid, str):
-        raise ValueError('villain_uid must be a string')
+        raise wrong_type('villain_uid', villain_uid, {'type': 'string'})
     # Standing only: a god reaches for someone who holds ground, and `people` now keeps
     # the fallen too. A world whose only villain has fallen has none to corrupt.
     from .terrain_villains import standing
     people = standing(world.get('villains', {}).get('people', []))
     if not people:
-        raise ValueError('Corruption needs a super villain to seat; this world has none')
+        raise refused_by_world('world.villains', None,
+                               'Corruption needs a standing super villain to seat and this '
+                               'world has none. Villains rise from recorded turmoil, so '
+                               'advance the world or raise villain_rise above zero.')
     if villain_uid is not None and not any(p['uid'] == villain_uid for p in people):
-        raise ValueError('Unknown villain_uid')
+        raise unknown_field(villain_uid, [p['uid'] for p in people], noun='standing villain')
     held = sum(len(c['nodes']) for c in religion.get('corruptions', []) if not c.get('cleansed_age'))
     if held >= NODE_BUDGET:
-        raise ValueError(f'At most {NODE_BUDGET} corrupted nodes per world; cleanse before corrupting further')
+        raise over_capacity('religion.corruptions', held, NODE_BUDGET,
+                            'per-world corrupted node')
     return cfg, encounters, variation, villain_uid
 
 
@@ -319,9 +342,7 @@ def corruption_request(body):
     start = perf_counter()
     cfg, encounters, variation, villain_uid = validate_corruption(body)
     world = body['world']
-    result = copy.deepcopy({k: v for k, v in world.items() if k != 'build_stages'})
-    if 'build_stages' in world:
-        result['build_stages'] = list(world['build_stages'])
+    result = adopt_world(world)
     STATE_KEYS = state_keys()
     previous_layers = copy.deepcopy(result['layers'])
     previous_state = {k: copy.deepcopy(result.get(k)) for k in STATE_KEYS}
@@ -360,31 +381,64 @@ CLEANSE_MAX_DRAIN = 4.    # a node's full intensity, so power 1.0 ends one in a 
 def validate_cleanse(body):
     from .terrain_history import validate_age_world
     allowed = {'api_version', 'world', 'target', 'power'}
-    if not isinstance(body, dict) or set(body) - allowed:
-        raise ValueError('Expected api_version, world, target and optional power')
+    if not isinstance(body, dict):
+        raise wrong_type('request', body, {'type': 'object'})
+    if set(body) - allowed:
+        raise unknown_field(sorted(set(body) - allowed)[0], sorted(allowed),
+                            noun='request field')
     if type(body.get('api_version')) is not int or body['api_version'] != API_VERSION:
-        raise ValueError('Unsupported corruption API version')
+        raise unsupported_api('api_version', body.get('api_version'), (API_VERSION,))
     world = body.get('world')
     cfg = validate_age_world(world)
     target = body.get('target')
-    if not isinstance(target, dict) or len(target) != 1 or not set(target) <= {'corruption', 'god_id'}:
-        raise ValueError('target must be {"corruption": <index>} or {"god_id": ...}')
+    if not isinstance(target, dict):
+        raise wrong_type('target', target, {'type': 'object'})
+    if len(target) != 1 or not set(target) <= {'corruption', 'god_id'}:
+        raise cross_field('target names exactly one thing, as {"corruption": <index>} or '
+                          '{"god_id": ...}.', ('corruption', 'god_id'))
     power = body.get('power', .25)
-    if type(power) not in (int, float) or not math.isfinite(power) or not 0 < power <= 1:
-        raise ValueError('power must be greater than 0 and at most 1')
+    if type(power) not in (int, float) or not math.isfinite(power):
+        raise wrong_type('power', power, {'type': 'number'})
+    if not 0 < power <= 1:
+        raise out_of_range('power', power, {'type': 'number', 'min': 0, 'max': 1,
+                                            'units': 'share of the structure drained'})
     if 'corruption' in target:
         records = world.get('religion', {}).get('corruptions', [])
         index = target['corruption']
-        if type(index) is not int or not 0 <= index < len(records):
-            raise ValueError('Unknown corruption')
+        if type(index) is not int:
+            raise wrong_type('target.corruption', index, {'type': 'integer'})
+        if not 0 <= index < len(records):
+            raise refused_by_world('target.corruption', index,
+                                   'This world carries %d corruption record(s); %r names '
+                                   'none of them.' % (len(records), index))
         if records[index].get('cleansed_age') is not None:
-            raise ValueError('That corruption is already cleansed')
+            raise refused_by_world('target.corruption', index,
+                                   'Corruption %d was already cleansed in age %s.'
+                                   % (index, records[index]['cleansed_age']))
     else:
         god = next((g for g in world.get('religion', {}).get('gods', []) if g['id'] == target['god_id']), None)
         if god is None:
-            raise ValueError('Unknown god')
+            raise unknown_field(target['god_id'],
+                                [g['id'] for g in world.get('religion', {}).get('gods', [])],
+                                noun='god')
         if god.get('status') != 'walking':
-            raise ValueError('Only a god that walks the world can be opposed')
+            raise refused_by_world('target.god_id', target['god_id'],
+                                   'Only a god that walks the world can be opposed; %s is %s.'
+                                   % (target['god_id'], god.get('status')))
+        # Two different things set `status` to 'walking', and only one of them writes a
+        # visitation record. A visitation does; `_reveal` does not, because a corrupted
+        # god's footprint is its ley cluster. `depart_god` requires the record, so a god
+        # revealed by corruption would reach an unguarded `next()` and raise a bare
+        # StopIteration out of a validated API. Refuse it here, by name, instead.
+        # `.get` rather than subscripts: a validator whose job is to turn malformed input
+        # into a ValueError must not itself raise KeyError on a partial record.
+        visitations = world.get('religion', {}).get('visitations', []) or []
+        if not any(v.get('god_id') == target['god_id'] and v.get('departed_age') is None
+                   for v in visitations):
+            raise refused_by_world('target.god_id', target['god_id'],
+                                   'A god revealed by corruption is opposed through its '
+                                   'corruption rather than sent home; target '
+                                   '{"corruption": <index>} instead.')
     return cfg, target, float(power)
 
 
@@ -403,9 +457,7 @@ def cleanse_request(body):
     start = perf_counter()
     cfg, target, power = validate_cleanse(body)
     world = body['world']
-    result = copy.deepcopy({k: v for k, v in world.items() if k != 'build_stages'})
-    if 'build_stages' in world:
-        result['build_stages'] = list(world['build_stages'])
+    result = adopt_world(world)
     STATE_KEYS = state_keys()
     previous_layers = copy.deepcopy(result['layers'])
     previous_state = {k: copy.deepcopy(result.get(k)) for k in STATE_KEYS}

@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Villains v1",
+  "description": "The `villains` block a finished world carries. It describes what the generator emits today and does not design anything: every property here was read off Sim/icarus_sim/terrain_villains.py rather than proposed. A world built with `villain_rise: 0` carries no block at all, so absence is a legal state of a world and not a failure of this contract. Tier is a continuous reach and `super villain` is a band on it rather than a flag: SUPER_TIER is 1.0, a reign is held above `villain_hold`, and the simulation's final age promotes the most concentrated regions to exactly SUPER_TIER so a generated world ends with antagonists standing in it. `people` holds everyone who ever held a region, living and fallen, the same shape `heroes.people` uses for legends and `npcs.people` for the dead: one list, a status field, and the reader filters. Every consumer that means \"who stands right now\" must say so, and absent status reads as living so older records still resolve.",
+  "type": "object",
+  "required": [
+    "version",
+    "people",
+    "tiers",
+    "outlook",
+    "fallen"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "tiers": {
+      "type": "object",
+      "description": "Accumulated tier per region anchor, the thing that actually persists. A villain is the name the world puts on a region that has concentrated past the band; the region outlives the villain. Keys are ley node ids, or `seat-<city uid>` where a world has no magic at all, and never culture ids -- a culture's id is rebuilt every age from whatever the roads join, so tier keyed to one silently resets and nothing can ever reach the band. A villain's own well is excluded from anchor selection, because a region anchored to its holder's work is anchored to something that did not exist before that holder.",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "people": {
+      "type": "array",
+      "description": "Everyone who ever held a region, living first by anchor and then the fallen in the order they fell. A region may hold both a fallen villain and the successor that replaced it, so `region` is not unique across this list.",
+      "items": {
+        "type": "object",
+        "required": [
+          "uid",
+          "region",
+          "born_age",
+          "seat_uid",
+          "node",
+          "direction",
+          "school",
+          "held_nodes",
+          "tier",
+          "reach_m",
+          "growth",
+          "status",
+          "log"
+        ],
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "`villain-<age>-<terrain node>`. Keyed to the age it rose and the terrain node it rose on, never to a settlement ordinal: hamlet, fortress, plot and nest ids are all renumbered on every age advance."
+          },
+          "region": {
+            "type": "string",
+            "description": "The region anchor this villain holds, matching a key of `tiers`."
+          },
+          "born_age": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fell_age": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Present only once status is `fallen`."
+          },
+          "seat_uid": {
+            "type": "string",
+            "description": "The city uid it rose in. A city uid is stable across ages; its position in `settlements.sites` is not."
+          },
+          "node": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Terrain node index of the seat."
+          },
+          "direction": {
+            "type": "array",
+            "description": "Unit vector on the globe.",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "school": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The magic school of the nearest ley node, or null in a world with no magic."
+          },
+          "god": {
+            "type": "string",
+            "description": "Present once a school-bound villain has been given its god; a well is only sunk by a villain that has one."
+          },
+          "held_nodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ley node ids this villain holds, including its own well once sunk."
+          },
+          "tier": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Continuous standing. At or above 1.0 is the super band; a pretender stalled by a full ceiling sits at 0.999."
+          },
+          "reach_m": {
+            "type": "number",
+            "minimum": 0,
+            "description": "tier x 4 x settlement_spacing. A field with falloff, not a radius of control."
+          },
+          "growth": {
+            "type": "string",
+            "description": "Which pressure raised it, and therefore the counter-play. Derived from the region's dominant threat.",
+            "enum": [
+              "devouring",
+              "spreading",
+              "hoarding",
+              "usurping"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Whether this villain still holds its region. Read through terrain_villains.standing(); absent reads as living.",
+            "enum": [
+              "living",
+              "fallen"
+            ]
+          },
+          "well": {
+            "type": "object",
+            "description": "The leyline well a god-bound villain sank: a source that is joined, so the edges are the point.",
+            "required": [
+              "node",
+              "school",
+              "god",
+              "lines",
+              "age"
+            ],
+            "properties": {
+              "node": {
+                "type": "string"
+              },
+              "school": {
+                "type": "string"
+              },
+              "god": {
+                "type": "string"
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "age": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "claims": {
+            "type": "array",
+            "description": "Ground this villain took. Claims persist after a fall -- held ground outlives its holder -- and each one carries its holder's state so a consumer reads how hard it presses off the claim itself rather than joining against the roster.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "influence": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "holder_status": {
+                  "type": "string",
+                  "enum": [
+                    "living",
+                    "fallen"
+                  ]
+                },
+                "holder_fell_age": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "log": {
+            "type": "array",
+            "description": "What happened to this villain and when. `promoted` is the terminal pass that seats a region as the simulation ends; `rose` is accumulation crossing the band during an age.",
+            "items": {
+              "type": "object",
+              "required": [
+                "age",
+                "event"
+              ],
+              "properties": {
+                "age": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "event": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fallen": {
+      "type": "array",
+      "description": "The durable mark of a reign that actually changed the world, in the same shape a ruined city gets one in `ruins`: appended, never pruned. A villain that reached the band, took no city, staked no claim and sank no well gets no record here -- that is a condition, not a formality. `tier` and `reach_m` are deliberately absent: both describe a grip it no longer has. The mark carries no asset_id, because a fallen villain's holdings are already placed.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "uid",
+          "fell_age",
+          "born_age",
+          "reigned_ages",
+          "left"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "`fallen-<villain uid>`."
+          },
+          "kind": {
+            "const": "fallen_villains"
+          },
+          "uid": {
+            "type": "string"
+          },
+          "fell_age": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "born_age": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reigned_ages": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "left": {
+            "type": "object",
+            "description": "What it did to the world, read back out of `ruins` and its own claims rather than accumulated on the record, because anything hung on a live record is lost the moment that record is rebuilt.",
+            "required": [
+              "ruins",
+              "claims",
+              "held_nodes"
+            ],
+            "properties": {
+              "ruins": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "well": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "held_nodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "works": {
+      "type": "array",
+      "description": "What seated villains built this age, present only in an age that built something. Written after the rebuild, on settled ground: a well joins the holdings a villain actually has this age and a claim names the peoples actually near it.",
+      "items": {
+        "type": "object"
+      }
+    },
+    "outlook": {
+      "type": "object",
+      "description": "Where turmoil is concentrating, so a story layer need not guess. The counterpart of war_outlook: that one tells \"they are coming\" from \"we once fought\", this one separates a region about to produce something from one that is merely violent.",
+      "required": [
+        "rise",
+        "ceiling",
+        "standing",
+        "regions"
+      ],
+      "properties": {
+        "rise": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ceiling": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "ceil(regions / villain_density), at least one. How many may stand in the band at once."
+        },
+        "standing": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Must equal the number of rows below with `seated` true, and the number of living entries in `people`."
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "region",
+              "culture",
+              "concentration",
+              "tier",
+              "to_threshold",
+              "seated",
+              "stalled",
+              "cities"
+            ],
+            "properties": {
+              "region": {
+                "type": "string"
+              },
+              "culture": {
+                "type": "string"
+              },
+              "concentration": {
+                "type": "number"
+              },
+              "tier": {
+                "type": "number"
+              },
+              "to_threshold": {
+                "type": "number",
+                "minimum": 0
+              },
+              "seated": {
+                "type": "boolean"
+              },
+              "stalled": {
+                "type": "boolean",
+                "description": "At or above the stall line but refused a seat because the ceiling is full. Succession, with no succession system."
+              },
+              "cities": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

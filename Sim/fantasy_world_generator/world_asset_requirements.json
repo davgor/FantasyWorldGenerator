@@ -6,12 +6,12 @@
   "unit": "metres",
   "biomes": {
     "0": "Ocean",
-    "1": "Tundra",
+    "1": "Tundra (tombstoned - no world cell carries this id; see 16 Cold tundra)",
     "2": "Desert",
     "3": "Grassland",
     "4": "Forest",
     "5": "Exposed rock",
-    "6": "Snow",
+    "6": "Snow (tombstoned - no world cell carries this id; see 17 Persistent land ice)",
     "7": "Rainforest",
     "8": "Lake",
     "13": "Marsh",
@@ -156,8 +156,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -293,9 +293,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -384,9 +382,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -704,9 +702,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -718,8 +714,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -820,9 +816,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -899,9 +893,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -943,9 +935,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -1099,7 +1089,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -1133,7 +1124,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -1167,8 +1159,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6,
-        8
+        8,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -1202,7 +1194,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -1347,8 +1340,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -1382,9 +1375,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -1519,9 +1512,7 @@
         "land_ice.infernal",
         "marsh.infernal",
         "marsh.umbral",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -1876,9 +1867,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         2,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -1912,9 +1903,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -1926,8 +1915,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -1963,8 +1952,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -2071,9 +2060,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2265,9 +2252,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2385,9 +2370,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2578,9 +2561,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2626,9 +2607,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2672,9 +2651,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -2800,7 +2777,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -2836,7 +2814,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -2872,7 +2850,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        6
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -3011,7 +2989,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -3321,9 +3299,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        7
+        7,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -3361,8 +3339,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        5
+        5,
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -3637,7 +3615,7 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1
+        16
       ],
       "people": null,
       "settlement_role": null,
@@ -4015,9 +3993,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -4523,8 +4499,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4560,8 +4536,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4597,8 +4573,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4634,8 +4610,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4671,8 +4647,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4708,8 +4684,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4745,8 +4721,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4782,8 +4758,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4819,8 +4795,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4856,8 +4832,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4893,8 +4869,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4930,8 +4906,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        4
+        4,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -4967,9 +4943,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5005,9 +4981,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5043,9 +5019,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5081,9 +5057,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5119,9 +5095,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5157,9 +5133,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5195,9 +5171,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5233,9 +5209,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5271,9 +5247,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5309,9 +5285,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5347,9 +5323,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -5385,9 +5361,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         4,
-        5
+        5,
+        15
       ],
       "people": null,
       "settlement_role": null,
@@ -7992,9 +7968,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -8006,8 +7980,9 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        6
+        15,
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -8071,9 +8046,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -8227,15 +8200,16 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
         2,
         3,
         4,
         5,
-        6,
         7,
         8,
-        13
+        13,
+        15,
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -8276,9 +8250,7 @@
         "marsh.umbral",
         "rainforest.earth",
         "rainforest.infernal",
-        "rainforest.weave",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.weave"
       ]
     },
     {
@@ -8320,9 +8292,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -16918,8 +16888,8 @@
       "status": "not_started",
       "quantity": 1,
       "biome_ids": [
-        1,
-        6
+        16,
+        17
       ],
       "people": null,
       "settlement_role": null,
@@ -17193,9 +17163,7 @@
         "grassland.infernal",
         "land_ice.infernal",
         "marsh.infernal",
-        "rainforest.infernal",
-        "snow.infernal",
-        "tundra.infernal"
+        "rainforest.infernal"
       ]
     },
     {
@@ -17451,14 +17419,14 @@
     "ocean.water": "Crystal currents",
     "ocean.earth": "Rootreef seas",
     "ocean.air": "Storm seas",
-    "tundra.weave": "Dream tundra",
-    "tundra.umbral": "Grave tundra",
-    "tundra.infernal": "Blighted tundra",
-    "tundra.radiant": "Blessed tundra",
-    "tundra.fire": "Ember tundra",
-    "tundra.water": "Rime tundra",
-    "tundra.earth": "Mossbound tundra",
-    "tundra.air": "Gale tundra",
+    "tundra.weave": "Dream tundra (tombstoned - no world cell carries this state; see Shifting frostlands, cold_tundra.weave)",
+    "tundra.umbral": "Grave tundra (tombstoned - no world cell carries this state; see Deathfrost plains, cold_tundra.umbral)",
+    "tundra.infernal": "Blighted tundra (tombstoned - no world cell carries this state; see Torment barrens, cold_tundra.infernal)",
+    "tundra.radiant": "Blessed tundra (tombstoned - no world cell carries this state; see Peaceful frostlands, cold_tundra.radiant)",
+    "tundra.fire": "Ember tundra (tombstoned - no world cell carries this state; see Ashfrost plains, cold_tundra.fire)",
+    "tundra.water": "Rime tundra (tombstoned - no world cell carries this state; see Bluefrost tundra, cold_tundra.water)",
+    "tundra.earth": "Mossbound tundra (tombstoned - no world cell carries this state; see Lichenstone plains, cold_tundra.earth)",
+    "tundra.air": "Gale tundra (tombstoned - no world cell carries this state; see Force-swept tundra, cold_tundra.air)",
     "desert.weave": "Glass mirages",
     "desert.umbral": "Haunted tombs",
     "desert.infernal": "Hellglass wastes",
@@ -17491,14 +17459,14 @@
     "exposed_rock.water": "Springstone cliffs",
     "exposed_rock.earth": "Living monoliths",
     "exposed_rock.air": "Windcarved spires",
-    "snow.weave": "Chromatic snow",
-    "snow.umbral": "Funeral snow",
-    "snow.infernal": "Sootsnow fields",
-    "snow.radiant": "Luminous snow",
-    "snow.fire": "Smoldering snow",
-    "snow.water": "Sapphire snow",
-    "snow.earth": "Mosswarm snow",
-    "snow.air": "Dancing snow",
+    "snow.weave": "Chromatic snow (tombstoned - no world cell carries this state; see Singing glaciers, land_ice.weave)",
+    "snow.umbral": "Funeral snow (tombstoned - no world cell carries this state; see Sepulchral ice, land_ice.umbral)",
+    "snow.infernal": "Sootsnow fields (tombstoned - no world cell carries this state; see Infernal glaciers, land_ice.infernal)",
+    "snow.radiant": "Luminous snow (tombstoned - no world cell carries this state; see Cathedral ice, land_ice.radiant)",
+    "snow.fire": "Smoldering snow (tombstoned - no world cell carries this state; see Steamcut glaciers, land_ice.fire)",
+    "snow.water": "Sapphire snow (tombstoned - no world cell carries this state; see Everflow glaciers, land_ice.water)",
+    "snow.earth": "Mosswarm snow (tombstoned - no world cell carries this state; see Rootsplit glaciers, land_ice.earth)",
+    "snow.air": "Dancing snow (tombstoned - no world cell carries this state; see Howling glaciers, land_ice.air)",
     "rainforest.weave": "Everchanging canopy",
     "rainforest.umbral": "Withering canopy",
     "rainforest.infernal": "Devouring jungle",

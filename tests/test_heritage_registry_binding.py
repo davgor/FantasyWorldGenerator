@@ -49,6 +49,17 @@ class IdentifierBindingTests(unittest.TestCase):
     def test_heritage_names_exactly_the_registry_parent_races(self):
         self.assertEqual(set(self.traits['races']), set(section('parent_races')))
 
+    def test_appearance_describes_exactly_the_registry_peoples(self):
+        """The body table is a second place ids can drift, so it is bound in both directions.
+
+        A civilization added to the registry without a body resolves to a bare parent-race
+        appearance forever, which is a silent wrong answer rather than a loud one: the
+        concept art, the sprites and the model all come out as the archetype.
+        """
+        appearance = policy.load('appearance')
+        self.assertEqual(set(appearance['peoples']), set(civilization_ids()))
+        self.assertEqual(set(appearance['races']), set(section('parent_races')))
+
     def test_every_lexicon_family_binds_a_real_parent_race(self):
         families = policy.load('lexicon')['families']
         claimed = {entry['parent_race'] for entry in families.values()}
@@ -174,6 +185,23 @@ class RegistryIdentityTests(unittest.TestCase):
 
 
 class ExportShapeTests(unittest.TestCase):
+    def test_the_exported_catalogue_carries_a_body_for_every_people(self):
+        """The channel the art pipeline actually reads.
+
+        Appearance ships through the native catalogue rather than through the world
+        document: it is the same for every seed, and putting it in each generated world
+        would move the `civilizations` block version and reject every saved world for data
+        no generation step reads. A catalogue exported before this layer landed fails here
+        rather than quietly serving traits with no body attached.
+        """
+        catalogue = Path(__file__).resolve().parents[1] / 'Contracts' / 'catalogues'             / 'native-catalogues-v1.json'
+        if not catalogue.is_file():
+            self.skipTest('native catalogue has not been exported')
+        shipped = json.loads(catalogue.read_text(encoding='utf-8'))['heritage']
+        self.assertEqual(set(shipped), set(civilization_ids()))
+        for cid, entry in shipped.items():
+            self.assertEqual(set(entry['appearance']), set(policy.APPEARANCE_BLOCKS), cid)
+
     def test_resolved_peoples_serialise_as_finite_json(self):
         """What ships to the native side has to survive the catalogue writer unchanged."""
         heritage.reset_cache()

@@ -115,6 +115,44 @@ def frontier_field(region_grid, n):
     return _seal_seam(grid, n)
 
 
+def coastal_water_field(layers, water_type, name, n):
+    """The best value of a water layer among a land cell's neighbours; 0 inland and at sea.
+
+    A shore building is a land feature whose reason for existing is out at sea. A whaling
+    station stands on land and lives off ``fishing_productivity``, which is an ocean
+    quantity: measured on seed 42 at sizes 17, 33, 65, 129 and 257, it is **identically 0.0
+    on every land cell** and runs 0.12 to 1.0 on water. So a ``domain: land`` archetype
+    gating on it is unplaceable by construction, at every raster, forever — the question it
+    asks cannot be answered where it is allowed to stand.
+
+    Answering it with the neighbouring water instead is a different query, not a lowered
+    threshold, which is why this is a derived layer rather than a tuned constant. A coastal
+    land cell takes the best of the water it touches; a cell touching no water reads 0, and
+    so does a water cell, so the field is only ever meaningful inside the ``land`` domain.
+
+    ``max`` rather than a mean on purpose: a station is sited for the richest water in reach
+    of a boat, and averaging over eight neighbours would penalise exactly the ragged inlet a
+    whaler wants. Grids wrap at the seam because column ``n - 1`` duplicates column ``0``.
+    """
+    source = layers.get(name)
+    grid = _blank(n, 0.)
+    if not source or not water_type:
+        return grid
+    for z in range(1, n - 1):
+        for x in range(n - 1):
+            if water_type[z][x] != 0.:
+                continue
+            best = 0.
+            for dx, dz, _ in STEPS:
+                nz, nx = z + dz, (x + dx) % (n - 1)
+                if not 0 <= nz < n:
+                    continue
+                if water_type[nz][nx] != 0.:
+                    best = max(best, source[nz][nx])
+            grid[z][x] = best
+    return _seal_seam(grid, n)
+
+
 def derive(world, readers):
     """The derived layer dictionary for a finished world, keyed by the names archetypes use."""
     n = readers.size(world)
@@ -128,4 +166,10 @@ def derive(world, readers):
         'nest_distance': distance_field(_cells_of(readers.nests(world), n), n, spacing),
         'villain_distance': distance_field(_cells_of(readers.villain_holdings(world), n), n, spacing),
         'frontier': frontier_field(readers.layer(world, 'culture_region'), n),
+        # What the sea next door is worth, carried onto the shore so a land archetype can
+        # ask about it. See `coastal_water_field`: the underlying layer is zero on every
+        # land cell at every raster measured, so this is the only form of the question a
+        # `domain: land` archetype can actually ask.
+        'coastal_fishing_productivity': coastal_water_field(
+            world.get('layers', {}), readers.layer(world, 'water_type'), 'fishing_productivity', n),
     }

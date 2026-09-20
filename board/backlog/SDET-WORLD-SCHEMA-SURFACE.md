@@ -1,8 +1,37 @@
 # SDET-WORLD-SCHEMA-SURFACE — the published world contract describes ten of forty-eight blocks
 
-Owner: none. State: **defect pinned by failing tests; no fix attempted.**
-Evidence: `tests/test_world_schema_surface.py` — 4 tests, 1 control passes, 3 fail, 0.011 s,
-no world generated.
+Owner: none. State: **CLOSED. All four tests pass.** Ready to move to `board/done/`; left in
+`backlog/` only because `board/README.md:31` links it here and that file belongs to another
+lane this wave.
+Evidence: `tests/test_world_schema_surface.py` — 4 tests, 4 pass, 0.009 s, no world generated.
+`tests/test_world_schema_conformance.py` — 13 tests, 12 pass, 1 skip, 80.4 s, still green
+against the tightened contract.
+
+## What landed
+
+`Contracts/schemas/world-output.schema.json`:
+
+- `required` grew from 6 keys to 16 — the ten sections
+  `test_world_schema_conformance.test_generated_world_exercises_every_versioned_section`
+  already insists a generated world carries. The same list is now pinned a third time as
+  `VERSIONED_SECTIONS` in `tools/validate_repo.py`, so the contract, the suite and the
+  determinism gate fail together instead of disagreeing.
+- The 37 undeclared `STATE_KEYS` blocks are declared, each with its JSON type and a one-line
+  description; the nine with a schema of their own point at it, and `villains` and `humans`
+  carry a pointer to the card that owns their outstanding defect.
+- A root `description` states plainly that `required` describes a **completed** (phase 16)
+  world and that a `--phase`-gated document is deliberately not described by this contract,
+  and that `additionalProperties: true` is a decision rather than an oversight.
+
+**The types were measured, not designed.** One world at the artifacts configuration
+(`generate_request({'recipe_version': 3, 'seed': 42, 'overrides': {'size': 17}})`, 76.3 s)
+was generated and every top-level block's type recorded from it. Writing the stubs by reading
+the emitters risks a stub the product violates.
+
+**Two numbers in this card are now stale and are corrected here rather than rewritten below,
+so the arithmetic that produced them stays auditable.** `STATE_KEYS` is **47**, not 48, and
+the undeclared count was **37**, not 38: wave 1 removed `pending_ley_edits` (see
+`board/done/SDET-LEY-QUEUE-NO-APPLIER.md`). The gap the card describes is unaffected.
 
 Companion to `PRODUCT-BLOCK-REGISTRY` and `PRODUCT-CONFORMANCE-PROOF-UNCHECKED`, which argue
 this in prose. This is the executable half.
@@ -129,7 +158,7 @@ only fixes the acceptance bar.
 
 - `Contracts/schemas/world-output.schema.json` — `additionalProperties: true`, 17 properties, 6 required.
 - `tests/test_world_schema_conformance.py:34` — the pass that reads as coverage.
-- `Sim/icarus_sim/terrain_history.py:398` — `STATE_KEYS`, the 48-block denominator.
+- `Sim/icarus_sim/terrain_history.py:406` — `STATE_KEYS`, the 47-block denominator.
 - `Sim/icarus_sim/terrain_scale.py:91-104` — the octave admission filter, computed not read.
 - `board/backlog/PRODUCT-BLOCK-REGISTRY.md` — the prose argument.
 

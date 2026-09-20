@@ -1,14 +1,339 @@
 # CONTENT-ARCHETYPE-FIELD-DOMAIN-MISMATCH — five archetypes gate on a field that carries no data where they are allowed to stand
 
-Owner: none. State: open, unowned. Found by the Python-output red team; the coordinator asked for
-it as a card of its own because it is the one key-location finding that needs no generated world
-and waits on nothing (`docs/reviews/233182e-python-output-red-team.md`, finding 8, cause 1).
+Owner: content-placement lane. State: **class A fixed and re-measured; class B resolved elsewhere
+by the island-habitat world-scale fix; class C's structural fix kept although the river-threshold
+fix removed the instance that motivated it; card stays open on the saturated-percentile gate and
+on an audit against a generated world.** Found by
+the Python-output red team; the coordinator asked for it as a card of its own because it is the
+one key-location finding that needs no generated world and waits on nothing
+(`docs/reviews/233182e-python-output-red-team.md`, finding 8, cause 1).
+
+## Status after the content-placement pass, and after the follow-up that re-measured it
+
+**Read this section, not the wave-1 one it replaces.** An adversarial audit of the first pass
+found that several of its published numbers did not reproduce, and it was mostly right: every
+size-17 row of its before/after table was wrong and its bolded claim that nothing stopped
+placing was false. All of it has been re-measured from scratch, in one process, against frozen
+world documents at sizes 17, 33 and 65, and what follows is the reading rather than the memory
+of one. **Two of the audit's own numbers do not reproduce either** and are corrected in place
+below: `gem_mine` does not go 1→0 at size 17 (it places one under every revision), and
+`geyser_basin` does not go 3→2 at size 65 (it is 20 candidates and 3 placed under every
+revision, which is what the wave-1 card claimed). An audit of an audit earns the same treatment
+as the thing it audits.
+
+**Why the first pass's numbers did not reproduce, stated so it is not read as carelessness.**
+Two causes, and only the second is a mistake.
+
+- **The world moved underneath it.** The river-threshold scaling fix landed in the same window.
+  Before it, `river_threshold_km2` was left at its 11 km value on a 200 km world, so every land
+  cell drained enough to be a river, `freshwater_distance` was 0 across all land and `river` was a
+  flat 1.0. Those are exactly the two layers this card's classes B and C turn on. The size-33 rows
+  of the old table largely still reproduce — `holy_well` 129 candidates and 5 placed, unchanged;
+  `quarantine_isle` 42 candidates; `geyser_basin` 8 candidates; totals 250→254 against a measured
+  251→256 — while **every size-17 row moved**, because that is the raster where the river fix bites.
+- **The land-cell claim was a measurement error.** "30 of 47 land cells already carry a ruin, nest
+  or religion site" was `len(readers.claimed_nodes(world))`, not its intersection with the land
+  domain. The correct figure is **16 of 47**. The same world claims 94 nodes in all, and 78 of
+  them are water, pole or seam nodes — mostly sea nests — which no `domain: land` archetype can
+  ever consider. One number was wrong in both directions at once, and it had been copied into
+  `docs/key-locations.md` and into an inline comment in `Sim/key_locations/__init__.py`. Both are
+  corrected, and both now say to count the intersection.
+
+### How this was measured, so the next person can repeat it rather than re-derive it
+
+Three copies of `Sim/key_locations` — `HEAD`, the wave-1 worktree, and the worktree after this
+follow-up — imported in turn **in one process** and run against **identical frozen world
+documents**. That is the only way to separate this lane's effect from the five others editing the
+same repository at the same time, and it is what makes the three-way table below a comparison
+rather than three readings.
+
+The worlds are seed 42, `recipe_version` 3, phase 16, at sizes 17, 33 and 65, generated through
+`generate_request` and frozen to disk with everything `key_locations` cannot read stripped out —
+which is a 59 MB document reduced to 1 MB, asserted byte-identical in the block it produces rather
+than assumed. **`generate_request`, not `default_config`.** The lab's bare default leaves
+`globe_radius` at 10000, which resolves to the legacy **11.15 km** planet with 6.4 km² of land and
+**39** land cells at size 17; the 200 km `world_size: small` preset this card is written against
+has 2,487 km² and **47**. That is the whole of the open reconciliation `board/README.md` records
+between this card's 47 land cells and the coordinator's 39: `Artifacts/city-planner/world.json` is
+the 11 km world at `generator_version` **9** — measured, `globe_radius` 1774.41 — and on it
+`island_habitat` is nonzero in 2 of 39 land cells and `freshwater_distance` in 4 of 39, which is
+this card's own "gen 9" row. Neither reading was wrong. They are two different planets.
+
+### Before and after, the same world documents, three package revisions
+
+| | size 17: HEAD → wave 1 → now | size 33 | size 65 |
+|---|---|---|---|
+| sites emitted | 106 → **112** → **111** | 251 → **256** → **255** | 494 → **497** → **491** |
+| scattered sites (no chains, no clusters) | 21 → **22** → 22 | 99 → **100** → 100 | 286 → **287** → 287 |
+| archetypes placing at least one | 24 → **25** → **26** | 53 → **57** → **55** | 82 → **88** → 88 |
+| wonders placed (of 5) | 0 → **2** → 2 | 0 → **2** → 2 | 0 → **2** → 2 |
+| archetypes with zero candidates | 9 → **6** → 6 | 6 → **3** → 3 | 6 → **2** → 2 |
+| `salt_mine` candidates / placed | 0 / 0 → **6 / 1** → **9 / 1** | 0 / 0 → **47 / 1** → **46 / 1** | 0 / 0 → **216 / 1** → **199 / 1** |
+| `salt_pans` candidates / placed | 0 / 0 → **7 / 0** → **5 / 0** | 0 / 0 → **26 / 0** → **16 / 0** | 0 / 0 → **122 / 3** → **71 / 3** |
+| `whaling_station` candidates / placed | 0 / 0 → **24 / 0** → 24 / 0 | 0 / 0 → **119 / 0** → 119 / 0 | 0 / 0 → **588 / 2** → 588 / 2 |
+| `holy_well` candidates / placed | 32 / 0 → 32 / 0 → 32 / 0 | 129 / 5 → 129 / 5 → 129 / 5 | 412 / 6 → 412 / 6 → 412 / 6 |
+| `geyser_basin` candidates / placed | 0 / 0 → 0 / 0 → 0 / 0 | 8 / 0 → 8 / 0 → 8 / 0 | 20 / 3 → 20 / 3 → 20 / 3 |
+| `summoning_circle` candidates / placed | 22 / 0 → 22 / 0 → 22 / 0 | 121 / 0 → 121 / 0 → 121 / 0 | 529 / 8 → **529 / 3** → **529 / 1** |
+| land cells | 47 | 268 | 1,174 |
+| land cells already claimed | 16 | 136 | 795 |
+
+The wave-1 card's **size-65** class-A row reproduces exactly — `salt_mine` 216 candidates and one
+site, `salt_pans` 122 and three, `whaling_station` 588 and two, `holy_well` 412 and six,
+`geyser_basin` 20 and three. It is the size-17 column that was wrong and the size-33 one that was
+close, which is consistent with the river fix being the cause: it moves the coarse raster most.
+
+**Class A is fixed, and at a raster with room all three place.** At size 65 the world grows a
+salt mine, three salt pans and two whaling stations where before it grew none at any size — the
+acceptance this card was filed for. At 17 and 33 only `salt_mine` places; the other two have
+ground and lose it to node exhaustion, and the diagnostic says so in its own words — *"no room:
+16 of 24 qualifying cells already carry another feature, and spacing or settlement clearance
+refused the remaining 8"*. The wave-1 card said all three had ground but placed nothing, which
+was wrong about `salt_mine` at every raster and wrong about all three at 65.
+
+**Class C's structural fix is right and its measured instance has gone.** `holy_well` is no longer
+eligible on every land cell, because `freshwater_distance` now varies: 15 of 47 land cells are
+nonzero at size 17 and 139 of 268 at size 33. The fail-closed rule takes **nothing** away at
+either raster now — 32 candidates before and after at 17, 129 before and after at 33 — so the rule
+is a guard against a shape that the river fix happened to remove rather than a change that cost
+content. It should stay, and at size 65 it likewise takes nothing: `holy_well` is 412 candidates
+and 6 placed under all three revisions. `river` now varies on land (24 of 47 nonzero at size 17),
+so the four wayside archetypes the rule caught are gated on a real river again at that raster.
+**At 33 and 65 they are not: `ford` and `ferry_crossing` are eligible on all 268 and all 1,174
+land cells respectively**, and at 65 they go on to place 10 and 3 sites each — so the voided
+gate is no longer merely reporting a wrong candidate count, it is putting fords on ground with
+no river. That is the *saturated* percentile described further down and nothing here fixes it.
+
+### Correction: "nothing that placed before stopped placing" is FALSE
+
+The wave-1 card bolded that claim. It does not survive measurement, and worse, **it is not a claim
+this system can support at all.** Measured, HEAD → wave 1 on identical worlds:
+
+| raster | stopped or shrank |
+|---|---|
+| 17 | `bandit_camp` 1→0, `caravanserai` 1→0, `wizard_tower` 1→0, `siege_camp` 2→0 |
+| 33 | `hedge_inn` 6→5, `logging_camp` 4→2, `pass_hospice` 3→1, `siege_camp` 8→6 |
+| 65 | **`summoning_circle` 8→3**, **`wayside_shrine` 5→1**, `siege_camp` 12→10, `pilgrim_station` 5→4 |
+
+All four disappear from the size-17 world entirely, and none of them had its gate touched. The size-65 row is the largest movement in the whole change and the audit was right to single it out — though it named `summoning_circle` 7→2 and `geyser_basin` 3→2, and the measurement gives 8→3 for the first and **no movement at all** for the second.
+
+**The mechanism, traced to a line rather than guessed at.** A cluster's existence is keyed on its
+anchor's *node id*. `build_clusters` seeds a generator on the cluster spec and the anchor's id and
+compares one draw against the spec's `chance`
+(`Sim/key_locations/core/composition.py:206-208`).
+A site's id is `keyloc-<kind>-<node>`, so the node *is* the seed. At size 17 the two `border_fort`
+sites sit on
+nodes 131 and 209 under `HEAD` and on nodes 85 and 209 after wave 1. The siege coin for node 131
+is 0.385 and clears the 0.55 chance; for node 85 it is 0.570 and does not. **One fort moved one
+cell and a whole cluster of two siege camps stopped existing.** Nothing about siege camps changed.
+
+So the honest general statement, which should replace the bolded claim wherever it is repeated:
+**at a raster where the node budget binds, any change that displaces one site re-rolls every draw
+keyed on that site's node, and content appears and disappears with no relation to the gate that
+was edited.** `select` also skips claimed nodes *before* consuming a jitter draw
+(`Sim/key_locations/core/placement.py:239-242`), so adding one claimed node anywhere re-pairs the jitter sequence
+with the candidate list for every archetype placed afterwards. Both are deterministic and neither
+is a bug; they make "nothing stopped placing" an unprovable claim rather than a false one.
+
+### What this follow-up changed, and what it cost
+
+| | size 17 | size 33 | size 65 |
+|---|---|---|---|
+| sites emitted | 112 → 111 | 256 → 255 | 497 → 491 |
+| gained | `cliff_coffins` 0→1 | `hedge_inn` 5→6, `hillfort` 1→2, `pass_hospice` 1→2 | `wayside_shrine` 1→2, `wild_magic_scar` 1→2 |
+| lost | `barrow` (scattered) 1→0, `miners_cottages` 5→4 | `smelter_ruin` 1→0, `standing_stones` 1→0, `reliquary_chapel` 3→2, `siege_camp` 6→5 | `siege_camp` 10→6, `miners_cottages` 7→5, `summoning_circle` 3→1 |
+
+Reported rather than buried, because it is the same effect as the section above: `salt_mine` moved
+to a different node, `salt_pans` lost candidates, and everything downstream of the node budget
+re-rolled. **Net one site fewer at 17 and 33 and six fewer at 65**, two archetypes lose their only
+size-33 site, and no class-A placement is lost at any raster — `salt_mine` still places one at
+all three and `salt_pans` still places three at 65 on 71 candidates instead of 122. The changes
+below are still right — an unjustified floor and an unjustified threshold are defects whatever
+they happen to be worth in one world's node budget — but the cost is a cost, and at size 65 it
+is four siege camps and two miners' cottages that exist in one arrangement of the world and not
+the other.
+
+**Count the sites, not the diagnostics.** These deltas are from the `sites` array grouped by
+`(kind, placement)`. A per-archetype reading of `diagnostics` misses some of them: `barrow`
+declares `also_scatters`, so it gets **two** diagnostic rows — one from the scatter pass and one
+from `barrow_ring` — and a reader keyed on the archetype id keeps whichever comes last. At size 17
+that hid `barrow`'s scattered site disappearing, and made the totals fail to add up: 112 sites
+against 111 summed placements. The `sites` array is the ground truth; `diagnostics` is one row per
+*pass*, not one per archetype.
+
+### `summoning_circle` at size 65: its gate is innocent, and its count is not a measurement of anything
+
+The audit reported `summoning_circle` falling from 7 placed to 2 at size 65, called it the largest
+content movement in the change, and said nobody had decided whether it was a defect the fix
+exposed or one the fix introduced. Re-measured on the current tree it is **8 → 3** under wave 1
+and **8 → 1** after this follow-up, so the audit was right about the size and right that nobody
+had explained it. **It is neither kind of defect. It is the node budget, and the count is not a
+property of the archetype.** Six runs of the *current* engine against one frozen size-65 world,
+varying only the catalogue handed to it:
+
+| catalogue | sites | `summoning_circle` placed, of 8 wanted, from 529 candidates |
+|---|---|---|
+| the full catalogue as it stands | 491 | **1** |
+| minus the five wonders | 492 | **3** |
+| minus the three class-A archetypes | 483 | **4** |
+| minus both | 494 | **8** |
+| `HEAD`'s catalogue | 494 | **8** |
+| a document holding *only* `summoning_circle` | 8 | **8** |
+
+Four things this settles, and the apportionment is the interesting one.
+
+**The gate did not move.** `summoning_circle` requires `magic_density above_percentile 0.55` and
+neither wave touched `magic_density` or that term. Its candidate count is **529 in every row of
+that table**, and so is `wanted` at 8, because `budget` draws from
+`rng(seed, 'keyloc-place-summoning_circle')`, a generator seeded per archetype that nothing else
+can reach. Whatever moved, it was not the archetype's relationship to the ground.
+
+**Remove the eight new sites and it recovers completely.** "Minus both" is `HEAD` in placement
+terms while still running the current engine, and it puts all 8 back. The loss is caused by the
+eight sites wave 1 added — one salt mine, three salt pans, two whaling stations, two wonders — and
+by nothing else.
+
+**Neither cause alone accounts for it, which is the signature of a reshuffle rather than a
+crowd-out.** Removing the five wonders alone recovers 2 of the 7; removing the three class-A
+archetypes alone recovers 3; removing both recovers all 7. Eight extra claimed nodes out of 1,174
+land cells cannot *crowd out* five sites. What they do is re-order: `select` skips a claimed node
+**before** consuming its jitter draw
+(`Sim/key_locations/core/placement.py:239-242`), so one extra claimed node
+anywhere in the list re-pairs the entire jitter sequence with the remaining candidates, and a
+greedy pass under a binding spacing rule packs a re-ordered list differently. `summoning_circle`
+is tier 0, `sorted(scattered, key=lambda a: (-a['tier'], a['id']))` places tier 0 last, and its
+own spacing is 0.8 reference cells against an arcane family spacing of 1.2 — so it is the
+archetype most exposed to exactly that.
+
+**An archetype in that position has a count that is a residue, not a measurement.** Alone in a
+document it takes every site it wants at all three rasters — 5 of 5 at size 17, 7 of 7 at 33, 8 of
+8 at 65 — and in the real catalogue it takes 0, 0 and 1. Reading a swing in that number as
+evidence about summoning circles is reading the residue as the signal. **The honest fix is not to
+this archetype**: it is either to stop tier 0 being last in line for ground, or to stop reporting
+a residue as though it were a placement decision. Both are larger than this card.
+
+### Three absolute floors arrived with no justification. Two are justified; one is gone.
+
+An absolute floor is the one part of a gate that does not travel between worlds, so it has to be
+**the value below which the field means none of the thing**, with the reason written down beside
+it. A floor taken from inside the field's own distribution is tuning, and untraceable tuning is
+the defect class this repository keeps rediscovering. The catalogue now carries a `floor_rule`
+note stating that, and the three floors were put to it one at a time.
+
+**`salt_pans`: `coastal_exposure >= 0.125`. Justified — it is 1/8, and 1/8 is the field's smallest
+possible positive value.** `coastal_exposure` is a cell's water-neighbour count divided by its
+neighbour count (`Sim/icarus_sim/terrain_ecology.py:93-95`).
+The sphere grid gives every cell six or
+eight neighbours at sizes 17, 33, 65, 129 and 257 — only the two poles differ, with 2(n−1)
+neighbours each, and `readers.cells` excludes the poles — so no cell can hold a positive value
+below 1/8. Measured: the smallest positive value on land is exactly 0.125 at sizes 17 and 33. The
+floor therefore says *touches water at all* and admits nothing less. It is not a level.
+
+**`whaling_station`: `coastal_fishing_productivity >= 0.12`. Justified — it is the constant term
+in the source field's own definition.** `fishing_productivity` is `clamp(0.12 + 0.55·shallow +
+0.3·estuary + 0.2·kelp + 0.15·reef)` wherever water exists and `0.0` on land
+(`Sim/icarus_sim/terrain_ecology.py:104`), so 0.12 is the least value it can take
+where it exists. Measured: the minimum on water is exactly 0.1200 at sizes 17 and 33. The derived shore field takes the best
+water neighbour, so it is ≥ 0.12 on any land cell touching water and exactly 0 inland — the same
+statement as the one above, in the other field's units.
+
+**Both floors are one raster step from being the entire gate, and that is measured rather than
+predicted.** The share of land reading zero climbs with the raster and the nearest-rank cut
+falls to meet the floor:
+
+| size | land cells | `coastal_exposure` zero on land | p55 cut | p60 cut on the shore field |
+|---|---|---|---|---|
+| 17 | 47 | 1 (2.1%) | 0.500 | 0.42 |
+| 33 | 268 | 77 (28.7%) | 0.375 | 0.42 |
+| 65 | 1,174 | 586 (**49.9%**) | **0.125** | **0.12** |
+
+At size 65 the p55 cut **is** 0.125 — the smallest positive value `coastal_exposure` can hold —
+and the p60 cut on `coastal_fishing_productivity` **is** 0.12. The percentile has already fallen
+the whole way to the floor. One raster further and it goes to zero: `percentile` is nearest-rank,
+so the cut is the value at index `round(0.55·(n−1))` and reaches zero once more than about **55
+per cent** of the domain reads zero — checked directly against `placement.percentile` at n = 100,
+268, 1174 and 4870, positive at 54 per cent zero and zero at 56. Size 65 is at 49.9. **Past size
+65 these two floors are the only thing standing between a shore archetype and every inland cell
+in the world**, which is the fail-open shape this card exists to describe, and it is why they are
+not decoration.
+
+**`salt_mine`: `metal_richness >= 0.3`. Removed, with the term it sat on.** This one was a level.
+`metal_richness` runs 0.148–0.682 on land at size 17 and 0.120–0.765 at size 33, so 0.3 is an
+interior cut with no meaning attached, and nothing anywhere said why it was 0.3. The deeper
+problem is the one the audit named: the field is an ore proxy —
+`clamp((0.45 + 0.7·perlin3 + 0.2·volcanic) · metal_abundance)` at
+`Sim/icarus_sim/terrain_ecology.py:108`.
+The archetype's own `reason` says *"a sea dried here long ago and left rock salt under dry
+ground"*. **Evaporite is not ore, and a gate that does not mean what the reason says places the
+right noun for the wrong cause** — invisibly, because the output records the reason string and not
+the gate that produced it.
+
+`salt_mine` now asks for an arid basin, which is what the reason describes: `rainfall
+below_percentile 0.35` and `tpi below_percentile 0.35`, low ground relative to its surroundings.
+Both fields vary on land at both rasters, so the fail-closed rule does not bite, and neither term
+carries a floor because a basin is a relative notion and has no absolute "none of the thing" value
+to name. Candidates: **9 at size 17** (against 6 for the ore gate) and **46 at size 33** (against
+47), and it places one site at both, so the semantic fix is free at 17 and costs one candidate at
+33.
+
+**`whaling_station`'s other floor, `coastal_exposure >= 0.03`, predates this work and was left
+alone.** It cannot bind — the field has no positive value below 0.125 — so it is inert rather than
+wrong, and changing it would move content for no reason. Noted here so the next reader does not
+have to re-derive that.
+
+### `salt_pans`' slope term was loosened in the same edit for no stated reason. Reverted.
+
+The class-A fix also changed `slope below_percentile` from 0.3 to 0.4, which has nothing to do
+with a gate naming an ocean field. Nothing anywhere justified it, so it is back at 0.3. What that
+costs, measured: candidates 7 → 5 at size 17 and 26 → 16 at size 33. `salt_pans` placed zero sites
+at both rasters before and after the revert, so **the revert costs no salt pans on either world**;
+what it costs is the reshuffle described above, which is where the one net site at each raster
+went.
+
+The general point is worth keeping: a threshold moved inside an edit that was about something else
+is invisible in review, because the diff reads as part of the fix. All three floors above and this
+slope term arrived exactly that way, in a change whose stated subject was a gate naming an ocean
+field.
+
+**The structural rule, stated so it cannot be rediscovered a third time.** *An absolute floor on an
+empty field fails closed; a percentile on an empty field fails open.* The closed failure costs a
+kind of place and says so in `diagnostics`. The open one voids the archetype's defining requirement
+and reports `placed`. Four of the five archetypes here carried a floor; `holy_well` did not, and it
+is the only one that was producing wrong output rather than no output.
+
+### What the fail-closed rule turned up that nobody had filed
+
+The rule was written for `holy_well` and immediately caught four more, which is the argument for
+writing the rule rather than fixing the instance. **`river` reads a flat 1.0 on every land cell of
+the size-17 reference world.** So `ford` and `ferry_crossing` were eligible on all 47 land cells —
+their entire domain — and `bridge` and `toll_station` were gated only by their second term. Four
+wayside archetypes whose defining requirement is *a river* were being placed without reference to
+one. They now report the gap instead. The same concurrent river change should restore them; if it
+does not, that is a finding of its own and larger than this card.
+
+**Followed up and half true.** The river fix landed and `river` does vary now — 24 of 47 nonzero
+at size 17 — so the fail-closed rule no longer fires on any of the four and all four are gated on
+a real river again at size 17: `ford` and `ferry_crossing` are down from all 47 land cells to 24,
+and `bridge` and `toll_station` to 13. At size 33 it did **not** work: the layer went from
+saturated to sparse, 22 of 268 nonzero, and an `above_percentile` cut over a field that is zero on
+92 per cent of the domain lands at zero, so `ford` and `ferry_crossing` are eligible on all 268
+land cells exactly as before. The gate is voided by the opposite extreme and looks identical from
+the outside. That is the saturated-percentile item further down, and it is what this card now
+stays open for.
 
 **This is resolution-independent.** Every other cause of a missing key location — tail
 calibration, the spacing squeeze, area-scaled rounding — recovers or changes with the raster.
 These do not. Raising the ceiling to 1025 will not put ocean salinity inland.
 
 ## Observed behavior
+
+> **Everything from here to the end of this section is the world *as it was when the card was
+> filed*, and two of its three sub-classes have since been overtaken by world-scale fixes
+> elsewhere.** It is kept because the reasoning is what the card is for, and because the
+> refutations of two plausible wrong readings are still worth having. Where it says
+> `freshwater_distance` is 0 on every land cell, `river` is a flat 1.0 or `island_habitat` is
+> identically zero, the current tree reads 15 of 47, 24 of 47 and 1 of 47 at size 17. Class A —
+> `salinity` and `fishing_productivity` on land — is unchanged and always will be; those are
+> ocean quantities by construction.
 
 Seed 42, sizes 17 and 33, `generator_version` 16. Scanning every archetype's `requires` terms
 against the field values **restricted to the domain that archetype declares** finds five whose
@@ -182,13 +507,187 @@ Three separate consequences, one per sub-class:
 
 ## Acceptance and evidence
 
-- No archetype gates on a field with zero nonzero values inside its declared domain, or the
-  catalogue records why that is intended.
-- A behavioral test asserts the property over the whole catalogue against a reference world, so a
-  new archetype cannot be added with a mismatched field.
-- An empty-field percentile term yields no candidates rather than all of them, with a test
-  covering the `holy_well` shape specifically.
-- `diagnostics` distinguishes "field carries no data in this domain" from "no ground satisfies".
+- [x] No archetype gates on a field with zero nonzero values inside its declared domain, or the
+  catalogue records why that is intended. **Done.** The three class-A archetypes were re-gated on
+  land fields, and the catalogue carries a `gate_rule` note stating the rule.
+- [x] A behavioral test asserts the property over the whole catalogue against a reference world, so
+  a new archetype cannot be added with a mismatched field. **Done**, in two halves that cover
+  different holes, with the limit of each written into its own docstring. See *The guard is two
+  tests and neither is sufficient alone* below.
+- [x] Every absolute floor in the catalogue is either the value below which its field means *none
+  of the thing*, with the reason recorded, or it is removed. **Done** for the three floors this
+  work introduced; the catalogue carries a `floor_rule` note stating the rule, and `salt_mine`'s
+  floor went out with the term it sat on. **Not audited across the other ninety-odd archetypes**,
+  which is the obvious next sweep and is not done here.
+- [x] Every archetype's gate means what its `reason` string says. **Done for `salt_mine` only**,
+  which is the one the audit named. Nobody has read the other ninety-six with that question in
+  mind, and nothing in the output would show it if one of them were wrong.
+- [x] An empty-field percentile term yields no candidates rather than all of them, with a test
+  covering the `holy_well` shape specifically. **Done**, and widened from "empty" to "no variation",
+  because a field that is a flat *nonzero* constant fails open in exactly the same way and `river`
+  is one.
+- [x] `diagnostics` distinguishes "field carries no data in this domain" from "no ground satisfies".
+  **Done**, and a third case was separated at the same time: *"no room: N of M qualifying cells
+  already carry another feature"*, which used to be reported as *"spacing and clearance left room
+  for fewer"* even when the number placed was zero.
+- [x] The generator 9 → 16 collapse of `island_habitat` and `freshwater_distance` is diagnosed.
+  **Done, and not by this card.** Both were world-scale bugs fixed in the same wave, each with the
+  same shape: a constant authored for the 11.15 km reference world, left absolute on a 200 km one.
+  `island_habitat` carried an absolute `min(3e6, …)` island-size arm — 3 km², against a single
+  size-17 cell of 15.2 km² at 200 km — so no component could ever be small enough to count
+  (`Sim/icarus_sim/terrain_ecology.py:131-134`).
+  The river side was the same shape: `river_threshold_km2` left at its 11 km value,
+  so every land cell drained enough to be a river, `freshwater_distance` read 0 everywhere and
+  `river` read a flat 1.0. Measured on the current tree: `island_habitat` is nonzero in 1 of 47
+  land cells at size 17 and 42 of 268 at size 33; `freshwater_distance` in 15 of 47 and 139 of 268;
+  `river` in 24 of 47 and 22 of 268. This card's step 3 is obsolete — the bisect it asks for has
+  been done and the answer was neither the layer's existence nor its water handling but the metre
+  constants, which is the generalisation worth keeping.
+- [ ] A percentile term that admits the entire domain is refused, not just one over a constant
+  field. **Not started**, and this is what the card now stays open for: `ford` and
+  `ferry_crossing` are eligible on all 268 land cells at size 33 today. See *the fail-closed rule
+  is necessary and not sufficient* below.
+- [ ] The catalogue-versus-world audit runs against a **generated** world, not a fixture and not a
+  hand-curated table. **Not started.**
+
+### The test guards reintroduction; it did not and could not find this
+
+Worth stating plainly, because the opposite is the natural assumption. The test module builds a
+hand-written world rather than generating one, and its fixture gave `salinity` a smooth gradient
+across the map with no reference to the water mask. So the fixture made all three class-A
+archetypes look placeable while they were unplaceable in every world the generator has ever
+produced — a fixture kinder to the catalogue than the world is hides exactly the defects a
+catalogue can have. The fixture now mirrors the measured semantics: `salinity` 1.0 on water and
+0.0 on land, `fishing_productivity` 0.0 on land. **The audit only became a real guard once the
+fixture stopped lying**, and the audit against a generated world is still worth adding separately.
+
+### The guard is two tests and neither is sufficient alone
+
+The audit above runs only against the hand-built fixture, so it guards exactly the two semantics
+that fixture was just taught — which was the audit's own finding about itself, and it is correct.
+The fix is not to pretend otherwise but to add the half the fixture cannot supply, and to write
+each half's limit into its own docstring.
+
+`test_no_archetype_requires_a_layer_measured_dead_in_its_own_domain` checks the catalogue against
+`CONSTANT_IN_DOMAIN`, a curated table of layers that carry no data inside a domain **by
+construction** — each one written as `<expr> if water[i] else 0.` or its mirror in
+`terrain_ecology.derive`, or a definition, as with the depth of water where there is no water.
+Sixteen entries, every one confirmed by reading the full size-17 document, and the eight that
+survive into the pruned worlds re-confirmed at size 33. It never looks at the fixture.
+
+The table is curated on purpose and the reason is the distinction this whole card turns on. A raw
+`min == max` sweep of one document returns about a hundred layer/domain pairs, and most of them —
+`ley_blood`, `zone_dead_sea`, `suitability_tidekin` — are constant because *this world* has no
+blood magic, no dead sea and no tidekin. **That is an unlucky world. A layer that is constant
+because the code that writes it skips the domain is a catalogue fault waiting to be committed.**
+Only the second kind is in the table, which is why it is short.
+
+The two halves catch different things, demonstrated rather than asserted. Pointing `salt_mine` at
+`water_depth` or at `reef` — both `domain: land`, both identically 0.0 on land in every generated
+world measured — makes the new test fail and the fixture audit **pass**, because the fixture gives
+both fields variation on land. Pointing it back at `salinity` fails both, because the fixture was
+taught that one. Conversely the fixture audit catches any archetype naming a layer the table does
+not list, including a layer nobody has measured yet. Neither test subsumes the other and the card
+should not claim either does.
+
+What is still missing, stated so it is not mistaken for done: **an audit against a generated
+world.** Both halves are catalogue-versus-something-cheap; neither runs the generator, and the
+table is a reading from one seed at two rasters rather than a property of the code that writes
+those layers.
+
+### The fail-closed rule is necessary and not sufficient: a *saturated* field fails open too
+
+Found while measuring the fix, and it is the next thing anyone working here should know. The rule
+implemented catches a field with **no variation** in the domain. It does not catch a field that
+varies but is saturated, and that case is live right now:
+
+```
+size 33   ford   requires river above_percentile 0.55   candidates 268 of 268 land cells
+```
+
+`river` is not constant at size 33 — so the rule lets it through — but it is saturated enough that
+the 55th-percentile cut lands at a value every land cell clears. The gate admits the entire domain
+exactly as `holy_well` did, and reports success. Same defect, one step further along.
+
+**Re-measured after the river-threshold fix landed, because the obvious guess is that it cured
+this too. It did not.** `river` now varies properly on land — 24 of 47 nonzero at size 17 and 22
+of 268 at size 33, against a flat 1.0 before — and `ford` and `ferry_crossing` are **still 268 of
+268** at size 33. The field is now *sparse* rather than saturated, and a `below`-style reading of
+an `above_percentile 0.55` cut over a field that is zero on 92 per cent of the domain lands at
+zero, so everything clears it. Zero variance, saturation and sparsity are three routes to the same
+place, which is the argument for a rule shaped on the outcome rather than on the field.
+
+Stating the general form so it is not rediscovered as a third instance: **a percentile gate carries
+no information whenever the cut it computes does not separate the domain.** Zero variance is the
+degenerate case of that, not the whole of it. A rule shaped on the *outcome* — refuse a resolved
+term that admits every cell in the domain, or more than some share of it — would cover both, and it
+is a bigger decision than this lane should take alone, because it changes the meaning of a
+percentile from "the top N per cent" to "the top N per cent, and it has to be a real top". Two
+archetypes (`ford`, `ferry_crossing`) are eligible on all 268 land cells at size 33 and all
+1,174 at size 65 today, and at 65 they place 10 and 3 sites from that unfiltered domain. **This
+is the one item on the card that is producing wrong content right now rather than absent
+content**, which is the argument for it being what the card stays open on.
+
+### Deliberately not done: `geyser_basin` and `lava_tube` are correctly calibrated and the raster is too coarse
+
+This is the tail-calibration cause the card names as distinct from its own, and it was measured
+rather than assumed because the temptation to lower the floor is strong and acting on it would be
+irreversible. **`geyser_basin` needs a bigger raster, not a smaller floor.** It wants its own card;
+this lane could not create one, so the measurement is recorded here.
+
+Seed 42, phase 9, `volcanic` restricted to land by the generator's own cell selection:
+
+| size | land cells | land max | p82 cut | ≥ 0.05 | ≥ 0.08 | `geyser_basin` / `lava_tube` candidates |
+|---|---|---|---|---|---|---|
+| 17 | 47 | **0.0286** | 0.00057 | **0** | **0** | 0 / 0 |
+| 33 | 268 | 0.1524 | 0.00145 | 8 | 3 | 8 / 3 |
+| 65 | 1,174 | 0.1524 | 0.00154 | 20 | 5 | 20 / 5 |
+| 129 | 4,870 | 0.1524 | 0.00167 | 66 | 21 | 66 / 21 |
+| 257 | 19,521 | 0.159 | 0.00179 | 286 | 93 | 286 / 93 |
+
+Three things this settles.
+
+**The field fires and the gate is not broken.** The candidate count grows smoothly with the
+raster and only size 17 has no qualifying ground at all.
+
+**One correction and one confirmation, because an audit of this section got one of each.** The
+audit reported `geyser_basin` moving from 3 placed to 2 at size 65 and called this section's
+premise contradicted. It does not reproduce: measured at phase 16 on the frozen size-65 world,
+`geyser_basin` is **20 candidates and 3 placed under all three package revisions**, exactly as the
+wave-1 card said, and it is likewise unmoved at 17 (0/0) and at 33 (8/0). *"Unmoved at every
+raster"* stands.
+
+What does not stand is the sentence above it. **"Both archetypes place from size 33 upward" is
+false**, and the reason is worth keeping: the candidate table here is a **phase 9** sweep, and what
+an archetype does with its candidates at phase 16 is a different question, because by then ruins,
+nests and religion sites have taken ground. At phase 16, size 33, `geyser_basin` has its 8
+candidates and places **none** — *"no room: 6 of 8 qualifying cells already carry another
+feature"* — and `lava_tube` has 3 and places none; at size 65 `geyser_basin` places 3 and
+`lava_tube` still places none from 5. **Candidates are ground; placements are ground that is still
+free.** Everything in this section is a claim about the first, and the conclusion it reaches — the
+floor is right and the raster is what is short — rests on the candidate column alone and is
+untouched.
+
+**The percentile is never the binding term; the absolute floor is.** The p82 cut sits around
+0.0018 at every size — two orders of magnitude below the 0.05 floor. So this is the floor doing
+precisely the job it was written for, which the catalogue note describes as stopping "the most
+volcanic ground on a world with no volcanism" from qualifying. At size 17 the land max is 0.0286
+and there genuinely is no volcanic ground; 47 land cells cannot resolve a hotspot.
+
+**Lowering the floor would cost every larger world permanently and buy one cell on one seed.**
+Dropping it from 0.05 to 0.0286 — the least change that could admit anything at size 17 — takes
+geyser ground on a size-257 world from 286 cells to 661, from 1.5% of land to 3.4%, and the same
+2.3× at size 129. It would still put exactly one candidate at size 17, and only on this seed.
+That is the shape of retune the settled ruling in this repository exists to refuse.
+
+### A separate defect found in passing and deliberately left alone
+
+`budget()` is called with land area for **every** archetype, including the `water`, `ocean` and
+`lake` ones, so a `maelstrom` and a `drowned_temple` are budgeted by how much *land* the world has.
+It is uniform and arguably defensible as "content density tracks how much world there is to
+explore", but it is not what the field name says. Changing it would move the counts of roughly
+fifteen water archetypes at once, which is a wider blast radius than this card, so it is recorded
+here rather than acted on.
 
 ## Adversarial review and limitations
 
@@ -213,4 +712,25 @@ re-deriving the domain test.
 `freshwater_distance` reads 0.0000 on land and −1.0 on water, which looks like a sentinel
 convention rather than a measured distance. If the intended semantics are "−1 means no data",
 then class C is a sentinel being read as a value, which would be a smaller and more local fix
-than step 4 — worth checking before implementing anything.
+than step 4 — worth checking before implementing anything. **Still live, and now visible on land
+too:** after the river fix the minimum on land at size 33 is **−1.0**, so at least one land cell
+is carrying the water sentinel. Any archetype reading that layer with a `below_percentile` term
+treats it as the nearest water in the world.
+
+**A third measurement error, from the pass this card documents, and the most instructive of the
+three.** `len(readers.claimed_nodes(world))` was read as "land cells already taken". It is not:
+it counts every node any module claimed, most of them at sea. 94 against the 16 that matter. The
+common thread with the other two is that all three came from asking a question the block never
+asks — `height > 0` instead of the water mask, a whole-grid population instead of the domain's, a
+whole-grid claim count instead of its intersection with the domain. **Every one of them would
+have been caught by starting from `readers.cells(world, archetype['domain'])` and intersecting,
+which is what the block itself does.**
+
+**What was and was not re-measured in this follow-up.** Sizes 17, 33 and 65, seed 42, phase 16,
+on the 200 km preset, three package revisions each against one frozen document per raster. **Not**
+measured: any other seed, and sizes 129 and 257 — which matters most for the floors, because the
+percentile-collapse crossing they exist to catch is predicted to fall between 65 and 129 and has
+not been observed. A size-65 phase-16 world costs about ten minutes of CPU on a contended box, so
+a second seed is affordable and a 129 is not obviously so; the claim most worth a second seed is
+still the shape of `coastal_exposure`'s zero share, since everything about the floors rests on
+it climbing monotonically with the raster and that is three points on one world.

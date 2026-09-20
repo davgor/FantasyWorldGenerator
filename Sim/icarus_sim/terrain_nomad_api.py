@@ -18,6 +18,9 @@ something else asked.
 import copy
 from time import perf_counter
 from .terrain_lab import Config
+from .terrain_errors import (invalid_choice, missing_block, out_of_range,
+                             refused_by_world, unknown_field, unsupported_api,
+                             wrong_type)
 from .terrain_nomads import CLASSIFICATIONS, GATES, ORIGIN_CAMP_KIND, ground, policy, seasonal_swing
 from .terrain_nomad_routes import add_nomad_routes
 from .terrain_encounters import add_encounters
@@ -28,29 +31,45 @@ FIELDS = {'api_version', 'world', 'node', 'origin', 'classification', 'variation
 
 
 def validate_nomad_request(body):
-    if not isinstance(body, dict) or set(body) - FIELDS:
-        raise ValueError('Expected api_version, world, node, origin, optional classification and variation')
+    if not isinstance(body, dict):
+        raise wrong_type('request', body, {'type': 'object'})
+    if set(body) - FIELDS:
+        raise unknown_field(sorted(set(body) - FIELDS)[0], FIELDS, noun='request field')
     if type(body.get('api_version')) is not int or body['api_version'] != API_VERSION:
-        raise ValueError('Unsupported nomad API version')
+        raise unsupported_api('api_version', body.get('api_version'), (API_VERSION,))
     world = body.get('world')
-    if not isinstance(world, dict) or 'nomads' not in world:
-        raise ValueError('World must already carry a nomads block')
+    if not isinstance(world, dict):
+        raise wrong_type('world', world, {'type': 'object'})
+    if 'nomads' not in world:
+        raise missing_block('nomads', 'This world carries no nomads block. Bands are placed '
+                            'at stage 16, so generate through phase 16 before raising one.')
     node = body.get('node')
-    if type(node) is not int or node < 0:
-        raise ValueError('node must be a non-negative grid index')
+    if type(node) is not int:
+        raise wrong_type('node', node, {'type': 'integer'})
+    if node < 0:
+        raise out_of_range('node', node, {'type': 'integer', 'min': 0, 'units': 'grid index'})
     origin = body.get('origin')
-    if not isinstance(origin, dict) or set(origin) - {'kind', 'id', 'age'}:
-        raise ValueError('origin takes kind, id and age')
+    if not isinstance(origin, dict):
+        raise wrong_type('origin', origin, {'type': 'object'})
+    if set(origin) - {'kind', 'id', 'age'}:
+        raise unknown_field(sorted(set(origin) - {'kind', 'id', 'age'})[0],
+                            ('kind', 'id', 'age'), noun='origin field')
     if origin.get('kind') not in ('world', 'god', 'villain'):
-        raise ValueError('origin kind must be world, god or villain')
-    if type(origin.get('age')) is not int or origin['age'] < 0:
-        raise ValueError('origin age must be a non-negative integer')
+        raise invalid_choice('origin.kind', origin.get('kind'),
+                             {'type': 'string', 'choices': ['world', 'god', 'villain']})
+    if type(origin.get('age')) is not int:
+        raise wrong_type('origin.age', origin.get('age'), {'type': 'integer'})
+    if origin['age'] < 0:
+        raise out_of_range('origin.age', origin['age'], {'type': 'integer', 'min': 0})
     wanted = body.get('classification')
     if wanted is not None and wanted not in CLASSIFICATIONS:
-        raise ValueError('Unknown classification')
+        raise unknown_field(wanted, CLASSIFICATIONS, noun='classification')
     variation = body.get('variation', 0)
-    if type(variation) is not int or not 0 <= variation <= 4294967295:
-        raise ValueError('variation must be a uint32')
+    if type(variation) is not int:
+        raise wrong_type('variation', variation, {'type': 'integer'})
+    if not 0 <= variation <= 4294967295:
+        raise out_of_range('variation', variation,
+                           {'type': 'integer', 'min': 0, 'max': 4294967295, 'units': 'seed'})
     return Config(**world['config']), node, origin, wanted, variation
 
 
@@ -63,20 +82,20 @@ def nomad_request(body):
     cfg, node, origin, wanted, variation = validate_nomad_request(body)
     world = body['world']
     started = perf_counter()
-    result = copy.deepcopy({k: v for k, v in world.items() if k != 'build_stages'})
-    if 'build_stages' in world:
-        result['build_stages'] = list(world['build_stages'])
-    result.setdefault('timing_ms', {'total': 0.})
-    result['timing_ms'].setdefault('total', 0.)
+    from .terrain_history import adopt_world
+    result = adopt_world(world)
 
     radius = result['effective_config']['globe_radius']
     points, areas, _ = sphere_grid(cfg.size, radius)
     if node >= len(points):
-        raise ValueError('node is outside this world')
+        raise refused_by_world('node', node, 'Node %d is outside this world; it has %d grid '
+                               'points.' % (node, len(points)))
     cells = habitat_cells(result, cfg, points, areas)
     cell = cells[node]
     if cell['fields'].get('medium') != 'land':
-        raise ValueError('A band cannot be raised on water')
+        raise refused_by_world('node', node, 'A band cannot be raised on water; node %d is '
+                               '%s. Pick a land node.'
+                               % (node, cell['fields'].get('medium', 'not land')))
     cell['swing'] = seasonal_swing(result, cell['x'], cell['z'])
     g = ground(result, cfg, radius, points)
     pol = policy()

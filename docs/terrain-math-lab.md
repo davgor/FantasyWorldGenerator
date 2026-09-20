@@ -284,7 +284,9 @@ land areas. Changing terrain/crust/sea-level settings can change that average.
 
 Calibration used default v4 phase 3, 129² samples, seeds 0–31: mean 20.00 km²,
 range 14.03–24.83 km². Independent holdout seeds 32–47: mean 18.65 km², range
-15.76–20.94 km². These finite samples establish an approximate preset, not a
+15.76–20.94 km². These km² figures were measured on the 11.15 km reference world and
+are reference-world values; a generated world is 200 km around and its areas scale by
+the square of the width ratio. These finite samples establish an approximate preset, not a
 distribution-wide guarantee. Machine-readable runs are in
 `Artifacts/terrain-lab/scale-calibration.json` and `scale-holdout.json`.
 
@@ -440,9 +442,15 @@ uses flood-parent links on flats. Receivers precede their children in flood orde
 so the graph is acyclic. Reverse traversal accumulates reference-sphere catchment
 area under uniform unit runoff, conserving total area at terminal outlets. Lake
 interiors participate in routing, connecting upstream and downstream catchments.
-Dry nodes exceeding River catchment (default 0.15 km²) draw cyan river segments.
-Smaller values show more tributaries. These are routes, not river-width geometry
-or measured flow rates. Earlier erosion is not rerun with these new routes.
+Dry nodes exceeding River catchment draw cyan river segments. Smaller values show
+more tributaries. The 0.15 km² default is the 11.15 km reference world's value, not
+the value a generated world uses: recipe 3 scales it by the square of the
+circumference ratio, resolving 48.27 km² at the 200 km small preset, 193.08 km² at
+400 km and 434.44 km² at 600 km. Left unscaled it stops discriminating: on a 200 km
+world almost every land cell drains more than 0.15 km², and the measured land-river
+fraction is 100% at size 17, 99.6% at 33 and 85.2% at 65. These are routes, not
+river-width geometry or measured flow rates. Earlier erosion is not rerun with these
+new routes.
 
 Connected water colors dry ground green, ocean blue and lakes turquoise. Terrain
 colors incorporates lake classification; vegetation landmarks avoid flooded cells.
@@ -461,7 +469,10 @@ Dry-ground area excludes lakes but not unmodelled river widths or flooded banks.
 
 Default seed 42 at 129²: ocean 22.52 km², lakes 0.63 km², dry ground 16.41 km²,
 about 3.15 million m³ equilibrium lake capacity, and 114 river segments with the
-default threshold. Water processing took about 214–228 ms locally, excluding
+default threshold. Those areas are REFERENCE-WORLD figures, measured on the 11.15 km
+world, and they no longer describe a generated world: the small preset is now 200 km
+around, so every area figure here is out by the square of 200/11.15. Re-measure
+before quoting them. Water processing took about 214–228 ms locally, excluding
 JSON/browser work. Graph storage is O(N); priority-flood routing is O(N log N).
 The classification version and geometry version remain independently exported;
 water version 1 identifies this additional model. Lake freezing, rain shadows,
@@ -602,6 +613,9 @@ Natural exportable food potential uses:
 terrain = exp(-(slope/14)^2) * max(0, 1-abs(temperature-18)/24) * (1-0.7*flood)
 natural = terrain * max(0, 1-abs(moisture-0.65)/0.65)
 water_access = exp(-freshwater_distance/400), or 0 when unavailable
+  (the 400 m characteristic reach is an unscaled reference-world constant; on a
+   200 km world measured freshwater distances reach 20745 m, so water_access is
+   effectively binary rather than a gradient — see the scale-constants card)
 irrigation = capability * water_access * max(0, (0.65-moisture)/0.65)
 adapted = natural + 0.75 * terrain * irrigation
 ```

@@ -89,7 +89,13 @@
           },
           "status": {
             "type": "string",
-            "minLength": 1
+            "description": "Two vocabularies share this field and the compiler emits both. Simulation-derived rows carry a support claim: `supported` means a generated world can reach this identity, `unreachable` means the identity is kept so every world document and registry slot still resolves but no art is commissioned for it, and `schematic` means the identity is placed as a labelled footprint or marker with production art unassigned. Rows compiled from the production catalogue instead carry that catalogue's own work state, today only `not_started`. Adding a value here is a contract change; tests/test_asset_list.py::test_status_vocabulary_is_closed_and_matches_the_schema fails in both directions until the enum and the compiler agree.",
+            "enum": [
+              "supported",
+              "unreachable",
+              "schematic",
+              "not_started"
+            ]
           },
           "selectors": {
             "type": "object"

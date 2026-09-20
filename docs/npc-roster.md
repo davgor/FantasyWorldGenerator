@@ -190,6 +190,14 @@ A person carries `civilization_id` (the primary join key for culture, language a
 parent cannot be resolved it is null and counted, never guessed: a guessed parent is a wrong
 tongue.
 
+**Appearance joins the same way and is held the same way.** `Sim/heritage/policies/appearance.json`
+carries one authored body per subrace — stature and mass bands, proportions, palettes,
+features, grooming, life stages, dress and art direction — and it ships in
+`Contracts/catalogues/native-catalogues-v1.json`, not in this block and not in the world
+document. A person here carries no height, no colouring and no portrait, for the same reason
+they carry no `traits`: the population-level parameters belong to heritage, and the
+per-individual draw from them belongs to the game engine. Join on `civilization_id`.
+
 The block also exports no field called `tier` in any sense. The word already means four
 incompatible things in this repository.
 

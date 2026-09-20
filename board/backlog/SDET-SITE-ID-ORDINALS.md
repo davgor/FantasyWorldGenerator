@@ -1,8 +1,66 @@
 # SDET-SITE-ID-ORDINALS — a cast uid follows a position in a list that is re-sorted every age
 
-Owner: none. State: **defect pinned by failing tests; no fix attempted.**
-Evidence: `Sim/tests/test_site_id_stability.py` — 5 tests, 2 controls pass, 3 fail, 0.048 s,
-no world generated.
+Owner: none. State: **defect still open; the test that pins it was repaired so that it CAN
+go green. No product change.**
+
+## 2026-09-20 — the pin was unsatisfiable, and is not any more
+
+`test_a_castellan_is_anchored_to_its_fortress_by_something_that_persists` could not have passed
+however the product changed. It read
+
+    ordinal = person['presence']['uid']
+
+and then flagged any of four carried fields whose value contains `ordinal` as a substring — and
+`presence.uid` is one of those four. It was an offender for ANY value it could ever hold,
+including `fortress-node-13`, which is the value the fix is supposed to produce. So the test
+was pinned to fail forever rather than pinned to a defect, and this card's acceptance was
+unreachable as written.
+
+The ordinal is now read out of the world —
+`next(f['id'] for f in world['humans']['fortresses'] if f['node'] == 13)` — which asks the
+question that was meant: does the person record carry the number that renumbers? It is still
+red, and it now names all four offenders: `uid`, `presence.uid`, `claim.target_uid` and
+`deeds[0].event_id`, every one of them `hero-castellan-fortress-1` or `fortress-1`.
+
+The `castellans()` harness now resolves `presence.uid` against a `fortress-node-<n>` map first
+and the ordinal map second, so it keeps working across the fix instead of silently finding
+nobody and reporting green.
+
+**Shown satisfiable rather than assumed.** Rewriting a test filed as a defect pin is the move
+that hides a defect, so the rewrite was falsified: wrapping `hero_generator.generate` to rewrite
+the four fields to the node key, in memory, turns the module from 5 tests / 3 fail to 5 / 0.
+All three failures are the product's and none is the predicate's.
+
+## The producer is not where the coordinating brief said it was
+
+The ordinal is built by `Sim/icarus_sim/terrain_humans.py:146-151` `record()`, which is
+provenance-pinned. `Sim/icarus_sim/terrain_settlements.py` has no `record()` and builds no
+`{kind}-{number}` site id — checked, not assumed.
+
+## Scoped first slice, for whoever takes this
+
+The fix belongs on the CONSUMER side, in `Sim/hero_generator/wells/countryside.py`, not in
+`terrain_humans.record()`: changing the producer moves `humans.hamlets[].id` and
+`humans.fortresses[].id` in the world document and with them every `hamlet_id`/`fortress_id`
+join in the plan blocks and `npc_roster`'s `plan_id`. Slice one is `_castellan` and `_reeve`,
+all four fields together — repairing `uid` alone leaves three ways to join the wrong row.
+
+Blast radius established by the adversarial verifier and NOT yet discharged, listed so the next
+person does not rediscover it: `tools/terrain_world.js:131` `heroSite()` resolves hero map pins
+by `find(c => c.id === presence.uid)` and would silently stop placing castellans and reeves on
+the lab map — and that file is provenance-pinned, making two pinned edits in the change, not
+one. `Sim/hero_generator/__init__.py:247` puts `presence.uid` into user-facing summary text.
+The `npcs` block's `site_uid`, `presence_node` and the `cast_located_by_presence` /
+`cast_presence_unresolved` counters move in every generated world.
+`Artifacts/npc-roster/sample-size65-seed42.json` goes stale with no regenerator in the tree.
+And `Sim/tests/test_npc_roster.py`'s `hero-castellan-fortress-0` literals must NOT be moved:
+they are hand-built inputs to that module's own synthetic world, not outputs of the cast
+package, and moving them breaks `FixtureTests` against the pinned roster fixture
+`Fixtures/npc-roster-v1.json`, which records both spellings.
+
+Evidence: `Sim/tests/test_site_id_stability.py` — 5 tests, 2 controls pass, 3 fail, 0.050 s,
+no world generated. Unchanged in count from the state as filed; changed in meaning, because
+one of the three was previously unsatisfiable.
 
 ## The defect
 

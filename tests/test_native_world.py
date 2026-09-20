@@ -122,26 +122,43 @@ class NativeWorldTests(unittest.TestCase):
         """The Python reference world, generated once per seed for the whole class."""
         if (seed, size) not in cls._oracle:
             from icarus_sim.terrain_world import generate_request
+            # Pinned to a villainless world. `villain_rise` now defaults to .5 and a
+            # generated world ends with super villains promoted into it, but Core has no
+            # villain model at all -- `grep -rn -i villain Core/` finds only three unread
+            # config fields -- so the oracle must ask for the configuration Core can
+            # actually reproduce. Without this every layer a villain's well and claims
+            # touch diverges, and the divergence looks like a numeric bug in the core.
             cls._oracle[(seed, size)] = generate_request(
-                {'seed': seed, 'recipe_version': 3, 'overrides': {'size': size}})
+                {'seed': seed, 'recipe_version': 3,
+                 'overrides': {'size': size, 'villain_rise': 0.}})
         return cls._oracle[(seed, size)]
 
     # Operations that build a world from a seed and a size, and therefore need the same
     # world shape the oracle resolved. The rest read a catalogue or do frame arithmetic.
-    WORLD_OPERATIONS = ('world', 'stage9', 'fields', 'cityplans', 'humans', 'nests', 'ages', 'samples')
+    WORLD_OPERATIONS = ('world', 'stage9', 'fields', 'cityplans', 'humans', 'nests', 'ages', 'samples', 'networks')
 
     # The shape parameters `Core/config.hpp` holds as raw authoring constants and recipe 3
     # resolves per world. `world_scale` is NOT among them: recipe 3 resolves it to Core's
     # own default, and passing it through `set:` aborts the driver (see the card).
     SHAPE_KEYS = ('globe_radius', 'tectonic_relief', 'amplitude', 'wavelength', 'orogeny',
                   'belt_width', 'plate_count', 'crust_bias', 'mountain_detail', 'sea_level',
-                  'settlement_spacing', 'support_reach', 'temperature_offset', 'moisture_bias',
-                  'erosion_passes', 'erosion_strength')
+                  'settlement_spacing', 'support_reach', 'culture_link_cost',
+                  'temperature_offset', 'moisture_bias',
+                  'erosion_passes', 'erosion_strength', 'river_threshold_km2')
     # Deliberately absent, having been checked rather than assumed: `ley_width` (180),
     # `ley_nodes` (10), `magic_instability` (.45), `rain_passes` (48) and `wind_bearing` (90)
     # are resolved by recipe 3 to exactly the values `Core/config.hpp` already holds, and
     # `override_bounds()` does not name them, so passing them would be noise at best.
     # `world_scale` is resolved to Core's own default too, and passing it aborts the driver.
+    #
+    # `river_threshold_km2` is newly present. Recipe 3 resolves it to 48.270568 km2 at the
+    # 200 km default, because it is a catchment AREA authored for the 11.15 km reference
+    # world and scales as the square of the width, while `Core/config.hpp` still holds the
+    # reference world's .15. Left unpassed, the driver builds rivers on every land cell and
+    # rain_river, river, freshwater_distance, flood_risk and every consumer of them diverge.
+    # Core/world.cpp's override chain had to learn the key first -- it throws INVALID_INPUT
+    # on any name it does not list -- and Core/genesis.cpp's override_bounds() now admits
+    # .001..10000 to match the reference.
     #
     # `support_reach` is passed but is OUTSIDE Core's own `override_bounds()` entry of
     # [100, 10000]: recipe 3 resolves 17938.9 at this seed, because reaches are absolute
@@ -183,7 +200,7 @@ class NativeWorldTests(unittest.TestCase):
                 expected = [v for row in world['layers'][key] for v in row]
                 self.assertEqual(len(values), len(expected))
                 if key in IDENTITY_LAYERS:
-                    self.assertEqual(values, [float(v) for v in expected], 'identity layer must match exactly')
+                    self.assertCellsIdentical(values, [float(v) for v in expected], key, ' (identity)')
                     continue
                 for native_value, reference in zip(values, expected):
                     if native_value == reference:
@@ -215,7 +232,7 @@ class NativeWorldTests(unittest.TestCase):
                 if key.startswith(('zone_', 'boreal', 'tundra', 'ice_cap', 'island_habitat', 'estuary', 'dominant_magic')):
                     # Categorical or indicator fields: a tolerance here could hide a
                     # region that manifested in one implementation and not the other.
-                    self.assertEqual(values, expected)
+                    self.assertCellsIdentical(values, expected, key, ' (categorical)')
                     continue
                 for native_value, reference in zip(values, expected):
                     if native_value == reference:
@@ -332,7 +349,7 @@ class NativeWorldTests(unittest.TestCase):
                 if key.endswith('_support_reach'):
                     # Reached or not reached: a tolerance would hide a hinterland that
                     # routes differently.
-                    self.assertEqual(values, expected)
+                    self.assertCellsIdentical(values, expected, key, ' (reached or not reached)')
                     continue
                 for native_value, reference in zip(values, expected):
                     if native_value == reference:
@@ -351,7 +368,8 @@ class NativeWorldTests(unittest.TestCase):
         from icarus_sim.terrain_history import materialize_stage
         world = self.oracle(PARITY_SEED, PARITY_SIZE)
         sites = materialize_stage(world, 10)['settlements']['sites']
-        plans = _plan_rows(self.native('cityplans', PARITY_SEED, PARITY_SIZE, CATALOGUES))
+        plans = _plan_rows(self.native('cityplans', PARITY_SEED, PARITY_SIZE, CATALOGUES,
+                                     'residents=1'))
         self.assertEqual(len(plans), len(sites))
         feature_order = ('leader_homes', 'barracks', 'noble_homes', 'worker_housing',
                          'apartments', 'market_district', 'religious_building')
@@ -422,15 +440,22 @@ class NativeWorldTests(unittest.TestCase):
                 self.assertEqual(int(row[2]), expected['node'])
                 self.assertEqual(row[3], expected['role'])
                 self.assertEqual(row[5], expected['culture_id'])
+                # The path first, then the cost. `access_cost` is a Dijkstra total, so the
+                # additions run strictly along the settled path and an identical path gives
+                # an identical double. Comparing the path separately is what tells a routing
+                # divergence apart from arithmetic inside one edge -- six hamlets differ by
+                # one to three ulp and neither side recorded which of the two it was.
+                self.assertEqual([int(node) for node in row[11].split(',') if node],
+                                 expected['access_nodes'], f"{expected['id']} access_nodes")
                 for offset, key in enumerate(('access_cost', 'worked_area_km2', 'delivered_food',
                                               'delivered_materials', 'irrigation_benefit')):
-                    self.assertEqual(float(row[6 + offset]), expected[key])
+                    self.assertEqual(float(row[6 + offset]), expected[key], f"{expected['id']} {key}")
         self.assertEqual(len(rows['FORTRESS']), len(staged['humans']['fortresses']))
         for row, expected in zip(rows['FORTRESS'], staged['humans']['fortresses']):
             with self.subTest(fortress=expected['id']):
                 self.assertEqual(int(row[2]), expected['node'])
-                self.assertEqual(float(row[4]), expected['defence_score'])
-                self.assertEqual(int(row[5]), expected['protected_route_node'])
+                self.assertEqual(float(row[4]), expected['defence_score'], expected['id'] + ' defence_score')
+                self.assertEqual(int(row[5]), expected['protected_route_node'], expected['id'] + ' route node')
         self.assertEqual(len(rows['PORT']), len(staged['fisheries']['ports']))
         for row, expected in zip(rows['PORT'], staged['fisheries']['ports']):
             with self.subTest(port=expected['id']):
@@ -509,9 +534,9 @@ class NativeWorldTests(unittest.TestCase):
                 self.assertEqual(row[3], expected['victor_uid'])
                 self.assertEqual(row[4], expected['defeated_uid'])
                 self.assertEqual(int(row[5]), expected['age'])
-                self.assertEqual(float(row[6]), expected['pressure'])
-                self.assertEqual(float(row[7]), expected['chance'])
-                self.assertEqual(float(row[8]), expected['roll'])
+                self.assertEqual(float(row[6]), expected['pressure'], 'pressure')
+                self.assertEqual(float(row[7]), expected['chance'], 'chance')
+                self.assertEqual(float(row[8]), expected['roll'], 'roll')
         veterans = [(city['uid'], entry['war_id'], entry['outcome'], entry['opponent_uid'])
                     for city in sites for entry in city.get('war_history', [])]
         self.assertEqual([tuple(row[1:5]) for row in rows.get('VETERAN', [])], veterans)
@@ -521,9 +546,13 @@ class NativeWorldTests(unittest.TestCase):
                           len([h for h in staged['humans']['hamlets'] if h['id'].startswith('hamlet-')]),
                           len(staged['fisheries']['ports']), len(staged['beast_nests']['sites'])])
         # Identity layers are exact; the continuous magic fields keep the contract.
+        # Compared cell by cell rather than with a bare assertEqual: these are 1089-element
+        # lists, and the difflib diff unittest renders for one of those raises RecursionError
+        # before it reaches the message, which turns a real divergence into an ERROR whose
+        # traceback names difflib instead of the layer. See `assertCellsIdentical`.
         for name in ('biome', 'dominant_magic'):
-            self.assertEqual(blocks[name], [value for row in staged['layers'][name] for value in row],
-                             f'{name} must match the finished world exactly')
+            self.assertCellsIdentical(blocks[name], [value for row in staged['layers'][name] for value in row],
+                                      name, ' (finished world, identity layer)')
         for name in ('ley_weave', 'magic_hazard'):
             expected = [value for row in staged['layers'][name] for value in row]
             for native_value, reference in zip(blocks[name], expected):
@@ -759,6 +788,99 @@ class NativeWorldTests(unittest.TestCase):
                 result = subprocess.run([str(self.binary), 'registry', str(path)], input='',
                                         capture_output=True, text=True, timeout=60)
                 self.assertNotEqual(result.returncode, 0, result.stdout[:400])
+
+    # How many differing cells a failed layer comparison names before it stops.
+    FIRST_DIFFERENCES = 6
+
+    def assertCellsIdentical(self, values, expected, key, note=''):
+        """Exact whole-layer comparison that names the differing cells instead of diffing them.
+
+        Defined at the end of the class on purpose. Four board cards cite line numbers
+        inside this file -- `tests/test_native_world.py:186`, `:456` and `:461` among
+        them -- so anything inserted above them silently invalidates those citations and
+        `tools/docs_check.py` reports CITE warnings against cards this lane does not own.
+
+        The layers that call this are categorical: a biome id, a zone flag, a
+        reached-or-not-reached hinterland. They are compared with no tolerance at all,
+        and that is deliberate -- a tolerance here would hide a region that manifested in
+        one implementation and not the other. What is NOT deliberate is what
+        `assertEqual` does on the way to reporting a difference. A 1089-element list
+        comparison hands both lists to `difflib`, `difflib._fancy_replace` recurses once
+        per element, and unittest raises `RecursionError` while it is rendering the
+        failure message. Measured on this interpreter, not inferred: two 1089-element
+        float lists take about seven minutes to reach a 1000-frame `RecursionError`
+        through `difflib._fancy_helper`. The assertion found a real divergence, spent
+        minutes on it, and then crashed explaining it -- the layer name is lost, the
+        mismatch count is lost, and the runner prints a difflib stack trace under the
+        heading ERROR rather than FAIL.
+
+        That cost a review cycle. The previous full run's six ERRORs -- `dominant_magic`
+        and five `zone_*` layers -- were read as a separate root-cause family needing
+        their own investigation; every one of them was this, wrapped around the same
+        ley-width divergence the FAILs beside them were already reporting. `self.maxDiff`
+        does not help: the recursion is inside difflib's comparison, not inside the
+        truncation that follows it.
+
+        So compare the lists here, with exactly the predicate `assertEqual` would use --
+        `==` with CPython's per-element identity shortcut, which is what makes a list
+        containing NaN equal to itself -- and report the count and the first few
+        offenders. This cannot mask a difference: it examines every element before it
+        decides, and it fails whenever `assertEqual` would have.
+        """
+        self.assertEqual(len(values), len(expected),
+                         f'{key}{note}: {len(values)} cells against the reference\'s {len(expected)}')
+        differing = [index for index, (native_value, reference) in enumerate(zip(values, expected))
+                     if not (native_value is reference or native_value == reference)]
+        if not differing:
+            return
+        shown = '; '.join(f'cell {index}: native {values[index]!r} vs reference {expected[index]!r}'
+                          for index in differing[:self.FIRST_DIFFERENCES])
+        if len(differing) > self.FIRST_DIFFERENCES:
+            shown += f'; and {len(differing) - self.FIRST_DIFFERENCES} more'
+        self.fail(f'{key}{note}: {len(differing)} of {len(expected)} cells differ -- {shown}')
+
+    def test_resolved_ley_networks_match_the_reference(self):
+        """The ley network parameters themselves, before any raster reads them.
+
+        This exists because the divergence it pins had no visible edge. `Core/magic.cpp`
+        assigned the authored width straight through -- a flat 110 m -- while the
+        reference scales it by the world's own circumference at
+        `terrain_leyline_history.py:101`, resolving 1973.28 m at the 200 km default. A
+        110 m Gaussian on a kilometres-wide cell falls between raster cells, so every ley
+        field, every instability field and every categorical layer downstream collapsed,
+        and what the suite reported was fifty-five mismatched grids and six RecursionErrors.
+        Nothing anywhere asserted the width itself, on either side.
+
+        So assert it here, where a revert is one wrong number rather than a wall of them,
+        and assert it with no tolerance: it is a resolved parameter, not a sampled field.
+        The driver's `networks` operation builds no world, so this costs milliseconds on
+        top of the oracle the rest of the class already shares.
+        """
+        world = self.oracle(PARITY_SEED, PARITY_SIZE)
+        reference = world['magic']['networks']
+        rows = _tagged(self.native('networks', PARITY_SEED, PARITY_SIZE))['NETWORK']
+        # Only the three resolved PARAMETERS are compared, not the node count. The oracle
+        # is a finished world, and the age transitions append a key point to a network for
+        # every ruin whose legacy names that school, so the reference's `weave` carries 26
+        # nodes at this seed against the eight it was generated with. Width, strength and
+        # instability are untouched by an age, so they are comparable against a fresh
+        # `generate_networks` and the node count is not. (Measured, not assumed:
+        # `network_geometry(seed, 8)` returns exactly 8 positions, so the extra 18 are the
+        # age transitions' and not a generation difference.)
+        #
+        # Core carries the eight known schools; the reference declares twelve, the extra
+        # four being the hidden schools generation never raises. Core's order is contract
+        # -- dominance ties break on it -- so check the names as well as the numbers.
+        self.assertEqual(len(rows), 8, 'the native core carries the eight known schools')
+        for row in rows:
+            name = row[1]
+            with self.subTest(school=name):
+                self.assertIn(name, reference, 'native school names come from the reference')
+                network = reference[name]
+                self.assertEqual(float(row[2]), network['width_m'],
+                                 'ley width is reach-scaled by the world, not an absolute 110 m')
+                self.assertEqual(float(row[3]), network['strength'], name + ' strength')
+                self.assertEqual(float(row[4]), network['instability'], name + ' instability')
 
 
 if __name__ == '__main__':

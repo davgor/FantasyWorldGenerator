@@ -1,6 +1,46 @@
 # SDET-CEILING-SENTINELS — a rejection test whose sentinel is "one more than the limit" becomes a performance test when the limit moves
 
-Owner: none. State: **pattern identified; all three known instances already repaired in
+Owner: none. State: **acceptance (1) landed; acceptance (2) still open, one instance armed.**
+
+## What landed, 2026-09-20
+
+`tools/validate_repo.py` gained `rejection_fixtures()`, called from `checks()` — the cheap
+stage, no world generated. For every `invalid_*` list in every `Fixtures/*.json`, every value
+under `overrides` whose key the option registry declares a domain for must be **outside** that
+domain. The bound is read from `registry(3)` rather than restated, so the check cannot itself
+be satisfied by moving a number — only by moving the fixture back out of range.
+
+That is acceptance (1), and it is verified in both directions rather than only observed green:
+it passes on the tree as it stands, and with the registry's `size.max` raised to 2049 in memory
+it fails naming the entry — `unreal-frame-v1.json invalid_generate[3] size=1026 is inside the
+declared domain (3..2049)`. A guard that has not been shown to fire is not a guard.
+
+Scope, stated so this is not read as more than it is: only values under `overrides` whose key
+the registry declares are decidable this way. Three of the eight entries are invalid for
+reasons the registry does not publish (a retired `recipe_version`, an out-of-range top-level
+`seed`) and the check says nothing about them.
+
+## Still armed
+
+`Sim/tests/test_terrain_patch.py:61` still carries the literal `1026`. The replacement is one
+line and is known:
+
+    from icarus_sim.terrain_world import registry
+    too_large = registry(3)['size']['max'] + 1
+
+It was **not applied**: that file is outside the contracts-tests lane's owned set this wave,
+and it is provenance-pinned, so it needs a manifest revision row in the same change. Handed to
+the coordinator.
+
+Two factual corrections to the text below, both of which make this look more expensive than it
+is: the manifest entry for `Sim/tests/test_terrain_patch.py` is status **`modified`**, not
+`exact`, and already carries a 2026-09-20 revision — so editing it needs a revision row only,
+not a status move. And the comment at `tests/test_native_genesis.py:88-90` that Documentation
+impact asks to correct was already corrected in `da83b34`; it now names the substring match.
+
+Below is the card as filed.
+
+State when filed: **pattern identified; all three known instances already repaired in
 `4713f9a`, and the repair reproduces the pattern.** No test written — see Acceptance.
 
 The three instances are recorded here with their pre-`4713f9a` values because the commit has

@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://fantasy-world-generator.local/schemas/world-output.schema.json",
   "title": "FantasyWorldGenerator world output",
+  "description": "A COMPLETED world -- phase 16, every stage run. `required` lists what such a document always carries, and is kept identical to the sections tests/test_world_schema_conformance.py asserts a generated world has and to VERSIONED_SECTIONS in tools/validate_repo.py, so the contract, the suite and the determinism gate fail together instead of disagreeing. A phase-gated document produced with --phase below 16 stops before some of these and is deliberately NOT described by this contract. `additionalProperties` stays true on purpose: the simulation carries blocks that are still moving, and a closed root would reject a world for growing. Every block terrain_history carries across an age boundary is declared below, so nothing arrives entirely unannounced; a declaration that gives only a type says only that, and the blocks with a schema of their own name it.",
   "type": "object",
   "required": [
     "schema",
@@ -9,492 +10,78 @@
     "generator_version",
     "config",
     "layers",
-    "recipe"
+    "recipe",
+    "terrain",
+    "settlements",
+    "civilizations",
+    "city_plans",
+    "hamlet_plans",
+    "castle_plans",
+    "world_scene",
+    "astrology",
+    "lunar_almanac",
+    "religion"
   ],
   "properties": {
-    "schema": {
-      "const": "fantasy-world-generator.world"
-    },
-    "schema_version": {
-      "const": 2
-    },
-    "generator_version": {
-      "const": 16
-    },
-    "config": {
-      "type": "object"
-    },
-    "layers": {
+    "area": {
       "type": "object",
+      "description": "Per-cell and aggregate surface areas in square metres."
+    },
+    "astrology": {
+      "type": "object",
+      "required": [
+        "version",
+        "calendar",
+        "moon",
+        "formulas"
+      ],
       "properties": {
-        "biome": {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
-              "enum": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                13,
-                15,
-                16,
-                17
-              ]
-            }
-          }
+        "version": {
+          "const": 1
         },
-        "natural_biome": {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
-              "enum": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                13,
-                15,
-                16,
-                17
-              ]
-            }
-          }
+        "calendar": {
+          "type": "object"
         },
-        "biome_variant": {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
+        "moon": {
+          "type": "object",
+          "required": [
+            "periods",
+            "offsets",
+            "tilt_max_degrees",
+            "great_year_days",
+            "hemispheres",
+            "regions"
+          ],
+          "properties": {
+            "periods": {
+              "type": "object"
+            },
+            "offsets": {
+              "type": "object"
+            },
+            "tilt_max_degrees": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 35
+            },
+            "great_year_days": {
               "type": "integer",
-              "minimum": -1,
-              "maximum": 155
-            }
-          }
-        }
-      }
-    },
-    "recipe": {
-      "type": "object",
-      "required": [
-        "version",
-        "seed",
-        "resolved",
-        "provenance"
-      ],
-      "properties": {
-        "version": {
-          "const": 3
-        },
-        "seed": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295
-        },
-        "resolved": {
-          "type": "object"
-        },
-        "provenance": {
-          "type": "object"
-        }
-      },
-      "additionalProperties": true
-    },
-    "terrain": {
-      "type": "object",
-      "required": [
-        "version",
-        "biomes",
-        "natural_biomes"
-      ],
-      "properties": {
-        "version": {
-          "const": 6
-        },
-        "biomes": {
-          "type": "array",
-          "minItems": 13,
-          "maxItems": 13,
-          "items": {
-            "$ref": "#/$defs/naturalBiome"
-          }
-        },
-        "natural_biomes": {
-          "type": "array",
-          "minItems": 13,
-          "maxItems": 13,
-          "items": {
-            "$ref": "#/$defs/naturalBiome"
-          }
-        },
-        "magical_biomes": {
-          "type": "array",
-          "minItems": 156,
-          "maxItems": 156,
-          "items": {
-            "$ref": "#/$defs/magicalBiome"
-          }
-        }
-      }
-    },
-    "settlements": {
-      "type": "object",
-      "required": [
-        "version",
-        "sites"
-      ],
-      "properties": {
-        "version": {
-          "const": 15
-        },
-        "sites": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "civilization_id",
-              "population_profile",
-              "city_class",
-              "suitability"
-            ],
-            "properties": {
-              "civilization_id": {
-                "type": "string"
-              },
-              "population_profile": {
-                "type": "string",
-                "not": {
-                  "enum": [
-                    "human",
-                    "highland",
-                    "woodland",
-                    "mixed"
-                  ]
-                }
-              },
-              "city_class": {
-                "enum": [
-                  "small",
-                  "medium",
-                  "capital"
-                ]
-              },
-              "suitability": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1
-              },
-              "war_history": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "war_id",
-                    "age",
-                    "kind",
-                    "outcome",
-                    "opponent_uid"
-                  ],
-                  "properties": {
-                    "war_id": {
-                      "type": "string"
-                    },
-                    "age": {
-                      "type": "integer"
-                    },
-                    "kind": {
-                      "type": "string"
-                    },
-                    "outcome": {
-                      "type": "string"
-                    },
-                    "opponent_uid": {
-                      "type": "string"
-                    },
-                    "opponent_civilization_id": {
-                      "type": "string"
-                    },
-                    "opponent_parent_race_id": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "civilizations": {
-      "type": "object",
-      "required": [
-        "version",
-        "entities"
-      ],
-      "properties": {
-        "version": {
-          "const": 3
-        },
-        "entities": {
-          "type": "array"
-        }
-      }
-    },
-    "city_plans": {
-      "type": "object",
-      "required": [
-        "version",
-        "identity",
-        "cities",
-        "phase_order"
-      ],
-      "properties": {
-        "version": {
-          "const": 6
-        },
-        "identity": {
-          "type": "object"
-        },
-        "cities": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "city_uid",
-              "shape",
-              "plots",
-              "stats",
-              "status",
-              "version",
-              "terrain",
-              "bounds_m"
-            ],
-            "properties": {
-              "status": {
-                "enum": [
-                  "complete",
-                  "partial",
-                  "unbuildable"
-                ]
-              },
-              "plots": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "rotation_degrees",
-                    "ground_elevation_m",
-                    "foundation_bottom_m",
-                    "dimensions_m",
-                    "plot_m"
-                  ],
-                  "properties": {
-                    "rotation_degrees": {
-                      "type": "number"
-                    },
-                    "ground_elevation_m": {
-                      "type": "number"
-                    },
-                    "foundation_bottom_m": {
-                      "type": "number"
-                    }
-                  }
-                }
-              },
-              "stats": {
-                "type": "object"
-              },
-              "version": {
-                "const": 6
-              },
-              "terrain": {
-                "type": "object",
-                "required": [
-                  "cell_m",
-                  "size",
-                  "codes",
-                  "surface"
-                ],
-                "properties": {
-                  "surface": {
-                    "type": "object",
-                    "required": [
-                      "size",
-                      "step_m",
-                      "heights_m"
-                    ],
-                    "properties": {
-                      "size": {
-                        "type": "integer",
-                        "minimum": 2
-                      },
-                      "step_m": {
-                        "type": "number",
-                        "exclusiveMinimum": 0
-                      },
-                      "heights_m": {
-                        "type": "array",
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "number"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              "minimum": 1
             }
           }
         },
-        "phase_order": {
-          "const": [
-            "map",
-            "shape",
-            "fortification",
-            "high",
-            "high_housing",
-            "low",
-            "low_housing"
-          ]
+        "formulas": {
+          "type": "object"
         }
       }
     },
-    "hamlet_plans": {
+    "beast_movements": {
       "type": "object",
-      "required": [
-        "version",
-        "identity",
-        "hamlets",
-        "phase_order"
-      ],
-      "properties": {
-        "version": {
-          "const": 2
-        },
-        "identity": {
-          "type": "object"
-        },
-        "hamlets": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "hamlet_id",
-              "shape",
-              "plots",
-              "stats",
-              "status",
-              "version",
-              "terrain",
-              "bounds_m"
-            ],
-            "properties": {
-              "status": {
-                "enum": [
-                  "complete",
-                  "partial",
-                  "unbuildable"
-                ]
-              },
-              "kind": {
-                "const": "hamlet"
-              },
-              "plots": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "rotation_degrees",
-                    "ground_elevation_m",
-                    "foundation_bottom_m",
-                    "dimensions_m",
-                    "plot_m"
-                  ],
-                  "properties": {
-                    "rotation_degrees": {
-                      "type": "number"
-                    },
-                    "ground_elevation_m": {
-                      "type": "number"
-                    },
-                    "foundation_bottom_m": {
-                      "type": "number"
-                    }
-                  }
-                }
-              },
-              "stats": {
-                "type": "object"
-              },
-              "version": {
-                "const": 2
-              },
-              "terrain": {
-                "type": "object",
-                "required": [
-                  "cell_m",
-                  "size",
-                  "codes",
-                  "surface"
-                ],
-                "properties": {
-                  "surface": {
-                    "type": "object",
-                    "required": [
-                      "size",
-                      "step_m",
-                      "heights_m"
-                    ],
-                    "properties": {
-                      "size": {
-                        "type": "integer",
-                        "minimum": 2
-                      },
-                      "step_m": {
-                        "type": "number",
-                        "exclusiveMinimum": 0
-                      },
-                      "heights_m": {
-                        "type": "array",
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "number"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "phase_order": {
-          "const": [
-            "map",
-            "shape",
-            "high",
-            "high_housing",
-            "low",
-            "low_housing"
-          ]
-        }
-      }
+      "description": "Beast migration routes. Shape is published separately in beast-movements.schema.json."
+    },
+    "beast_nests": {
+      "type": "object",
+      "description": "Monster nest placements and their profiles."
     },
     "castle_plans": {
       "type": "object",
@@ -623,6 +210,773 @@
         }
       }
     },
+    "city_plans": {
+      "type": "object",
+      "required": [
+        "version",
+        "identity",
+        "cities",
+        "phase_order"
+      ],
+      "properties": {
+        "version": {
+          "const": 6
+        },
+        "identity": {
+          "type": "object"
+        },
+        "cities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "city_uid",
+              "shape",
+              "plots",
+              "stats",
+              "status",
+              "version",
+              "terrain",
+              "bounds_m"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unbuildable"
+                ]
+              },
+              "plots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rotation_degrees",
+                    "ground_elevation_m",
+                    "foundation_bottom_m",
+                    "dimensions_m",
+                    "plot_m"
+                  ],
+                  "properties": {
+                    "rotation_degrees": {
+                      "type": "number"
+                    },
+                    "ground_elevation_m": {
+                      "type": "number"
+                    },
+                    "foundation_bottom_m": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "stats": {
+                "type": "object"
+              },
+              "version": {
+                "const": 6
+              },
+              "terrain": {
+                "type": "object",
+                "required": [
+                  "cell_m",
+                  "size",
+                  "codes",
+                  "surface"
+                ],
+                "properties": {
+                  "surface": {
+                    "type": "object",
+                    "required": [
+                      "size",
+                      "step_m",
+                      "heights_m"
+                    ],
+                    "properties": {
+                      "size": {
+                        "type": "integer",
+                        "minimum": 2
+                      },
+                      "step_m": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "heights_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "phase_order": {
+          "const": [
+            "map",
+            "shape",
+            "fortification",
+            "high",
+            "high_housing",
+            "low",
+            "low_housing"
+          ]
+        }
+      }
+    },
+    "civilizations": {
+      "type": "object",
+      "required": [
+        "version",
+        "entities"
+      ],
+      "properties": {
+        "version": {
+          "const": 3
+        },
+        "entities": {
+          "type": "array"
+        }
+      }
+    },
+    "climate": {
+      "type": "object",
+      "description": "Temperature, moisture and wind fields."
+    },
+    "config": {
+      "type": "object"
+    },
+    "debug_stats": {
+      "type": "object",
+      "required": [
+        "version",
+        "cities",
+        "diaspora"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "cities": {
+          "type": "array"
+        },
+        "diaspora": {
+          "type": "object"
+        }
+      }
+    },
+    "encounters": {
+      "type": "object",
+      "description": "Placed encounters. Shape is published separately in encounters.schema.json."
+    },
+    "fisheries": {
+      "type": "object",
+      "description": "Fishing grounds and their productivity."
+    },
+    "generator_version": {
+      "const": 16
+    },
+    "geological_history": {
+      "type": "object",
+      "description": "Plate and orogeny history behind the present terrain."
+    },
+    "habitats": {
+      "type": "object",
+      "description": "Habitat classification driving wildlife and nest suitability."
+    },
+    "hamlet_plans": {
+      "type": "object",
+      "required": [
+        "version",
+        "identity",
+        "hamlets",
+        "phase_order"
+      ],
+      "properties": {
+        "version": {
+          "const": 2
+        },
+        "identity": {
+          "type": "object"
+        },
+        "hamlets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "hamlet_id",
+              "shape",
+              "plots",
+              "stats",
+              "status",
+              "version",
+              "terrain",
+              "bounds_m"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unbuildable"
+                ]
+              },
+              "kind": {
+                "const": "hamlet"
+              },
+              "plots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rotation_degrees",
+                    "ground_elevation_m",
+                    "foundation_bottom_m",
+                    "dimensions_m",
+                    "plot_m"
+                  ],
+                  "properties": {
+                    "rotation_degrees": {
+                      "type": "number"
+                    },
+                    "ground_elevation_m": {
+                      "type": "number"
+                    },
+                    "foundation_bottom_m": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "stats": {
+                "type": "object"
+              },
+              "version": {
+                "const": 2
+              },
+              "terrain": {
+                "type": "object",
+                "required": [
+                  "cell_m",
+                  "size",
+                  "codes",
+                  "surface"
+                ],
+                "properties": {
+                  "surface": {
+                    "type": "object",
+                    "required": [
+                      "size",
+                      "step_m",
+                      "heights_m"
+                    ],
+                    "properties": {
+                      "size": {
+                        "type": "integer",
+                        "minimum": 2
+                      },
+                      "step_m": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "heights_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "phase_order": {
+          "const": [
+            "map",
+            "shape",
+            "high",
+            "high_housing",
+            "low",
+            "low_housing"
+          ]
+        }
+      }
+    },
+    "heroes": {
+      "type": "object",
+      "description": "The hero cast. Shape is published separately in hero-generator.schema.json."
+    },
+    "history": {
+      "type": "object",
+      "description": "The age ledger: what happened at each age boundary this world has crossed."
+    },
+    "humans": {
+      "type": "object",
+      "description": "Human cultures, hamlets and fortresses. NOTE: `hamlets[].id` and `fortresses[].id` are list ORDINALS that renumber at every age advance and are not stable identity -- see board/backlog/SDET-SITE-ID-ORDINALS.md."
+    },
+    "key_location_plans": {
+      "type": "object",
+      "description": "Interior and exterior plans for key locations. Shape is published separately in key-location-plans.schema.json."
+    },
+    "key_locations": {
+      "type": "object",
+      "description": "Placed key locations. Shape is published separately in key-locations.schema.json."
+    },
+    "layers": {
+      "type": "object",
+      "properties": {
+        "biome": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                13,
+                15,
+                16,
+                17
+              ]
+            }
+          }
+        },
+        "natural_biome": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                13,
+                15,
+                16,
+                17
+              ]
+            }
+          }
+        },
+        "biome_variant": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 155
+            }
+          }
+        }
+      }
+    },
+    "lunar_almanac": {
+      "type": "object",
+      "required": [
+        "version",
+        "reported_year",
+        "now",
+        "months",
+        "events"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "reported_year": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "now": {
+          "type": "object"
+        },
+        "months": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12
+        },
+        "events": {
+          "type": "array"
+        }
+      }
+    },
+    "magic": {
+      "type": "object",
+      "description": "Ley networks, nodes and edges, plus the magical biome overlay."
+    },
+    "nomads": {
+      "type": "object",
+      "description": "Nomad bands and their movements. Shape is published separately in nomads.schema.json."
+    },
+    "npcs": {
+      "type": "object",
+      "description": "The NPC roster. Shape is published separately in npc-roster.schema.json."
+    },
+    "ocean_archipelagos": {
+      "type": "array",
+      "description": "Island clusters placed in open water, one entry per cluster."
+    },
+    "peoples": {
+      "type": "object",
+      "description": "The parent races and their derived peoples."
+    },
+    "population": {
+      "type": "object",
+      "description": "Settled population figures per site."
+    },
+    "population_budget": {
+      "type": "object",
+      "description": "The accounting that turns carrying capacity into settled population."
+    },
+    "population_profiles": {
+      "type": "array",
+      "description": "The population profiles available to this world, one entry per profile."
+    },
+    "quests": {
+      "type": "object",
+      "description": "Quest lifecycle over `heroes.quest_hooks`, written by the time-advance API. Difficulty is not emitted here; it belongs to the quest generator.",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "quests": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "quests"
+      ]
+    },
+    "recipe": {
+      "type": "object",
+      "required": [
+        "version",
+        "seed",
+        "resolved",
+        "provenance"
+      ],
+      "properties": {
+        "version": {
+          "const": 3
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "resolved": {
+          "type": "object"
+        },
+        "provenance": {
+          "type": "object"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "The control catalogue this world was generated against, as terrain_world.registry() published it. The same table ships independently at Contracts/catalogues/world-controls-v1.json, which is how a caller reads it without generating a world first."
+        },
+        "overrides": {
+          "type": "object",
+          "description": "Exactly the controls the request set, before any derivation. An override equal to a default is still an explicit choice and is recorded here as one."
+        },
+        "biases": {
+          "type": "object",
+          "description": "Prerequisite controls raised because a regional character was requested more strongly than its default. Each entry names the value and the request that caused it; a direct override always wins."
+        }
+      },
+      "additionalProperties": true
+    },
+    "regions": {
+      "type": "object",
+      "description": "Named geographic regions over the terrain."
+    },
+    "religion": {
+      "type": "object",
+      "required": [
+        "version",
+        "catalogue",
+        "cosmology",
+        "gods",
+        "faiths",
+        "sites",
+        "visitations"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "catalogue": {
+          "type": "object"
+        },
+        "cosmology": {
+          "type": "object"
+        },
+        "gods": {
+          "type": "array"
+        },
+        "faiths": {
+          "type": "object"
+        },
+        "sites": {
+          "type": "array"
+        },
+        "visitations": {
+          "type": "array"
+        }
+      }
+    },
+    "roads": {
+      "type": "object",
+      "description": "The road graph joining settlements; rebuilt from scratch at every age boundary."
+    },
+    "ruins": {
+      "type": "array",
+      "description": "Abandoned sites, one entry per ruin."
+    },
+    "schema": {
+      "const": "fantasy-world-generator.world"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "seasonal_environment": {
+      "type": "object",
+      "description": "Per-season environmental state."
+    },
+    "seasonal_food": {
+      "type": "object",
+      "description": "Per-season food production."
+    },
+    "sediment_budget": {
+      "type": "object",
+      "description": "Erosion and deposition accounting for the terrain solver."
+    },
+    "settlement_candidates": {
+      "type": "array",
+      "description": "Sites the settlement placer considered, one entry per candidate."
+    },
+    "settlements": {
+      "type": "object",
+      "required": [
+        "version",
+        "sites"
+      ],
+      "properties": {
+        "version": {
+          "const": 15
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "civilization_id",
+              "population_profile",
+              "city_class",
+              "suitability"
+            ],
+            "properties": {
+              "civilization_id": {
+                "type": "string"
+              },
+              "population_profile": {
+                "type": "string",
+                "not": {
+                  "enum": [
+                    "human",
+                    "highland",
+                    "woodland",
+                    "mixed"
+                  ]
+                }
+              },
+              "city_class": {
+                "enum": [
+                  "small",
+                  "medium",
+                  "capital"
+                ]
+              },
+              "suitability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "war_history": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "war_id",
+                    "age",
+                    "kind",
+                    "outcome",
+                    "opponent_uid"
+                  ],
+                  "properties": {
+                    "war_id": {
+                      "type": "string"
+                    },
+                    "age": {
+                      "type": "integer"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "outcome": {
+                      "type": "string"
+                    },
+                    "opponent_uid": {
+                      "type": "string"
+                    },
+                    "opponent_civilization_id": {
+                      "type": "string"
+                    },
+                    "opponent_parent_race_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sky": {
+      "type": "object",
+      "description": "Celestial bodies and sky features."
+    },
+    "story_web": {
+      "type": "object",
+      "description": "Relationships and threads between cast members. Shape is published separately in story-web.schema.json."
+    },
+    "terrain": {
+      "type": "object",
+      "required": [
+        "version",
+        "biomes",
+        "natural_biomes"
+      ],
+      "properties": {
+        "version": {
+          "const": 6
+        },
+        "biomes": {
+          "type": "array",
+          "minItems": 13,
+          "maxItems": 13,
+          "items": {
+            "$ref": "#/$defs/naturalBiome"
+          }
+        },
+        "natural_biomes": {
+          "type": "array",
+          "minItems": 13,
+          "maxItems": 13,
+          "items": {
+            "$ref": "#/$defs/naturalBiome"
+          }
+        },
+        "magical_biomes": {
+          "type": "array",
+          "minItems": 156,
+          "maxItems": 156,
+          "items": {
+            "$ref": "#/$defs/magicalBiome"
+          }
+        }
+      }
+    },
+    "terrain_detail": {
+      "type": "object",
+      "description": "Per-cell detail classification layered over `terrain`."
+    },
+    "threat_assessments": {
+      "type": "object",
+      "description": "Per-city threat, war and pressure figures consumed by the villain and quest layers."
+    },
+    "transport": {
+      "type": "object",
+      "description": "Transport capacity and routing over the road and sea networks."
+    },
+    "villains": {
+      "type": "object",
+      "description": "Seated super villains, their tiers and the outlook report. This block has NO schema of its own; `Contracts/` publishes contracts derived from it (key-locations, nomads) but not the block itself -- see board/backlog/VILLAINS-NO-SCHEMA.md."
+    },
+    "water": {
+      "type": "object",
+      "description": "Hydrology: rivers, lakes and drainage derived from the height field."
+    },
+    "wildlife": {
+      "type": "object",
+      "description": "Animal populations placed against habitat, distinct from `beast_nests`."
+    },
+    "world_clock": {
+      "type": "object",
+      "description": "Authoritative simulated now, written by the time-advance API. `day` is a real number of days since founding year 0 on the lunar calendar (360-day years).",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "day": {
+          "type": "number"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "epoch_day": {
+          "type": "number"
+        },
+        "derived_from": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "day",
+        "age"
+      ]
+    },
+    "world_economy": {
+      "type": "object",
+      "description": "Aggregate economic state."
+    },
     "world_scene": {
       "type": "object",
       "required": [
@@ -653,68 +1007,6 @@
         },
         "regional_roads": {
           "type": "array"
-        }
-      }
-    },
-    "astrology": {
-      "type": "object",
-      "required": ["version", "calendar", "moon", "formulas"],
-      "properties": {
-        "version": {"const": 1},
-        "calendar": {"type": "object"},
-        "moon": {
-          "type": "object",
-          "required": ["periods", "offsets", "tilt_max_degrees", "great_year_days", "hemispheres", "regions"],
-          "properties": {
-            "periods": {"type": "object"},
-            "offsets": {"type": "object"},
-            "tilt_max_degrees": {"type": "number", "minimum": 10, "maximum": 35},
-            "great_year_days": {"type": "integer", "minimum": 1}
-          }
-        },
-        "formulas": {"type": "object"}
-      }
-    },
-    "lunar_almanac": {
-      "type": "object",
-      "required": ["version", "reported_year", "now", "months", "events"],
-      "properties": {
-        "version": {"const": 1},
-        "reported_year": {"type": "integer", "minimum": 0},
-        "now": {"type": "object"},
-        "months": {"type": "array", "minItems": 12, "maxItems": 12},
-        "events": {"type": "array"}
-      }
-    },
-    "religion": {
-      "type": "object",
-      "required": ["version", "catalogue", "cosmology", "gods", "faiths", "sites", "visitations"],
-      "properties": {
-        "version": {"const": 1},
-        "catalogue": {"type": "object"},
-        "cosmology": {"type": "object"},
-        "gods": {"type": "array"},
-        "faiths": {"type": "object"},
-        "sites": {"type": "array"},
-        "visitations": {"type": "array"}
-      }
-    },
-    "debug_stats": {
-      "type": "object",
-      "required": [
-        "version",
-        "cities",
-        "diaspora"
-      ],
-      "properties": {
-        "version": {
-          "const": 1
-        },
-        "cities": {
-          "type": "array"
-        },
-        "diaspora": {
-          "type": "object"
         }
       }
     }

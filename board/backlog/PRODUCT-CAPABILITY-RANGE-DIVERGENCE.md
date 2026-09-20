@@ -19,7 +19,8 @@ rather than parity; verified independently in-tree at `233182e` by this session.
 >
 > **What survives the close, and should be carried into the widen rather than lost with the card:**
 > `recipe.parameters` is a single-producer statement published inside every generated world
-> (`Sim/icarus_sim/terrain_world.py:279`). After the widen, `size` agrees — but nothing stops the
+> (`Sim/icarus_sim/terrain_world.py:340-345`: the guard that accepts `size`, then the
+> publish of `recipe.parameters` four lines later). After the widen, `size` agrees — but nothing stops the
 > next parameter from diverging the same way, and a consumer still has no way to tell which producer
 > path a published bound describes. If the widen does not address that, it is worth one line in the
 > handoff saying so deliberately.
@@ -45,16 +46,16 @@ time and the registry must say so rather than implying otherwise.
 
 ## The defect
 
-Every generated world publishes its own parameter registry. `Sim/icarus_sim/terrain_world.py:279`
+Every generated world publishes its own parameter registry. `Sim/icarus_sim/terrain_world.py:345`
 writes `'parameters': registry(version)` into `result['recipe']`, alongside a `provenance` map
 naming each parameter as `override` or `default`. That registry is the consumer-facing statement of
 what the producer accepts, and it is inside the document, not in a separate negotiation.
 
 It advertises **`size` 3–1025**:
 
-- `Sim/icarus_sim/terrain_world.py:175` — `bounds={... 'size':(3,1025) ...}`, written into each
-  definition's `min`/`max` by the loop at `:190`.
-- `Sim/icarus_sim/terrain_world.py:274` — `if type(raw['size']) is not int or raw['size']>1025:
+- `Sim/icarus_sim/terrain_world.py:187` — `bounds={... 'size':(3,1025) ...}`, written into each
+  definition's `min`/`max` by the loop at `:203`.
+- `Sim/icarus_sim/terrain_world.py:340` — `if type(raw['size']) is not int or raw['size']>1025:
   raise ValueError('Grid maximum is 1025')`. The reference path genuinely accepts it.
 
 Every native consumer refuses above **257**:
@@ -127,7 +128,11 @@ current-boundary limitations, where a consumer author is already reading.
 
 ## Sources consulted
 
-`Sim/icarus_sim/terrain_world.py:157-190,212-232,274-282`; `Core/genesis.hpp:8`;
+*Line numbers re-resolved against the live file on 2026-09-20; `terrain_world.py` is
+under concurrent edit, so re-check before quoting them.*
+
+
+`Sim/icarus_sim/terrain_world.py:169-212,340-351`; `Core/genesis.hpp:8`;
 `Core/genesis.cpp:92`; `Unreal/FantasyWorldGenerator/Source/FantasyWorldGenerator/Private/FantasyWorldGeneratorSubsystem.cpp:230-241`;
 `Contracts/capabilities-and-coordinates.md` (via `docs/unreal-integration.md` "Current boundary").
 Relayed from the principal red team and **not** verified here: `tests/test_native_genesis.py:84`

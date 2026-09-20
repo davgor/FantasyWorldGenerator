@@ -18,7 +18,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 
-STAGES = ("checks", "sim-tests", "repo-tests", "artifacts")
+STAGES = ("checks", "sim-tests", "repo-tests", "consumers", "artifacts")
 
 
 def run(*command: str, env=None) -> None:
@@ -31,6 +31,138 @@ def environment() -> dict:
     values["PYTHONPATH"] = str(ROOT / "Sim")
     values["PYTHONPYCACHEPREFIX"] = str(ROOT / ".pycache")
     return values
+
+
+# The sections a completed world always carries. Kept identical to the list in
+# `tests/test_world_schema_conformance.py` and `Contracts/schemas/world-output.schema.json`
+# so the gate, the suite and the contract fail together instead of disagreeing.
+#
+# Declared below `run` on purpose: board/backlog/PERF-SUITE-RUNNER-ORPHANS-CHILD.md cites
+# `run` by line number, and tools/docs_check.py's CITE rule checks the cited line, so a
+# constant inserted above it silently retargets somebody else's citation.
+VERSIONED_SECTIONS = ("terrain", "settlements", "civilizations", "city_plans", "hamlet_plans",
+                      "castle_plans", "world_scene", "astrology", "lunar_almanac", "religion")
+
+
+def option_registry():
+    """`terrain_world.registry(3)`, the published domain of every generation option."""
+    if str(ROOT / "Sim") not in sys.path:
+        sys.path.insert(0, str(ROOT / "Sim"))
+    from icarus_sim.terrain_world import registry
+    return registry(3)
+
+
+def out_of_domain(option: dict, value) -> bool:
+    """Whether `value` is outside the domain `option` declares.
+
+    Only the two kinds of domain the registry actually publishes are understood: a
+    `choices` list and a `min`/`max` pair. An option declaring neither is not something
+    this function can decide, and it says so by returning False rather than by guessing.
+    """
+    if "choices" in option:
+        return value not in option["choices"]
+    low, high = option.get("min"), option.get("max")
+    if low is None or high is None:
+        return False
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return True
+    return not low <= value <= high
+
+
+def rejection_fixtures() -> None:
+    """Every override in an `invalid_*` fixture list must still be outside its bound.
+
+    A rejection case needs an input the product refuses. The obvious value is the smallest
+    such input -- one more than the current limit -- which is correct the day it is written
+    and wrong, silently, the day the limit moves. Nothing errors when that happens: the
+    input has become legal, so instead of being rejected it is EXECUTED, and a rejection
+    fixture becomes a world generation. The only symptom is a suite that got slower, which
+    is the one symptom nobody investigates.
+
+    This has already fired. Raising the grid ceiling from 257 to 1025 in `4713f9a` turned
+    three "one above the limit" sentinels into legal work at once, and `Fixtures/
+    unreal-frame-v1.json` still carries the repaired value as a literal -- 1026, which is
+    one above the ceiling again.
+
+    JSON cannot compute its own sentinel, so the loader has to. This reads the bound from
+    `registry(3)` rather than restating it, which is what makes the check itself immune:
+    it cannot be satisfied by moving a number, only by moving the fixture back out of
+    range. It fails at the instant a ceiling moves and names the entry, instead of an hour
+    later when someone notices `--stage repo-tests` stopped terminating.
+
+    Scope, stated so this is not read as more than it is: only values under `overrides`
+    whose key the registry declares a domain for are decidable here. An entry that is
+    invalid for a reason the registry does not publish -- a retired `recipe_version`, a
+    malformed body -- carries no such override and this check says nothing about it.
+    """
+    options = option_registry()
+    legal = []
+    for path in sorted((ROOT / "Fixtures").glob("*.json")):
+        document = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(document, dict):
+            continue
+        for field, entries in document.items():
+            if not field.startswith("invalid_") or not isinstance(entries, list):
+                continue
+            for index, entry in enumerate(entries):
+                overrides = entry.get("overrides") if isinstance(entry, dict) else None
+                for name, value in (overrides or {}).items():
+                    option = options.get(name)
+                    if option is None or out_of_domain(option, value):
+                        continue
+                    bound = (f"choices {option['choices']}" if "choices" in option
+                             else f"{option.get('min')}..{option.get('max')}")
+                    legal.append(f"{path.name} {field}[{index}] {name}={value!r} "
+                                 f"is inside the declared domain ({bound})")
+    if legal:
+        raise ValueError(
+            "rejection fixtures carry values the product now accepts, so they generate a "
+            "world instead of being refused: " + "; ".join(legal) +
+            ". Derive the sentinel from the declared bound instead of restating it.")
+
+
+def compare_worlds(first: Path, second: Path, label: str, require=()) -> dict:
+    """Assert two generated worlds are byte-identical, and say WHICH block drifted if not.
+
+    The byte comparison stays the primary gate -- it is the strictest statement available
+    and the interchange artifact is shipped as bytes. What it cannot do is either half of
+    what an operator needs when it goes red:
+
+    * It names nothing. "world generation is not byte-reproducible" tells whoever is
+      holding the pager that determinism broke and nothing about where, so the next step
+      is a hand diff of two multi-megabyte documents.
+    * It is satisfied by two documents that are byte-identical and structurally empty.
+      Equality is necessary and not sufficient: a generator that stopped emitting
+      `settlements` would compare equal to itself all day.
+
+    So on failure this parses both and names the first top-level block whose canonical
+    digest differs, and on success it checks the blocks in `require` are present and
+    non-empty. `require` is per-pair on purpose -- a phase-gated world legitimately has
+    fewer blocks than a completed one, and demanding them there would be asserting
+    something untrue.
+    """
+    if first.read_bytes() != second.read_bytes():
+        try:
+            left = json.loads(first.read_text(encoding="utf-8"))
+            right = json.loads(second.read_text(encoding="utf-8"))
+        except ValueError as error:
+            raise ValueError(f"{label} is not byte-reproducible, and the document does not "
+                             f"parse either: {error}") from None
+        drifted = []
+        for key in sorted(set(left) | set(right)):
+            marker = (json.dumps(left.get(key), sort_keys=True, default=str),
+                      json.dumps(right.get(key), sort_keys=True, default=str))
+            if marker[0] != marker[1]:
+                drifted.append(key)
+        raise ValueError(f"{label} is not byte-reproducible; these top-level blocks differ "
+                         f"between the two runs: {drifted or ['none -- the parsed content is equal, so the difference is in key order or formatting']}")
+    document = json.loads(first.read_text(encoding="utf-8"))
+    empty = [key for key in require if not document.get(key)]
+    if empty:
+        raise ValueError(f"{label} is byte-reproducible over a document that is missing or "
+                         f"empty in {empty}. Reproducing nothing reproducibly is not the "
+                         "guarantee this gate is here to make.")
+    return document
 
 
 def checks(env) -> None:
@@ -52,6 +184,7 @@ def checks(env) -> None:
         raise ValueError("missing required repository files: " + ", ".join(missing))
     for schema in (ROOT / "Contracts/schemas").glob("*.json"):
         json.loads(schema.read_text(encoding="utf-8"))
+    rejection_fixtures()
     packaged_catalogue = ROOT / "Sim/fantasy_world_generator/world_asset_requirements.json"
     documented_catalogue = ROOT / "Contracts/catalogues/world-assets.json"
     if packaged_catalogue.read_bytes() != documented_catalogue.read_bytes():
@@ -68,6 +201,10 @@ def checks(env) -> None:
     # The native catalogue is generated from the authoring registries; a trait edit that
     # never reaches the generator would otherwise pass unnoticed.
     run(sys.executable, "tools/export_catalogues.py", "--check", env=env)
+    # The control catalogue is the one table Python, Core and the plugin all read. It also
+    # carries the two facts a caller cannot otherwise see: which controls are pinned shut,
+    # and which are derived from the authored world shape.
+    run(sys.executable, "tools/export_controls.py", "--check", env=env)
     run(sys.executable, "tools/verify_provenance.py", env=env)
     # Documents describing the product must point at things that exist and state
     # versions the code agrees with. Structural only: it cannot tell whether a record
@@ -78,6 +215,17 @@ def checks(env) -> None:
 
 def sim_tests(env) -> None:
     run(sys.executable, "-m", "unittest", "discover", "-s", "Sim/tests", "-p", "test_*.py", "-v", env=env)
+
+
+def consumers(env) -> None:
+    """The scripted consumers: the orchestrator's calls, in the order a game makes them.
+
+    Its own stage rather than part of `repo-tests`, which already runs the showcase
+    exporter and is near its ceiling. These are discovered by a `consumer_*.py` pattern so
+    the two unittest suites cannot pick them up and charge for them twice.
+    """
+    run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "consumer_*.py",
+        "-v", env=env)
 
 
 def repo_tests(env) -> None:
@@ -102,16 +250,20 @@ def artifacts(env) -> None:
         for target in (world_first, world_second):
             run(sys.executable, "-m", "fantasy_world_generator", "generate",
                 "--seed", "42", "--size", "17", "--output", str(target), env=env)
-        if world_first.read_bytes() != world_second.read_bytes():
-            raise ValueError("world generation is not byte-reproducible")
+        # The ten sections `tests/test_world_schema_conformance.py` asserts a generated
+        # world carries. Pinned here too so a world that quietly stopped carrying one
+        # fails the determinism gate and the conformance suite together, rather than the
+        # gate passing over an emptier and emptier document while the suite alone objects.
+        compare_worlds(world_first, world_second, "world generation", require=VERSIONED_SECTIONS)
 
         # The size-17 world above resolves NONE of its five noise octaves. Octave
         # admission needs step <= wavelength/2^k, and 17 is far too coarse to admit even
         # the first, so the multi-octave surface accumulation -- the filtered loop, the
         # .5**k falloff, the ridge term -- contributes identically zero and never runs.
-        # Sim/tests/test_terrain_metrics.py already asserts the noise layer is zero at
-        # exactly this configuration. So the guarantee above covers a world with no
-        # surface relief, which is not a world anyone ships.
+        # Sim/tests/test_terrain_metrics.py measures that across the whole 17/33/65 ladder:
+        # zero octaves resolve at 17 and the noise layer is identically zero there. So the
+        # guarantee above covers a world with no surface relief, which is not a world
+        # anyone ships -- the `require` list is what stops it also covering an empty one.
         #
         # 513 is the first size that admits all five octaves, and phase 5 stops before
         # settlements, ages and city planning, so this pair costs about four minutes
@@ -121,12 +273,14 @@ def artifacts(env) -> None:
         for target in (octaves_first, octaves_second):
             run(sys.executable, "-m", "fantasy_world_generator", "generate",
                 "--seed", "42", "--size", "513", "--phase", "5", "--output", str(target), env=env)
-        if octaves_first.read_bytes() != octaves_second.read_bytes():
-            raise ValueError("full-octave world generation is not byte-reproducible")
+        # `require` is empty here and that is deliberate: this pair stops at phase 5, so it
+        # has no settlements, no ages and no plans, and demanding them would assert
+        # something the configuration cannot produce.
+        document = compare_worlds(octaves_first, octaves_second,
+                                  "full-octave world generation", require=())
         # Moving the size fixes today; asserting the octaves resolved keeps it fixed. If a
         # future wavelength or plate-count change stops admitting the fifth octave here,
         # this fails loudly instead of quietly guaranteeing determinism over nothing.
-        document = json.loads(octaves_first.read_text(encoding="utf-8"))
         resolved = document.get("resolved_octaves")
         requested = document.get("effective_config", document.get("config", {})).get("octaves")
         if resolved != requested:
@@ -134,7 +288,8 @@ def artifacts(env) -> None:
                              f"guarantee to cover the accumulation path; resolved {resolved} of {requested}")
 
 
-RUNNERS = {"checks": checks, "sim-tests": sim_tests, "repo-tests": repo_tests, "artifacts": artifacts}
+RUNNERS = {"checks": checks, "sim-tests": sim_tests, "repo-tests": repo_tests,
+           "consumers": consumers, "artifacts": artifacts}
 
 
 def main(argv=None) -> int:

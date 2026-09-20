@@ -40,9 +40,9 @@ Being absent from generation is not the same as being invisible to it. These fou
 
 - **The moon charts no tide for them.** `tide` and the lunar almanac cover the known eight, so a hidden school has no `surged_strength` key at all rather than being reported as unmoved, and `city_potencies` gives hidden schools potency but no lunar sway. Alien magic does not answer to this world's sky.
 - **No god of the pantheon claims one.** `lint_catalogue` requires the school gods to cover the known eight exactly once, and `world_facts.schools` — which is exported as `religion.facts` — reports only the known eight, so a world's religion record shows no trace of them.
-- **Player leyline edits cannot reach them.** `advance_age_request` validates an edit's `school` against the known eight, so no caller can hand-place a hidden node at an age boundary. `age-advance-request.schema.json` pins the same eight.
+- **Player leyline edits cannot reach them.** `advance_age_request` validates an edit's `school` against the known eight, so no caller can hand-place a hidden node at an age boundary. `age-advance-request.schema.json` pins the same eight. Read the scope exactly: the restriction is on the **edits a caller supplies**, not on the world itself. `validate_age_world` asserts that all twelve networks exist and never asks which network a node sits in, so a world that already carries hidden nodes advances normally — which is what lets a corrupted world survive an age boundary at all.
 
-That last one is the load-bearing restriction: the corruption API is the only way a node enters a hidden network.
+That last one is the load-bearing restriction, in its narrow form: the corruption API is the only way a node is **created** in a hidden network. Deepening one that already exists is a separate act with a separate rule — a cult of a revealed god may lift its own circuit node, by the same fraction a known-school cult uses, and may never open new ground. Nothing else writes a hidden network.
 
 ## What a consumer sees
 

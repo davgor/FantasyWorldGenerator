@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "note": "Natural surface identities and their magic-school variant names. ORDER IS A CONTRACT: VARIANT_NAMES entries are matched to natural_biomes BY POSITION, and biome_variant in a saved world stores a flat index into the natural_biomes x schools cross product. Reordering, inserting or deleting a natural_biomes row renumbers every variant in every saved world. Append only, and see biome_catalogue() in terrain_biome_catalogue.py.",
+ "note": "Natural surface identities and their magic-school variant names. ORDER IS A CONTRACT: VARIANT_NAMES entries are matched to natural_biomes BY POSITION, and biome_variant in a saved world stores a flat index into the natural_biomes x schools cross product. Reordering, inserting or deleting a natural_biomes row renumbers every variant in every saved world. Append only, and see biome_catalogue() in terrain_biome_catalogue.py. A row may carry \"reachable\": false; that is a TOMBSTONE, not a deletion - the id, the row and its position survive, the classifier keeps emitting the label, and only asset commissioning stops. Absent means reachable; see UNREACHABLE_BIOMES and reachable_natural_catalogue() in terrain_biome_catalogue.py.",
  "natural_biomes": [
   {
    "id": 0,
@@ -18,7 +18,9 @@
     156,
     164,
     126
-   ]
+   ],
+   "reachable": false,
+   "unreachable_note": "Tombstoned by user ruling 0.2 on 2026-09-20: art commissioning stops, the identity does not. classify() in terrain_biomes.py assigns this label below 5 C and the ecology cold pass (cold_habitat in terrain_ecology.py) relabels it to 15, 16 or 17 on every cell except a floating-point measure-zero band: cos(2*pi*(3-6)/12) and cos(2*pi*(9-6)/12) both evaluate to +6.123233995736766e-17 rather than 0, so a mean temperature within about 2.2e-15 C below 5.0 C at large seasonal amplitude gets a seventh warm month, cold_habitat returns None and the label survives. No generated world has shown it: a seed 42 size 17 world at phase 8 has zero cells of 1 or 6 in either layer. The row and its position stay because biome_variant is a flat index into the 13x12 cross product, and classify() keeps its branch. The ground it describes is covered by 16 cold_tundra and 17 land_ice, which carry the art."
   },
   {
    "id": 2,
@@ -63,7 +65,9 @@
     230,
     240,
     241
-   ]
+   ],
+   "reachable": false,
+   "unreachable_note": "Tombstoned by user ruling 0.2 on 2026-09-20: art commissioning stops, the identity does not. classify() in terrain_biomes.py assigns this label at or below 0 C and the ecology cold pass (cold_habitat in terrain_ecology.py) always relabels it to 15, 16 or 17. Unlike 1 there is no floating-point survival band: cold_habitat returns None only when a seventh month exceeds 5 C, and the seventh-largest month is the mean plus amplitude*6.12e-17, which cannot exceed 5 when the mean is at or below 0. classify() keeps its branch because terrain_biomes.py derives the Snow region feature marker from biome 6, and removing it would silently empty world output of those markers. The row and its position stay because biome_variant is a flat index into the 13x12 cross product. The ground it describes is covered by 16 cold_tundra and 17 land_ice, which carry the art."
   },
   {
    "id": 7,

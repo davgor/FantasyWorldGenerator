@@ -9,7 +9,10 @@ flag that flips. That is the whole pacing model: one that has just crossed the l
 threat that is growing, not one that has arrived, so the peace after a player kills one
 comes from the successor being weak rather than from a cooldown holding anything back.
 
-Nothing here runs unless `villain_rise` is above zero, and it defaults to zero.
+`villain_rise` defaults to .5 and a generated world ends with super villains standing in
+it: accumulation alone cannot seat anybody inside two age transitions, so the rate is the
+campaign ramp and `promote()` is the arrival. Setting it to zero is still a real off
+switch -- no `villains` block is written at all.
 """
 import copy
 import math
@@ -29,12 +32,36 @@ FRAGMENT_SHARE = .35        # the tier a region keeps when its villain falls
 # question from whether the record persists, and it is deliberately a number rather
 # than a boolean so it can decay without reopening the consumers.
 #
-# 1.0 is today's answer and is not an argued one: it is the value that makes retention
-# the only change. The case for decaying it is the same case FRAGMENT_SHARE already
-# makes for tier -- a region's grip fades when its holder goes -- and over long spans
-# a world that never decays it places by who *ever* held power rather than who holds
-# it. Owned by whoever settles the tick cadence; see VILLAIN-FALL-UNRECORDED.md.
-FALLEN_CLAIM_INFLUENCE = 1.
+# The decay is now argued and set, by the same case FRAGMENT_SHARE makes for tier: a
+# region's grip fades when its holder goes. A world that never decays this places by who
+# *ever* held power rather than who holds it, and that failure only appears over spans no
+# single age advance could reach -- which is why the value waited for the clock.
+#
+# The claim drops at the fall and fades by the same factor each age after it, to a floor
+# below which it stops steering entirely and is reported as zero. The record is never
+# pruned: what fades is how hard the claim presses, not whether it happened.
+#
+#   ages since fall  0     1     2     3     4     5
+#   influence        .60   .36   .216  .130  .078  0 (below the floor)
+#
+# Seed-visible: a world containing a fallen villain places differently than it did when
+# this was 1.0. See docs/decisions/024-fallen-claim-decay.md.
+FALLEN_CLAIM_INFLUENCE = .6   # what a claim keeps at the moment its holder falls
+CLAIM_DECAY_PER_AGE = .6      # what it keeps of that for each further age
+CLAIM_INFLUENCE_FLOOR = .05   # below this a claim no longer steers anything
+
+
+def claim_influence(ages_since_fall):
+    """How hard a fallen villain's claim still presses, `ages_since_fall` ages later.
+
+    Zero below the floor rather than a vanishing fraction, so a consumer scaling by this
+    stops being nudged by claims too old to matter instead of being nudged imperceptibly
+    forever.
+    """
+    if ages_since_fall < 0:
+        return 1.
+    value = FALLEN_CLAIM_INFLUENCE * (CLAIM_DECAY_PER_AGE ** ages_since_fall)
+    return 0. if value < CLAIM_INFLUENCE_FLOOR else round(value, 9)
 
 # Which pressure raised them decides how their reach grows, and therefore how they are
 # fought. The sim owns this field; the hero generator reads it and picks the matching
@@ -152,15 +179,29 @@ def _seat(region, reports_by_uid):
     return ranked[0] if ranked else None
 
 
+# A villain's own well is a ley node it created at its own seat, so it is always the
+# nearest node to that seat. Left in the running it re-anchors the region onto the
+# holder's own work: `regions()` then reports a different anchor, `advance` looks the
+# villain up by the old one and misses, and the reign is stranded on the very age it
+# began -- deterministically, for every villain bound to a school god. That is why the
+# anchor must be ground the world laid down, not ground the villain did.
+WELL_NODE_PREFIX = 'well-'
+
+
 def _held_node(result, seat, radius):
     """The nearest existing ley node, which is what the villain actually holds.
 
     Keyed to the node and not to the city on purpose: anything hung on a city dict that
     is not in the survivor key tuple is dropped silently at the next age transition.
+
+    Wells are skipped, because a region anchored to its own villain's well is anchored to
+    something that did not exist before that villain and will not outlast it.
     """
     best = None
     for school, net in sorted(result.get('magic', {}).get('networks', {}).items()):
         for node in net['nodes']:
+            if node['id'].startswith(WELL_NODE_PREFIX):
+                continue
             angle = math.acos(max(-1., min(1., sum(a * b for a, b in zip(seat['direction'], node['direction'])))))
             distance = radius * angle
             if best is None or distance < best[0]:
@@ -245,6 +286,15 @@ def advance(result, cfg, age, rise, hold, density):
     # Without this filter a fallen villain is reloaded as living and rises from the dead.
     living = {v['region']: dict(v) for v in standing(block.get('people', []))}
     fallen = [dict(v) for v in block.get('people', []) if not is_standing(v)]
+    # The dead fade. Every age a fallen villain's claims press less on the ground it took,
+    # restamped here rather than computed by each consumer, because the claim is what the
+    # leaf packages read and they cannot import this module to ask.
+    for old in fallen:
+        fell_age = old.get('fell_age')
+        if fell_age is None:
+            continue
+        for claim in old.get('claims', []):
+            claim['influence'] = claim_influence(age - int(fell_age))
     marks = []
     reports_by_uid = {r['city_uid']: r for r in result.get('threat_assessments', {}).get('cities', [])}
     radius = result['effective_config']['globe_radius']
@@ -297,7 +347,7 @@ def advance(result, cfg, age, rise, hold, density):
                 for claim in villain.get('claims', []):
                     claim['holder_status'] = 'fallen'
                     claim['holder_fell_age'] = age
-                    claim['influence'] = FALLEN_CLAIM_INFLUENCE
+                    claim['influence'] = claim_influence(0)
                 # The mark is taken before the roster entry leaves the standing set, so it
                 # reads the villain as it was at the end of its reign rather than after.
                 mark = fallen_mark(result, villain, age)
@@ -384,6 +434,76 @@ def outlook(result, cfg, rise, density):
             'cities': len(region['cities']),
         })
     return {'rise': rise, 'ceiling': limit, 'standing': len(seated), 'regions': rows}
+
+
+def promote(result, cfg, age, density):
+    """Seat the world's most concentrated regions as the simulation ends.
+
+    `advance` accumulates tier from turmoil, and a world only ever runs two age
+    transitions inside a generation, so organic seating needs a `villain_rise` above
+    0.834536 at seed 42 size 17 -- above most of the legal range, and unreachable at the
+    default. Turning the rate up far enough to seat somebody would also make every
+    intervening age lurch. So the rate stays the campaign ramp and this is the arrival:
+    at the end of the run the regions that concentrated the most take the seats the
+    ceiling allows, and a generated world always ends with antagonists in it.
+
+    Deliberately NOT an accumulation. A promoted villain enters at exactly `SUPER_TIER`,
+    the bottom of the band, because a villain that has just crossed the line is a threat
+    that is growing rather than one that has arrived -- which is the whole pacing model.
+    The tier it is given is the tier it would have to hold.
+
+    Idempotent: a region that already holds a standing villain is skipped, and the ceiling
+    counts who is already seated, so running this twice changes nothing. That matters
+    because the hook fires on the final age of a generation AND on the final age of an
+    `advance_age_request`, and a caller may advance a world that was already promoted.
+    """
+    block = result.get('villains')
+    if block is None:
+        # `villain_rise: 0` stays a real off switch: a world that never raised anybody
+        # carries no block, and the end of the simulation must not invent one.
+        return []
+    reports_by_uid = {r['city_uid']: r for r in result.get('threat_assessments', {}).get('cities', [])}
+    radius = result['effective_config']['globe_radius']
+    spacing = cfg.settlement_spacing
+    tiers = dict(block.get('tiers') or {})
+    living = {v['region']: v for v in standing(block.get('people', []))}
+    region_list = regions(result, radius, reports_by_uid)
+    limit = ceiling(len(region_list), density)
+    room = limit - sum(1 for v in living.values() if v['tier'] >= SUPER_TIER)
+    if room <= 0:
+        return []
+    # Most concentrated first, ties by anchor so the order is a property of the world and
+    # not of dictionary iteration.
+    ranked = sorted((r for r in region_list if r['anchor'] not in living),
+                    key=lambda r: (-concentration(r, reports_by_uid), r['anchor']))
+    promoted = []
+    for region in ranked[:room]:
+        rid = region['anchor']
+        seat, school, node_id = region['seat'], region['school'], region['node_id']
+        pressed = concentration(region, reports_by_uid)
+        pressure = dominant_pressure([reports_by_uid[c['uid']] for c in region['cities']
+                                      if c.get('uid') in reports_by_uid])
+        villain = {
+            'uid': f'villain-{age}-{seat["node"]}',
+            'region': rid, 'born_age': age,
+            'seat_uid': seat['uid'], 'node': seat['node'], 'direction': list(seat['direction']),
+            'school': school, 'held_nodes': [node_id] if node_id else [],
+            'tier': SUPER_TIER, 'reach_m': SUPER_TIER * REACH_SPACINGS_PER_TIER * spacing,
+            'growth': GROWTH_BY_PRESSURE.get(pressure, DEFAULT_GROWTH),
+            'status': 'living',
+            'log': [{'age': age, 'event': 'promoted', 'concentration': round(pressed, 6)}],
+        }
+        living[rid] = villain
+        tiers[rid] = SUPER_TIER
+        promoted.append(villain)
+    if not promoted:
+        return []
+    block['version'] = VERSION
+    block['tiers'] = {k: round(v, 9) for k, v in sorted(tiers.items())}
+    fallen = [dict(v) for v in block.get('people', []) if not is_standing(v)]
+    block['people'] = ([living[k] for k in sorted(living)]
+                       + sorted(fallen, key=lambda v: (v.get('fell_age', -1), v['uid'])))
+    return promoted
 
 
 # --- what a seated villain builds -----------------------------------------------------

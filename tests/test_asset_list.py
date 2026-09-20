@@ -57,6 +57,70 @@ class AssetListTests(unittest.TestCase):
                          len(document["archetypes"]),
                          "every archetype gets exactly one marker and nothing else claims that source")
 
+    def test_tombstoned_surfaces_keep_their_identity_and_lose_their_claim(self):
+        """User ruling 0.2: 1 tundra and 6 snow stop commissioning art without leaving the list.
+
+        The count is pinned to the catalogue rather than hardcoded, so adding a fourteenth biome
+        does not fail this, but tombstoning a third one does - that is a decision, not drift.
+        """
+        from icarus_sim.terrain_biome_catalogue import (biome_catalogue, reachable_natural_catalogue,
+                                                        reachable_biome_catalogue, UNREACHABLE_BIOMES)
+        assets = {item["id"]: item for item in compile_asset_list()["assets"]}
+        self.assertEqual(UNREACHABLE_BIOMES, frozenset({1, 6}))
+        for biome in natural_catalogue():
+            expected = "supported" if biome["id"] not in UNREACHABLE_BIOMES else "unreachable"
+            self.assertEqual(assets[biome["asset_id"]]["status"], expected, biome["asset_id"])
+        for variant in biome_catalogue():
+            expected = "supported" if variant["core_biome_id"] not in UNREACHABLE_BIOMES else "unreachable"
+            self.assertEqual(assets[variant["asset_id"]]["status"], expected, variant["asset_id"])
+        unreachable = [item for item in assets.values() if item["status"] == "unreachable"]
+        self.assertEqual(len(unreachable),
+                         (len(natural_catalogue()) - len(reachable_natural_catalogue()))
+                         + (len(biome_catalogue()) - len(reachable_biome_catalogue())))
+        self.assertEqual(len(unreachable), 26)
+        # The identity survives: the native registry binds one slot per row and every world
+        # document still names all thirteen in terrain['biomes'].
+        self.assertIn("terrain.biome.001", assets)
+        self.assertIn("terrain.mutation.snow.umbral", assets)
+
+    def test_status_vocabulary_is_closed_and_matches_the_schema(self):
+        """The `unreachable` claim was declarative: the schema took any non-empty string.
+
+        Nothing outside the compiler reads `status`, so a typo - `unreachabe`, `Supported` -
+        would have shipped through validate_repo, the registry build and the docs mirror without
+        a single check noticing. The enum closes that, and this test checks it in both
+        directions: a value the compiler emits but the enum omits fails, and a value the enum
+        declares but nothing emits fails too, so the vocabulary cannot rot into a list of words
+        that used to mean something. The third assertion is the one that matters - it proves the
+        enum is enforced rather than decorative, which is exactly what this field was before.
+        """
+        import sys
+        root = Path(__file__).resolve().parents[1]
+        if str(root / 'tests') not in sys.path:
+            sys.path.insert(0, str(root / 'tests'))
+        from schema_subset import errors, validate
+
+        schema = json.loads((root / 'Contracts/schemas/asset-list.schema.json').read_text(encoding='utf-8'))
+        declared = schema['properties']['assets']['items']['properties']['status']['enum']
+        self.assertEqual(len(declared), len(set(declared)), 'duplicate status in the enum')
+
+        document = compile_asset_list()
+        emitted = {item['status'] for item in document['assets']}
+        self.assertEqual(emitted, set(declared),
+                         'the compiler and the contract disagree about the status vocabulary')
+        validate(document, schema)
+
+        # Guard the guard: the enum must actually reject, or this whole test is theatre.
+        # The control is the same one-row document with the status left alone, so the only
+        # thing separating a clean validate from a reported error is the field under test.
+        row = document['assets'][0]
+        validate(dict(document, assets=[row]), schema)
+        broken = list(errors(dict(document, assets=[dict(row, status='supprted')]), schema))
+        self.assertEqual([e for e in broken if 'status' not in e], [],
+                         'the control document was already invalid for some other reason')
+        self.assertTrue([e for e in broken if 'status' in e],
+                        'the schema accepted a status outside its own enum')
+
     def test_history_potential_states_are_exhaustive(self):
         from icarus_sim.terrain_history import biome_catalogue
         assets={a['id']:a for a in compile_asset_list()['assets']}

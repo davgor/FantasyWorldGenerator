@@ -53,7 +53,10 @@ class QuietTests(unittest.TestCase):
         self.assertEqual(self.world, before)
 
     def test_a_world_without_a_villain_is_refused(self):
-        plain = generate_request({'seed': 42, 'recipe_version': 3, 'overrides': {'size': 17}})
+        # The fixture must ASK for a villainless world now. A default world ends with
+        # super villains promoted into it, so `{'size': 17}` stopped being one.
+        plain = generate_request({'seed': 42, 'recipe_version': 3,
+                                  'overrides': {'size': 17, 'villain_rise': 0.}})
         with self.assertRaises(ValueError):
             corruption.corruption_request({'api_version': 1, 'world': plain, 'encounters': 999})
 
@@ -257,6 +260,50 @@ class CleanseTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             corruption.cleanse_request({'api_version': 1, 'world': self.corrupted,
                                         'target': {'god_id': 'god_radiant'}})
+
+    def test_opposing_a_revealed_god_by_god_id_refuses_and_never_raises_stopiteration(self):
+        """The only god corruption ever makes walk is the one this route cannot handle.
+
+        `_reveal` sets `status` to 'walking' without writing a visitation record, because a
+        corrupted god's footprint is its ley cluster. `depart_god` needs that record. Before
+        this guard the call raised a bare `StopIteration` out of a validated request API,
+        on the exact path `docs/corruption.md` advertises for opposing a walking god.
+        """
+        god_id = self.record['god_id']
+        walking = next(g for g in self.corrupted['religion']['gods'] if g['id'] == god_id)
+        self.assertEqual(walking['status'], 'walking')
+        self.assertFalse([v for v in self.corrupted['religion'].get('visitations', [])
+                          if v.get('god_id') == god_id])
+        try:
+            corruption.cleanse_request({'api_version': 1, 'world': self.corrupted,
+                                        'target': {'god_id': god_id}, 'power': 1.})
+        except ValueError as error:
+            self.assertIn('corruption', str(error))
+        except StopIteration:
+            self.fail('a validated request API must not raise a bare StopIteration')
+        else:
+            self.fail('opposing a corruption-revealed god by god_id must be refused')
+
+    def test_departing_a_revealed_god_is_refused_at_the_visitation_door_too(self):
+        """The same status-only guard, reached through `visitation_request(depart=True)`."""
+        from icarus_sim.terrain_visitation import visitation_request
+        god_id = self.record['god_id']
+        try:
+            visitation_request({'api_version': 1, 'world': self.corrupted,
+                                'god_id': god_id, 'depart': True})
+        except ValueError:
+            pass
+        except StopIteration:
+            self.fail('a validated request API must not raise a bare StopIteration')
+        else:
+            self.fail('a god that walks by corruption cannot depart a visitation it never made')
+
+    def test_the_corruption_route_is_the_one_that_works(self):
+        """The refusal names `{"corruption": <index>}`, so that route must actually work."""
+        done, _ = self.drive(1.)
+        self.assertTrue(done['cleanse']['cleansed'])
+        god = next(g for g in done['religion']['gods'] if g['id'] == self.record['god_id'])
+        self.assertEqual(god['status'], 'sleeping')
 
 
 class CorruptionLegacyTests(unittest.TestCase):

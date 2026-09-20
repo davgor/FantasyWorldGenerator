@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any, List, Optional
 
 from .asset_list import compile_asset_list
-from .capabilities import capabilities_document
+from .capabilities import capabilities_document, describe_controls
 from icarus_sim.terrain_world import generate_request
+from icarus_sim.terrain_errors import RequestError
 
 
 def _write_json(path: Path, value: Any, indent: Optional[int] = 2) -> None:
@@ -56,6 +58,10 @@ def world_document(request: dict[str, Any], build_stages: bool = False, timings:
 
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="fantasy-world", description=__doc__)
+    root.add_argument("--terse-errors", action="store_true",
+                      help="Emit only the core failure fields, dropping expected/suggestion. "
+                           "Exists so the retry-loop evaluation can measure whether the "
+                           "detail changes anything.")
     commands = root.add_subparsers(dest="command", required=True)
 
     generate = commands.add_parser("generate", help="Generate an Unreal-consumable world JSON document")
@@ -76,6 +82,16 @@ def parser() -> argparse.ArgumentParser:
     capabilities = commands.add_parser("capabilities", help="Export supported reference contracts and coordinate conventions")
     capabilities.add_argument("--version", type=int, default=1, help="Capability descriptor version (default: 1)")
     capabilities.add_argument("--output", type=Path, required=True)
+
+    controls = commands.add_parser("controls", help="Describe the generator controls without generating a world")
+    controls.add_argument("--group", help="Only controls in this group, e.g. Terrain or Drainage")
+    controls.add_argument("--name", action="append", dest="names",
+                          help="Only this control; repeatable")
+    controls.add_argument("--query", help="Only controls whose name or description contains this text")
+    controls.add_argument("--include-pinned", action="store_true",
+                          help="Include controls that refuse every value or are read by nothing")
+    controls.add_argument("--output", type=Path,
+                          help="Write to a file; omit to print to stdout")
     return root
 
 
@@ -84,6 +100,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     try:
         if args.command == "capabilities":
             _write_json(args.output, capabilities_document(args.version))
+            return 0
+        if args.command == "controls":
+            document = describe_controls(group=args.group, names=args.names, query=args.query,
+                                         include_pinned=args.include_pinned)
+            if args.output:
+                _write_json(args.output, document)
+            else:
+                print(json.dumps(document, ensure_ascii=False, indent=2))
             return 0
         if args.command == "asset-list":
             _write_json(args.output, compile_asset_list())
@@ -101,6 +125,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         document = world_document(request, build_stages=args.include_build_stages, timings=args.include_timings)
         _write_json(args.output, document, indent=2 if args.pretty else None)
         return 0
+    except RequestError as exc:
+        # The machine-readable half goes to stdout so a caller can parse it without
+        # scraping prose; the one-line summary goes to stderr for whoever is watching.
+        # Exit 2 matches Core/tests/genesis_driver.cpp, so both producers agree on what a
+        # refused request looks like from outside.
+        print(json.dumps(exc.document(detail=not args.terse_errors), ensure_ascii=False))
+        print("%s: %s" % (exc.code, exc), file=sys.stderr)
+        return 2
     except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
         parser().error(str(exc))
 

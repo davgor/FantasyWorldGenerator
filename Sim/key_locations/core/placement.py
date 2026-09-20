@@ -96,6 +96,22 @@ def resolve(archetype, layers, cells):
 
     Returns ``None`` when the world cannot serve the archetype, which callers report as a
     diagnostic rather than approximating around.
+
+    **A percentile over a field with no variation inside the domain resolves to nothing.**
+    That rule is the asymmetry this function used to get wrong, and it is worth stating in
+    full because the two halves fail in opposite directions. An absolute floor on an empty
+    field admits no cell, so the archetype disappears and ``diagnostics`` says so — it fails
+    *closed*, loudly. A percentile on an empty field computes a cut equal to the one value
+    present, every cell clears it, and the gate silently admits the entire domain — it fails
+    *open*, and reports ``"placed"``. Measured: ``holy_well`` asks for the nearest 35 per
+    cent of ``freshwater_distance``, that layer reads a flat 0.0 on all 47 land cells of the
+    size-17 reference world, and the archetype was eligible on all 47 — its defining
+    requirement voided while the diagnostic claimed success. A closed failure costs a kind of
+    place; an open one puts the place somewhere the archetype's own reason does not hold.
+
+    ``normalisers`` above already draws this line for scoring — *"a constant field carries no
+    information about where to put anything"* — so the test here is the same one, applied to
+    the harder question of whether a cell may stand at all.
     """
     resolved = []
     for term in archetype.get('requires', []):
@@ -107,6 +123,8 @@ def resolve(archetype, layers, cells):
             values = [grid[c['z']][c['x']] for c in cells]
             if not values:
                 return None
+            if min(values) == max(values):
+                return None
             if 'above_percentile' in term:
                 cut = percentile(values, term['above_percentile'])
                 rule['min'] = max(cut, term['min']) if 'min' in term else cut
@@ -117,6 +135,37 @@ def resolve(archetype, layers, cells):
             rule.pop('below_percentile', None)
         resolved.append(rule)
     return resolved
+
+
+def gap(archetype, layers, cells):
+    """Why this world cannot serve the archetype at all, or ``None`` when it can.
+
+    Three different things make an archetype impossible and they point at three different
+    people. A missing layer is a world generated to too early a phase. A field that is
+    identically constant inside the archetype's own domain is a **catalogue** mistake — the
+    archetype is asking a question its declared ground cannot answer, and no raster, seed or
+    threshold will change that. Everything else is an ordinary world that happens not to have
+    the ground this time. Collapsing all three into *"no ground in this world satisfies the
+    requirements"* sends someone looking at the world when the fault is in the catalogue.
+
+    Measured on seed 42 at every size from 17 to 257: ``salinity`` is 0.0 on every land cell
+    and 1.0 on every water cell, and ``fishing_productivity`` is 0.0 on every land cell. They
+    are ocean quantities. Three ``domain: land`` archetypes gated on them, which is the shape
+    this reason exists to name.
+    """
+    domain = archetype.get('domain')
+    for term in archetype.get('requires', []):
+        grid = layers.get(term['layer'])
+        if grid is None:
+            return f"the world never generated the {term['layer']} layer"
+        values = [grid[c['z']][c['x']] for c in cells]
+        if not values:
+            return f"this world has no {domain} cells for it to stand on"
+        if ('above_percentile' in term or 'below_percentile' in term) and min(values) == max(values):
+            return (f"{term['layer']} is identically {min(values):g} across the {domain} domain, "
+                    f"so a percentile over it selects nothing - the archetype names a field "
+                    f"that carries no data where it is allowed to stand")
+    return None
 
 
 def eligible(archetype, layers, cells):

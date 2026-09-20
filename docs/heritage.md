@@ -1,12 +1,13 @@
-# Heritage: key traits, culture and language
+# Heritage: key traits, culture, language and appearance
 
 `civilizations.json` answers where a people can live. The 37 numeric fields listed in
 `terrain_profiles.FIELDS` cover climate comfort, slope limits, water reach, food and college
 siting, and every one of them is read by placement code.
 
 Heritage answers what a people is *like*. It is a separate package, `Sim/heritage`, holding
-three layers: seventeen categorical **key traits** per race, a **culture** derived from them,
-and a **language genome** derived from culture and physiology.
+four layers: seventeen categorical **key traits** per race, a **culture** derived from them,
+a **language genome** derived from culture and physiology, and an authored **appearance** —
+the body, for concept art, sprites and models.
 
 ## The chain
 
@@ -17,6 +18,9 @@ traits.races[parent_race]                     authored, complete, every axis pre
   + overrides.culture[civilization]           authored, sparse
   -> derive_genome(culture, traits, lexicon)  pure
   + overrides.genome[civilization]            authored, sparse
+
+appearance.races[parent_race]                 authored, complete, every block present
+  + appearance.peoples[civilization]          authored, sparse delta
 ```
 
 Three parent races carry a complete base. Twelve civilizations carry deltas from it. **Every
@@ -59,6 +63,102 @@ and `terrain_history` gates replay on that version, so **worlds generated before
 rejected on age advance and must be regenerated**. The registry hash has not moved; the version gate has. Read the guarantee as "adding these tables cost nothing", not as "nothing has
 changed" - `docs/civilizations.md` already warns that a seed alone is insufficient after authored
 rules change.
+
+## The body
+
+`appearance.json` is the fourth layer and the one exception to the rule above: it carries
+numbers. It may, because a body has measurements and nothing else in the repository states
+them. `civilizations.json` measures habitat and never anatomy, so a number here cannot become
+a second copy of one the placement code reads — which is the only thing the no-numbers rule
+was ever protecting.
+
+It is authored rather than derived, in the same base-and-delta shape as the traits: a parent
+race carries a complete body and each subrace extends it. Derivation would be dishonest here.
+A skin range, an ear form and a way of dressing are new information, not consequences of the
+seventeen axes, and a generator that invented them from `body_scale` would produce three
+bodies wearing twelve names.
+
+Eight blocks, ordered from what a modeller needs first to what a concept artist needs last:
+
+| block | holds | what reads it |
+| --- | --- | --- |
+| `frame` | height and mass bands per sex, build, dimorphism | model scale, collision, the per-NPC draw |
+| `proportion` | heads tall, shoulder, leg and hand ratios | rig proportions, sprite silhouette |
+| `coloration` | skin, hair and eye: a weighted hex palette and a note on how it is distributed | material tint, concept palette |
+| `features` | face shape, ear, eye, nose, brow, jaw, lips, teeth, skin, markings | head mesh, portrait art |
+| `grooming` | scalp texture, facial hair, body hair, styles | hair cards, sprite variants |
+| `life_stages` | onset year and height fraction for four stages, plus a span | child and elder sprite sets |
+| `attire` | layering, materials, dye character, signature item, footwear | costume concepting |
+| `art_direction` | the silhouette, what it reads as, and what to avoid | the prompt itself |
+
+A band is `min`/`mean`/`max`/`sd`, so a caller can draw one NPC from the population it
+describes, and a palette weight is a population frequency. **Both are population parameters.
+The per-individual weighting the game engine applies sits on top of them and is not authored
+here.**
+
+### A handle and the English beside it
+
+`broad_high_bridge` tells a concept artist nothing about a dwarf's nose. So the two blocks an
+artist works from directly carry both halves, and carry them in one value:
+
+```json
+"nose": {
+  "form": "broad_high_bridge",
+  "note": "Big, and meant to be. Broad across the bridge and broad at the wings, starting
+           high between the brows with no dip at all, so brow and nose form one continuous
+           ridge straight down the centre of the face. ..."
+},
+"skin": {
+  "note": "Narrower than the human range and pushed toward the warm reds. Ruddy ochre is
+           commonest by a long way ...",
+  "swatches": [{"name": "ruddy_ochre", "hex": "#c98f68", "weight": 0.34}, ...]
+}
+```
+
+The `form` is the join key and the prompt fragment; the `note` is what a person or a model
+actually reads. They are one value rather than two blocks on purpose — a prose block sitting
+beside a token block is two registries of the same fact, and the day someone edits one of
+them is the day they disagree. A delta replaces the pair together, so a subrace cannot
+inherit a description that no longer matches its form.
+
+Elsewhere the token rule still holds: `grooming`, `attire` and `frame` are handles, and
+`art_direction.silhouette` and `.reads_as` are standalone prose. A `note` under `PROSE_MIN`
+characters is a load error, which is what stops a token being pasted in as a description.
+
+### What binds a body to its traits
+
+Two envelopes, both in `policy.py` beside `phonemes.GATES` for the reason those are there —
+they are physical constraints, not authoring taste:
+
+- `BODY_SCALE_HEIGHT_M` gives each `body_scale` value a height envelope the authored band has
+  to lie inside. The `compact` ceiling is 1.34 m and the `small` ceiling is 1.26 m, so **no
+  people under the dwarf parent race can be authored taller than 4 ft 5 in** — 1.3462 m. That
+  is a property of the loader rather than a promise in a comment.
+- `LIFESPAN_TEMPO_YEARS` does the same for `life_stages.max_years` against `lifespan_tempo`.
+
+Both are checked on the *resolved* body by `check_resolved_appearance`. A race base is
+complete and is checked at load; a subrace delta cannot be judged until it has been merged
+onto what it inherits, so it is checked inside `resolve`. One implementation and two call
+sites: a second merge inside `policy.py` is exactly the drift a sparse layer invites.
+
+Categorical values are held to a token rather than to a closed enum, with two exceptions —
+`facial_hair` and `sexual_dimorphism` — where a wrong value produces the wrong art silently
+instead of a missing field. Appearance vocabulary is art direction and grows with the world;
+closing all of it would mean a code edit for every new nose.
+
+### Where it ships
+
+Appearance goes out through `Contracts/catalogues/native-catalogues-v1.json` and through
+`heritage.resolve`, and **not** through the world document.
+`terrain_civilizations.heritage_of` still publishes traits, culture, genome and provenance
+only, so the `civilizations` block stays at version 3 and no saved world is rejected on age
+advance. A body is identical in every world from every seed, no generation step reads one,
+and paying a world-document version bump to copy static data into every save is the wrong
+trade. A consumer holding a world joins to the catalogue on `civilization_id`.
+
+The `heritage` hash inside that block does move, because `heritage_identity` hashes the
+resolved peoples and a resolved people now carries a body. Nothing gates on that hash — only
+`registry_identity` gates age advance — so it reports the change without rejecting anything.
 
 ## The seventeen axes
 
@@ -150,10 +250,16 @@ race should leave the name empty, not substitute a default.**
    to its parent base, so this step is optional and the result is still complete.
 3. Add a branch under the matching family in `policies/lexicon.json` with its sound changes and
    any coinages of its own.
-4. Hand-tune in `policies/overrides.json` only where the derivation is wrong.
-5. Increment the `revision` of every file changed.
-6. Run `python -m unittest discover -s Sim/tests` with `PYTHONPATH=Sim`, then
-   `python tools/export_catalogues.py` and the repository validator.
+4. Add a delta under `peoples` in `policies/appearance.json`. Every civilization needs an
+   entry, even an empty one: unlike traits, an absent people is a load error, because a
+   subrace silently wearing its archetype's body is a wrong answer nobody notices until the
+   art comes back looking like its parent.
+5. Hand-tune in `policies/overrides.json` only where the derivation is wrong.
+6. Increment the `revision` of every file changed.
+7. Run `python -m unittest discover -s Sim/tests` with `PYTHONPATH=Sim`, then
+   `python tools/export_catalogues.py` and the repository validator. The export is not
+   optional for an appearance edit: the catalogue is the channel the art pipeline reads, and
+   `--check` runs inside the validator's `checks` stage.
 
 Each policy file carries its own revision, and `heritage_identity()` hashes the *resolved*
 peoples rather than the source bytes — so a derivation edit that changes no output invalidates
@@ -170,6 +276,12 @@ nothing, while a one-character override that does change an output is caught.
 - Four dwarven branches share one soma, so their inventories are close and distinctness rests
   on the sound changes. `hill_dwarf` inherits uvulars its pastoral description does not suggest;
   its rules shift them away, but the inventory still lists them.
+- A `coloration` palette is four or five weighted swatches. That is a coarse stand-in for a
+  real population's distribution and will read as banding if a consumer picks swatches
+  without interpolating between them.
+- `attire` is one costume per subrace, with no class, rank, season or trade variation. A city
+  of them drawn straight from this table is a city in uniform; the intended fix is a
+  per-NPC layer on the engine side, not more rows here.
 
 ## Terminology
 

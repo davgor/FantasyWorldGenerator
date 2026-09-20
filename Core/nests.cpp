@@ -44,7 +44,9 @@ Scored suitability(const NestProfile& profile,const Habitat& habitat) {
 }
 // Species table first, then its role's, then no preference. Keys are decimal strings
 // of natural biome ids, matching how civilization biome preferences are authored. An
-// absent biome is habitat the species does not use.
+// absent biome is habitat the species does not use. An animal resolves its table
+// through its feeding role; a monster carries its own and the loader refuses one that
+// does not, so the bare `return 1.` is unreachable for the shipped catalogue.
 double biome_weight(const NestProfile& profile,
                     const std::map<std::string,std::map<std::string,double>>& roles,
                     std::int64_t biome) {
@@ -69,6 +71,29 @@ double arc(const Vec3& a,const Vec3& b,double radius) {
 // absolute multiplier would tax the big creatures a second time for being big.
 double tier_density(double base,double falloff,std::int64_t tier) {
     return base*std::pow(falloff,static_cast<double>(1-tier));
+}
+// Mirrors Sim/icarus_sim/terrain_nests.py NEST_DANGER_SPAN_M / NEST_DANGER_FLOOR and
+// terrain_scale.py REFERENCE_RADIUS_M. How far out the danger ramp turns over, in
+// reference-world metres, and the share of the rate that survives at the wrong end of
+// it. Nothing may become impossible, so the floor is not zero.
+constexpr double nest_danger_span_m=300.;
+constexpr double nest_danger_floor=.2;
+constexpr double nest_reference_radius_m=1774.4123532462844;
+constexpr double nest_reference_pi=3.14159265358979323846;
+// Rate multiplier that slides danger outward from settled ground. The clearance is a
+// hard floor and stays one, but a cutoff is the wrong shape for a difficulty gradient
+// and cannot make one at any resolution: scaling `clearance * tier` up digs a wider
+// hole around every settlement rather than ramping anything. `inward` is 1 on a
+// settlement's doorstep and a half one span out; a tier one species is drawn towards
+// it and a tier five species away from it, in proportion to danger. A ratio of squares
+// rather than an exponential -- no pow, no exp, nothing whose last bit depends on the
+// libm this build links against -- and squared because the plain ratio swings by only
+// a factor of two across the band a settled world actually offers.
+double danger_ramp(std::int64_t tier,double clear_of,double span) {
+    const double reach=span*span,out=clear_of*clear_of;
+    const double inward=reach/(reach+out);
+    const double danger=static_cast<double>(tier-1)/4.;
+    return nest_danger_floor+(1-nest_danger_floor)*(danger*(1-inward)+(1-danger)*inward);
 }
 // The share of a cell that goes to one species.
 struct Share {const NestProfile* profile=nullptr;double rate=0.,score=0.;};
@@ -111,6 +136,12 @@ NestResult place(const std::string& kind_of,const std::vector<const NestProfile*
     for(std::size_t index=0;index<cells.size();++index)
         for(const Vec3& site:settled)
             nearest[index]=std::min(nearest[index],arc(cells[index].direction,site,radius));
+    // ...and how far out a cell is decides how dangerous the ground is, continuously.
+    // Authored against the reference world and scaled by circumference, so it means the
+    // same thing at every width. Matches terrain_nests.py's
+    // `NEST_DANGER_SPAN_M*reach_scale(2*math.pi*radius)` term for term.
+    const double span=nest_danger_span_m*((2*nest_reference_pi*radius)
+                                          /(2*nest_reference_pi*nest_reference_radius_m));
     // Where each species can live and how much room it has there. `room` is what the
     // species would claim if nothing else existed: how common it is, how well the
     // ground suits it, and how much ground there is. Plain accumulation, matching the
@@ -132,7 +163,8 @@ NestResult place(const std::string& kind_of,const std::vector<const NestProfile*
             if(weight<=0.) continue;
             const Scored scored=suitability(*profile,cell);
             if(!scored.eligible || scored.score<cfg.options.nest_min_suitability) continue;
-            const double room=profile->occurrence*scored.score*weight*cell.area_km2;
+            const double room=profile->occurrence*scored.score*weight
+                              *danger_ramp(profile->tier,nearest[index],span)*cell.area_km2;
             if(room<=0.) continue;
             rooms[index].push_back(Room{profile,wet,room,scored.score});
             tier_room[std::make_pair(profile->tier,wet)]+=room;

@@ -98,8 +98,12 @@ class Config:
             if not math.isfinite(value) or not low<=value<=high:raise ValueError(f'{key} must be {low}..{high}')
         if type(self.rain_passes) is not int or not 1<=self.rain_passes<=128:raise ValueError('rain_passes must be 1..128')
         if type(self.settlement_count) is not int or not 0<=self.settlement_count<=24:raise ValueError('settlement_count must be 0..24')
-        if not math.isfinite(self.river_threshold_km2) or not .001<=self.river_threshold_km2<=100:
-            raise ValueError('river_threshold_km2 must be 0.001..100')
+        # 10000, not 100: the default 0.15 km2 is the 11.15 km reference world's value and
+        # recipe 3 scales it as the square of the width, resolving 48.27, 193.08 and 434.44
+        # km2 at the 200/400/600 km presets. At 100 the medium and large presets raised
+        # here instead of generating. terrain_world.RIVER_THRESHOLD_MAX_KM2 mirrors this.
+        if not math.isfinite(self.river_threshold_km2) or not .001<=self.river_threshold_km2<=10000:
+            raise ValueError('river_threshold_km2 must be 0.001..10000')
         if not math.isfinite(self.temperature_offset) or not -40<=self.temperature_offset<=40:
             raise ValueError('temperature_offset must be -40..40 C')
         if not math.isfinite(self.moisture_bias) or not -1<=self.moisture_bias<=1:

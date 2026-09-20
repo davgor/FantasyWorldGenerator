@@ -39,6 +39,41 @@ def reach_scale(circumference_m):
     return circumference_m/REFERENCE_CIRCUMFERENCE_M
 
 
+def runoff_scale(circumference_m):
+    """Factor for CATCHMENT AREAS authored against the reference world.
+
+    The area analogue of `reach_scale`: reaches take the length factor, catchments take
+    its square. `river_threshold_km2` is the only current caller.
+
+    What is measured, at a FIXED raster and seed: `rain_runoff` is cell area times
+    rainfall accumulated downstream (terrain_climate.py:64,75). Widening the world does
+    not move the rainfall field -- climate runs on the same normalised sphere grid -- so
+    runoff follows cell area exactly. Generating seed 42 size 17 at 200/400/600 km and
+    taking the per-cell ratio gives 4.000000 at double the width and 9.000000 at triple,
+    on all 47 land cells, against k**2 of 4 and 9. The threshold is an area, so it takes
+    the same square or it stops meaning the same share of the world.
+
+    Measured effect of applying it (phase-9 land-river fraction, seed 42, sizes 17/33/65):
+
+        200 km  unscaled 0.15 km2   100.00% / 99.63% / 85.18%  <- saturated
+        200 km  derived 48.27 km2    68.09% / 47.76% / 16.01%
+        400 km  unscaled 0.15 km2   100.00% / 100.00% / 93.78%
+        400 km  derived 193.08 km2   68.09% / 47.76% / 16.01%
+        600 km  unscaled 0.15 km2   100.00% / 100.00% / 96.59%
+        600 km  derived 434.44 km2   68.09% / 47.76% / 16.01%
+
+    The derived fractions are identical at all three widths, which is the property being
+    bought: the river network stops depending on how wide the world is.
+
+    NOT claimed: that the live 200 km world's runoff is 321.8x the archived 11.15 km
+    reference world's. It is not -- measured per-cell growth between those two spans
+    13.2x to 764x -- because commit 21df9aa re-derived wavelength, tectonic_relief,
+    amplitude and orogeny along with the radius. Those are two different planets, not one
+    planet at two widths, and the comparison does not test this factor.
+    """
+    return reach_scale(circumference_m)**2
+
+
 def design_radius(circumference_m, world_scale):
     """Design-space radius that yields a physical circumference. Core/genesis.cpp:156."""
     return circumference_m/(2*math.pi*world_scale)
@@ -119,9 +154,15 @@ def shape_overrides(circumference_m, relief_m, orogeny, plate_count, world_scale
         raise ValueError('plate_count must be at least 2')
     ceiling = max_relief_m(circumference_m, amplitude_ratio)
     if relief_m >= ceiling:
+        # Round both printed bounds OUTWARD, never to nearest. A ':.0f' here rounds the
+        # needed circumference DOWN, so a caller who follows the advice literally builds
+        # the width the message named and is refused again. The needed width rounds up
+        # and the admitted relief rounds down, so both numbers land on the legal side.
+        needed_km = math.ceil(circumference_m*relief_m/ceiling/10)/100
+        admitted_m = math.floor(ceiling*100)/100
         raise ValueError(f'relief of {relief_m:g} m needs a circumference above '
-                         f'{circumference_m*relief_m/ceiling/1000:.0f} km; '
-                         f'{circumference_m/1000:g} km admits at most {ceiling:.0f} m')
+                         f'{needed_km:g} km; '
+                         f'{circumference_m/1000:g} km admits at most {admitted_m:g} m')
     radius = design_radius(circumference_m, world_scale)
     relief = tectonic_relief_for(relief_m, world_scale)
     overrides = {'globe_radius': radius, 'world_scale': world_scale,

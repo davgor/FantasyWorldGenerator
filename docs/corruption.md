@@ -42,6 +42,16 @@ A god seats an existing super villain — the one with the most reach, or a name
 4. binds the villain: `god`, `school`, `corrupted`, and the new nodes in `held_nodes`
 5. reveals itself, and rouses the known pantheon
 
+Step 3 is the shared rebuild tail and it is reached **indirectly**, which has already cost one wrong board card.
+
+`terrain_corruption.py:269`
+
+That line calls `rebuild_tail`, whose body runs the network evaluation, the environment refresh and the biome variants, in that order.
+
+`terrain_history.py:288`
+
+So searching this module for the names of those three functions finds nothing and proves nothing. It is a grep for the callee inside the caller. The ground does move: on a seed-42 world a corruption takes the hidden field from negative zero to 1.149990 and produces hidden-school cells where there were none.
+
 ### Four distinct failure modes
 
 | God | What happens to a city | The tell |
@@ -67,7 +77,9 @@ It takes time by construction — a partial-power structure needs several ticks 
 
 **Killing the villain is not cleansing the land.** The nodes are the persistent entity. Unseating a holder leaves them standing and a successor free to take them; cleansing is the other order of operations.
 
-Opposing a walking god is the same operation under another name: an avatar is a ley cluster and not a creature, so driving one off is cleansing its nodes, and the effect is an early `depart_god`.
+Opposing a walking god is the same operation under another name: an avatar is a ley cluster and not a creature, so driving one off is cleansing its nodes. **The `{"god_id": ...}` form is for a god that walks by visitation, and its effect is an early departure.** A god revealed by a corruption does not walk by visitation — it has no visitation record, because its footprint is the corrupted cluster — so that form now refuses it with a message naming the route that works. Oppose a revealed god through `{"corruption": <index>}`: the same drain, on the thing the god actually is here.
+
+Until this was corrected the `{"god_id": ...}` form raised a bare `StopIteration` on exactly the god corruption creates, which is to say on the only god this paragraph could ever have been about. Whether refusing is the right answer, or whether opposing a revealed god should drain all of its live corruption records in one call, is an open design question recorded on the board.
 
 ## Limits
 

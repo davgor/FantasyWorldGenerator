@@ -1,0 +1,1084 @@
+{
+  "schema": "fantasy-world-generator.heritage-appearance",
+  "revision": 1,
+  "notes": "What a people looks like, authored rather than derived: a parent race carries a complete base and each subrace extends it. This is the concept-art, sprite and model source. It is the one heritage layer that carries numbers, because a body has measurements and there is nowhere else in the repository that states them - civilizations.json measures habitat, never anatomy, so nothing here can restate a number that lives there. Metres and kilogrammes, never feet; the Unreal adapter converts at its own boundary. Each band is min/mean/max/sd so a caller can draw a truncated normal per NPC; the weights on a palette are population frequencies, not the per-individual weighting the game engine applies on top. The two blocks an artist works from directly, `features` and `coloration`, pair a machine handle with open English describing it, and the pair travels together so the two cannot drift. Deltas merge one key at a time inside a block, and a delta that restates its inherited value is a load error, so every entry reads as its difference from its archetype. Height must lie inside the envelope its body_scale trait owns: policy.BODY_SCALE_HEIGHT_M is what makes 'no dwarf is taller than 4 ft 5 in' a structural property rather than a promise.",
+  "races": {
+    "human": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.62, "mean": 1.74, "max": 1.88, "sd": 0.068},
+          "female": {"min": 1.51, "mean": 1.62, "max": 1.75, "sd": 0.062}
+        },
+        "mass_kg": {
+          "male": {"min": 60.0, "mean": 74.0, "max": 92.0, "sd": 9.0},
+          "female": {"min": 50.0, "mean": 62.0, "max": 78.0, "sd": 8.0}
+        },
+        "build": "balanced",
+        "sexual_dimorphism": "moderate"
+      },
+      "proportion": {
+        "heads_tall": 7.4,
+        "shoulder_width_ratio": 0.245,
+        "leg_length_ratio": 0.47,
+        "hand_length_ratio": 0.11
+      },
+      "features": {
+        "face_shape": {
+          "form": "varied_oval",
+          "note": "No single shape. Ovals, squares and hearts all turn up in one village, and the spread inside a single human settlement is wider than the spread between two dwarven holds. If a crowd of humans reads as one face repeated, that is the error."
+        },
+        "ear": {
+          "form": "rounded",
+          "note": "Small, rounded, set close to the skull, and carrying no information at all. This is the plain ear every other people in this table is described against."
+        },
+        "eye_shape": {
+          "form": "varied_almond",
+          "note": "Almond as a default, but lid shape, fold, and how deeply the eye is set all vary freely. Two siblings routinely differ."
+        },
+        "nose": {
+          "form": "varied_straight",
+          "note": "Middling in every direction. Bridges run flat to high and tips snubbed to hooked, and no one form is common enough to call the human nose."
+        },
+        "brow": {
+          "form": "moderate_ridge",
+          "note": "A visible ridge on most men and a soft one on most women. It shades the eye slightly and does nothing more."
+        },
+        "jaw": {
+          "form": "moderate_square",
+          "note": "Squarer and deeper in men, tapering in women. This is the clearest single place a human face reads as one sex or the other, which is not true of the elves or the dwarves."
+        },
+        "lips": {
+          "form": "varied_medium",
+          "note": "The full range, thin to full, with no pattern worth drawing to."
+        },
+        "teeth": {
+          "form": "even",
+          "note": "Even and unremarkable in the young, and crooked, worn or missing by middle age in anyone who worked for a living."
+        },
+        "skin_texture": {
+          "form": "ordinary_pored",
+          "note": "Visible pores, freckles, moles and sun damage. Skin that is entirely clean and even is a mark of wealth, not a mark of being human."
+        },
+        "markings": {
+          "form": "freckling_and_working_scars",
+          "note": "Freckles over the nose and shoulders, and scars that record a trade: burns up a smith's forearms, rope grooves across a sailor's palms, a cook's left thumb."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "The widest spread of any people here, and geographic rather than tribal: one heartland market holds rose-pale, tan, olive and deep brown standing next to each other, and the children of two tones land anywhere between them. Tan and olive are commonest by a clear margin. Everyone darkens across a working summer and lightens again by spring.",
+          "swatches": [
+            {"name": "pale_rose", "hex": "#efd0b8", "weight": 0.22},
+            {"name": "warm_tan", "hex": "#cfa077", "weight": 0.28},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.22},
+            {"name": "deep_brown", "hex": "#7b5237", "weight": 0.18},
+            {"name": "dark_umber", "hex": "#4f3423", "weight": 0.10}
+          ]
+        },
+        "hair": {
+          "note": "Dark dominates: brown and black together are three heads in five. Wheat blond and copper red are real but uncommon, and both run lighter at the ends than at the root. Grey starts in the thirties at the temples and is general by sixty.",
+          "swatches": [
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.36},
+            {"name": "black", "hex": "#221c18", "weight": 0.24},
+            {"name": "chestnut", "hex": "#6b4326", "weight": 0.18},
+            {"name": "wheat_blond", "hex": "#b39a63", "weight": 0.14},
+            {"name": "copper_red", "hex": "#8d4322", "weight": 0.08}
+          ]
+        },
+        "eye": {
+          "note": "Brown in nearly half, hazel next, and the pale colours clustered in the northern and coastal lines rather than spread evenly through the population. Flecked irises and odd-coloured pairs occur and are unremarkable.",
+          "swatches": [
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.44},
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.20},
+            {"name": "blue", "hex": "#4a7fa8", "weight": 0.16},
+            {"name": "grey", "hex": "#7d8489", "weight": 0.12},
+            {"name": "green", "hex": "#4e7a4a", "weight": 0.08}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "varied_straight_to_coiled",
+        "facial_hair": "male_only",
+        "body_hair": "moderate",
+        "common_styles": ["cropped", "shoulder_length", "braided_crown"]
+      },
+      "life_stages": {
+        "child": {"onset_years": 0, "height_fraction": 0.38, "read": "large head on a short frame, no sex difference in silhouette"},
+        "adolescent": {"onset_years": 12, "height_fraction": 0.80, "read": "limbs outrun the torso; shoulders and hips begin to diverge"},
+        "adult": {"onset_years": 18, "height_fraction": 1.0, "read": "full stature, weight still climbing for a decade"},
+        "elder": {"onset_years": 55, "height_fraction": 0.98, "read": "greying, thinning hair, softened jaw, a hand's loss of height"},
+        "max_years": 95
+      },
+      "attire": {
+        "layering": "two_layer_tunic_and_cloak",
+        "materials": ["linen", "wool", "tanned_leather", "iron"],
+        "dye_character": "earth_dyes",
+        "signature_item": "belt_and_pouch",
+        "footwear": "turnshoes"
+      },
+      "art_direction": {
+        "silhouette": "The baseline everything else is drawn against: an even seven-and-a-half-head build with no exaggerated mass anywhere.",
+        "reads_as": "A person. Nothing about the outline announces a species before the face does.",
+        "avoid": ["pointed_ears", "exaggerated_proportions", "one_skin_tone_across_a_crowd"]
+      }
+    },
+    "elf": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.72, "mean": 1.86, "max": 1.99, "sd": 0.055},
+          "female": {"min": 1.66, "mean": 1.79, "max": 1.92, "sd": 0.052}
+        },
+        "mass_kg": {
+          "male": {"min": 56.0, "mean": 66.0, "max": 78.0, "sd": 5.5},
+          "female": {"min": 48.0, "mean": 57.0, "max": 68.0, "sd": 5.0}
+        },
+        "build": "lithe_long",
+        "sexual_dimorphism": "minimal"
+      },
+      "proportion": {
+        "heads_tall": 8.1,
+        "shoulder_width_ratio": 0.22,
+        "leg_length_ratio": 0.52,
+        "hand_length_ratio": 0.115
+      },
+      "features": {
+        "face_shape": {
+          "form": "long_tapering_heart",
+          "note": "Long through the midface and narrowing hard to a small chin, so the head reads as a downward-pointing shape. Widest at the cheekbones, which sit high and close under the skin."
+        },
+        "ear": {
+          "form": "long_swept_point",
+          "note": "The signature, and the thing to get right. An elf's ear is long - a hand's length from lobe to tip - set low on the skull and swept back and upward so the point rises past the crown. It is thin enough to glow red at the edge with a light behind it, and it moves: the ears angle toward whatever the elf is listening to, and they flatten back when the elf is angry. Draw them at full length in profile too. Shortening them is the fastest way to turn an elf into a human in a wig."
+        },
+        "eye_shape": {
+          "form": "almond_wide_set",
+          "note": "Large, almond, set wide apart, and canted up at the outer corner. Very little white shows below the iris, which is what produces the flat, unhurried, slightly inhuman stare."
+        },
+        "nose": {
+          "form": "straight_narrow",
+          "note": "Narrow, perfectly straight, and small for the length of the face. The nose is the quietest thing an elf has and it must never compete with the ears."
+        },
+        "brow": {
+          "form": "high_fine",
+          "note": "A high smooth forehead with essentially no bony ridge. The eyebrows are fine, set high, angled, and on the pale-skinned lines they are often the only hair colour visible at portrait distance."
+        },
+        "jaw": {
+          "form": "tapered_narrow",
+          "note": "Narrow the whole way down to a small pointed chin, on a long neck. There is no masculine squaring even in the men, which is most of why elven sexes are hard to read at a distance."
+        },
+        "lips": {
+          "form": "thin_defined",
+          "note": "Thin but sharply outlined, with a pronounced cupid's bow. They rarely part at rest."
+        },
+        "teeth": {
+          "form": "even_small",
+          "note": "Small, even and very white, and almost never shown. An elf smiling with teeth reads to other elves as a threat display, so a friendly elf smiles closed-mouthed."
+        },
+        "skin_texture": {
+          "form": "smooth_fine_pored",
+          "note": "Near poreless, and faintly translucent at the temples, the ears and the inner wrist where the vessels show through. It does not tan and it does not scar well: the few scars an old elf carries stay silver and legible for centuries."
+        },
+        "markings": {
+          "form": "none",
+          "note": "No freckles, no moles, no birthmarks, nothing. The face is a blank field, which is exactly why a single scar or one painted line carries so much weight on it."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Four tones that do not blend the way human ones do. Elven colouring is inherited whole from one parent or the other rather than averaged, so a house is far more uniform in colour than a human village is, and a mixed pair produces children of two distinct tones rather than one intermediate. All four are cool-undertoned and none of them tan; an elf who has spent a season in the sun is the same colour and merely looks tired.",
+          "swatches": [
+            {"name": "moonlit_ivory", "hex": "#efe0cd", "weight": 0.26},
+            {"name": "warm_bronze", "hex": "#c69368", "weight": 0.28},
+            {"name": "pale_olive", "hex": "#d8c7a4", "weight": 0.26},
+            {"name": "deep_walnut", "hex": "#7d5539", "weight": 0.20}
+          ]
+        },
+        "hair": {
+          "note": "Even quarters, and unrelated to skin - a deep-walnut elf with pale silver hair is ordinary and not remarked on. The colours are saturated and hold that saturation for centuries. Silver here is a birth colour, not an aged one, so it belongs on the young as readily as the old.",
+          "swatches": [
+            {"name": "pale_silver", "hex": "#cfc8bb", "weight": 0.24},
+            {"name": "dark_umber", "hex": "#3a2c22", "weight": 0.28},
+            {"name": "autumn_gold", "hex": "#a5823f", "weight": 0.26},
+            {"name": "black_green_sheen", "hex": "#232a24", "weight": 0.22}
+          ]
+        },
+        "eye": {
+          "note": "Clear, evenly split across the four, and large enough in the face that the colour is the first thing legible at portrait distance. The iris is unusually flat in tone with a hard dark ring around its edge, so it reads as a solid disc of colour rather than as a textured one.",
+          "swatches": [
+            {"name": "leaf_green", "hex": "#4e7a4a", "weight": 0.30},
+            {"name": "pale_grey", "hex": "#9aa2a5", "weight": 0.26},
+            {"name": "amber_gold", "hex": "#b08830", "weight": 0.24},
+            {"name": "deep_blue", "hex": "#2f4f78", "weight": 0.20}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "fine_straight",
+        "facial_hair": "none",
+        "body_hair": "absent",
+        "common_styles": ["waist_length_loose", "temple_braids", "single_crown_plait"]
+      },
+      "life_stages": {
+        "child": {"onset_years": 0, "height_fraction": 0.35, "read": "slight and long-limbed; the ears are already at full adult length"},
+        "adolescent": {"onset_years": 25, "height_fraction": 0.70, "read": "narrow and unfinished for decades; no growth spurt, only slow extension"},
+        "adult": {"onset_years": 100, "height_fraction": 1.0, "read": "full stature, and then five centuries with no visible change at all"},
+        "elder": {"onset_years": 600, "height_fraction": 1.0, "read": "no stoop and no grey; age shows only as a thinning, translucent stillness in the skin"},
+        "max_years": 900
+      },
+      "attire": {
+        "layering": "draped_single_layer",
+        "materials": ["woven_bark_silk", "living_wood", "spider_silk", "horn"],
+        "dye_character": "undyed_natural",
+        "signature_item": "carved_wood_circlet",
+        "footwear": "soft_wrapped"
+      },
+      "art_direction": {
+        "silhouette": "A vertical line: narrow shoulders, very long legs, hair and cloth falling unbroken from shoulder to ankle, and the ear points breaking that line at the top.",
+        "reads_as": "A young tree. Height and stillness, never bulk.",
+        "avoid": ["beards", "heavy_armour_bulk", "round_ears", "short_ears", "visible_ageing_before_six_hundred"]
+      }
+    },
+    "dwarf": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.19, "mean": 1.27, "max": 1.34, "sd": 0.045},
+          "female": {"min": 1.13, "mean": 1.21, "max": 1.29, "sd": 0.043}
+        },
+        "mass_kg": {
+          "male": {"min": 57.0, "mean": 68.0, "max": 84.0, "sd": 7.5},
+          "female": {"min": 49.0, "mean": 59.0, "max": 73.0, "sd": 6.5}
+        },
+        "build": "dense_broad",
+        "sexual_dimorphism": "low"
+      },
+      "proportion": {
+        "heads_tall": 4.6,
+        "shoulder_width_ratio": 0.31,
+        "leg_length_ratio": 0.42,
+        "hand_length_ratio": 0.125
+      },
+      "features": {
+        "face_shape": {
+          "form": "broad_square",
+          "note": "Wide, short and flat-fronted, as broad at the jaw as at the temples, so the head reads as a block rather than an oval. Very little forehead shows above the brow and very little neck below the jaw."
+        },
+        "ear": {
+          "form": "small_rounded",
+          "note": "Small, thick, rounded, and usually not visible at all - under hair, under a hood, under a helm. Nothing about a dwarf's ear is meant to be the thing you notice, which is the deliberate opposite of the gnomes."
+        },
+        "eye_shape": {
+          "form": "deep_set_under_shelf",
+          "note": "Set deep under the brow shelf and shaded by it, so the eyes only catch light when the head tips back. Small for the size of the face, with heavy lids and creased outer corners from a lifetime of squinting into heat and dark."
+        },
+        "nose": {
+          "form": "broad_high_bridge",
+          "note": "Big, and meant to be. Broad across the bridge and broad at the wings, starting high between the brows with no dip at all, so brow and nose form one continuous ridge straight down the centre of the face. It is the largest feature a dwarf has, it survives every helm, and it is what the face is built around. A dwarf drawn with a small neat nose is a short human."
+        },
+        "brow": {
+          "form": "heavy_shelf",
+          "note": "One heavy bony shelf running straight across, carrying thick brows that frequently meet in the middle. This is the ledge the whole face hangs off, and it is the first thing to establish when drawing one."
+        },
+        "jaw": {
+          "form": "square_wide",
+          "note": "Square, wide and deep, and almost always invisible under the beard. As far as a viewer is concerned the outline of the beard is the jawline, which is why a dwarven portrait can be built from a nose, a brow and a beard shape alone."
+        },
+        "lips": {
+          "form": "broad_firm",
+          "note": "Wide and firm, and mostly buried in moustache. What reads is the line of the mouth, not its shape."
+        },
+        "teeth": {
+          "form": "blunt_square",
+          "note": "Large, square and blunt-edged, with no pronounced canine at all. Chipped and worn flat in anyone past their first century."
+        },
+        "skin_texture": {
+          "form": "thick_weathered",
+          "note": "Thick, coarse-pored and slightly grainy, like a fine sandstone. It creases into deep permanent lines rather than fine wrinkles, and it takes a burn without much complaint."
+        },
+        "markings": {
+          "form": "forge_burn_speckling",
+          "note": "A dusting of tiny dark spark-burns across the forearms, the backs of the hands and the cheekbones, accumulated over decades. Old dwarves are heavily speckled, and it is read as a record of work rather than as damage."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Narrower than the human range and pushed toward the warm reds. Ruddy ochre is commonest by a long way, and deep umber runs through the southern holds. The odd one out is the slate cast: a cool grey-tinted tone that appears in clans working the deepest galleries and reads as stone dust under the skin even scrubbed. All four weather redder at the cheek and the nose.",
+          "swatches": [
+            {"name": "pale_stone", "hex": "#e0c3a8", "weight": 0.22},
+            {"name": "ruddy_ochre", "hex": "#c98f68", "weight": 0.34},
+            {"name": "deep_umber", "hex": "#8a5a3b", "weight": 0.28},
+            {"name": "slate_cast", "hex": "#a3907f", "weight": 0.16}
+          ]
+        },
+        "hair": {
+          "note": "Very dark or very red, with almost nothing in between: black-iron and dark brown together take near two in three, and copper red about a fifth. It goes iron grey early, around sixty or seventy, and then white. Beard and scalp go at the same rate, so a grey-bearded dwarf with dark hair reads as wrong to anyone who knows dwarves.",
+          "swatches": [
+            {"name": "black_iron", "hex": "#2b2621", "weight": 0.34},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.30},
+            {"name": "copper_red", "hex": "#8d4322", "weight": 0.22},
+            {"name": "iron_grey", "hex": "#7a736c", "weight": 0.14}
+          ]
+        },
+        "eye": {
+          "note": "Dark and warm, which is what a deep brow shelf leaves you with: brown and amber take two in three between them. The cool slate grey that travels with the slate skin cast is the only pale colour common enough to be worth drawing.",
+          "swatches": [
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.42},
+            {"name": "amber", "hex": "#9a6b24", "weight": 0.24},
+            {"name": "slate_grey", "hex": "#6b7178", "weight": 0.22},
+            {"name": "deep_green", "hex": "#3d5a43", "weight": 0.12}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "coarse_thick",
+        "facial_hair": "full_universal",
+        "body_hair": "heavy",
+        "common_styles": ["forked_beard", "clan_braids", "shaved_temples"]
+      },
+      "life_stages": {
+        "child": {"onset_years": 0, "height_fraction": 0.42, "read": "already broad; a dwarf child is a small adult, not a slight one"},
+        "adolescent": {"onset_years": 14, "height_fraction": 0.78, "read": "shoulders fill out before height finishes; first beard at the end of it"},
+        "adult": {"onset_years": 30, "height_fraction": 1.0, "read": "full mass and full beard, held for a century and a half"},
+        "elder": {"onset_years": 180, "height_fraction": 0.97, "read": "beard to the belt and white, shoulders still square, a slight settling of the spine"},
+        "max_years": 350
+      },
+      "attire": {
+        "layering": "heavy_layered",
+        "materials": ["boiled_leather", "wool_felt", "riveted_plate", "gold_wire"],
+        "dye_character": "earth_dyes_and_bare_metal",
+        "signature_item": "clan_beard_rings",
+        "footwear": "hobnailed_boots"
+      },
+      "art_direction": {
+        "silhouette": "A wide trapezoid: shoulders close to half the standing height, no visible neck, the mass carried high in the chest.",
+        "reads_as": "A walking anvil. The density is bone and muscle under thick skin, not fat - put the weight in the shoulders and the forearms.",
+        "avoid": ["tall_slender_limbs", "bare_chin", "pointed_ears", "small_neat_nose", "long_leg_line"]
+      }
+    }
+  },
+  "peoples": {
+    "human_heartland": {},
+    "elf": {},
+    "dwarf": {},
+    "human_maritime": {
+      "frame": {
+        "mass_kg": {
+          "male": {"min": 64.0, "mean": 78.0, "max": 95.0, "sd": 9.0},
+          "female": {"min": 53.0, "mean": 65.0, "max": 81.0, "sd": 8.0}
+        },
+        "build": "rope_muscled"
+      },
+      "features": {
+        "skin_texture": {
+          "form": "salt_weathered",
+          "note": "Deep-tanned, dried and lined early by salt and glare, with a hard pink burn across the nose and the tops of the ears that never fully goes. The line at the collar and at the rolled sleeve is sharp and worth drawing."
+        },
+        "markings": {
+          "form": "voyage_tattoo_record",
+          "note": "Hand-poked blue-black tattoos up the forearms, over the hands and around the neck, each one marking a crossing made, a cape rounded or a wreck survived. An old sailor's arms are a legible itinerary, and a young one's are nearly bare."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "The same underlying human range, shifted two shades darker by exposure and with the pale end effectively absent among working crews. What actually varies is not the tone but where the sun reached it.",
+          "swatches": [
+            {"name": "sun_darkened_tan", "hex": "#c08b5e", "weight": 0.34},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.26},
+            {"name": "deep_brown", "hex": "#7b5237", "weight": 0.24},
+            {"name": "pale_rose", "hex": "#efd0b8", "weight": 0.16}
+          ]
+        },
+        "hair": {
+          "note": "The heartland spread with sun-bleaching over the top: brown lightens to a dry sandy tone at the ends while the roots stay dark, so most heads read as two-tone rather than as one colour.",
+          "swatches": [
+            {"name": "sun_bleached_brown", "hex": "#8a6a44", "weight": 0.32},
+            {"name": "black", "hex": "#221c18", "weight": 0.28},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.26},
+            {"name": "wheat_blond", "hex": "#b39a63", "weight": 0.14}
+          ]
+        }
+      },
+      "grooming": {
+        "common_styles": ["tarred_queue", "cropped_under_cap", "full_beard"]
+      },
+      "attire": {
+        "layering": "oiled_over_linen",
+        "materials": ["sailcloth", "oiled_wool", "tarred_rope", "brass"],
+        "signature_item": "tattooed_forearms",
+        "footwear": "barefoot_on_deck"
+      },
+      "art_direction": {
+        "silhouette": "Heartland proportions thickened through the chest, forearms and hands; everything below the knee bare.",
+        "reads_as": "Someone who hauls for a living and has not been indoors in a year.",
+        "avoid": ["pale_untouched_skin", "unmarked_forearms", "fitted_boots"]
+      }
+    },
+    "human_desert": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.66, "mean": 1.79, "max": 1.93, "sd": 0.066},
+          "female": {"min": 1.55, "mean": 1.67, "max": 1.80, "sd": 0.061}
+        },
+        "mass_kg": {
+          "male": {"min": 55.0, "mean": 66.0, "max": 80.0, "sd": 8.0},
+          "female": {"min": 45.0, "mean": 56.0, "max": 69.0, "sd": 7.0}
+        },
+        "build": "lean_long"
+      },
+      "proportion": {
+        "heads_tall": 7.7,
+        "shoulder_width_ratio": 0.235,
+        "leg_length_ratio": 0.49
+      },
+      "features": {
+        "eye_shape": {
+          "form": "narrow_shaded",
+          "note": "Habitually narrowed against the glare, with heavy dark lashes and a permanent crease at the outer corner by thirty. Kohl along the lid line is near universal for both sexes and is practical rather than decorative, so it belongs on a caravan guard as much as on a court singer."
+        },
+        "skin_texture": {
+          "form": "sun_leathered",
+          "note": "Where it is exposed at all - the hands, and the band across the eyes - it is dark, dry and finely creased. Skin under the wraps is markedly lighter, and that edge at the cheekbone is a real visible line, not a shadow."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Deep bronze through dark umber and consistently so: the pale end of the human range does not survive here. The variation that matters is exposure rather than tone, and an unwrapped face in a tent is a noticeably different colour from the same person's hands.",
+          "swatches": [
+            {"name": "deep_bronze", "hex": "#a97545", "weight": 0.34},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.26},
+            {"name": "deep_brown", "hex": "#7b5237", "weight": 0.28},
+            {"name": "dark_umber", "hex": "#4f3423", "weight": 0.12}
+          ]
+        },
+        "hair": {
+          "note": "Black in more than half and brown through most of the rest. Henna goes on hair and beard alike and reads as a strong orange-red sitting over dark hair rather than as a growth colour, so it belongs on adults and never on a child.",
+          "swatches": [
+            {"name": "black", "hex": "#221c18", "weight": 0.54},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.30},
+            {"name": "henna_red", "hex": "#8a3c20", "weight": 0.16}
+          ]
+        },
+        "eye": {
+          "note": "Dark brown in nearly three in five and nothing pale at all. The kohl makes the eye read darker and larger still, which is the effect intended.",
+          "swatches": [
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.58},
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.24},
+            {"name": "amber", "hex": "#9a6b24", "weight": 0.18}
+          ]
+        }
+      },
+      "grooming": {
+        "common_styles": ["oiled_and_wrapped", "long_braid_under_veil", "shaved_for_the_heat"]
+      },
+      "attire": {
+        "layering": "loose_full_cover",
+        "materials": ["fine_cotton", "indigo_linen", "glass_bead", "silver"],
+        "dye_character": "indigo_and_saffron",
+        "signature_item": "layered_face_wrap",
+        "footwear": "sandals"
+      },
+      "art_direction": {
+        "silhouette": "Taller and narrower than the heartland baseline, and almost entirely hidden: the cloth reads before the body does.",
+        "reads_as": "A column of moving cloth with a strip of face showing.",
+        "avoid": ["exposed_skin_at_noon", "heavy_armour", "tight_tailoring"]
+      }
+    },
+    "human_cold": {
+      "frame": {
+        "mass_kg": {
+          "male": {"min": 70.0, "mean": 86.0, "max": 104.0, "sd": 10.0},
+          "female": {"min": 58.0, "mean": 72.0, "max": 88.0, "sd": 9.0}
+        },
+        "build": "heavy_set"
+      },
+      "proportion": {
+        "shoulder_width_ratio": 0.27
+      },
+      "features": {
+        "skin_texture": {
+          "form": "wind_chapped",
+          "note": "Red and raw across the cheeks and the nose with fine broken vessels showing through, and dead pale everywhere the clothing covers. The two do not blend into each other; there is a hard edge where the hood sits."
+        },
+        "markings": {
+          "form": "frostbite_scarring",
+          "note": "Waxy white patches on the ear rims, the nose tip and the fingers, and missing fingertips and toes on anyone who has been caught out in a bad year. Common enough that a full set of fingers on an old hunter is the thing worth remarking on."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "The pale end of the human range and very little else: two in five are rose-pale, and the wind-burnt pink sits over the top of whichever ground tone is underneath through the whole winter. Anyone darker than a light olive here is a recent arrival or the child of one, and is treated as such.",
+          "swatches": [
+            {"name": "pale_rose", "hex": "#efd0b8", "weight": 0.40},
+            {"name": "wind_burnt_pink", "hex": "#d09a80", "weight": 0.30},
+            {"name": "warm_tan", "hex": "#cfa077", "weight": 0.20},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.10}
+          ]
+        },
+        "hair": {
+          "note": "Blond and red are both far commoner here than anywhere else, taking more than half between them. Beards frequently run redder than the scalp hair on the same man, which is worth drawing rather than smoothing out.",
+          "swatches": [
+            {"name": "wheat_blond", "hex": "#b39a63", "weight": 0.30},
+            {"name": "copper_red", "hex": "#8d4322", "weight": 0.22},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.30},
+            {"name": "ash_blond", "hex": "#b09a6f", "weight": 0.18}
+          ]
+        },
+        "eye": {
+          "note": "Blue and grey take nearly two in three. Pale eyes in a wind-reddened face is the whole look, and it is what a southerner remembers about them.",
+          "swatches": [
+            {"name": "blue", "hex": "#4a7fa8", "weight": 0.36},
+            {"name": "grey", "hex": "#7d8489", "weight": 0.28},
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.20},
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.16}
+          ]
+        }
+      },
+      "grooming": {
+        "facial_hair": "male_full",
+        "body_hair": "heavy",
+        "common_styles": ["full_beard", "side_braids", "hood_flattened_crop"]
+      },
+      "life_stages": {
+        "elder": {"onset_years": 50, "height_fraction": 0.97, "read": "weathered early; the hands and face age a decade ahead of the body"},
+        "max_years": 85
+      },
+      "attire": {
+        "layering": "furred_over_wool",
+        "materials": ["reindeer_hide", "thick_fur", "bone", "tin"],
+        "dye_character": "undyed_natural",
+        "signature_item": "fur_ruffed_hood",
+        "footwear": "fur_boots"
+      },
+      "art_direction": {
+        "silhouette": "Broadened by fur before it is broadened by the body; the outline is a bell, widest at the shoulders and the hem.",
+        "reads_as": "Someone dressed to survive the walk home rather than to be looked at.",
+        "avoid": ["bare_arms", "close_fitting_outerwear", "clean_shaven_adult_men"]
+      }
+    },
+    "human_large_island": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.58, "mean": 1.69, "max": 1.82, "sd": 0.062},
+          "female": {"min": 1.47, "mean": 1.58, "max": 1.70, "sd": 0.058}
+        }
+      },
+      "proportion": {
+        "heads_tall": 7.3,
+        "shoulder_width_ratio": 0.24
+      },
+      "features": {
+        "face_shape": {
+          "form": "soft_square",
+          "note": "Broad through the cheekbone and squared at the jaw, but softened at every corner, so the face reads composed rather than strong."
+        },
+        "eye_shape": {
+          "form": "epicanthic_almond",
+          "note": "Almond with a smooth epicanthic fold and a low soft lid crease, set level rather than canted. The lashes are short and straight."
+        },
+        "nose": {
+          "form": "low_bridge_fine",
+          "note": "Fine and small, with a low gently curved bridge that sits close to the plane of the face. In profile the face is much flatter than a heartland one."
+        },
+        "skin_texture": {
+          "form": "fine_smooth",
+          "note": "Fine-pored and even, and deliberately kept that way: shade, oil and a mineral powder are ordinary daily grooming for anyone who can afford them, and a weathered face here is a statement about your work."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "A narrow, warm, even range from ivory through golden tan to olive, and an actively managed one. Powder and shade keep the face lighter than the hands and the neck on anyone of rank, and that mismatch is a status signal rather than a painting error - keep it.",
+          "swatches": [
+            {"name": "warm_ivory", "hex": "#ead2b6", "weight": 0.30},
+            {"name": "golden_tan", "hex": "#d2a86f", "weight": 0.34},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.26},
+            {"name": "deep_brown", "hex": "#7b5237", "weight": 0.10}
+          ]
+        },
+        "hair": {
+          "note": "Black in nearly two in three and dark brown through most of the rest, uniformly straight and heavy enough that a style holds its shape without pinning. Grey arrives late and goes to a clean iron rather than a yellowed white.",
+          "swatches": [
+            {"name": "black", "hex": "#221c18", "weight": 0.62},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.28},
+            {"name": "iron_grey", "hex": "#7a736c", "weight": 0.10}
+          ]
+        },
+        "eye": {
+          "note": "Brown through to near-black almost universally, with the darkest reading as a single tone with the pupil at any distance past arm's reach.",
+          "swatches": [
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.62},
+            {"name": "black_brown", "hex": "#241a12", "weight": 0.24},
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.14}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "straight_heavy",
+        "facial_hair": "sparse",
+        "common_styles": ["lacquered_topknot", "pinned_coil", "temple_shaved"]
+      },
+      "attire": {
+        "layering": "wrapped_and_sashed",
+        "materials": ["hemp", "paper_silk", "lacquer", "bamboo"],
+        "dye_character": "muted_mineral_dyes",
+        "signature_item": "lacquered_hairpin",
+        "footwear": "raised_wooden_clogs"
+      },
+      "art_direction": {
+        "silhouette": "Squared by the garment, not the body: straight shoulder line, sash at the waist, hem breaking above the clog.",
+        "reads_as": "Composure. Everything is deliberate, including the hair.",
+        "avoid": ["loose_unbound_hair_in_public", "full_beards", "asymmetric_draping"]
+      }
+    },
+    "human_rainforest": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.52, "mean": 1.63, "max": 1.75, "sd": 0.060},
+          "female": {"min": 1.42, "mean": 1.53, "max": 1.64, "sd": 0.056}
+        },
+        "mass_kg": {
+          "male": {"min": 52.0, "mean": 62.0, "max": 75.0, "sd": 7.0},
+          "female": {"min": 43.0, "mean": 52.0, "max": 64.0, "sd": 6.0}
+        },
+        "build": "compact_wiry"
+      },
+      "proportion": {
+        "heads_tall": 7.1,
+        "leg_length_ratio": 0.45
+      },
+      "features": {
+        "lips": {
+          "form": "full_wide",
+          "note": "Full and wide, and frequently stained a dark red-brown from chewing annatto seed, which also stains the teeth at the gumline."
+        },
+        "skin_texture": {
+          "form": "humid_sheen",
+          "note": "Always faintly damp, so it takes a bright continuous highlight down the arm and the cheekbone rather than a broken one. Small cuts heal raised and pale in this climate, so everyone carries a scatter of old ones."
+        },
+        "markings": {
+          "form": "cohort_scarification_and_dye",
+          "note": "Raised keloid scarring in the cohort's own pattern across the shoulders, the upper arms and the cheekbones, cut at initiation and added to at each passage after it. Annatto dye is worked into the fresh cuts and over the face for the season following, so new marks read hot red and settle pale over years - which means a person's age and standing are both readable off their face from across a clearing."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Deep brown through dark umber with a warm copper running through the river lines. The palette is only half the story here: under closed canopy the ambient light is green, so every one of these tones takes a green bounce in shadow and a hot white skylight highlight in the gaps, and a face lit neutrally will look wrong no matter which swatch it uses.",
+          "swatches": [
+            {"name": "deep_brown", "hex": "#7b5237", "weight": 0.34},
+            {"name": "dark_umber", "hex": "#4f3423", "weight": 0.30},
+            {"name": "warm_copper", "hex": "#a06a3f", "weight": 0.24},
+            {"name": "olive", "hex": "#b5895e", "weight": 0.12}
+          ]
+        },
+        "hair": {
+          "note": "Black in two in three and tightly coiled, and frequently dressed with red ochre and clay, which reads as a matte red-brown crust rather than as a hair colour. The ochre is a cohort marker and is not worn by children.",
+          "swatches": [
+            {"name": "black", "hex": "#221c18", "weight": 0.66},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.24},
+            {"name": "ochre_dressed", "hex": "#8a3c20", "weight": 0.10}
+          ]
+        },
+        "eye": {
+          "note": "Near-black in most and brown through the rest. The amber that turns up occasionally is noted at birth here and followed for what it is supposed to mean.",
+          "swatches": [
+            {"name": "black_brown", "hex": "#241a12", "weight": 0.58},
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.30},
+            {"name": "amber", "hex": "#9a6b24", "weight": 0.12}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "tight_coiled",
+        "facial_hair": "sparse",
+        "body_hair": "light",
+        "common_styles": ["cohort_shave_pattern", "feather_bound_locks", "clay_dressed_crown"]
+      },
+      "life_stages": {
+        "adolescent": {"onset_years": 11, "height_fraction": 0.79, "read": "the cohort takes its first marks here; the scarification dates the person"},
+        "adult": {"onset_years": 16, "height_fraction": 1.0, "read": "full stature early, and the full pattern completed across the shoulders"},
+        "elder": {"onset_years": 45, "height_fraction": 0.97, "read": "the marks have spread and blurred; hair goes white against very dark skin"},
+        "max_years": 78
+      },
+      "attire": {
+        "layering": "minimal_wrapped",
+        "materials": ["bark_cloth", "feather", "river_shell", "spotted_hide"],
+        "dye_character": "annatto_and_charcoal",
+        "signature_item": "cohort_scar_pattern",
+        "footwear": "barefoot"
+      },
+      "art_direction": {
+        "silhouette": "Short, wiry and mostly uncovered; the readable shapes are the headdress and the shoulder scarring, not the clothing.",
+        "reads_as": "Someone whose body is the record of which age-group they belong to.",
+        "avoid": ["full_coverage_garments", "smooth_unmarked_shoulders", "boots"]
+      }
+    },
+    "tidekin": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.64, "mean": 1.76, "max": 1.88, "sd": 0.050},
+          "female": {"min": 1.60, "mean": 1.71, "max": 1.83, "sd": 0.048}
+        },
+        "mass_kg": {
+          "male": {"min": 62.0, "mean": 72.0, "max": 84.0, "sd": 6.0},
+          "female": {"min": 55.0, "mean": 64.0, "max": 75.0, "sd": 5.5}
+        },
+        "build": "streamlined_muscular"
+      },
+      "proportion": {
+        "heads_tall": 7.6,
+        "shoulder_width_ratio": 0.25,
+        "leg_length_ratio": 0.49
+      },
+      "features": {
+        "face_shape": {
+          "form": "long_smooth_wedge",
+          "note": "The elven taper flattened and broadened into a smooth wedge with no sharp corner anywhere on it - a face built to part water, with the cheekbone shelf gone and the brow running straight into the nose."
+        },
+        "ear": {
+          "form": "finned_low_swept",
+          "note": "Not the elven point, and this is the fastest way to tell the two apart. A tidekin's ear is a low broad webbed fin lying flat along the side of the skull, with two or three cartilage ridges visible through the web, and it seals shut underwater. It reads as a fin at any distance and it never rises above the crown."
+        },
+        "eye_shape": {
+          "form": "large_dark_nictitating",
+          "note": "Very large, very dark and forward-set, with a translucent third lid that flicks across sideways - a pale film over the whole eye for an instant, which is worth catching in one frame of an animation. Almost no white shows at all, so the eye reads as a single dark disc."
+        },
+        "nose": {
+          "form": "flat_closable",
+          "note": "Low, flat and small, with slitted nostrils that close. In profile the face runs almost straight from brow to lip with no projection, which is the single biggest departure from the elven head."
+        },
+        "lips": {
+          "form": "wide_firm",
+          "note": "Wide and firm, running further back toward the ear than a land face's mouth does, so a tidekin's smile is startlingly broad."
+        },
+        "skin_texture": {
+          "form": "smooth_slick",
+          "note": "Smooth, slightly rubbery and always faintly wet-looking even when dry. It takes a broad soft sheen rather than the tight specular highlight human skin gives, which is worth setting up in the material rather than painting in."
+        },
+        "markings": {
+          "form": "iridescent_scale_patching",
+          "note": "Patches of fine iridescent scale across the cheekbones, the backs of the forearms and down the spine, catching green and violet at a glancing angle and invisible face-on. The patches spread with age, and a tidekin's years are read off how far the patching has reached."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Two families of tone side by side and freely mixed: the warm bronzes and walnuts inherited from the elves, and the cool tidal greys and greens that only this branch carries. The green-greys deepen and saturate after long immersion and fade back toward flat grey on land, so a tidekin's colour visibly shifts across a season ashore.",
+          "swatches": [
+            {"name": "tidal_grey_green", "hex": "#8fa392", "weight": 0.28},
+            {"name": "warm_bronze", "hex": "#c69368", "weight": 0.26},
+            {"name": "deep_walnut", "hex": "#7d5539", "weight": 0.26},
+            {"name": "pale_sea_glass", "hex": "#cfd9cf", "weight": 0.20}
+          ]
+        },
+        "hair": {
+          "note": "Dark and heavy, and wet most of the time, so it reads as ropes rather than as strands. Kelp black leads. The sea green is a true growth colour here and not a stain, and salt white shows up young on those who spend their lives in open water.",
+          "swatches": [
+            {"name": "kelp_black", "hex": "#1f2a26", "weight": 0.34},
+            {"name": "sea_green", "hex": "#43635a", "weight": 0.24},
+            {"name": "salt_white", "hex": "#d6d3c6", "weight": 0.20},
+            {"name": "dark_umber", "hex": "#3a2c22", "weight": 0.22}
+          ]
+        },
+        "eye": {
+          "note": "Dark dominates, and the darkest is functionally black across iris and pupil together, which is what deep work needs. The nictitating lid greys the whole eye for an instant as it passes.",
+          "swatches": [
+            {"name": "nictitating_black", "hex": "#161a1c", "weight": 0.32},
+            {"name": "pale_grey", "hex": "#9aa2a5", "weight": 0.26},
+            {"name": "sea_green", "hex": "#43635a", "weight": 0.26},
+            {"name": "amber_gold", "hex": "#b08830", "weight": 0.16}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "thick_ropey",
+        "common_styles": ["salt_locks", "shell_bound_tail", "shaved_sides"]
+      },
+      "life_stages": {
+        "elder": {"onset_years": 450, "height_fraction": 0.99, "read": "scale patching spreads until it covers the forearms and shoulders entirely"},
+        "max_years": 700
+      },
+      "attire": {
+        "layering": "minimal_wrapped",
+        "materials": ["oiled_hide", "woven_kelp", "shell", "pearl"],
+        "signature_item": "shell_gorget",
+        "footwear": "barefoot"
+      },
+      "art_direction": {
+        "silhouette": "The elven line thickened and shortened: same long neck and narrow hips, but swimmer's shoulders and a full chest, and a flat profile where an elf has a pointed one.",
+        "reads_as": "Something that is better in the water than on the beach.",
+        "avoid": ["pointed_upswept_ears", "dry_matte_skin", "enclosed_footwear", "elven_slightness"]
+      }
+    },
+    "gnome": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 0.97, "mean": 1.05, "max": 1.14, "sd": 0.038},
+          "female": {"min": 0.95, "mean": 1.01, "max": 1.09, "sd": 0.036}
+        },
+        "mass_kg": {
+          "male": {"min": 26.0, "mean": 33.0, "max": 41.0, "sd": 4.0},
+          "female": {"min": 23.0, "mean": 29.0, "max": 36.0, "sd": 3.6}
+        },
+        "build": "slight_wiry"
+      },
+      "proportion": {
+        "heads_tall": 4.2,
+        "shoulder_width_ratio": 0.26,
+        "leg_length_ratio": 0.44,
+        "hand_length_ratio": 0.14
+      },
+      "features": {
+        "face_shape": {
+          "form": "narrow_pointed_triangle",
+          "note": "The dwarven block turned upside down: wide across the eyes and the cheekbones, then narrowing hard to a small pointed chin. A large cranium above a small face, which is what makes the head read as oversized on the body."
+        },
+        "ear": {
+          "form": "long_pointed_jug",
+          "note": "Long and sharply pointed like an elf's, but broader at the base and standing out sideways instead of sweeping back, so they read as jug ears rather than as elegant ones. Nearly as long as the face is tall, thin enough to light through, and constantly moving. Often the first part of a gnome visible over a workbench."
+        },
+        "nose": {
+          "form": "long_sharp_hooked",
+          "note": "Also big, and this is the joke of a gnome's face: they carry a dwarf's nose and an elf's ears at the same time and have room for little else. Long, narrow, sharply ridged, and hooked or upturned at the tip, projecting well past the line of the chin in profile. Between the nose and the ears there is hardly any face left over, and that crowding is the likeness."
+        },
+        "eye_shape": {
+          "form": "large_round",
+          "note": "Large, round and forward-set, with a permanent slight widening that reads as curiosity. The white shows all the way around the iris, which is the exact opposite of the elven look and does most of the work of making gnomes read as harmless."
+        },
+        "brow": {
+          "form": "light_mobile",
+          "note": "No bony shelf whatsoever - the forehead runs smooth into the nose. The brows themselves are bushy, wiry, and extremely mobile, and they do most of a gnome's expressing."
+        },
+        "jaw": {
+          "form": "narrow_pointed",
+          "note": "Small and pointed, and thoroughly dwarfed by the nose hanging over it."
+        },
+        "lips": {
+          "form": "thin_wide",
+          "note": "Thin and unusually wide, running nearly the full breadth of a narrow face, so a gnome's grin reaches almost ear to ear."
+        },
+        "teeth": {
+          "form": "even_small",
+          "note": "Small, neat and slightly gapped at the front. Shown freely and often, unlike either parent stock."
+        },
+        "skin_texture": {
+          "form": "fine_early_lined",
+          "note": "Fine and thin, and lined early: crow's feet and a creased forehead by forty from squinting at close work, on a face that is otherwise nowhere near old."
+        },
+        "markings": {
+          "form": "ink_and_acid_staining",
+          "note": "Permanent ink at the fingers and bleached acid patches over the hands and forearms, plus - very often - a pale unstained band across the face where a lens harness or a pair of spectacles habitually sits."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Human-like in range but consistently warmer and more yellow, and unevenly applied: gnomes go blotchy. Flushed at the cheeks, the nose and the ear tips over a paler ground, with stain and burn patches on the hands from whatever they last worked with. An evenly toned gnome looks ill.",
+          "swatches": [
+            {"name": "warm_ivory", "hex": "#ead2b6", "weight": 0.30},
+            {"name": "nut_brown", "hex": "#b07a4e", "weight": 0.30},
+            {"name": "olive_tan", "hex": "#c2a173", "weight": 0.24},
+            {"name": "deep_umber", "hex": "#8a5a3b", "weight": 0.16}
+          ]
+        },
+        "hair": {
+          "note": "Chestnut and copper dominate, and the striking one is the early white: better than a quarter of gnomes are greying by thirty-five and fully white by fifty, on a face carrying no other sign of age. It is fine, dry, and stands out from the head rather than lying down.",
+          "swatches": [
+            {"name": "chestnut", "hex": "#6b4326", "weight": 0.28},
+            {"name": "copper_red", "hex": "#8d4322", "weight": 0.24},
+            {"name": "early_white", "hex": "#ded6c8", "weight": 0.26},
+            {"name": "black_iron", "hex": "#2b2621", "weight": 0.22}
+          ]
+        },
+        "eye": {
+          "note": "Bright, pale-favouring, and large in a small face, so the colour carries further than it does on anyone else here. Violet is genuinely rare at about one in sixteen, and is the only entry in this whole table that gnomes themselves bother to comment on.",
+          "swatches": [
+            {"name": "bright_blue", "hex": "#4a7fa8", "weight": 0.32},
+            {"name": "amber", "hex": "#9a6b24", "weight": 0.28},
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.34},
+            {"name": "violet_rare", "hex": "#7a5c9a", "weight": 0.06}
+          ]
+        }
+      },
+      "grooming": {
+        "scalp_texture": "fine_flyaway",
+        "facial_hair": "male_only",
+        "body_hair": "light",
+        "common_styles": ["mutton_chops", "wire_bound_topknot", "singed_fringe"]
+      },
+      "life_stages": {
+        "child": {"onset_years": 0, "height_fraction": 0.40, "read": "head and ears are near adult size from the start; the body catches up around them"},
+        "adolescent": {"onset_years": 12, "height_fraction": 0.76, "read": "hands reach full size first, which is when the apprenticeship begins"},
+        "adult": {"onset_years": 22, "height_fraction": 1.0, "read": "full stature; hair often already going white at the temples"},
+        "elder": {"onset_years": 70, "height_fraction": 0.96, "read": "white-haired, stooped over the bench, spectacles pushed up onto the forehead"},
+        "max_years": 120
+      },
+      "attire": {
+        "layering": "many_pocketed",
+        "materials": ["canvas", "brass", "waxed_cotton", "ground_glass"],
+        "dye_character": "bright_market_dyes",
+        "signature_item": "brass_lens_harness",
+        "footwear": "buckled_shoes"
+      },
+      "art_direction": {
+        "silhouette": "Top-heavy and spiky: an oversized head with ears and nose projecting off it in three directions, on a narrow four-head frame broken up by tools and pockets.",
+        "reads_as": "A specialist, and a comic one. The body is a stand for the hands, the eyes, the ears and the nose.",
+        "avoid": ["dwarven_bulk", "heavy_shoulder_mass", "small_ears", "small_nose", "empty_hands", "full_beards"]
+      }
+    },
+    "hill_dwarf": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.08, "mean": 1.16, "max": 1.23, "sd": 0.040},
+          "female": {"min": 1.02, "mean": 1.10, "max": 1.18, "sd": 0.038}
+        },
+        "mass_kg": {
+          "male": {"min": 44.0, "mean": 54.0, "max": 66.0, "sd": 6.0},
+          "female": {"min": 38.0, "mean": 46.0, "max": 57.0, "sd": 5.5}
+        },
+        "build": "lean_broad"
+      },
+      "proportion": {
+        "heads_tall": 4.9,
+        "shoulder_width_ratio": 0.29,
+        "leg_length_ratio": 0.45
+      },
+      "features": {
+        "face_shape": {
+          "form": "broad_oval",
+          "note": "Broader than a human's and shorter, but softened out of the mountain clans' hard block: longer through the cheek, rounder at the corners, and with an actual forehead showing."
+        },
+        "brow": {
+          "form": "soft_shelf",
+          "note": "The shelf is still there but rounded off rather than squared, and the brows sitting on it are lighter and sun-bleached, so the eyes are far less shadowed than a mountain dwarf's."
+        },
+        "jaw": {
+          "form": "rounded_wide",
+          "note": "Still wide, but rounded at the corners and actually visible - a cropped beard does not hide the jawline the way a full one does, which is most of why hill dwarves read as friendlier."
+        },
+        "skin_texture": {
+          "form": "sun_weathered",
+          "note": "Coarse like any dwarf's, but tanned, and reddened across the nose and the cheekbones, and cracked at the knuckles from weather rather than from forge heat."
+        },
+        "markings": {
+          "form": "sun_freckling",
+          "note": "Heavy freckling over the nose, the cheeks and the forearms in place of the spark-burns, which the mountain clans read as the mark of someone who has never worked a forge and mean it unkindly."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Warmer and more sun-touched than the mountain holds, and with no slate cast at all - the grey-tinted tone is a deep-gallery inheritance and simply does not appear above ground. Tan and ruddy take three faces in five between them, and both redden further across a working summer.",
+          "swatches": [
+            {"name": "sun_warmed_tan", "hex": "#d3a274", "weight": 0.34},
+            {"name": "ruddy_ochre", "hex": "#c98f68", "weight": 0.28},
+            {"name": "deep_umber", "hex": "#8a5a3b", "weight": 0.24},
+            {"name": "pale_stone", "hex": "#e0c3a8", "weight": 0.14}
+          ]
+        },
+        "hair": {
+          "note": "Lighter than the mountain clans through the middle of the range: wheat brown replaces black-iron as the commonest, copper holds strong, and everything bleaches a shade or two at the ends by late summer.",
+          "swatches": [
+            {"name": "wheat_brown", "hex": "#7a5a34", "weight": 0.32},
+            {"name": "copper_red", "hex": "#8d4322", "weight": 0.26},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.28},
+            {"name": "iron_grey", "hex": "#7a736c", "weight": 0.14}
+          ]
+        },
+        "eye": {
+          "note": "Hazel and brown mostly, with green common enough here to pass without comment - the warm mountain palette shifted toward the greens you would expect of a people who live in fields rather than galleries.",
+          "swatches": [
+            {"name": "hazel", "hex": "#6f5230", "weight": 0.36},
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.30},
+            {"name": "deep_green", "hex": "#3d5a43", "weight": 0.22},
+            {"name": "slate_grey", "hex": "#6b7178", "weight": 0.12}
+          ]
+        }
+      },
+      "grooming": {
+        "facial_hair": "male_full",
+        "body_hair": "moderate",
+        "common_styles": ["cropped_beard", "sun_braid", "loose_hair"]
+      },
+      "life_stages": {
+        "elder": {"onset_years": 150, "height_fraction": 0.96, "read": "white-bearded and bent from the fields rather than the bench"},
+        "max_years": 280
+      },
+      "attire": {
+        "layering": "single_layer_practical",
+        "materials": ["homespun_wool", "tanned_hide", "horn", "copper"],
+        "dye_character": "plant_dyes_bright",
+        "signature_item": "herb_satchel",
+        "footwear": "soft_shoes"
+      },
+      "art_direction": {
+        "silhouette": "The mountain build let out: still broad-shouldered, but longer in the leg and much lighter through the chest.",
+        "reads_as": "A smallholder. Nothing about them says forge or fortress.",
+        "avoid": ["plate_armour", "beard_rings", "subterranean_pallor", "forge_soot"]
+      }
+    },
+    "frosthold_dwarf": {
+      "frame": {
+        "height_m": {
+          "male": {"min": 1.21, "mean": 1.29, "max": 1.34, "sd": 0.043},
+          "female": {"min": 1.15, "mean": 1.23, "max": 1.30, "sd": 0.041}
+        },
+        "mass_kg": {
+          "male": {"min": 62.0, "mean": 75.0, "max": 90.0, "sd": 8.0},
+          "female": {"min": 53.0, "mean": 64.0, "max": 79.0, "sd": 7.0}
+        }
+      },
+      "features": {
+        "eye_shape": {
+          "form": "narrow_deep_set",
+          "note": "Deeper set and narrower even than a mountain dwarf's, with heavy lower lids - a face built to squint at snow glare. The creases at the outer corner stay pale where the sun never reaches into them, so an old frostholder has white fans radiating from both eyes."
+        },
+        "skin_texture": {
+          "form": "wind_chapped",
+          "note": "Thick dwarf skin that is also permanently chapped: red across the cheekbones and the bridge of the nose, split at the lips and the knuckles, and dead white anywhere a scarf has been sitting."
+        },
+        "markings": {
+          "form": "frostbite_pallor_and_forge_burns",
+          "note": "Forge speckling on the forearms as any dwarf carries, plus waxy white frostbite patches on the ear rims, the nose tip and the fingertips - and the shortened fingers that go with them on the older holders. The two kinds of mark together are how a frosthold dwarf is told from a mountain one with the beard covered."
+        }
+      },
+      "coloration": {
+        "skin": {
+          "note": "Pale, and the pallor is real rather than an absence of sun - these tones persist in a frosthold dwarf who has worked a forge all their life. The wind-burnt pink is less a tone than a permanent condition sitting over whichever ground tone is underneath it.",
+          "swatches": [
+            {"name": "snow_pale", "hex": "#eed3bb", "weight": 0.38},
+            {"name": "wind_burnt_pink", "hex": "#d09a80", "weight": 0.30},
+            {"name": "pale_ochre", "hex": "#c0996f", "weight": 0.20},
+            {"name": "frost_grey_cast", "hex": "#b3aa9f", "weight": 0.12}
+          ]
+        },
+        "hair": {
+          "note": "The cold branch is where the light hair is. Ash and white blond together take near half, which is the widest departure any dwarven clan makes from the black-and-copper family palette; dark brown holds on at about three in ten and reads almost foreign here.",
+          "swatches": [
+            {"name": "ash_blond", "hex": "#b09a6f", "weight": 0.30},
+            {"name": "white_blond", "hex": "#d9cdb4", "weight": 0.18},
+            {"name": "iron_grey", "hex": "#7a736c", "weight": 0.22},
+            {"name": "dark_brown", "hex": "#4a3526", "weight": 0.30}
+          ]
+        },
+        "eye": {
+          "note": "Pale ice blue and slate grey take more than two in three, almost exactly inverting the mountain holds' dark-and-amber. Pale eyes under a heavy dwarven brow is the frosthold face.",
+          "swatches": [
+            {"name": "pale_ice_blue", "hex": "#8fb2c4", "weight": 0.38},
+            {"name": "slate_grey", "hex": "#6b7178", "weight": 0.30},
+            {"name": "dark_brown", "hex": "#3b2a1d", "weight": 0.20},
+            {"name": "amber", "hex": "#9a6b24", "weight": 0.12}
+          ]
+        }
+      },
+      "grooming": {
+        "common_styles": ["ice_stiffened_braids", "fur_wrapped_beard", "shaved_crown"]
+      },
+      "attire": {
+        "layering": "furred_over_heavy",
+        "materials": ["seal_hide", "thick_fur", "bone", "riveted_plate"],
+        "signature_item": "carved_bone_snow_goggles",
+        "footwear": "fur_lined_boots"
+      },
+      "art_direction": {
+        "silhouette": "The widest outline of any people here: the dwarven trapezoid with a fur shoulder mantle on top of it.",
+        "reads_as": "A door-shaped person coming out of a blizzard.",
+        "avoid": ["exposed_skin", "dark_complexions", "light_summer_layers"]
+      }
+    }
+  }
+}

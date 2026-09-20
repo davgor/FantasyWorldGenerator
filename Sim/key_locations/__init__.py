@@ -251,10 +251,16 @@ def generate(world, document=None):
         wanted = placement.budget(resolved, land_km2, draw)
         candidates = placement.eligible(resolved, layers, cells)
         if not candidates or wanted <= 0:
+            # Three absences that look identical in a count and are not the same problem:
+            # a catalogue that names a field carrying no data in its own domain, a world
+            # that simply lacks the ground this time, and a world too small to support one.
+            # `gap` separates the first from the second; only it can point at the catalogue.
+            reason = placement.gap(resolved, layers, cells) if not candidates else None
             diagnostics.append({'archetype': archetype['id'], 'placed': 0, 'wanted': wanted,
                                 'candidates': len(candidates),
-                                'reason': 'no ground in this world satisfies the requirements' if not candidates
-                                          else 'the world is too small to support one'})
+                                'reason': reason or ('no ground in this world satisfies the requirements'
+                                                     if not candidates
+                                                     else 'the world is too small to support one')})
             continue
         taken = family_taken.setdefault(archetype['family'], [])
         chosen = placement.select(resolved, layers, candidates, norms, radius, draw, wanted,
@@ -266,9 +272,31 @@ def generate(world, document=None):
             sites.append(_record(world, archetype, resolved, entry, layers, spacing, radius, seed, ages,
                                  hazard_cut, nests_by_node, ruin_records, city_records, gods,
                                  succession_table, used_names, biome_names))
+        if len(chosen) == wanted:
+            reason = 'placed'
+        elif not chosen:
+            # "left room for fewer" is a false statement when the answer is none, and it
+            # sent a reader looking at spacing constants. On the size-17 reference world 16
+            # of 47 land cells already carry a ruin, nest or religion site before this pass
+            # begins, so the usual answer is that the ground was taken rather than that the
+            # rules are too strict. Say which, with the count, because the two have
+            # different fixes: one is a raster too coarse to hold everything a world wants,
+            # the other is a spacing rule authored against a different world size.
+            # Count the intersection with the domain, never `len(claimed_nodes(world))`.
+            # That world claims 94 nodes in all and 78 of them are water, pole or seam
+            # nodes - mostly sea nests - which never enter a `domain: land` archetype's
+            # candidate list. An earlier revision of this comment said 30 of 47 from the
+            # bare length and the figure was wrong in both directions at once.
+            # Not named `taken`: that name is bound above to this family's spacing list and
+            # rebinding it here would read as a mutation of it to the next person through.
+            occupied = sum(1 for c in candidates if c['node'] in claimed)
+            reason = (f'no room: {occupied} of {len(candidates)} qualifying cells already carry another '
+                      f'feature, and spacing or settlement clearance refused the remaining '
+                      f'{len(candidates) - occupied}')
+        else:
+            reason = 'spacing and clearance left room for fewer'
         diagnostics.append({'archetype': archetype['id'], 'placed': len(chosen), 'wanted': wanted,
-                            'candidates': len(candidates),
-                            'reason': 'placed' if len(chosen) == wanted else 'spacing and clearance left room for fewer'})
+                            'candidates': len(candidates), 'reason': reason})
     context = {'radius': radius, 'layers': layers, 'n': n, 'world': world, 'reader': readers,
                'land_cells': cells_by_domain['land']}
 

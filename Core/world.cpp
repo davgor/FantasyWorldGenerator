@@ -76,11 +76,25 @@ WorldConfig resolve_config(const GenerateRequest& request) {
         else if(key=="erosion_strength") cfg.erosion_strength=value;
         else if(key=="settlement_spacing") cfg.settlement_spacing=value;
         else if(key=="support_reach") cfg.support_reach=value;
+        // Reach-scaled by the reference alongside settlement_spacing and support_reach
+        // (terrain_world.py:249-253), so Core keeping its 1800 m default renumbers the
+        // culture groups and every culture id hashes differently from the reference.
+        else if(key=="culture_link_cost") cfg.culture_link_cost=value;
+        else if(key=="river_threshold_km2") cfg.river_threshold_km2=value;
         else throw Error("INVALID_INPUT");
     }
-    // The design radius preset, exactly as the reference resolves it: an explicit
-    // globe_radius override wins, otherwise the size name picks one, two or three
-    // times ten kilometres. The shared scale is applied later.
+    // The design radius preset: an explicit globe_radius override wins, otherwise the
+    // size name picks one, two or three times ten kilometres. The shared scale is
+    // applied later.
+    //
+    // NOT "exactly as the reference resolves it" -- that claim is stale. The reference
+    // moved its presets to WORLD_SIZE_CIRCUMFERENCE_KM (200/400/600 km physical) in
+    // commit 21df9aa and derives globe_radius, tectonic_relief, amplitude, wavelength
+    // and orogeny from the requested width; Core still resolves 10000.*multiple design
+    // radius, i.e. 11.15/22.3/33.4 km physical. Core's own river_threshold_km2 default
+    // of .15 km2 is therefore correct HERE and wrong on a reference-shaped world, which
+    // is why the harness must pass the resolved value through the override chain above.
+    // Tracked in board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md.
     if(request.world_size) {
         cfg.world_size=*request.world_size;
         const double multiple=cfg.world_size=="large" ? 3. : (cfg.world_size=="medium" ? 2. : 1.);

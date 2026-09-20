@@ -6,7 +6,11 @@ A super villain is a **field**: a reach in metres with falloff, like a ley netwo
 
 This is the continuation of [PLAN.md](../PLAN.md) §21, which shipped as a heading with no body. Reference: `Sim/icarus_sim/terrain_villains.py`; the option registry in `terrain_world.py`; the lottery hook in `terrain_history.city_fate`.
 
-Nothing here happens unless `villain_rise` is above zero, and it defaults to zero. A default world carries no `villains` block at all — the option is invisible in the output, not merely inert in it.
+`villain_rise` defaults to `0.5` and a default world ends with super villains standing in it. Setting it to zero is still a real off switch rather than a quiet one: no `villains` block is written at all, so the option is invisible in the output rather than merely inert in it.
+
+**The rate alone could never have delivered that, which is why there are two mechanisms.** A generation runs exactly two age transitions, and at seed 42 size 17 the most concentrated region reaches tier 1.198 only at `villain_rise` 1.0 — the declared maximum — so no value below 0.834536 seats anybody by accumulation alone. Turning the rate up far enough to seat one would make every intervening age lurch. So the rate stays the campaign ramp, and `terrain_villains.promote()` is the arrival: on the final age of a generation, and on the final age of an `advance_age_request`, the most concentrated regions take the seats the ceiling allows. A promoted villain enters at exactly `SUPER_TIER`, the bottom of the band, because one that has just crossed the line is a threat that is growing rather than one that has arrived. The pass is idempotent — a region already holding a standing villain is skipped and the ceiling counts who is already seated — so advancing an already-promoted world changes nothing.
+
+How many stand is phase- and age-dependent, never a constant: it is `ceil(regions / villain_density)`, and a world carries 9 regions after two ages at phase 16 against 11 at phase 14. Read the count off `villains.outlook.ceiling`, not off a remembered number.
 
 ## Tier is reach, and it is continuous
 
@@ -69,7 +73,7 @@ That makes `people` a list of everyone who ever held a region, not a list of who
 
 The ground a villain took does **not** revert. Its claims stay on the map and keep steering key-location placement and the nomad cultist gate, because held ground outlives its holder. Its own seat position does not: the claim persists, the person does not stand there any more.
 
-How *hard* a fallen villain's claims still press is a separate question from whether they persist, and it is deliberately a number — `influence` on the claim, `FALLEN_CLAIM_INFLUENCE` in the module — rather than a boolean. Today it is `1.0`, which makes retention the only behavioural change. The argument for decaying it is the one `FRAGMENT_SHARE` already makes for tier: a region's grip fades when its holder goes, and a world that never decays it eventually places by who *ever* held power rather than by who holds it. That decision belongs with whoever settles the tick cadence and has not been made.
+How *hard* a fallen villain's claims still press is a separate question from whether they persist, and it is deliberately a number — `influence` on the claim, `FALLEN_CLAIM_INFLUENCE` in the module — rather than a boolean. It decays: `0.6` at the fall and `0.6` of that again each further age, reported as exactly zero once it falls below `0.05`. The argument is the one `FRAGMENT_SHARE` already makes for tier — a region's grip fades when its holder goes, and a world that never decays it eventually places by who *ever* held power rather than by who holds it. The record is never pruned; only the pressure fades. Settled with the tick cadence, because only a span crossing many ages makes the failure visible: see [decision 024](decisions/024-fallen-claim-decay.md). `terrain_nomads`' cultist gate is the only reader of the field today.
 
 ## Growth decides how it is fought
 

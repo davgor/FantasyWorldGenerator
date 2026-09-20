@@ -333,8 +333,14 @@ Catalogues Catalogues::parse(const std::string& text) {
     }
     // An animal placed by a role the catalogue does not describe would silently lose
     // its whole range map, so it is an authoring error rather than an empty world.
-    for(const NestProfile& profile:result.nests_)
+    // A monster has no role to fall back on, so a monster with no table of its own
+    // scores 1.0 on every biome and is equally at home on a glacier and in a rainforest.
+    // That was the whole of the monster half's opinion about biome until the 2026-09-20
+    // ruling; both loaders now refuse it rather than let it come back quietly.
+    for(const NestProfile& profile:result.nests_) {
         require(profile.creature_class!="animal" || result.nest_roles_.count(profile.role)!=0);
+        require(profile.creature_class!="monster" || !profile.biome_weights.empty());
+    }
     require(!result.profiles_.empty() && !result.civilization_ids_.empty() && !result.parent_races_.empty());
     return result;
 }

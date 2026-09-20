@@ -1,8 +1,49 @@
 # SDET-STATUS-VOCABULARY — one field name, seven namespaces, and no way to ask who is alive
 
-Owner: none. State: **defect pinned by failing tests; no fix attempted.**
-Evidence: `tests/test_status_vocabulary.py` — 7 tests, 3 pass, 4 fail, 0.041 s, no world
+Owner: none. State: **partly closed by another lane; the harness control repaired here.**
+Evidence: `tests/test_status_vocabulary.py` — 7 tests, 4 pass, 3 fail, 0.036 s, no world
 generated.
+
+## What changed, 2026-09-20
+
+**Two of the three defects are closed, by a different lane.** `Contracts/schemas/villains.schema.json`
+now exists and `asset-list.schema.json` now carries an enum
+(`supported | unreachable | schematic | not_started`), so
+`test_every_status_a_block_emits_is_constrained_by_its_contract` passes. It is kept, because the
+two ways of being undescribed — no enum, no schema — are permanent shapes and the assertion is
+over the whole surface rather than over those two sites.
+
+**The overload finding grew.** Publishing the villains schema put `living` into a second
+vocabulary beside `hero-generator`'s, so `test_no_token_means_two_different_things` now reports
+two overloaded tokens, `complete` and `living`, where it reported one. The complements differ
+(`legend` against `fallen`), which is exactly the failure the card describes: a consumer that
+learned `living` from one contract learned the wrong other half.
+
+**The harness control had the ceiling-sentinel defect and fired for the wrong reason.** It read
+
+    self.assertEqual((len(rows), sum(1 for r in rows if r[2])), (13, 12), ...)
+
+and the villains schema made the surface `(14, 14)`, so a control whose job is to prove the
+harness is not vacuous went red because somebody added a contract the board had asked for.
+That is `SDET-CEILING-SENTINELS` in a different costume: a literal that is correct on the day
+it is written and wrong the day the thing it counts legitimately moves. It now asserts the
+structural walk agrees with an independent raw-text count of `"status": {` — which catches a
+walker that starts annexing `route_status`, the near-miss this card warns about, because
+`"route_status": {` does not contain `"status": {` — and names the thirteen sites the module
+argues about instead of tallying them. A fifteenth `status` anywhere in `Contracts/` leaves it
+green.
+
+**Still open, and NOT fixed here:** the two liveness assertions. `LIVE` and `ENDED` are module
+dict literals and `assertEqual(len(set(LIVE.values())), 1)` compares a literal against itself,
+so neither can go green however the product changes. Deriving them needs a published
+liveness mapping — a `liveness` sibling keyword on each person-level `status`, or a token
+rename — which is a decision the Contracts owner has to take and which this lane does not own
+(`hero-generator.schema.json`, `npc-roster.schema.json` and `villains.schema.json` are all
+outside it). Both are left red and honest rather than rewritten into something weaker. See
+`board/backlog/TIME-LIVENESS.md`, which needs exactly that predicate.
+
+The surface table below is the pre-2026-09-20 state and is kept for the argument; the module
+docstring in `tests/test_status_vocabulary.py` carries the current one.
 
 Executable half of `PRODUCT-CONSUMER-VOCABULARY`. The enumeration below was produced by
 walking every `*.schema.json` for a property literally named `status`, not by reading them.

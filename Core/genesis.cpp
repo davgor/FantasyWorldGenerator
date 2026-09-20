@@ -121,16 +121,17 @@ GenerateRequest generate_request(const json::Value& value) {
     return request;
 }
 const std::map<std::string,OverrideBound>& override_bounds() {
-    // The reference's own table, for the inputs this core resolves. Anything outside
-    // a bound is a broken request, not a clamped one.
+    // The reference's own table, generated. Anything outside a bound is a broken request,
+    // not a clamped one.
+    //
+    // This used to be written by hand and four of its twenty shared rows had drifted from
+    // the reference: plate_count, belt_width, settlement_spacing and support_reach. The
+    // last one mattered -- recipe 3 resolves support_reach to 17938.9 m at the default
+    // 200 km preset, above the old 10000 ceiling, so the reference producer's own default
+    // world could not be requested through this boundary. tests/test_native_world.py
+    // routed around it through the driver's set: channel and recorded why in a comment.
     static const std::map<std::string,OverrideBound> bounds{
-        {"amplitude",{0.,1e7}},{"tectonic_relief",{0.,1e7}},{"mountain_detail",{0.,1.}},
-        {"ridge",{0.,1.}},{"octaves",{1.,10.}},{"sea_level",{-1e7,1e7}},{"orogeny",{0.,20.}},{"globe_radius",{.01,1e7}},
-        {"wavelength",{.01,1e7}},{"radius",{.01,1e7}},{"extent",{.01,1e7}},
-        {"plate_count",{2.,64.}},{"belt_width",{.01,1.}},{"crust_bias",{-1.,1.}},
-        {"temperature_offset",{-40.,40.}},{"moisture_bias",{-1.,1.}},
-        {"erosion_passes",{0.,40.}},{"erosion_strength",{0.,1.}},
-        {"settlement_spacing",{10.,10000.}},{"support_reach",{100.,10000.}},
+#include "controlbounds.inl"
     };
     return bounds;
 }

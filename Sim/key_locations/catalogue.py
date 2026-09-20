@@ -76,6 +76,20 @@ def lint(document):
             raise ValueError(f'archetype {archetype["id"]!r} has unknown domain {archetype["domain"]!r}')
         if archetype.get('placement', 'node') not in PLACEMENTS:
             raise ValueError(f'archetype {archetype["id"]!r} has unknown placement {archetype["placement"]!r}')
+        if archetype.get('placement', 'node') == 'node':
+            rate = archetype.get('per_1000_km2')
+            if not isinstance(rate, (int, float)) or rate <= 0:
+                # A rate of zero is the silent form of "never", and it does not look like
+                # one. The five tier-3 wonders declared `per_1000_km2: 0.0` beside
+                # `max_count: 1`, which reads as "at most one of these in a world" and
+                # means "none, in any world, ever" - `budget` multiplies the rate by land
+                # area, and zero times any area is zero at every raster and every seed.
+                # They reported `wanted: 0` against 15 to 78 qualifying cells and nobody
+                # saw it, because a missing archetype looks exactly like an unlucky one.
+                # A composed archetype is exempt: a waystone's count comes from the length
+                # of its road, so a rate would be the meaningless number here.
+                raise ValueError(f'archetype {archetype["id"]!r} is placed by scatter and needs a positive '
+                                 f'per_1000_km2 rate, not {rate!r}; a zero rate places it in no world ever')
         for term in archetype.get('requires', []):
             unknown = set(term) - TERM_KEYS
             if unknown or 'layer' not in term:

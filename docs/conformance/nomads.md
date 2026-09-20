@@ -19,9 +19,12 @@ versions:
 proof:
   - path: Sim/tests/test_terrain_nomads.py
     establishes: gate eligibility, the weighted draw, route construction, stage gating, and block isolation across a generated world
+  - path: Sim/tests/test_cult_leyline_writes.py
+    establishes: that every cult deepens its circuit node by the same lift whatever its school, that a cult never creates a node, that a band naming no node writes nothing, and that no world carries a pending ley queue
 decisions: []
 tickets:
   - board/done/NOMADS.md
+  - board/done/SDET-LEY-QUEUE-NO-APPLIER.md
   - board/backlog/NOMAD-FISSION.md
   - board/backlog/NOMAD-SURVIVOR-SETTLEMENT.md
   - board/backlog/NOMAD-CARAVAN-ECONOMY.md
@@ -91,15 +94,32 @@ Write-backs additionally mutate `magic.networks` (cult devotion) and
 `child_seed(cfg.seed, 'nomads-v1', nomad_variation)`, with per-entity domains
 `nomad-class-<uid>`, `nomad-camp-<uid>` and `nomad-route-<uid>`. Because streams are
 keyed by a string domain, a feature drawing only from new domains cannot perturb an
-existing stream. The `pending_ley_edits` applier sorts by `(school, id)` specifically so
-that two bands requesting in a different order cannot produce two different worlds.
+existing stream. Cult leyline writes iterate `sorted(bands, key=lambda b: b['uid'])`
+specifically so that two bands requesting in a different order cannot produce two
+different worlds; that covers hidden and known schools alike, since both now write
+directly.
 
 ## Where it runs
 
 Gated on `cfg.phase >= 16`, so `materialize_stage(world, 15)` has no `nomads` and stage
-sixteen does. It runs at **both** attach sites — stage sixteen and the age-advance tail
-— because an aged world must reclassify against the world it actually has. The block is
-replaced wholesale, never merged.
+sixteen does. It runs at **three** sites — stage sixteen, the age-advance tail, and a
+time advance — because an aged world must reclassify against the world it actually has.
+The block is replaced wholesale, never merged.
+
+The third site means **`nomads` and `nomad_routes` are not stable between reads of a live
+world.** `terrain_time.advance_time_request` re-runs `add_nomads` on a one-year cadence
+and `add_nomad_routes` on a one-month cadence, at an arbitrary day chosen by the caller,
+with a seed derived from the absolute step index rather than from `cfg.seed` alone — that
+derivation is what makes a band move at all between two ages. A consumer may cache these
+blocks against a `world_clock.day`, and may not cache them against the world's identity.
+`apply_nomad_effects` runs on the tick path for the same reason it runs on the age path:
+`add_nomads` replaces the block wholesale, which discards `nomads.effects` and would
+otherwise leave the previous population's cultist ley deepening, raid pressure, ridden
+roads and survivor camps standing in a world whose bands no longer exist.
+
+Nothing else about this capability changes: the gate, the classifications and the draw
+are as described above, and a tick reaches them only through the same three public
+passes.
 
 `nomads` is in `STATE_KEYS` and in the lab's `historyStateKeys`. Omitting the second
 does not raise: `materialize_stage` builds from everything *not* in that list, so the
@@ -183,12 +203,13 @@ weight, not the gate.
   downstream block had already read the settlements it produced.
 - Raid pressure is added *after* the threat assessment was evaluated, so it widens
   `regional_threat` without having influenced anything that already read it.
-- **The `pending_ley_edits` round trip cannot be tested end to end under current
-  conditions.** The nomad side writes the queue and is tested; no applier has ever been
-  observed draining it, because no world in testing produces a hidden-school cultist —
-  the four hidden schools are locked at zero occurrence until a player unlocks them. The
-  contract was agreed with a session that has since closed. This is untestable by
-  construction, not unfinished, and no conformance claim about that path should rest on
-  a green suite. What a future reader needs to re-derive is in the module docstring of
-  `terrain_nomad_effects.py`.
+- **The `pending_ley_edits` round trip is retired, not unfinished.** It rested on the
+  claim that `advance_age_request` would refuse a hidden-school node at the next age
+  boundary, so a cult of a hidden god had to queue its intent for a corruption-side
+  applier. That claim was tested and is false: the gate validates only the caller-supplied
+  edits of an age-advance request, never the world's own networks, and a world carrying a
+  hidden-school node — newly created or intensified — is accepted. Every cult now writes
+  directly, by the same lift. The invariant that does hold is narrower and is pinned by
+  `Sim/tests/test_cult_leyline_writes.py`: a cult may only deepen a hidden node, and only
+  the corruption API creates one.
 - `beast_movements` and `encounters` are **not owned here**.

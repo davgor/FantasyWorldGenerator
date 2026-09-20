@@ -236,21 +236,15 @@ class WorldSchemaConformanceTests(unittest.TestCase):
             self.assertIn(key, materialize_stage(self.world, 16))
 
     def test_nomad_write_backs_are_reported_rather_than_silent(self):
-        """Every write-back says what it did, and the hidden-school split is respected."""
-        from icarus_sim.terrain_leyline_history import KNOWN_SCHOOLS
+        """Every write-back says what it did, and no world carries a ley queue."""
         effects = self.world['nomads']['effects']
-        for key in ('leyline_edits', 'leyline_edits_queued', 'towns_under_raid_pressure',
+        for key in ('leyline_edits', 'leyline_edits_hidden', 'towns_under_raid_pressure',
                     'roads_ridden', 'settlement_candidates'):
             self.assertGreaterEqual(effects[key], 0, key)
-        # A known school is written directly, so it must never appear in the queue; the
-        # queue exists only because advance_age_request refuses the hidden ones.
-        for edit in self.world.get('pending_ley_edits', []):
-            self.assertNotIn(edit['school'], KNOWN_SCHOOLS, edit)
-            self.assertTrue(0 <= edit['intensity'] <= 4, edit)
-            self.assertTrue(edit['requested_by'], edit)
-        # Emitted only when non-empty, so presence means something is genuinely queued.
-        if effects['leyline_edits_queued'] == 0:
-            self.assertNotIn('pending_ley_edits', self.world)
+        # The pending_ley_edits queue is retired: cults of a hidden school write directly,
+        # like known-school ones, because the KNOWN_SCHOOLS gate it worked around only ever
+        # validated caller-supplied age-advance edits and never the world's own networks.
+        self.assertNotIn('pending_ley_edits', self.world)
         for candidate in self.world.get('settlement_candidates', []):
             self.assertIn(candidate['from_band'], {b['uid'] for b in self.world['nomads']['groups']})
 

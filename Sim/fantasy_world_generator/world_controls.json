@@ -1,0 +1,2853 @@
+{
+ "content_sha256": "4fc42cdac4cf905cc67752f0d5ee6aafb89d508e31f9958a6639259643ca57a9",
+ "controls": {
+  "air_capacity": {
+   "default": 2.0,
+   "description": "Monthly air shipment ceiling",
+   "group": "Transport",
+   "max": 100.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "food units/month"
+  },
+  "air_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Air",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "air_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Air",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "air_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Air",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "air_reach": {
+   "default": 4500.0,
+   "description": "Maximum air route length",
+   "group": "Transport",
+   "max": 50000.0,
+   "min": 100.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "air_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Air",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "air_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Air",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "air_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Air",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "amplitude": {
+   "default": 1100.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Peak-to-trough amplitude of the surface noise laid over the tectonic base.",
+   "group": "Terrain",
+   "max": 10000000.0,
+   "min": 0,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "animal_density": {
+   "default": 4.5,
+   "description": "Tier one animal groups per square kilometre of land, and again per square kilometre of water; higher tiers follow the pyramid",
+   "group": "Beast nests",
+   "max": 40.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "groups/km2"
+  },
+  "animal_tier_falloff": {
+   "default": 4.0,
+   "description": "How much rarer each animal danger tier is than the one below it",
+   "group": "Beast nests",
+   "max": 8.0,
+   "min": 1.5,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "archipelago_count": {
+   "default": 5,
+   "description": "Candidate oceanic island clusters",
+   "group": "Ocean islands",
+   "max": 16,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "clusters"
+  },
+  "archipelago_extent": {
+   "default": 1.0,
+   "description": "Cluster footprint multiplier",
+   "group": "Ocean islands",
+   "max": 3.0,
+   "min": 0.3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "archipelago_occurrence": {
+   "default": 0.8,
+   "description": "Probability each candidate cluster manifests",
+   "group": "Ocean islands",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "atoll_weight": {
+   "default": 1.0,
+   "description": "Relative chance of reef islands and atolls",
+   "group": "Ocean islands",
+   "max": 5.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "beast_movement_share": {
+   "default": 1.0,
+   "description": "Share of eligible creature sites that become travelling groups; wildlife is dense enough that routing every one is mostly volume",
+   "group": "Nomads",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "belt_width": {
+   "default": 0.08,
+   "description": "Angular half-width of the collision belts raised where plates meet. Wider belts give broad cordillera; narrow ones give sharp isolated ranges.",
+   "group": "Terrain",
+   "max": 0.3,
+   "min": 0.01,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radius fraction"
+  },
+  "blood_instability": {
+   "default": 0.8,
+   "description": "Instability independent of density",
+   "group": "Blood",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "blood_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Blood",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "blood_occurrence": {
+   "default": 0.0,
+   "description": "Locked at zero: a hidden school cannot manifest during generation",
+   "group": "Blood",
+   "max": 0.0,
+   "min": 0.0,
+   "pinned_reason": "min == max == 0.0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "number",
+   "units": "relative"
+  },
+  "blood_strength": {
+   "default": 1.15,
+   "description": "Magical influence amplitude",
+   "group": "Blood",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "blood_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Blood",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "blood_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Blood",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "bridge_cost": {
+   "default": 200.0,
+   "description": "Extra traversal cost charged when a road segment crosses a river.",
+   "group": "Communities",
+   "max": 10000,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "cost"
+  },
+  "circumference_km": {
+   "default": 0.0,
+   "description": "Physical distance around the world; zero keeps the world_size preset",
+   "group": "World",
+   "max": 100000,
+   "min": 0,
+   "overrides": [
+    "globe_radius",
+    "tectonic_relief",
+    "amplitude",
+    "wavelength",
+    "orogeny",
+    "settlement_spacing",
+    "support_reach",
+    "culture_link_cost",
+    "river_threshold_km2"
+   ],
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "km"
+  },
+  "coastal_hamlets": {
+   "default": 2,
+   "description": "Maximum additional coastal support hamlets per city",
+   "group": "Coasts",
+   "max": 4,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "hamlets"
+  },
+  "cold_island_weight": {
+   "default": 1.0,
+   "description": "Relative chance of cold archipelagos",
+   "group": "Ocean islands",
+   "max": 5.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "college_count": {
+   "default": 2,
+   "description": "Maximum magical colleges seated across the world.",
+   "group": "Communities",
+   "max": 12,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "colleges"
+  },
+  "continental_island_weight": {
+   "default": 1.0,
+   "description": "Relative chance of continental fragments",
+   "group": "Ocean islands",
+   "max": 5.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "crust_bias": {
+   "default": 0.0,
+   "description": "Shifts the continental against oceanic balance of newly drawn crust. Negative sinks more of the world under ocean; positive raises more land.",
+   "group": "Terrain",
+   "max": 1,
+   "min": -1,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "crystal_extent": {
+   "default": 0.22,
+   "description": "crystal angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "crystal_intensity": {
+   "default": 0.8,
+   "description": "How strongly the crystal character is expressed where it manifests. Paired with crystal_occurrence, which decides whether it appears at all, and crystal_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "crystal_occurrence": {
+   "default": 0.55,
+   "description": "crystal manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "culture_link_cost": {
+   "default": 1800.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Road cost budget within which two cities count as one cultural region.",
+   "group": "Communities",
+   "max": 100000,
+   "min": 1,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "dead_sea_extent": {
+   "default": 0.22,
+   "description": "dead sea angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "dead_sea_intensity": {
+   "default": 0.8,
+   "description": "How strongly the dead sea character is expressed where it manifests. Paired with dead_sea_occurrence, which decides whether it appears at all, and dead_sea_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "dead_sea_occurrence": {
+   "default": 0.55,
+   "description": "dead sea manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "demonic_extent": {
+   "default": 0.22,
+   "description": "demonic angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "demonic_intensity": {
+   "default": 0.8,
+   "description": "How strongly the demonic character is expressed where it manifests. Paired with demonic_occurrence, which decides whether it appears at all, and demonic_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "demonic_occurrence": {
+   "default": 0.55,
+   "description": "demonic manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "detail_variation": {
+   "default": 0,
+   "description": "Rerolls surface noise without changing the master seed or the continents beneath it.",
+   "group": "Terrain",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "draconic_extent": {
+   "default": 0.22,
+   "description": "draconic angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "draconic_intensity": {
+   "default": 0.8,
+   "description": "How strongly the draconic character is expressed where it manifests. Paired with draconic_occurrence, which decides whether it appears at all, and draconic_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "draconic_occurrence": {
+   "default": 0.55,
+   "description": "draconic manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "earth_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Earth",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "earth_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Earth",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "earth_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Earth",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "earth_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Earth",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "earth_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Earth",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "earth_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Earth",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "eldritch_instability": {
+   "default": 0.8,
+   "description": "Instability independent of density",
+   "group": "Eldritch",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "eldritch_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Eldritch",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "eldritch_occurrence": {
+   "default": 0.0,
+   "description": "Locked at zero: a hidden school cannot manifest during generation",
+   "group": "Eldritch",
+   "max": 0.0,
+   "min": 0.0,
+   "pinned_reason": "min == max == 0.0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "number",
+   "units": "relative"
+  },
+  "eldritch_strength": {
+   "default": 1.15,
+   "description": "Magical influence amplitude",
+   "group": "Eldritch",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "eldritch_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Eldritch",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "eldritch_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Eldritch",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "enchanted_extent": {
+   "default": 0.22,
+   "description": "enchanted angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "enchanted_intensity": {
+   "default": 0.8,
+   "description": "How strongly the enchanted character is expressed where it manifests. Paired with enchanted_occurrence, which decides whether it appears at all, and enchanted_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "enchanted_occurrence": {
+   "default": 0.55,
+   "description": "enchanted manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "erosion_passes": {
+   "default": 6,
+   "description": "How many hydraulic erosion steps run over the finished heightfield.",
+   "group": "Drainage",
+   "max": 40,
+   "min": 0,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "passes"
+  },
+  "erosion_strength": {
+   "default": 0.5,
+   "description": "How much material each erosion pass moves.",
+   "group": "Drainage",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "fire_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Fire",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "fire_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Fire",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "fire_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Fire",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "fire_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Fire",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "fire_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Fire",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "fire_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Fire",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "fish_productivity": {
+   "default": 60.0,
+   "description": "Annual productive marine food yield",
+   "group": "Coasts",
+   "max": 200.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "food units/km\u00b2/year"
+  },
+  "fishing_reach": {
+   "default": 700.0,
+   "description": "Ordinary coastal vessel harvesting reach",
+   "group": "Coasts",
+   "max": 4000.0,
+   "min": 50.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "fortress_count": {
+   "default": 1024,
+   "description": "Maximum route-defence fortresses; road length, crossings and city count ask for fewer unless this is lowered.",
+   "group": "Communities",
+   "max": 1024,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "fortresses"
+  },
+  "fungal_extent": {
+   "default": 0.22,
+   "description": "fungal angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "fungal_intensity": {
+   "default": 0.8,
+   "description": "How strongly the fungal character is expressed where it manifests. Paired with fungal_occurrence, which decides whether it appears at all, and fungal_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "fungal_occurrence": {
+   "default": 0.55,
+   "description": "fungal manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "globe_radius": {
+   "default": 10000.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Planet radius in design space. Derived from the physical width; setting it directly bypasses circumference_km and the world_size preset entirely.",
+   "group": "World",
+   "max": 10000000.0,
+   "min": 0.01,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "hamlets_per_core": {
+   "default": 3,
+   "description": "Maximum support hamlets packed around each core city.",
+   "group": "Communities",
+   "max": 8,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "hamlets"
+  },
+  "haunted_marsh_extent": {
+   "default": 0.22,
+   "description": "haunted marsh angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "haunted_marsh_intensity": {
+   "default": 0.8,
+   "description": "How strongly the haunted marsh character is expressed where it manifests. Paired with haunted_marsh_occurrence, which decides whether it appears at all, and haunted_marsh_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "haunted_marsh_occurrence": {
+   "default": 0.55,
+   "description": "haunted marsh manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "haunted_sands_extent": {
+   "default": 0.22,
+   "description": "haunted sands angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "haunted_sands_intensity": {
+   "default": 0.8,
+   "description": "How strongly the haunted sands character is expressed where it manifests. Paired with haunted_sands_occurrence, which decides whether it appears at all, and haunted_sands_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "haunted_sands_occurrence": {
+   "default": 0.55,
+   "description": "haunted sands manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "human_magic_limit": {
+   "default": 0.45,
+   "description": "Highest magical hazard a road or settlement tolerates. Ground above it is routed around and never settled.",
+   "group": "Communities",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "ice_accumulation": {
+   "default": 0.5,
+   "description": "Moisture required for persistent land ice",
+   "group": "Cold",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "infernal_instability": {
+   "default": 0.65,
+   "description": "Instability independent of density",
+   "group": "Infernal",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "infernal_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Infernal",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "infernal_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Infernal",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "infernal_strength": {
+   "default": 0.45,
+   "description": "Magical influence amplitude",
+   "group": "Infernal",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "infernal_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Infernal",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "infernal_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Infernal",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "island_radius": {
+   "default": 0.035,
+   "description": "Typical island radius / planet radius",
+   "group": "Ocean islands",
+   "max": 0.1,
+   "min": 0.008,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "island_spacing": {
+   "default": 2.5,
+   "description": "Spacing relative to island radius",
+   "group": "Ocean islands",
+   "max": 6.0,
+   "min": 1.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "islands_per_cluster": {
+   "default": 5,
+   "description": "Islands in each manifested cluster",
+   "group": "Ocean islands",
+   "max": 12,
+   "min": 1,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "islands"
+  },
+  "layout_variation": {
+   "default": 0,
+   "description": "Rerolls plate layout and crust distribution without changing the master seed, so the same world can be given a different continental arrangement.",
+   "group": "Terrain",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "lunar_influence": {
+   "default": 0.5,
+   "description": "How strongly lunar surges sway the age lottery; zero leaves the moon a spectator",
+   "group": "Moon",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "magic_enabled": {
+   "default": 1,
+   "description": "Whether leylines, magical biomes and every system reading them run at all. Zero yields a mundane world.",
+   "group": "World",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "flag"
+  },
+  "metal_abundance": {
+   "default": 1.0,
+   "description": "Overall geological metal richness multiplier",
+   "group": "Geography",
+   "max": 2.0,
+   "min": 0.1,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "moisture_bias": {
+   "default": 0.0,
+   "description": "Uniform shift applied to modelled rainfall before biomes are classified. Negative dries the world toward desert.",
+   "group": "Climate",
+   "max": 1,
+   "min": -1,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "monster_density": {
+   "default": 0.53,
+   "description": "Tier one monster lairs per square kilometre of land, and again per square kilometre of water; higher tiers follow the pyramid",
+   "group": "Beast nests",
+   "max": 40.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "lairs/km2"
+  },
+  "monster_tier_falloff": {
+   "default": 2.0,
+   "description": "How much rarer each monster danger tier is; gentler than the animal pyramid so a greater lair is an event rather than a rumour, and the smallest world can still hold one",
+   "group": "Beast nests",
+   "max": 8.0,
+   "min": 1.5,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "moon_nod_days": {
+   "default": 0,
+   "description": "Nod cycle in days (which hemisphere leans in); zero lets the seed choose 17..37",
+   "group": "Moon",
+   "max": 37,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "days"
+  },
+  "moon_spin_days": {
+   "default": 0,
+   "description": "Spin cycle in days (which meridian faces the world); zero lets the seed choose 15..63",
+   "group": "Moon",
+   "max": 63,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "days"
+  },
+  "moon_synodic_days": {
+   "default": 0,
+   "description": "Phase cycle in days; zero lets the seed choose 26..34",
+   "group": "Moon",
+   "max": 34,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "days"
+  },
+  "moon_tilt_degrees": {
+   "default": 0.0,
+   "description": "Maximum lean of the moon toward the world; zero lets the seed choose 10..35",
+   "group": "Moon",
+   "max": 35.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "degrees"
+  },
+  "moon_variation": {
+   "default": 0,
+   "description": "Independent moon seed variation",
+   "group": "Moon",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "mountain_abundance": {
+   "default": 1.3,
+   "description": "Width of mountain collision belts relative to the legacy model",
+   "group": "Geography",
+   "max": 2.0,
+   "min": 0.25,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "mountain_detail": {
+   "default": 0.65,
+   "description": "How strongly collision uplift is modulated along and across a belt. Higher values break a smooth ridge into distinct massifs.",
+   "group": "Terrain",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nest_density": {
+   "default": 1.0,
+   "description": "Overall creature density multiplier; zero empties the world",
+   "group": "Beast nests",
+   "max": 3.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nest_fantasy": {
+   "default": 1.0,
+   "description": "Monster density multiplier; zero leaves only animals",
+   "group": "Beast nests",
+   "max": 3.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nest_limit": {
+   "default": 0,
+   "description": "Hard cap on habitat anchors per pass; zero lets the ground decide",
+   "group": "Beast nests",
+   "max": 20000,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "anchors"
+  },
+  "nest_min_suitability": {
+   "default": 0.3,
+   "description": "Minimum weighted habitat suitability",
+   "group": "Beast nests",
+   "max": 0.95,
+   "min": 0.05,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nest_per_species": {
+   "default": 0,
+   "description": "Cap on anchors for one species; zero lets density decide",
+   "group": "Beast nests",
+   "max": 64,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "anchors"
+  },
+  "nest_settlement_clearance": {
+   "default": 250.0,
+   "description": "Minimum distance from settled anchors on the same layer",
+   "group": "Beast nests",
+   "max": 3000.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "nest_spacing": {
+   "default": 1.0,
+   "description": "Same-species territory spacing multiplier",
+   "group": "Beast nests",
+   "max": 4.0,
+   "min": 0.25,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nest_variation": {
+   "default": 0,
+   "description": "Independent nest seed variation",
+   "group": "Beast nests",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "nomad_density": {
+   "default": 18.0,
+   "description": "Candidate bands per thousand square kilometres of habitable land",
+   "group": "Nomads",
+   "max": 200.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "bands/1000km2"
+  },
+  "nomad_occurrence": {
+   "default": 1.0,
+   "description": "Overall multiplier on travelling bands; zero leaves the world settled",
+   "group": "Nomads",
+   "max": 3.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "nomad_variation": {
+   "default": 0,
+   "description": "Independent nomad seed variation",
+   "group": "Nomads",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "octaves": {
+   "default": 5,
+   "description": "How many halvings of the base wavelength to accumulate. Octaves finer than the grid can represent are discarded rather than aliased; resolved_octaves reports how many survived.",
+   "group": "Terrain",
+   "max": 10,
+   "min": 1,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "octaves"
+  },
+  "orogeny": {
+   "default": 1.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Gain on collision uplift alone. Unlike tectonic_relief it lifts orogenic belts without deepening the basins, which is how a world gets mountains that answer to its oceans.",
+   "group": "Terrain",
+   "max": 20,
+   "min": 0,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "gain"
+  },
+  "phase": {
+   "default": 16,
+   "description": "How far through the sixteen generation stages to run. A lower phase stops early and omits every block a later stage would have written.",
+   "group": "World",
+   "max": 16,
+   "min": 1,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "stage"
+  },
+  "pirate_extent": {
+   "default": 0.22,
+   "description": "pirate angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "pirate_intensity": {
+   "default": 0.8,
+   "description": "How strongly the pirate character is expressed where it manifests. Paired with pirate_occurrence, which decides whether it appears at all, and pirate_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "pirate_occurrence": {
+   "default": 0.55,
+   "description": "pirate manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "plate_count": {
+   "default": 12,
+   "description": "Tectonic plates the globe is divided into. Fewer means wider continents and longer collision belts; more means a fragmented world. It also sets the detail wavelength, so with grid size it decides how many noise octaves can resolve.",
+   "group": "Terrain",
+   "max": 48,
+   "min": 3,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "plates"
+  },
+  "population_profile": {
+   "choice_labels": {
+    "dwarf": "Dwarves",
+    "elf": "High Elf",
+    "frosthold_dwarf": "Frosthold Dwarves",
+    "gnome": "Gnomes",
+    "hill_dwarf": "Hill Dwarves",
+    "human_cold": "Cold peoples",
+    "human_desert": "Desert humans",
+    "human_heartland": "Heartland humans",
+    "human_large_island": "Large islanders",
+    "human_maritime": "Maritime humans",
+    "human_rainforest": "Deep rainforest humans",
+    "mixed": "Humans, dwarves and elves",
+    "tidekin": "Tidekin sea elves"
+   },
+   "choices": [
+    "mixed",
+    "human_maritime",
+    "human_desert",
+    "human_cold",
+    "human_large_island",
+    "human_rainforest",
+    "human_heartland",
+    "dwarf",
+    "elf",
+    "gnome",
+    "tidekin",
+    "hill_dwarf",
+    "frosthold_dwarf"
+   ],
+   "default": "mixed",
+   "description": "Which civilization founds the first cities, or mixed to let every eligible profile compete for ground.",
+   "group": "Communities",
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "string",
+   "units": ""
+  },
+  "radiant_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Radiant",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "radiant_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Radiant",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "radiant_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Radiant",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "radiant_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Radiant",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "radiant_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Radiant",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "radiant_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Radiant",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "radius": {
+   "default": 500.0,
+   "description": "Feature radius for the retired non-tectonic experiment path; recipe 3 does not read it.",
+   "group": "Terrain",
+   "max": 10000000.0,
+   "min": 0.01,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "rain_passes": {
+   "default": 48,
+   "description": "How many transport steps the rainfall model takes. More passes carry moisture further inland and sharpen rain shadows.",
+   "group": "Climate",
+   "max": 128,
+   "min": 1,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "passes"
+  },
+  "rain_strength": {
+   "default": 1.0,
+   "description": "Multiplier on the moisture each transport pass carries.",
+   "group": "Climate",
+   "max": 3,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "red_sands_extent": {
+   "default": 0.22,
+   "description": "red sands angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "red_sands_intensity": {
+   "default": 0.8,
+   "description": "How strongly the red sands character is expressed where it manifests. Paired with red_sands_occurrence, which decides whether it appears at all, and red_sands_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "red_sands_occurrence": {
+   "default": 0.55,
+   "description": "red sands manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "relief_m": {
+   "default": 0.0,
+   "description": "Physical relief budget from ocean floor to continental platform; zero keeps the tectonic_relief default",
+   "group": "World",
+   "max": 1000000.0,
+   "min": 0,
+   "overrides": [
+    "globe_radius",
+    "tectonic_relief",
+    "amplitude",
+    "wavelength",
+    "orogeny",
+    "settlement_spacing",
+    "support_reach",
+    "culture_link_cost",
+    "river_threshold_km2"
+   ],
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "ridge": {
+   "default": 0.55,
+   "description": "Blends the surface noise between rounded hills at 0 and sharp ridgelines at 1.",
+   "group": "Terrain",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "river_threshold_km2": {
+   "default": 0.15,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Upstream catchment a cell must drain before it counts as a river. It is an area, so it scales as the square of world width; left absolute on a wide world every land cell becomes a river and freshwater distance collapses to zero everywhere.",
+   "group": "Drainage",
+   "max": 10000,
+   "min": 0.001,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "km2"
+  },
+  "road_max_grade": {
+   "default": 0.35,
+   "description": "Steepest gradient a road segment may climb. Steeper ground is routed around or left unconnected.",
+   "group": "Communities",
+   "max": 1,
+   "min": 0.01,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "grade"
+  },
+  "rot_instability": {
+   "default": 0.8,
+   "description": "Instability independent of density",
+   "group": "Rot",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "rot_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Rot",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "rot_occurrence": {
+   "default": 0.0,
+   "description": "Locked at zero: a hidden school cannot manifest during generation",
+   "group": "Rot",
+   "max": 0.0,
+   "min": 0.0,
+   "pinned_reason": "min == max == 0.0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "number",
+   "units": "relative"
+  },
+  "rot_strength": {
+   "default": 1.15,
+   "description": "Magical influence amplitude",
+   "group": "Rot",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "rot_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Rot",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "rot_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Rot",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "salinity": {
+   "default": 0.65,
+   "description": "Arid lake salinization strength",
+   "group": "Coasts",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "sea_capacity": {
+   "default": 8.0,
+   "description": "Monthly sea shipment ceiling",
+   "group": "Transport",
+   "max": 100.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "food units/month"
+  },
+  "sea_draft": {
+   "default": 1.0,
+   "description": "Minimum navigable water depth",
+   "group": "Transport",
+   "max": 10.0,
+   "min": 0.1,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "sea_level": {
+   "default": 0.0,
+   "description": "Datum offset applied to the finished heightfield. Raising it drowns coastline; lowering it exposes shelf.",
+   "group": "Terrain",
+   "max": 10000000.0,
+   "min": -10000000.0,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "sea_reach": {
+   "default": 6000.0,
+   "description": "Maximum navigable sea route length",
+   "group": "Transport",
+   "max": 50000.0,
+   "min": 100.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "seasonality": {
+   "default": 1.0,
+   "description": "Latitude-dependent temperature seasonality",
+   "group": "Cold",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "seed": {
+   "default": 42,
+   "description": "Master uint32 seed. Every subsystem derives its own stream from this, so one seed reproduces the whole world; the *_variation controls reroll a single layer without disturbing the rest.",
+   "group": "World",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "settlement_count": {
+   "default": 24,
+   "description": "Maximum surface cities; actual counts require habitat and productive capacity.",
+   "group": "Communities",
+   "max": 24,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "cities"
+  },
+  "settlement_spacing": {
+   "default": 450.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Minimum separation enforced between founded cities.",
+   "group": "Communities",
+   "max": 100000,
+   "min": 10,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "shape": {
+   "choices": [
+    "globe"
+   ],
+   "default": "globe",
+   "description": "World topology. Recipe 3 requires a globe.",
+   "group": "World",
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "string",
+   "units": ""
+  },
+  "size": {
+   "default": 129,
+   "description": "Sampling grid along one edge of the sphere. This is a content control as much as a detail control: settlement count tracks cells rather than land area, so raising it yields a fuller world rather than the same world sampled finer.",
+   "group": "World",
+   "max": 1025,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "cells"
+  },
+  "sky_altitude": {
+   "default": 450.0,
+   "description": "Island altitude above local ground or sea",
+   "group": "Sky",
+   "max": 2500.0,
+   "min": 100.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "sky_clusters": {
+   "default": 0,
+   "description": "Candidate elevated archipelagos",
+   "group": "Sky",
+   "max": 0,
+   "min": 0,
+   "pinned_reason": "min == max == 0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "integer",
+   "units": "clusters"
+  },
+  "sky_occurrence": {
+   "default": 0.0,
+   "description": "Probability a magically supported cluster manifests",
+   "group": "Sky",
+   "max": 0.0,
+   "min": 0.0,
+   "pinned_reason": "min == max == 0.0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "number",
+   "units": "relative"
+  },
+  "sky_radius": {
+   "default": 180.0,
+   "description": "Typical independent island surface radius",
+   "group": "Sky",
+   "max": 600.0,
+   "min": 40.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "starlight_lakes_extent": {
+   "default": 0.22,
+   "description": "starlight lakes angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "starlight_lakes_intensity": {
+   "default": 0.8,
+   "description": "How strongly the starlight lakes character is expressed where it manifests. Paired with starlight_lakes_occurrence, which decides whether it appears at all, and starlight_lakes_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "starlight_lakes_occurrence": {
+   "default": 0.55,
+   "description": "starlight lakes manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "steampunk_extent": {
+   "default": 0.22,
+   "description": "steampunk angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "steampunk_intensity": {
+   "default": 0.8,
+   "description": "How strongly the steampunk character is expressed where it manifests. Paired with steampunk_occurrence, which decides whether it appears at all, and steampunk_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "steampunk_occurrence": {
+   "default": 0.55,
+   "description": "steampunk manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "stubbornness": {
+   "default": 0.2,
+   "description": "Willingness to settle difficult ground. Read only by the retired automatic-parameter path, which recipe 3 forbids, so on this recipe the control is accepted and has no effect.",
+   "group": "Communities",
+   "inert_reason": "Written only by terrain_recipes.seed_config, which runs when auto_parameters is set; recipe 3 forbids auto_parameters, so on this recipe the value is accepted and never read.",
+   "max": 1,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "inert",
+   "type": "number",
+   "units": "relative"
+  },
+  "support_reach": {
+   "default": 1000.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "How far a city reaches for the rural land feeding it. Authored against the reference world and scaled with world width.",
+   "group": "Communities",
+   "max": 100000,
+   "min": 100,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "tectonic_relief": {
+   "default": 800.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Total relief budget from ocean floor to continental platform. The hypsometric profile puts the floor far below the platform, so raising this deepens basins as fast as it raises peaks.",
+   "group": "Terrain",
+   "max": 10000000.0,
+   "min": 0,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "tectonics": {
+   "default": 1,
+   "description": "Whether plate tectonics run. Recipe 3 requires them, so this is fixed at 1 and rejects any other value.",
+   "group": "World",
+   "max": 1,
+   "min": 1,
+   "pinned_reason": "min == max == 1, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "integer",
+   "units": "flag"
+  },
+  "temperature_offset": {
+   "default": 0.0,
+   "description": "Uniform shift applied to the latitude and elevation temperature model. Negative cools the whole world toward ice.",
+   "group": "Climate",
+   "max": 40,
+   "min": -40,
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "C"
+  },
+  "umbral_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Umbral",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "umbral_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Umbral",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "umbral_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Umbral",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "umbral_strength": {
+   "default": 0.45,
+   "description": "Magical influence amplitude",
+   "group": "Umbral",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "umbral_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Umbral",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "umbral_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Umbral",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "villain_density": {
+   "default": 3.0,
+   "description": "Cultural regions per villain permitted at or above the band; the rest stall just beneath it",
+   "group": "Communities",
+   "max": 12.0,
+   "min": 1.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "regions"
+  },
+  "villain_hold": {
+   "default": 0.7,
+   "description": "Tier a seated villain falls below to lose the world; under the rise band, so a reign is long once established",
+   "group": "Communities",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "villain_rise": {
+   "default": 0.5,
+   "description": "Share of a region's concentrated turmoil that becomes villain tier each age; zero raises none and writes no villains block",
+   "group": "Communities",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "void_instability": {
+   "default": 0.8,
+   "description": "Instability independent of density",
+   "group": "Void",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "void_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Void",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "void_occurrence": {
+   "default": 0.0,
+   "description": "Locked at zero: a hidden school cannot manifest during generation",
+   "group": "Void",
+   "max": 0.0,
+   "min": 0.0,
+   "pinned_reason": "min == max == 0.0, so every override of this control is rejected.",
+   "producers": [
+    "reference"
+   ],
+   "status": "pinned",
+   "type": "number",
+   "units": "relative"
+  },
+  "void_strength": {
+   "default": 1.15,
+   "description": "Magical influence amplitude",
+   "group": "Void",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "void_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Void",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "void_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Void",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "volcanic_island_weight": {
+   "default": 1.0,
+   "description": "Relative chance of volcanic island chains",
+   "group": "Ocean islands",
+   "max": 5.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "war_survival": {
+   "default": 0.0,
+   "description": "Chance a defeated city survives a war as its victor's vassal instead of a ruin; zero keeps every loser a ruin",
+   "group": "Communities",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "water_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Water",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "water_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Water",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "water_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Water",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "water_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Water",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "water_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Water",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "water_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Water",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "wavelength": {
+   "default": 4300.0,
+   "derived_from": [
+    "circumference_km",
+    "relief_m"
+   ],
+   "description": "Base wavelength of the surface noise. Octave k is admitted only while wavelength/2**k stays at least twice the cell step, so this and grid size together decide how much detail survives.",
+   "group": "Terrain",
+   "max": 10000000.0,
+   "min": 0.01,
+   "note": "Computed from the world's physical width unless set explicitly; an explicit value wins. An absent circumference_km falls back to the world_size preset, so this derives on the default path too.",
+   "producers": [
+    "reference",
+    "native"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "weave_instability": {
+   "default": 0.2,
+   "description": "Instability independent of density",
+   "group": "Weave",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "weave_nodes": {
+   "default": 8,
+   "description": "Independent ley node count",
+   "group": "Weave",
+   "max": 24,
+   "min": 3,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "nodes"
+  },
+  "weave_occurrence": {
+   "default": 1.0,
+   "description": "Probability this magical network manifests",
+   "group": "Weave",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "weave_strength": {
+   "default": 0.7,
+   "description": "Magical influence amplitude",
+   "group": "Weave",
+   "max": 2.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "weave_variation": {
+   "default": 0,
+   "description": "Independent network seed variation",
+   "group": "Weave",
+   "max": 4294967295,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "integer",
+   "units": "seed"
+  },
+  "weave_width": {
+   "default": 110.0,
+   "description": "Gaussian influence reach",
+   "group": "Weave",
+   "max": 2000.0,
+   "min": 10.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "m"
+  },
+  "wind_bearing": {
+   "default": 90.0,
+   "description": "Prevailing wind direction carrying moisture inland, clockwise from north.",
+   "group": "Climate",
+   "max": 360,
+   "min": 0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "degrees"
+  },
+  "witch_huts_extent": {
+   "default": 0.22,
+   "description": "witch huts angular influence radius",
+   "group": "Regions",
+   "max": 0.8,
+   "min": 0.04,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "radians"
+  },
+  "witch_huts_intensity": {
+   "default": 0.8,
+   "description": "How strongly the witch huts character is expressed where it manifests. Paired with witch_huts_occurrence, which decides whether it appears at all, and witch_huts_extent, which sets how far it reaches.",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "witch_huts_occurrence": {
+   "default": 0.55,
+   "description": "witch huts manifestation probability",
+   "group": "Regions",
+   "max": 1.0,
+   "min": 0.0,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "relative"
+  },
+  "world_scale": {
+   "default": 0.17744123532462844,
+   "description": "Design-space to metre conversion for the heightfield. Rescales the planet geometry without changing which world the seed draws.",
+   "group": "Terrain",
+   "max": 1000,
+   "min": 0.001,
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "number",
+   "units": "ratio"
+  },
+  "world_size": {
+   "choices": [
+    "small",
+    "medium",
+    "large"
+   ],
+   "default": "small",
+   "description": "Preset physical scale: small, medium or large, resolving to 200, 400 or 600 km of circumference. Sets globe_radius and the terms derived from it unless circumference_km or an explicit override is supplied.",
+   "group": "World",
+   "producers": [
+    "reference"
+   ],
+   "status": "open",
+   "type": "string",
+   "units": ""
+  }
+ },
+ "recipe_version": 3,
+ "schema": "fantasy-world-generator.world-controls",
+ "version": 1
+}

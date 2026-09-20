@@ -182,6 +182,14 @@ ocean_archipelagos           3           3            3
 - **Desert is not a defect.** Absent below size 65 only because the grid cannot produce a dry
   cell (moisture min 0.589 at 17, 0.223 at 65). *Anyone who had retuned its thresholds against a
   size-17 world would have broken warm worlds permanently.* [verified]
+  - **Correction appended 2026-09-20 by the biome-reachability lane. The ruling stands; the
+    premise does not.** Those minima are the moisture layers of the twelve archived world
+    documents. Eleven of them carry a globe radius of 1774.41 and the twelfth carries 1834.62 --
+    all of them the retired ~11 km planet. The live tree resolves 31830.99, a 200 km
+    circumference. Re-measured here at raster 17 phase 10, desert appears in **222 of 232
+    seeds**, with land moisture minima from 0.0065 to 0.6197 and seed 42 giving 0.0555 and six
+    desert cells. What is settled is the *ruling* -- do not retune desert thresholds against a
+    small world -- not the "absent below size 65" evidence for it. [re-measured]
 
 ### Round trip and hidden schools
 
@@ -415,6 +423,15 @@ accounted 70,292, unaccounted 735. [owner-verified]
   the absence of a warning. A survey that cannot say what it missed will always report full
   coverage.
 - Biome frequency table — wants a phase-16 world at 129 or 257.
+  - Appended 2026-09-20: a **phase-10** world answers any biome-layer question, at 0.35 s for
+    raster 17 and 3.7 s for raster 65 against 70-120 s for phase 16. The biome layer stops
+    changing after stage 9 -- verified byte-identical between phase 10 and phase 16 at seeds 42
+    and 0 at raster 17, across natural_biome, biome, temperature, moisture, slope, height and
+    water type: 0 differing cells in all seven layers, 0.36 s against 77 s.
+    Phase 10 rather than 9 because it is the first stage that runs the biome-variant pass, so it
+    also exercises the tombstone. NOT true, and do not repeat it: that the classification pass
+    never re-runs. It does, at stages 14 and 15, through the age transition; it recomputes the
+    same answer only because nothing between stages 10 and 15 moves height, water type or river.
 - Determinism outside seed 42 size 17, with villain paths live.
 - Coverage magnitude — needs re-running; records were added during the sweep.
 
@@ -439,6 +456,14 @@ because each one, if lost, turns a correct behaviour back into a plausible-looki
    falls monotonically with the raster (0.589 at size 17, 0.457 at 33, 0.294–0.223 at 65) and
    desert appears exactly when it crosses ~0.3. *Anyone who retunes the desert thresholds
    against a size-17 world breaks warm worlds permanently.*
+   - **Correction appended 2026-09-20. What is settled is the ruling, not the mechanism given
+     for it.** The monotonic table was measured on the retired ~11 km world documents, not on
+     this tree; at raster 17 here desert appears in 222 of 232 seeds. Restated so the settled
+     item survives its own evidence: **do not retune the desert thresholds against a
+     small world.** A knob tuned against a degenerate corner damages the configurations that
+     work, and that is true whether or not the corner is still degenerate. The biome that
+     genuinely is unreachable at raster 17 is `5 exposed_rock`, and it is carded with its
+     mechanism and its measured cost rather than fixed.
 2. **The gate at `terrain_history.py:741` is correct.** It refuses all four hidden schools on
    ordinary leyline edits, which is what the rulings above require. One session nearly filed
    it as a bug before the ruling arrived.

@@ -157,7 +157,18 @@ std::vector<RegionInfluence> add_environment(const WorldConfig& cfg,double radiu
         }
         Sum area;
         for(std::size_t i:component) area.add(grid.areas[i]);
-        const double value=area.value()<std::min(3e6,land_total.value()*.15) ? 1. : 0.;
+        // Mirrors Sim/icarus_sim/terrain_ecology.py: a component is an island when it is
+        // small RELATIVE TO THIS WORLD'S LAND. The dropped min(3e6,...) arm was 3 km2 in
+        // absolute metres, authored for the 11.15 km reference world. On the 200 km
+        // default the smallest cell is 15.217 km2 at size 17, so at that raster no
+        // component of any seed can reach the floor and the layer is identically zero.
+        // That is a statement about size 17, NOT about wide worlds in general -- an
+        // earlier revision of this comment said "at any wider world no component can fall
+        // under it" and that is wrong. Cells shrink to 1.914 km2 at size 33 and 0.240 km2
+        // at size 65, where a one-cell polar component does clear the floor: measured at
+        // phase 12, seed 40 reads 1 island cell at size 33 and 6 at size 65 under the old
+        // arm. Zero at the default raster, all but zero above it.
+        const double value=area.value()<land_total.value()*.15 ? 1. : 0.;
         for(std::size_t i:component) islandness[i]=value;
     }
     layers.island_habitat=node_grid(islandness,grid);

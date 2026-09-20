@@ -9,7 +9,7 @@
       "source": "docs/catalogue/world-assets/manifest.json",
       "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
       "destination": "Contracts/catalogues/world-assets.json",
-      "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+      "destination_sha256": "d611a5de01cee9321327243a9203af1a3a0ddaad2925e4332f2a4a6c81bd3e47",
       "status": "modified",
       "reason": "Pinned semantic asset-requirement input; Unreal assets and bindings remain game-owned",
       "revisions": [
@@ -19,6 +19,13 @@
           "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+          "destination_sha256": "d611a5de01cee9321327243a9203af1a3a0ddaad2925e4332f2a4a6c81bd3e47",
+          "decision": "board/done/BIOME-TUNDRA-SNOW-UNREACHABLE.md",
+          "reason": "User ruling 0.2 tombstones biomes 1 tundra and 6 snow, which terrain_ecology's cold pass overwrites in every legal option setting. The ten production assets that targeted ONLY those two ids are re-pointed at 16 cold_tundra and 17 land_ice, which worlds do contain and which carried no art at all -- together with 15 boreal_forest they held zero of the 492 rows. This is a re-target, not a write-off: no brief is deleted. The packaged copy and the docs mirror are updated byte-identically in the same change, which tools/validate_repo.py compares. The tombstone was then extended to `biome_variant_ids`: nineteen production rows still named tundra.<school> and snow.<school> as target ground, a second selector surface the first pass missed, against the same variant identities the compiler flags unreachable."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -198,7 +205,7 @@
       "source": "Sim/icarus_sim/terrain_ecology.py",
       "source_sha256": "bbe079783b0e0ed6a737af602d035e9f1486dfaf15b49652a051c9997039844e",
       "destination": "Sim/icarus_sim/terrain_ecology.py",
-      "destination_sha256": "d64ca3046d7232eed6dec39dc9c953a2c1f90060abf9c6fface6e6e8146e82e3",
+      "destination_sha256": "25846914491f6478a26dd63543cefebc9a3e30c143ec077bb5de4c34aab964e7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -208,6 +215,19 @@
           "destination_sha256": "d64ca3046d7232eed6dec39dc9c953a2c1f90060abf9c6fface6e6e8146e82e3",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "d64ca3046d7232eed6dec39dc9c953a2c1f90060abf9c6fface6e6e8146e82e3",
+          "destination_sha256": "328c4e50b5003e9fa4229d6e49276b806b395cb3847ddf1c7cfbd9a940195da6",
+          "reason": "User ruling 2.0 published-layer regression: drop the absolute-metre arm from the islandness test. `min(3e6, land_total*.15)` picked the 3 km2 arm at any world wider than about 0.157% land fraction, and the smallest possible land component on the 200 km default world is 15.2 km2 at size 17, so island_habitat was identically zero at every raster -- a published layer that had become a constant, taking the `islander` community trait and the quarantine_isle site with it. The fraction arm is the one that bound on every archived world, so this reproduces all twelve documents under Artifacts/ cell-for-cell (0 differing cells) while restoring the layer at 200 km. Seed-affecting by design; authorised by user ruling 0.1, worlds are disposable. Mirrored in Core/ecology.cpp in the same change."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "328c4e50b5003e9fa4229d6e49276b806b395cb3847ddf1c7cfbd9a940195da6",
+          "destination_sha256": "25846914491f6478a26dd63543cefebc9a3e30c143ec077bb5de4c34aab964e7",
+          "decision": "board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md",
+          "reason": "Comment-only correction of a claim this file's own 2026-09-20 revision introduced. That row said dropping the absolute `min(3e6, ...)` arm mattered because island_habitat was identically zero at every raster on the 200 km world. It is identically zero at sizes 17 and 33 and NOT at 65, where cells fall under 3e6 and the old arm produced raster noise rather than silence. The behaviour is unchanged and correct; only the justification was overstated, and an overstated justification in a pinned file is what the next reader will believe."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -306,7 +326,7 @@
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "daf2be9bbf311e231f9a6528f7dcefdec6ebb1f5afe56888702554a9d314ff36",
+      "destination_sha256": "2ba39c1cc9168077d6620cde9f2d6abc3b51bf61a19c3017d2096375d48047cd",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -353,6 +373,12 @@
           "previous_destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
           "destination_sha256": "daf2be9bbf311e231f9a6528f7dcefdec6ebb1f5afe56888702554a9d314ff36",
           "reason": "settlement_spacing and support_reach upper bounds raised to 100 km so reaches can scale with a 200-600 km world. At the old 10 km ceiling a derived city spacing could not be expressed and the rural catchment stayed smaller than one raster cell."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "daf2be9bbf311e231f9a6528f7dcefdec6ebb1f5afe56888702554a9d314ff36",
+          "destination_sha256": "2ba39c1cc9168077d6620cde9f2d6abc3b51bf61a19c3017d2096375d48047cd",
+          "reason": "User ruling 2.0 published-layer regression: widen the river_threshold_km2 Config bound from 0.001..100 to 0.001..10000. This is the gate that actually binds -- registry bounds are consulted only for caller-supplied overrides, before the width derivation runs, so a derived value never meets them, while Config.__post_init__ is re-run on every dataclasses.replace inside the stage loop. At the old ceiling the 400 and 600 km presets raised instead of generating, because recipe 3 resolves 193.08 and 434.44 km2 there. Bound widening only; the default stays at the reference world's 0.15."
         }
       ]
     },
@@ -407,7 +433,7 @@
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
       "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
       "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
-      "destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
+      "destination_sha256": "6117298f42d82a50fe0d441419d6cbb891d1e145b76bb0b37d46d9fb56b70f05",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -438,6 +464,13 @@
           "destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
           "decision": "board/done/NOMADS.md",
           "reason": "Creature movement classes: every profile declares `movement` (nester | migratory | irruptive | follower | drifter), defaulting to nester so no existing creature changes behaviour, and seventeen creatures are added that only exist because movement does -- wandering dead with no grave to return to, irruptive swarms out of marginal ground, followers that derive their route from a host, migratory herds, and a barrow wight added deliberately as the stationary contrast. The undead split follows a rule rather than a tag: an undead with a grave nests at it, an undead without one wanders. Profiles 663 -> 680. Behavior reviewed is the movement field and the added rows; coverage is Sim/tests/test_creature_movement.py, which asserts structural placeability rather than observed placement. Documented in docs/nomads.md."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
+          "destination_sha256": "6117298f42d82a50fe0d441419d6cbb891d1e145b76bb0b37d46d9fb56b70f05",
+          "decision": "board/done/BESTIARY-MONSTERS-BIOME-BLIND.md",
+          "reason": "Three user rulings land in the creature catalogue. 3.0: biome 17 land ice is added to ten animal role tables, each weight strictly below that role's cold_tundra, so the one biome with no animals gains them -- apex_predator and marine_mammal are included because the biome gate in _place runs before suitability, so a shore species does NOT reach the ice through the coast gate as the card assumed. 0.4: every monster gains a per-species biome_weights table naming every live biome, so biome identity steers monsters for the first time; an absent key means excluded, so naming all of them is what keeps the map populated. 0.5: monsters gain a `likeness` naming the real animal whose skeleton and gait they are built on, with `likeness_traits` from a closed seventeen-term vocabulary and an optional `likeness_secondary` for a grafted second animal, so the asset and animation generators have a rig source. Seed-affecting by design; ruling 0.1 makes worlds disposable. No animal was renamed or reclassified: this world's fauna is Earth's."
         }
       ],
       "modification": "Diverged from the pinned extraction; see revisions."
@@ -446,7 +479,7 @@
       "source": "Sim/icarus_sim/terrain_nests.py",
       "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
       "destination": "Sim/icarus_sim/terrain_nests.py",
-      "destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
+      "destination_sha256": "0122625f0b159af7ebed265b500f76e8b43e513989eac50bec9b919409e694a1",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
       "revisions": [
@@ -463,6 +496,13 @@
           "destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Habitat placement split into two independent passes, animals then monsters, each a thinned point process over the ground rather than a lottery under a fixed anchor cap. Tier carries the ecology: density falls geometrically with danger, and the pyramid is a per-medium world budget so a tier cannot forfeit its share by being habitat-specialised. Settlement clearance is folded into the intensity instead of rejecting a draw after it. Counts now scale with habitable area, which the 120 cap prevented."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
+          "destination_sha256": "0122625f0b159af7ebed265b500f76e8b43e513989eac50bec9b919409e694a1",
+          "decision": "board/backlog/CONTENT-NO-DIFFICULTY-GRADIENT.md",
+          "reason": "A continuous distance factor is multiplied into the placement rate beside the existing binary settlement clearance, so danger ramps with distance from people instead of stepping. A clearance is a cutoff and makes a hole, not a ramp, at any resolution; the span is scaled by circumference through terrain_scale.reach_scale rather than being another absolute metre constant, and a floor keeps every species placeable somewhere. Validation also now refuses a monster with no biome_weights, matching the require added to Core/profiles.cpp. Ported to Core/nests.cpp term for term in the same change."
         }
       ],
       "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
@@ -471,7 +511,7 @@
       "source": "Sim/icarus_sim/terrain_patch.py",
       "source_sha256": "f630c5cf4d642c0f17a2f99eb759b6f13f72c74390e0301731c4632ab8246ef6",
       "destination": "Sim/icarus_sim/terrain_patch.py",
-      "destination_sha256": "d75767af857672cc5931340ad5e5d7f68c6bfb8beebf8776ac6df82115d2df1c",
+      "destination_sha256": "8a7630f3d484046b5bd221d012c10d1b1e1aa2d231a48bedb0e3e0a4fe34a8c0",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -494,6 +534,13 @@
           "previous_destination_sha256": "ab8731e02bdbe24606df24b4215777b4b93548a16816e95c2f0c3deb25b84f35",
           "destination_sha256": "d75767af857672cc5931340ad5e5d7f68c6bfb8beebf8776ac6df82115d2df1c",
           "reason": "Raise the age-advance grid ceiling from 257 to 1025 so a world can hold both its history and its full terrain. The octave admission filter needs step <= wavelength/2, which at this planet's 14,702 m wavelength first admits the fifth of five noise octaves at size 513 -- above the old age-advance refusal, so until now a world could have all of its terrain or all of its history and never both. No generated bytes change: this widens which inputs are accepted, not what any accepted input produces. Core/genesis.hpp max_grid moves in the same change so the reference and the port agree on the accepted range."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "d75767af857672cc5931340ad5e5d7f68c6bfb8beebf8776ac6df82115d2df1c",
+          "destination_sha256": "8a7630f3d484046b5bd221d012c10d1b1e1aa2d231a48bedb0e3e0a4fe34a8c0",
+          "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
+          "reason": "Convert the patch request boundary to the structured failure envelope, and separate a well-formed patch the planet is too small to hold from a malformed one. Refusal text and shape only; no accepted request behaves differently and no mesh value changed."
         }
       ]
     },
@@ -797,7 +844,7 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "be5d2d06c822a03a6d778a4123181d1d0364486ef4db989fa82c672d7120cb66",
+      "destination_sha256": "4e921da08e81de4343c21cba3f3ebbbeeaca55fc8a49c5d740c7b3610b7e5729",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -915,6 +962,33 @@
           "previous_destination_sha256": "4144f5258f325313b9acdbd965cb0b0b6217aa19a6541f5e8ded2d812593aeb2",
           "destination_sha256": "be5d2d06c822a03a6d778a4123181d1d0364486ef4db989fa82c672d7120cb66",
           "reason": "Scope the octave ladder to its plate-count band and correct an over-general claim. The globe radius cancels out of octave admission but sqrt(plate_count) does not, so the ladder is not a function of grid size alone: over the legal range 3..48 it shifts one octave earlier at 3..4 and one later at 17..48, and 34 of 46 legal values do not follow the default band's row. The previous text also stated flatly that 1025 adds no octave over 513, which holds in the default band 5..16 and is false above plate_count 16, where 513 resolves four and 1025 is the first size resolving five. Comment only; no behavior, contract or generated byte changes."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "be5d2d06c822a03a6d778a4123181d1d0364486ef4db989fa82c672d7120cb66",
+          "destination_sha256": "a2db435716268b301bbdb4e625a4ab75b1e803ceb121e9dc981caba0810afb75",
+          "reason": "User ruling 2.0 published-layer regression: derive river_threshold_km2 from the world width, and widen the registry bound to match. The threshold is a catchment AREA left at the 11.15 km reference world's absolute 0.15 km2, so on the 200 km default every land cell drained more than it -- every land cell was a river, every land cell its own freshwater source, freshwater_distance identically 0 on land and flood_risk identically 1.0. Three published layers had become constants. Reaches take reach_scale; catchments take its square, and measurement confirms the exponent exactly: at a fixed raster and seed, per-cell rain_runoff grows 4.000000x at double the width and 9.000000x at triple, on all 47 land cells. The derived value makes the river network width-invariant -- land-river fractions 68.1/47.8/16.0 percent at sizes 17/33/65 identically at 200, 400 and 600 km, against 100/99.6/85.2 unscaled. Calibrated to a stated target (neither saturated nor empty at 17, 33 and 65) with the sweep recorded in board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md. Raises naming the circumference rather than clamping, because a silent ceiling is the same defect class being fixed. Seed-affecting by design; authorised by user ruling 0.1."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "a2db435716268b301bbdb4e625a4ab75b1e803ceb121e9dc981caba0810afb75",
+          "destination_sha256": "e404d5a8abeb651c9b6b31f72976342cf92d512a5cb621af8eb98809242dd129",
+          "decision": "docs/super-villains.md",
+          "reason": "User ruling: super villains exist now, and the simulation ends with super villain promotions, so time modification can be debugged against a world that has antagonists in it. `villain_rise` moves from 0. to .5. The rate alone cannot deliver it and that is why there are two mechanisms: a generation runs exactly two age transitions, and at seed 42 size 17 the most concentrated region reaches tier 1.1982707 only at rise 1.0, the declared maximum, so no value below 0.834536 seats anybody by accumulation. The rate is the campaign ramp; terrain_villains.promote() is the arrival, seating the most concentrated regions at exactly SUPER_TIER on the final age of a generation and of an advance, idempotently. Zero remains a real off switch that writes no villains block at all. Seed-affecting by design; ruling 0.1 makes worlds disposable. Landed with a fix to terrain_villains._held_node, without which every god-bound villain was stranded on the age it rose by its own well re-anchoring its region."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "e404d5a8abeb651c9b6b31f72976342cf92d512a5cb621af8eb98809242dd129",
+          "destination_sha256": "edd007b68e4b884a861f1cd4de58c0fc13238730f8613be7d38a61d970007945",
+          "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
+          "reason": "Give every published control a description and a unit in one CONTROL_PROSE table, and make registry() raise when that table is not total. 54 of 209 controls described themselves with their own field name and 43 carried no unit; the reader is a packaged local model that cannot ask what a control does. No control renamed, no bound changed, no generated value moved."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "edd007b68e4b884a861f1cd4de58c0fc13238730f8613be7d38a61d970007945",
+          "destination_sha256": "4e921da08e81de4343c21cba3f3ebbbeeaca55fc8a49c5d740c7b3610b7e5729",
+          "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
+          "reason": "Replace the request boundary's bare ValueErrors with the versioned fantasy-world-generator.failure envelope at schema 2, carrying the field, the received value, the violated bound or choice list and a next value to try. RequestError subclasses ValueError so every existing handler is unaffected. No control renamed, no bound changed, no accepted request behaves differently."
         }
       ]
     },
@@ -1077,7 +1151,7 @@
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "e2cb31f7f32627e7446ec0eae9a08b07ba94075df8c0d2d31490debf18afed0f",
+      "destination_sha256": "d6e711c1207d77166d18b7b3674c29a0dd19afc2d52f05a30138357f5041c8c8",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1107,6 +1181,13 @@
           "previous_destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
           "destination_sha256": "e2cb31f7f32627e7446ec0eae9a08b07ba94075df8c0d2d31490debf18afed0f",
           "reason": "Derive the wide comparison world from the current default (sqrt(3) times the circumference for three times the surface) instead of a hardcoded 20 km. The fixed width silently became narrower than the default when the world grew to 200 km, inverting the population-scales-with-ground comparison."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "e2cb31f7f32627e7446ec0eae9a08b07ba94075df8c0d2d31490debf18afed0f",
+          "destination_sha256": "d6e711c1207d77166d18b7b3674c29a0dd19afc2d52f05a30138357f5041c8c8",
+          "decision": "board/done/BESTIARY-MONSTERS-BIOME-BLIND.md",
+          "reason": "Covers the rulings landed in terrain_nest_profiles.json and terrain_nests.py: every monster names every live biome, every likeness resolves to a real animal profile, and the danger ramp is monotone in tier."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -1516,7 +1597,7 @@
       "source": "docs/catalogue/world-assets/manifest.json",
       "source_sha256": "b8606e1b4ee50754bf3f424d8f30f381638b48ff6c672e67aa4a64df83b298c7",
       "destination": "docs/catalogue/world-assets/manifest.json",
-      "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+      "destination_sha256": "d611a5de01cee9321327243a9203af1a3a0ddaad2925e4332f2a4a6c81bd3e47",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1526,6 +1607,13 @@
           "destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "2f04a675a8c2226923e8bffe24aa7f68f2c9f64c4ab50ec1537e991a0eeffce4",
+          "destination_sha256": "d611a5de01cee9321327243a9203af1a3a0ddaad2925e4332f2a4a6c81bd3e47",
+          "decision": "board/done/BIOME-TUNDRA-SNOW-UNREACHABLE.md",
+          "reason": "Docs mirror of Contracts/catalogues/world-assets.json, kept byte-identical. See that entry's revision of the same date for the reasoning. The tombstone was then extended to `biome_variant_ids`: nineteen production rows still named tundra.<school> and snow.<school> as target ground, a second selector surface the first pass missed, against the same variant identities the compiler flags unreachable."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -1684,7 +1772,7 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "1ba58d79c7de2d3f6310172ebcdf01007024ae9aa1f68108510f1167baea4ab3",
+      "destination_sha256": "ff9f66a9028e8ee61b96f96d46589cb8699cdd243282e9dfd8bc462cb61e551e",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -1731,6 +1819,19 @@
           "destination_sha256": "1ba58d79c7de2d3f6310172ebcdf01007024ae9aa1f68108510f1167baea4ab3",
           "decision": "board/in-progress/CONFORMANCE-DOCS.md",
           "reason": "Corrected the mandated interpreter invocation from python3 to python. The python3 name resolves to the Microsoft Store alias stub on the development machine and has never launched; fifteen completed tickets record the failure. No behavior, contract or schema is affected."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "1ba58d79c7de2d3f6310172ebcdf01007024ae9aa1f68108510f1167baea4ab3",
+          "destination_sha256": "d78547646c490b7f40904ff403a164ff0457643195f59fa31200e1abe00b53d3",
+          "reason": "User ruling 2.0 published-layer regression: correct four reference-world constants that no longer describe a generated world. The River catchment default is the 11.15 km world's 0.15 km2 and recipe 3 now scales it as the square of the width (48.27 km2 at the 200 km preset); the water_access characteristic reach of 400 m is an unscaled reference-world constant against measured post-fix distances reaching 20745 m, so water_access is now effectively binary; and the two km2 measurement blocks were measured on the 11.15 km world and are out by the square of the width ratio. Documentation only; no behaviour change from this file."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "d78547646c490b7f40904ff403a164ff0457643195f59fa31200e1abe00b53d3",
+          "destination_sha256": "ff9f66a9028e8ee61b96f96d46589cb8699cdd243282e9dfd8bc462cb61e551e",
+          "decision": "board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md",
+          "reason": "Prose-only repair of the river-threshold paragraph: a sentence spliced in by the 2026-09-20 revision left a run-on line in an otherwise wrapped document."
         }
       ]
     },
@@ -1738,7 +1839,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "67b56bbed5e1b368a2d787cbae99a3e232067d0dddad61b5cf5268159258112d",
+      "destination_sha256": "7289f2698b95963542c1869f4091a01a48c4785a5a128c145fb9ea9ed5ff8715",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1945,6 +2046,19 @@
           "destination_sha256": "67b56bbed5e1b368a2d787cbae99a3e232067d0dddad61b5cf5268159258112d",
           "decision": "board/in-progress/CONFORMANCE-DOCS.md",
           "reason": "Corrected the mandated interpreter invocation from python3 to python. The python3 name resolves to the Microsoft Store alias stub on the development machine and has never launched; fifteen completed tickets record the failure. No behavior, contract or schema is affected."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "67b56bbed5e1b368a2d787cbae99a3e232067d0dddad61b5cf5268159258112d",
+          "destination_sha256": "d49df22314d8ef3805665d27762b114511eafbca0f826f6f9dfac2c386303e8f",
+          "reason": "User ruling 2.0 published-layer regression: define what `small` means for islander status now that the absolute 3 km2 floor is retired -- a connected land component under 15% of this world's total land area, a relative test with no metre floor. Also adds one pointer to decision record 023 recording that existing worlds are disposable until the first player-facing consumer ships. Documentation only."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "d49df22314d8ef3805665d27762b114511eafbca0f826f6f9dfac2c386303e8f",
+          "destination_sha256": "7289f2698b95963542c1869f4091a01a48c4785a5a128c145fb9ea9ed5ff8715",
+          "decision": "board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md",
+          "reason": "Three factual corrections, no behaviour. The islander paragraph carried the same overstated every-raster claim as terrain_ecology.py. The habitat paragraph still said the 21 feeding roles supply the biome table every animal uses, which stopped being the whole story when every monster gained its own per-species biome_weights, and its catalogue counts were stale. Re-counted against the live catalogue."
         }
       ]
     },
@@ -2004,7 +2118,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "523c789edf505b321c1b0b2a74c3fb1867390ad4ece1daf303c8605f46d6b8b0",
+      "destination_sha256": "2071109630b957e00e75853e31d45e059c513032eba2e1fc2992ba2e73838be3",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2163,6 +2277,13 @@
           "destination_sha256": "523c789edf505b321c1b0b2a74c3fb1867390ad4ece1daf303c8605f46d6b8b0",
           "decision": "docs/key-locations.md",
           "reason": "Key location exterior plans: list `key_location_plans` in historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS and the plans do not appear at stages before sixteen. Omitting it fails silently."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "523c789edf505b321c1b0b2a74c3fb1867390ad4ece1daf303c8605f46d6b8b0",
+          "destination_sha256": "2071109630b957e00e75853e31d45e059c513032eba2e1fc2992ba2e73838be3",
+          "decision": "docs/time-advance.md",
+          "reason": "Register world_clock and quests in the lab stage viewer key list, mirroring the same addition to terrain_history.STATE_KEYS. materialize_stage and the lab both build an earlier stage from every key NOT in their list, so a new top-level state block omitted from them is silently shown at every stage rather than raising -- the failure docs/conformance/nomads.md already documents for this list."
         }
       ]
     },
@@ -2170,7 +2291,7 @@
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "8995f725d4ddfa684112ec91344f8a5ea5fb257401e7ea985ab75965707699ff",
+      "destination_sha256": "b70190bec5fd9eb1b0f462c332dfbd6a057b4bc9d8d7307dded7c8df13a3f6ca",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2215,6 +2336,27 @@
           "previous_destination_sha256": "c5126d5215df464531765b9b8fb826d93d3039cd67d5e7235fe70a731078dccc",
           "destination_sha256": "8995f725d4ddfa684112ec91344f8a5ea5fb257401e7ea985ab75965707699ff",
           "reason": "User-requested moon controls: POST /world/moon routes to terrain_astrology.lunar_request, the stateless moon query for any day or hour. Documented in docs/astrology.md."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "8995f725d4ddfa684112ec91344f8a5ea5fb257401e7ea985ab75965707699ff",
+          "destination_sha256": "007d479683afeeb18032590fd0ddd410cf4d0cccb9fe1054f6ac1044aed27a3d",
+          "decision": "docs/time-advance.md",
+          "reason": "Route POST /world/advance-time to terrain_time.advance_time_request, beside the existing advance-age, summon and moon mutators, and give it their 256 MB body limit because it carries a whole world. The handler is dispatch only: no simulation logic is added to the lab, and the route is the same stateless world-in/world-out shape as its neighbours."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "007d479683afeeb18032590fd0ddd410cf4d0cccb9fe1054f6ac1044aed27a3d",
+          "destination_sha256": "37a4afcf8a364bcb6ef1ba16130587f61ab3977d49ad4cff00a91c3584142d69",
+          "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
+          "reason": "Give corruption_request, cleanse_request and nomad_request a transport, and render the structured failure envelope when a refusal carries one. All three had schemas, validators and tests and no route, so the tier-2 corruption tier and the villain-to-nomad seam were reachable only by importing Python. Dispatch only; no request validator changed."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "37a4afcf8a364bcb6ef1ba16130587f61ab3977d49ad4cff00a91c3584142d69",
+          "destination_sha256": "b70190bec5fd9eb1b0f462c332dfbd6a057b4bc9d8d7307dded7c8df13a3f6ca",
+          "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
+          "reason": "Route the settlement founding API. Dispatch only; the handler validates and refuses in terrain_settlement_api, not here."
         }
       ]
     },

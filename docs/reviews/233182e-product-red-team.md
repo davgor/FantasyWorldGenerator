@@ -114,7 +114,7 @@ should re-check before quoting a line.**
 
 **Severity: blocking for any second consumer.**
 
-`Sim/icarus_sim/terrain_history.py:398` defines `STATE_KEYS` with **48** top-level blocks.
+`Sim/icarus_sim/terrain_history.py:406` defines `STATE_KEYS` with **47** top-level blocks.
 
 | | count |
 |---|---|

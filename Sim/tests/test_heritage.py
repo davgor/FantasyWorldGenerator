@@ -5,6 +5,7 @@ the registry's ids - is a repository-level contract and lives in
 tests/test_heritage_registry_binding.py instead.
 """
 import copy
+import json
 import random
 import unittest
 
@@ -308,6 +309,230 @@ class NamingTests(unittest.TestCase):
         self.assertEqual(set(table), {'onsets', 'nuclei', 'codas', 'third_syllable_chance'})
         self.assertTrue(table['onsets'] and table['nuclei'])
 
+
+# 4 ft 5 in in metres, to four places. The requirement that raised this layer was stated in
+# feet; the repository is metric everywhere and the Unreal adapter converts at its own
+# boundary, so the conversion is done once, here, where it can be read.
+FOUR_FOOT_FIVE_M = 1.3462
+DWARVES = tuple(cid for cid, parent in PEOPLES if parent == 'dwarf')
+
+
+class AppearanceTests(unittest.TestCase):
+    """The authored body: complete per race, extended per subrace, agreeing with the traits."""
+
+    def setUp(self):
+        heritage.reset_cache()
+        self.policies = policy.load_all()
+        self.bodies = {cid: heritage.resolve(cid, parent)['appearance']
+                       for cid, parent in PEOPLES}
+
+    def test_every_people_resolves_a_complete_body(self):
+        for cid, body in self.bodies.items():
+            self.assertEqual(set(body), set(policy.APPEARANCE_BLOCKS), cid)
+            for block, keys in policy.APPEARANCE_BLOCKS.items():
+                self.assertEqual(set(body[block]), set(keys), f'{cid}.{block}')
+
+    def test_archetypes_carry_empty_appearance_deltas(self):
+        """The race base is the unmarked member here too, so a delta reads as a difference."""
+        for cid in ('human_heartland', 'elf', 'dwarf'):
+            self.assertEqual(self.policies['appearance']['peoples'][cid], {}, cid)
+
+    def test_no_dwarf_stands_over_four_foot_five(self):
+        """The stated requirement, asserted on the resolved body rather than on the table.
+
+        Every people under the dwarf parent race - the mountain clans, the frostholds, the
+        hill dwarves and the gnomes - is shorter than this at the top of its band, for both
+        sexes. `policy.BODY_SCALE_HEIGHT_M` is what enforces it at load; this is what states
+        it, so a future envelope edit that quietly lets a dwarf past 4 ft 5 in fails here
+        with the sentence that says why it matters.
+        """
+        self.assertEqual(len(DWARVES), 4)
+        for cid in DWARVES:
+            for sex in policy.SEXES:
+                band = self.bodies[cid]['frame']['height_m'][sex]
+                self.assertLess(band['max'], FOUR_FOOT_FIVE_M, f'{cid}.{sex}')
+
+    def test_height_bands_sit_inside_the_envelope_their_body_scale_owns(self):
+        for cid, parent in PEOPLES:
+            resolved = heritage.resolve(cid, parent)
+            floor, ceiling = policy.BODY_SCALE_HEIGHT_M[resolved['traits']['body_scale']]
+            for sex in policy.SEXES:
+                band = resolved['appearance']['frame']['height_m'][sex]
+                self.assertGreaterEqual(band['min'], floor, f'{cid}.{sex}')
+                self.assertLessEqual(band['max'], ceiling, f'{cid}.{sex}')
+
+    def test_every_band_can_be_drawn_from(self):
+        """min <= mean <= max with a positive spread: what a per-NPC draw needs to exist."""
+        for cid, body in self.bodies.items():
+            for measure in ('height_m', 'mass_kg'):
+                for sex in policy.SEXES:
+                    band = body['frame'][measure][sex]
+                    self.assertLessEqual(band['min'], band['mean'], f'{cid}.{measure}.{sex}')
+                    self.assertLessEqual(band['mean'], band['max'], f'{cid}.{measure}.{sex}')
+                    self.assertGreater(band['sd'], 0, f'{cid}.{measure}.{sex}')
+
+    def test_palettes_are_distributions_over_named_swatches(self):
+        for cid, body in self.bodies.items():
+            for channel in ('skin', 'hair', 'eye'):
+                entry = body['coloration'][channel]
+                self.assertEqual(set(entry), set(policy.PALETTE_KEYS), f'{cid}.{channel}')
+                palette = entry['swatches']
+                self.assertGreaterEqual(len(palette), policy.PALETTE_MIN, f'{cid}.{channel}')
+                total = sum(swatch['weight'] for swatch in palette)
+                self.assertAlmostEqual(total, 1.0, places=6, msg=f'{cid}.{channel}')
+                names = [swatch['name'] for swatch in palette]
+                self.assertEqual(len(set(names)), len(names), f'{cid}.{channel}')
+
+    def test_every_face_carries_a_handle_and_a_description(self):
+        """`broad_high_bridge` tells an artist nothing; the note beside it is the deliverable.
+
+        Both halves travel in one value so they cannot drift apart, which is the whole
+        reason there is no separate prose block sitting beside the token one.
+        """
+        for cid, body in self.bodies.items():
+            for key in policy.APPEARANCE_BLOCKS['features']:
+                entry = body['features'][key]
+                self.assertEqual(set(entry), set(policy.FEATURE_KEYS), f'{cid}.{key}')
+                self.assertRegex(entry['form'], policy.TOKEN, f'{cid}.{key}')
+                self.assertGreaterEqual(len(entry['note'].strip()), policy.PROSE_MIN,
+                                        f'{cid}.{key}')
+
+    def test_every_palette_says_how_it_is_distributed(self):
+        for cid, body in self.bodies.items():
+            for channel in ('skin', 'hair', 'eye'):
+                note = body['coloration'][channel]['note']
+                self.assertGreaterEqual(len(note.strip()), policy.PROSE_MIN,
+                                        f'{cid}.{channel}')
+
+    def test_the_two_big_noses_and_the_two_pointed_ears_are_where_they_belong(self):
+        """The face rules that distinguish the three stocks, asserted rather than assumed.
+
+        Elves have the pointed ears, dwarves have the big nose, and gnomes - who descend
+        from the dwarven parent race but read as neither parent - carry both at once. That
+        last one is the entire likeness of a gnome, so it is worth a test rather than a
+        hope that nobody edits it flat.
+        """
+        elf = self.bodies['elf']['features']
+        dwarf = self.bodies['dwarf']['features']
+        gnome = self.bodies['gnome']['features']
+        self.assertIn('point', elf['ear']['form'])
+        self.assertIn('rounded', dwarf['ear']['form'])
+        self.assertIn('broad', dwarf['nose']['form'])
+        self.assertIn('narrow', elf['nose']['form'])
+        self.assertIn('point', gnome['ear']['form'])
+        self.assertIn('long', gnome['nose']['form'])
+        # And the notes have to say so too, because the tokens are not what an artist reads.
+        self.assertIn('ears', gnome['nose']['note'])
+        self.assertIn('small_ears', self.bodies['gnome']['art_direction']['avoid'])
+        self.assertIn('small_nose', self.bodies['gnome']['art_direction']['avoid'])
+        self.assertIn('short_ears', self.bodies['elf']['art_direction']['avoid'])
+        self.assertIn('small_neat_nose', self.bodies['dwarf']['art_direction']['avoid'])
+
+    def test_lifespan_agrees_with_the_tempo_axis(self):
+        for cid, parent in PEOPLES:
+            resolved = heritage.resolve(cid, parent)
+            low, high = policy.LIFESPAN_TEMPO_YEARS[resolved['traits']['lifespan_tempo']]
+            maximum = resolved['appearance']['life_stages']['max_years']
+            self.assertGreaterEqual(maximum, low, cid)
+            self.assertLessEqual(maximum, high, cid)
+
+    def test_adult_is_the_stature_every_band_is_stated_at(self):
+        """A child sprite scales off this, so the adult fraction has to be exactly one."""
+        for cid, body in self.bodies.items():
+            self.assertEqual(body['life_stages']['adult']['height_fraction'], 1, cid)
+
+    def test_every_subrace_bears_a_distinct_body(self):
+        """Every subrace bears a unique culture; a sprite sheet needs the same of a body."""
+        rendered = {cid: json.dumps(body, sort_keys=True) for cid, body in self.bodies.items()}
+        self.assertEqual(len(set(rendered.values())), len(PEOPLES))
+
+    def test_appearance_is_where_the_numbers_live(self):
+        """The counterpart to the two no-numbers assertions above.
+
+        Those prove heritage cannot restate the habitat profile. This proves the ban did not
+        simply push the measurements out of the package: a body has numbers, and they are
+        here, in the one layer whose lint permits them.
+        """
+        for cid, body in self.bodies.items():
+            self.assertTrue(_numbers(body['frame']), cid)
+            self.assertTrue(_numbers(body['proportion']), cid)
+
+
+class AppearanceRejectionTests(unittest.TestCase):
+    """Authoring mistakes in the body layer fail at load, naming the mistake."""
+
+    def setUp(self):
+        heritage.reset_cache()
+        self.traits = policy.load('traits')
+        self.appearance = copy.deepcopy(policy.load('appearance'))
+
+    def _lint(self):
+        with self.assertRaises(ValueError) as caught:
+            policy.lint_appearance(self.appearance, self.traits)
+        return str(caught.exception)
+
+    def test_a_dwarf_taller_than_its_body_scale_allows_is_refused(self):
+        band = self.appearance['races']['dwarf']['frame']['height_m']['male']
+        band['max'] = 1.62
+        self.assertIn('height envelope', self._lint())
+
+    def test_a_palette_that_is_not_a_distribution_is_refused(self):
+        self.appearance['races']['elf']['coloration']['eye']['swatches'][0]['weight'] = 0.9
+        self.assertIn('must sum to 1', self._lint())
+
+    def test_a_swatch_without_a_colour_is_refused(self):
+        self.appearance['races']['human']['coloration']['skin']['swatches'][0]['hex'] = 'tan'
+        self.assertIn('#rrggbb', self._lint())
+
+    def test_a_lifespan_its_tempo_forbids_is_refused(self):
+        """A dwarf clan given an elven span is a slip, not a design decision.
+
+        The value is past the elder onset, so it clears the ordering check and is caught by
+        the tempo envelope alone - which is the half of this that binds appearance to the
+        key traits rather than to itself.
+        """
+        self.appearance['races']['dwarf']['life_stages']['max_years'] = 1000
+        self.assertIn('lifespan_tempo', self._lint())
+
+    def test_life_stages_out_of_order_are_refused(self):
+        self.appearance['races']['dwarf']['life_stages']['elder']['onset_years'] = 20
+        self.assertIn('stages run in order', self._lint())
+
+    def test_an_incomplete_race_body_is_refused(self):
+        del self.appearance['races']['dwarf']['attire']
+        self.assertIn('appearance blocks', self._lint())
+
+    def test_a_face_token_with_no_description_is_refused(self):
+        """A handle alone is what this layer exists to stop shipping."""
+        self.appearance['races']['dwarf']['features']['nose'] = {
+            'form': 'broad_high_bridge', 'note': 'big nose'}
+        self.assertIn('open English', self._lint())
+
+    def test_a_palette_with_no_note_is_refused(self):
+        del self.appearance['races']['human']['coloration']['skin']['note']
+        self.assertIn('note', self._lint())
+
+    def test_a_subrace_extending_an_unknown_key_is_refused(self):
+        self.appearance['peoples']['gnome']['frame'] = {'wingspan_m': 2.0}
+        self.assertIn('frame.wingspan_m', self._lint())
+
+    def test_a_people_missing_from_the_body_table_is_refused(self):
+        del self.appearance['peoples']['tidekin']
+        self.assertIn('tidekin', self._lint())
+
+    def test_a_delta_restating_its_inherited_body_is_an_error(self):
+        base = policy.load('appearance')['races']['dwarf']
+        with self.assertRaises(ValueError) as caught:
+            derive.merge_appearance(base, {'frame': {'build': base['frame']['build']}},
+                                    'people')
+        self.assertIn('inherited value', str(caught.exception))
+
+    def test_a_delta_may_replace_one_key_without_restating_its_block(self):
+        """The merge is depth two, so a subrace can change its eyes and keep its skin."""
+        base = policy.load('appearance')['races']['dwarf']
+        merged = derive.merge_appearance(base, {'frame': {'build': 'reedy'}}, 'people')
+        self.assertEqual(merged['frame']['build'], 'reedy')
+        self.assertEqual(merged['frame']['height_m'], base['frame']['height_m'])
 
 if __name__ == '__main__':
     unittest.main()

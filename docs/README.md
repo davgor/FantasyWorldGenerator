@@ -5,6 +5,7 @@
 - [Simulation and world layers](terrain-world-layers.md) is the canonical generator behavior contract.
 - [Unified globe scene](unified-world-scene.md) defines leyline variation, city/world junctions and global placements.
 - [The moon](astrology.md) defines the lunar cycle, its almanac and clock hooks, temporary ley surges and ruin legacies.
+- [Time advance](time-advance.md) defines the clock a live world runs on: the calendar and `world_clock`, the bands an elapsed span selects, why a span of an age or longer is answered with an age advancement and a cost estimate rather than a tick, the quest lifecycle, the one liveness predicate, and the invariant that a span cut differently produces the same world.
 - [Pantheon](pantheon.md) defines the god catalogue, cosmologies, faiths and the visitation API that lets the orchestrator summon a god.
 - [Hidden schools](hidden-schools.md) defines the twelve-school taxonomy: the four schools the world does not know, why they are appended rather than inserted, and why generation can never raise one.
 - [Super villains](super-villains.md) defines the antagonists that operate on a different order than the kings around them: tier as continuous reach, the turmoil that raises it, and the fate lottery they take cities through.
@@ -18,7 +19,7 @@
 - [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
 - [Hero generator](hero-generator.md) defines the separate cast package: people precipitated from ruins and wars, alignment-then-archetype selection, personas, and the `heroes` export.
 - [Story web](story-web.md) defines the separate story-web package: every living hero's trope spokes, the deterministic weight equation, the offered resting hook, bound acts with options and threads, and the `story_web` export.
-- [Heritage](heritage.md) defines the separate heritage package: seventeen categorical key traits per race, the culture derived from them, the language genome derived from culture and physiology, and the morphemic naming those genomes drive.
+- [Heritage](heritage.md) defines the separate heritage package: seventeen categorical key traits per race, the culture derived from them, the language genome derived from culture and physiology, the morphemic naming those genomes drive, and the authored appearance layer - stature, palettes, features and art direction per subrace - that the concept-art, sprite and model pipelines read.
 - [NPC roster](npc-roster.md) defines the separate people package: one record per staffed post, the bounded quest-giver earmark, the alive/dead state and the `npcs` export.
 - [Key locations](key-locations.md) defines the separate places package: ninety-seven catalogue archetypes across eleven families, percentile-relative placement, derived state and occupant, the succession pass that produces dungeons without a dungeon archetype, chains and clusters for the places that are wrong placed alone, tier-2 interior chamber graphs, and the `key_locations` export.
 - [Nomads](nomads.md) defines the travelling bands the land raises once the simulation settles: the six classifications, the hard geographic gate each one must pass before any weight is drawn, why a candidate satisfying none raises nobody, and the `nomads` export.
@@ -56,6 +57,9 @@ they double as the canonical description of a subsystem.
 - [020 Authoring catalogues ship as data](decisions/020-authoring-catalogues-ship-as-data.md)
 - [021 Heritage chain](decisions/021-heritage-chain.md)
 - [022 Private source-inclusive package policy](decisions/022-private-package-distribution.md) — renumbered from a second 017; earlier references to "decision 017" for distribution mean this one.
+- [023 World compatibility policy](decisions/023-world-compatibility-policy.md) — worlds are disposable and no migration is owed, until phase 2, the first player-facing consumer.
+- [025 Controls are a machine contract](decisions/025-controls-are-a-machine-contract.md) — every published control carries a description and a unit, and the catalogue ships as generated data the native core and the packaged plugin read.
+- [024 Fallen claim decay](decisions/024-fallen-claim-decay.md) — a fallen villain's claim fades over ages and its record does not, so a world advanced across many ages is not governed by its dead.
 
 Numbers 003 to 013 were allocated in the source repository and did not come across with
 the extraction. The gap is inherited, not a set of missing records.

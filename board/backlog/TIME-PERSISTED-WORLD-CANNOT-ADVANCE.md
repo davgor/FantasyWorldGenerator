@@ -41,9 +41,38 @@ else, after the size-17 reference world that resolves zero octaves and the ceili
 that turned rejection tests into legal work. The guarantee is right; its blast radius is not
 being tracked.
 
+## Resolution
+
+**Delivered 2026-09-20.** The contract question the card insisted on answering first is
+answered the way `cli.py` already asserted it: a persisted world does not carry timing, so
+every writer must tolerate its absence.
+
+It is not a `setdefault` at the first site reached, which this card rightly warns against --
+there are roughly thirty unguarded writes across seventeen files and fixing one arms the
+next. The guard goes where a persisted world *enters* instead. `terrain_history.adopt_world`
+is the one seam every stateless request API now takes a caller's world through: deep copy,
+`build_stages` shared rather than copied, `timing_ms` guaranteed. By the time any producer
+runs the key exists, so all thirty are disarmed by one guarantee, and a request API written
+later inherits it rather than having to remember.
+
+Evidence, against a world generated through the CLI and read back off disk (seed 42, size
+17, 62 blocks, no `timing_ms`): `lunar_request`, `advance_age_request`, `visitation_request`,
+`corruption_request` and `nomad_request` all succeed. `cleanse_request` refuses correctly,
+because that world carries no corruption to cleanse, and says so by name.
+
+Covered by `tests/consumer_orchestrator.py::PersistBoundaryTests`, which generates, persists,
+reads back and acts -- and asserts first that the persisted world really lacks `timing_ms`,
+without which the rest of the class proves nothing.
+
+**What this does not close:** the seven passes that append to `warnings` rather than
+replacing it, found by the time-advance session and filed as
+`SEASONS-WHOLESALE-EXCEPT-ITS-LAST-LINE`. Four of them are reached by `advance_age_request`
+on every call, so a world advanced ten ages already carries ten copies of the biome and
+climate method strings. Same shape as this defect, different key, still open.
+
 ## Current state
 
-Unfixed. Reproduced on seed 42 size 17 phase 13, both directions, against `biomes.json` at
+Fixed; see Resolution above. Originally reported as Reproduced on seed 42 size 17 phase 13, both directions, against `biomes.json` at
 the data-ized catalogue.
 
 ## Proposed fix

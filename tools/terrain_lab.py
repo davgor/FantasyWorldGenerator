@@ -39,12 +39,12 @@ def benchmark(cfg, repeats):
 def serve(cfg, port):
     class Handler(BaseHTTPRequestHandler):
         def do_POST(self):
-            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate', '/world/advance-age', '/world/summon', '/world/moon'):
+            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate', '/world/advance-age', '/world/advance-time', '/world/summon', '/world/moon', '/world/corrupt', '/world/cleanse', '/world/nomad', '/world/found-settlement'):
                 self.send_error(404)
                 return
             try:
                 length = int(self.headers.get('Content-Length','0'))
-                limit=256*1024*1024 if self.path in ('/world/advance-age', '/world/summon', '/world/moon') else 65536
+                limit=256*1024*1024 if self.path in ('/world/advance-age', '/world/advance-time', '/world/summon', '/world/moon', '/world/corrupt', '/world/cleanse', '/world/nomad', '/world/found-settlement') else 65536
                 if not 0 < length <= limit:
                     raise ValueError(f'JSON body must be 1..{limit} bytes')
                 body = json.loads(self.rfile.read(length))
@@ -54,6 +54,12 @@ def serve(cfg, port):
                 elif self.path == '/world/advance-age':
                     from icarus_sim.terrain_history import advance_age_request
                     result=advance_age_request(body)
+                elif self.path == '/world/advance-time':
+                    # The clock the other mutators assume: advance a live world by an
+                    # elapsed span. Stateless like advance-age; a span of an age or more
+                    # is answered with an estimate rather than a tick.
+                    from icarus_sim.terrain_time import advance_time_request
+                    result=advance_time_request(body)
                 elif self.path == '/world/summon':
                     # The orchestrator summons a god (or sends a walking one home); stateless like advance-age.
                     from icarus_sim.terrain_visitation import visitation_request
@@ -62,6 +68,23 @@ def serve(cfg, port):
                     # The sky and the surge at any day or hour, for an orchestrator driving a clock.
                     from icarus_sim.terrain_astrology import lunar_request
                     result=lunar_request(body)
+                elif self.path == '/world/found-settlement':
+                    # The player picks the ground; the world supplies the metadata.
+                    from icarus_sim.terrain_settlement_api import found_settlement_request
+                    result=found_settlement_request(body)
+                elif self.path == '/world/corrupt':
+                    # The hidden gods act only when something is watching: the caller passes
+                    # its own cross-playthrough `encounters` count and the world decides.
+                    from icarus_sim.terrain_corruption import corruption_request
+                    result=corruption_request(body)
+                elif self.path == '/world/cleanse':
+                    from icarus_sim.terrain_corruption import cleanse_request
+                    result=cleanse_request(body)
+                elif self.path == '/world/nomad':
+                    # Raise one band at a node. The villain-to-nomad seam calls this, and
+                    # until now could only do so from inside Python.
+                    from icarus_sim.terrain_nomad_api import nomad_request
+                    result=nomad_request(body)
                 elif self.path == '/patch':
                     result=patch_request(body)
                 else:
@@ -71,7 +94,10 @@ def serve(cfg, port):
                     result = manual_seed(body[key]) if key == 'seed' else prompt_seed(body[key])
                 payload = json.dumps(result,allow_nan=False).encode()
             except (ValueError, TypeError, OverflowError, UnicodeError) as exc:
-                payload = json.dumps({'error':str(exc)}).encode()
+                # A RequestError carries the field, the value and the bound; anything else
+                # only has its text. Both answer 400, so a caller branches on the body.
+                document = exc.document() if hasattr(exc, 'document') else {'error':str(exc)}
+                payload = json.dumps(document).encode()
                 self.send_response(400)
             else:
                 self.send_response(200)

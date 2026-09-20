@@ -92,7 +92,7 @@
       "required": [
         "version",
         "leyline_edits",
-        "leyline_edits_queued",
+        "leyline_edits_hidden",
         "towns_under_raid_pressure",
         "roads_ridden",
         "settlement_candidates",
@@ -108,10 +108,10 @@
           "minimum": 0,
           "description": "Known-school circuits deepened directly."
         },
-        "leyline_edits_queued": {
+        "leyline_edits_hidden": {
           "type": "integer",
           "minimum": 0,
-          "description": "Hidden-school intents queued into pending_ley_edits, because advance_age_request refuses a leyline edit outside KNOWN_SCHOOLS."
+          "description": "Hidden-school circuits deepened directly, by the same lift as a known-school one. A cult never creates a hidden node; only the corruption API does."
         },
         "towns_under_raid_pressure": {
           "type": "integer",

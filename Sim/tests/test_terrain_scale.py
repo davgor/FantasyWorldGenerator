@@ -2,8 +2,10 @@ import math
 import unittest
 
 from icarus_sim.terrain_lab import Config
-from icarus_sim.terrain_scale import (AMPLITUDE_RATIO, design_radius, detail_wavelength,
-                                      max_relief_m, resolved_octaves, shape_overrides)
+from icarus_sim.terrain_scale import (AMPLITUDE_RATIO, REFERENCE_CIRCUMFERENCE_M,
+                                      design_radius, detail_wavelength, max_relief_m,
+                                      reach_scale, resolved_octaves, runoff_scale,
+                                      shape_overrides)
 
 WORLD_SCALE = Config().world_scale
 CIRCUMFERENCES = (11149.6, 60_000., 200_000., 1_000_000., 2_500_000.)
@@ -109,12 +111,112 @@ class ShapeOverrideTests(unittest.TestCase):
         self.assertIn('km', message)
         self.assertIn('admits at most', message)
 
+    def test_the_advice_in_the_message_actually_works(self):
+        # The bug this guards: the message used ':.0f', which rounds the needed
+        # circumference to NEAREST. For 1667 m the true minimum is 90.1934 km and the
+        # message said "above 90 km" -- a caller who built exactly the width named was
+        # refused again by the same guard. Both printed bounds must round OUTWARD, so
+        # feeding either number straight back must be accepted.
+        import re
+        for circumference, relief in ((11149.6, 1667.), (200_000., 4000.),
+                                      (123456., 2500.), (11149.6, 206.4)):
+            with self.subTest(circumference=circumference, relief=relief):
+                with self.assertRaises(ValueError) as caught:
+                    shape_overrides(circumference, relief, 1., 12, WORLD_SCALE)
+                message = str(caught.exception)
+                needed_km = float(re.search(r'above ([0-9.]+) km', message).group(1))
+                admitted_m = float(re.search(r'at most ([0-9.]+) m', message).group(1))
+                exact_km = circumference*relief/max_relief_m(circumference)/1000
+                self.assertGreaterEqual(needed_km, exact_km,
+                                        f'advice rounds below the true bound: {message}')
+                # Both numbers are advice; both must be honoured by the guard itself.
+                shape_overrides(needed_km*1000, relief, 1., 12, WORLD_SCALE)
+                shape_overrides(circumference, admitted_m, 1., 12, WORLD_SCALE)
+
     def test_rejects_nonsense_inputs(self):
         for bad in ({'circumference_m': 0.}, {'relief_m': -1.}, {'plate_count': 1}):
             with self.assertRaises(ValueError):
                 shape_overrides(**dict({'circumference_m': 200_000., 'relief_m': 500.,
                                         'orogeny': 1., 'plate_count': 12,
                                         'world_scale': WORLD_SCALE}, **bad))
+
+
+class RunoffScaleTests(unittest.TestCase):
+    """The area analogue of reach_scale. Structural properties only.
+
+    Deliberately NOT asserted: runoff_scale(200_000.) == 321.8037865406216. The value is
+    arithmetically exact, but pinning it to 1e-9 would turn a calibrated factor into a
+    repo contract and the next retune would land as a mysterious test failure rather than
+    a decision. What matters is the SHAPE -- identity at the reference, the square
+    relationship, and monotonicity -- plus the saturation guard in
+    Sim/tests/test_layer_scale_regression.py, which measures the layer itself.
+    """
+
+    def test_reference_world_is_unscaled(self):
+        self.assertEqual(runoff_scale(REFERENCE_CIRCUMFERENCE_M), 1.0)
+        self.assertEqual(reach_scale(REFERENCE_CIRCUMFERENCE_M), 1.0)
+
+    def test_is_exactly_the_square_of_the_reach_factor(self):
+        # Reaches take the length factor, catchments take its square. A future reader
+        # "simplifying" one into the other is the failure this guards.
+        for circumference in CIRCUMFERENCES:
+            self.assertEqual(runoff_scale(circumference), reach_scale(circumference)**2)
+
+    def test_grows_strictly_and_faster_than_the_reach_factor(self):
+        values = [runoff_scale(c) for c in CIRCUMFERENCES]
+        self.assertEqual(values, sorted(values))
+        for circumference in CIRCUMFERENCES:
+            if circumference > REFERENCE_CIRCUMFERENCE_M:
+                self.assertGreater(runoff_scale(circumference), reach_scale(circumference))
+
+    def test_doubling_the_world_quadruples_the_catchment(self):
+        for circumference in CIRCUMFERENCES:
+            self.assertAlmostEqual(runoff_scale(2*circumference)/runoff_scale(circumference),
+                                   4.0, places=9)
+
+
+class RiverThresholdBoundTests(unittest.TestCase):
+    """The widened 0.001..10000 bound, in both gates that enforce it."""
+
+    def test_config_accepts_the_derived_preset_values(self):
+        # 200/400/600 km resolve 48.27/193.08/434.44 km2. At the old ceiling of 100 the
+        # medium and large presets raised instead of generating.
+        for circumference in (200_000., 400_000., 600_000.):
+            Config(river_threshold_km2=.15*runoff_scale(circumference))
+
+    def test_config_rejects_past_the_bound(self):
+        Config(river_threshold_km2=10000.)
+        for bad in (10000.1, .0009, float('nan')):
+            with self.assertRaises(ValueError):
+                Config(river_threshold_km2=bad)
+
+    def test_registry_bound_matches_the_config_bound(self):
+        from icarus_sim.terrain_world import registry, RIVER_THRESHOLD_MAX_KM2
+        entry = registry(3)['river_threshold_km2']
+        self.assertEqual(entry['max'], RIVER_THRESHOLD_MAX_KM2)
+        self.assertEqual(entry['min'], .001)
+
+    def test_request_accepts_and_rejects_at_the_bound(self):
+        from icarus_sim.terrain_world import generate_request
+        with self.assertRaises(ValueError) as caught:
+            generate_request({'recipe_version': 3, 'seed': 42,
+                              'overrides': {'river_threshold_km2': 10000.1}})
+        self.assertIn('river_threshold_km2', str(caught.exception))
+
+    def test_too_wide_a_world_raises_rather_than_clamping(self):
+        # The defect class being fixed is a constant that silently stops scaling. If the
+        # derived threshold ever exceeds the bound the request must SAY so, naming the
+        # width, not quietly clamp and re-saturate the rivers.
+        from icarus_sim.terrain_world import (generate_request,
+                                              RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM)
+        too_wide = RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM*2
+        with self.assertRaises(ValueError) as caught:
+            generate_request({'recipe_version': 3, 'seed': 42,
+                              'overrides': {'circumference_km': too_wide, 'size': 17,
+                                            'phase': 1}})
+        message = str(caught.exception)
+        self.assertIn('river_threshold_km2', message)
+        self.assertIn(f'{too_wide:g} km', message)
 
 
 if __name__ == '__main__':

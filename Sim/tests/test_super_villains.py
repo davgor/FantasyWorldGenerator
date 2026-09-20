@@ -12,15 +12,76 @@ def world(rise=1., **overrides):
 
 
 class DefaultTests(unittest.TestCase):
-    def test_zero_rise_leaves_no_trace_at_all(self):
-        """Not merely inert: a default world carries no villains block to ignore."""
-        plain = generate_request({'seed': 42, 'recipe_version': 3, 'overrides': {'size': 17}})
-        self.assertNotIn('villains', plain)
+    """The default changed: a generated world now ends with antagonists standing in it.
+
+    These tests used to assert the opposite, and they were right to until the ruling of
+    2026-09-20. They are kept and inverted rather than deleted, because the property that
+    matters is unchanged in shape -- the option still decides, and zero is still a real off
+    switch that writes no block at all.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.plain = generate_request({'seed': 42, 'recipe_version': 3, 'overrides': {'size': 17}})
+
+    def test_a_default_world_ends_with_super_villains_standing(self):
+        self.assertIn('villains', self.plain)
+        standing = villains.standing(self.plain['villains']['people'])
+        self.assertTrue(standing, 'a default world raised nobody')
+        for villain in standing:
+            self.assertGreaterEqual(villain['tier'], villains.SUPER_TIER)
+
+    def test_the_promoted_are_seated_at_the_bottom_of_the_band(self):
+        """A villain that has just crossed the line is growing, not arrived."""
+        promoted = [v for v in villains.standing(self.plain['villains']['people'])
+                    if any(e['event'] == 'promoted' for e in v.get('log', []))]
+        self.assertTrue(promoted)
+        for villain in promoted:
+            self.assertEqual(villain['tier'], villains.SUPER_TIER)
+
+    def test_no_more_stand_than_the_ceiling_allows(self):
+        """Asserted against the ceiling, never against a count.
+
+        The number of regions is phase- and age-dependent -- 9 after two ages at phase 16,
+        11 at phase 14 -- so any test naming a literal number of villains is pinning a
+        coincidence rather than a rule.
+        """
+        block = self.plain['villains']
+        outlook = block['outlook']
+        standing = villains.standing(block['people'])
+        self.assertLessEqual(len(standing), outlook['ceiling'])
+        self.assertEqual(outlook['ceiling'],
+                         villains.ceiling(len(outlook['regions']), 3.))
+
+    def test_the_outlook_agrees_with_the_roster(self):
+        """The regression this guards: a villain's own well used to re-anchor its region.
+
+        `sink_well` appends a ley node at the villain's seat and `_held_node` took the
+        nearest node, so the anchor moved onto the well and the roster and the outlook
+        stopped describing the same world -- standing 1 against zero regions seated, on the
+        very age the villain rose.
+        """
+        block = self.plain['villains']
+        seated = sum(1 for row in block['outlook']['regions'] if row['seated'])
+        self.assertEqual(block['outlook']['standing'], seated)
+        self.assertEqual(len(villains.standing(block['people'])), seated)
+
+    def test_no_region_is_anchored_to_a_villains_own_well(self):
+        wells = {v['well']['node'] for v in villains.standing(self.plain['villains']['people'])
+                 if v.get('well')}
+        self.assertTrue(wells, 'no well was sunk, so this guards nothing')
+        for row in self.plain['villains']['outlook']['regions']:
+            self.assertNotIn(row['region'], wells)
+
+    def test_zero_rise_is_still_a_real_off_switch(self):
+        """Not merely inert: a world built with zero carries no villains block to ignore."""
+        off = generate_request({'seed': 42, 'recipe_version': 3,
+                                'overrides': {'size': 17, 'villain_rise': 0.}})
+        self.assertNotIn('villains', off)
 
     def test_the_option_is_recorded_only_when_it_is_used(self):
-        plain = generate_request({'seed': 42, 'recipe_version': 3, 'overrides': {'size': 17}})
-        self.assertNotIn('villain_rise', plain['recipe']['overrides'])
-        self.assertEqual(plain['recipe']['resolved']['villain_rise'], 0.)
+        self.assertNotIn('villain_rise', self.plain['recipe']['overrides'])
+        self.assertEqual(self.plain['recipe']['resolved']['villain_rise'], .5)
 
 
 class RiseTests(unittest.TestCase):
@@ -224,9 +285,25 @@ class FallTests(unittest.TestCase):
         self.assertEqual(held['holder_status'], 'fallen')
         self.assertEqual(held['holder_fell_age'], 1)
         self.assertEqual(held['influence'], villains.FALLEN_CLAIM_INFLUENCE)
-        # Today's value makes retention the only behavioural change. If this constant ever
-        # moves, it moves worlds, and that is the point of asserting it here.
-        self.assertEqual(villains.FALLEN_CLAIM_INFLUENCE, 1.)
+        # This constant moves worlds, which is the point of asserting it here. It moved
+        # once, deliberately, from 1.0 to a decaying curve: see
+        # docs/decisions/024-fallen-claim-decay.md. Retention is unchanged -- the claim is
+        # never pruned -- but how hard it presses now fades, because a world advanced
+        # across many ages was otherwise placed entirely by villains who no longer exist.
+        self.assertEqual(villains.FALLEN_CLAIM_INFLUENCE, .6)
+        self.assertEqual(villains.CLAIM_DECAY_PER_AGE, .6)
+        self.assertEqual(villains.CLAIM_INFLUENCE_FLOOR, .05)
+
+        # The claim fades with each further age and is restamped on the record itself, so
+        # a leaf package reads the current strength off the claim without a join.
+        world['villains']['tiers'] = {k: 0. for k in world['villains']['tiers']}
+        villains.advance(world, self.Config(), 4, rise=0., hold=99., density=3.)
+        faded = next(p for p in world['villains']['people'] if p['uid'] == villain['uid'])
+        self.assertEqual(faded['claims'][0]['influence'], villains.claim_influence(3))
+        self.assertLess(faded['claims'][0]['influence'], villains.FALLEN_CLAIM_INFLUENCE)
+        # The record itself is untouched by the fading.
+        self.assertEqual(faded['claims'][0]['holder_fell_age'], 1)
+        self.assertEqual(faded['status'], 'fallen')
 
     def test_a_villain_that_marked_the_world_leaves_a_record_of_it(self):
         """The ruin pattern: who they were, when they ended, and what they left.

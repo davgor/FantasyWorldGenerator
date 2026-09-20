@@ -26,6 +26,41 @@ SIZE = 17
 RADIUS = 31830.99
 SPACING = 2 * math.pi * RADIUS / (SIZE - 1)
 
+# The natural biome id space is sparse - 0..8, then 13, 15, 16, 17 - and `_biome_names` keys
+# on `id` because the world's own `terrain.biome_contract` says these are catalogue ids and
+# never array offsets. The fixture below used to publish the thirteen names with no `id` at
+# all, so every lookup fell to `None` and the environment test failed for every site. A
+# fixture that omits a key the reader keys on does not test a simplification of the world,
+# it tests a different world.
+NATURAL_BIOME_IDS = (0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 15, 16, 17)
+NATURAL_BIOME_NAMES = ('Ocean', 'Tundra', 'Desert', 'Grassland', 'Forest', 'Exposed rock',
+                       'Snow', 'Rainforest', 'Lake', 'Marsh', 'Boreal forest', 'Cold tundra',
+                       'Persistent land ice')
+
+# Layers that carry no data inside a domain BY CONSTRUCTION, so a `requires` term naming one
+# from an archetype declared in that domain can never select, on any seed, raster or
+# threshold. Each entry is written as `<expr> if water[i] else 0.` or the mirror of it in
+# `terrain_ecology.derive` (Sim/icarus_sim/terrain_ecology.py:93-115), or is a definition -
+# the depth of water where there is no water is zero. Confirmed by measurement rather than
+# by reading alone, and the measurement is not uniform, so say which: seed 42 on the 200 km
+# world, phase 16, every layer read through `readers.cells` and found min == max across the
+# whole domain - all sixteen at size 17, and the eight that `key_locations` itself reads
+# (`fishing_productivity`, `reef`, `water_depth`, `island_habitat`, `harbor_suitability`,
+# `rocky_coast`, `coastal_fishing_productivity`, `ice_cap`) again at sizes 33 and 65.
+#
+# The distinction this table draws is the one the whole finding turns on. A layer that is
+# constant on a world because that world has no blood magic, no tidekin and no dead sea is
+# an unlucky world; a layer that is constant on a domain because the code that writes it
+# skips that domain is a catalogue fault waiting to be committed. Only the second kind
+# belongs here, which is why this is a short curated list and not the ~100 names a raw
+# min == max sweep of one document returns.
+CONSTANT_IN_DOMAIN = {
+    'land': ('salinity', 'fishing_productivity', 'reef', 'lagoon', 'estuary', 'kelp',
+             'fjord', 'open_ocean', 'water_depth'),
+    'water': ('island_habitat', 'harbor_suitability', 'rocky_coast', 'coastal_support',
+              'maritime', 'coastal_fishing_productivity', 'ice_cap'),
+}
+
 
 def full(value):
     return [[value] * SIZE for _ in range(SIZE)]
@@ -56,11 +91,26 @@ def site(kind, uid, name, x, z, **extra):
     return record
 
 
+def wet(x, z):
+    """The fixture's water mask, so a layer can be built to agree with it."""
+    return x < 3 and 4 < z < 12
+
+
 def layers():
-    """Plausible fields: a warm wet continent on one side, cold dry highland on the other."""
+    """Plausible fields: a warm wet continent on one side, cold dry highland on the other.
+
+    Two of these are deliberately *not* plausible-looking, and that is the point.
+    ``salinity`` and ``fishing_productivity`` are ocean quantities: measured on seed 42 at
+    sizes 17, 33, 65, 129 and 257, salinity is 0.0 on every land cell and 1.0 on every water
+    cell, and fishing_productivity is 0.0 on every land cell and 0.12 to 1.0 on water. This
+    fixture used to give both a smooth gradient that ignored the water mask, which made three
+    ``domain: land`` archetypes gated on them look placeable here while they were unplaceable
+    in every real world ever generated. A fixture that is kinder to the catalogue than the
+    world is hides exactly the defects a catalogue can have.
+    """
     out = {
         'height': shaped(lambda x, z: 400 * math.sin(x / 3.) + 300 * math.cos(z / 2.5) + 500),
-        'water_type': [[1. if (x < 3 and 4 < z < 12) else 0. for x in range(SIZE)] for z in range(SIZE)],
+        'water_type': [[1. if wet(x, z) else 0. for x in range(SIZE)] for z in range(SIZE)],
         'water_depth': shaped(lambda x, z: max(0., 40 - 6 * x)),
         'slope': shaped(lambda x, z: abs(math.sin(x / 2.)) * .6),
         'tpi': shaped(lambda x, z: math.sin(x / 2.) * math.cos(z / 3.)),
@@ -74,13 +124,13 @@ def layers():
         'shear': shaped(lambda x, z: .4 if x == 12 else .02),
         'volcanic': shaped(lambda x, z: .5 if (x == 14 and z in (6, 7, 8)) else 0.),
         'metal_richness': shaped(lambda x, z: .1 + .5 * (x > 9)),
-        'salinity': shaped(lambda x, z: .5 if x < 5 else .05),
+        'salinity': shaped(lambda x, z: 1. if wet(x, z) else 0.),
         'coastal_exposure': shaped(lambda x, z: .6 if x in (3, 4) else .02),
         'rocky_coast': shaped(lambda x, z: .5 if x == 3 else .01),
         'reef': shaped(lambda x, z: .4 if x == 2 else .01),
         'island_habitat': shaped(lambda x, z: .5 if (x == 5 and z == 3) else .01),
         'harbor_suitability': shaped(lambda x, z: .4 if x == 4 else .05),
-        'fishing_productivity': shaped(lambda x, z: .5 if x < 6 else .05),
+        'fishing_productivity': shaped(lambda x, z: (.3 + .1 * z) if wet(x, z) else 0.),
         'ice_cap': shaped(lambda x, z: .6 if z < 3 else 0.),
         'freshwater_distance': shaped(lambda x, z: abs(z - 8) * 900.),
         'wetland_distance': shaped(lambda x, z: abs(z - 10) * 800.),
@@ -125,10 +175,8 @@ def world(seed=42, ages=2, **overrides):
         'fisheries': {'ports': []},
         'regions': {'landmarks': []},
         'terrain': {'version': 6,
-                    'natural_biomes': [{'name': n} for n in
-                                       ('Ocean', 'Tundra', 'Desert', 'Grassland', 'Forest', 'Exposed rock',
-                                        'Snow', 'Rainforest', 'Lake', 'Marsh', 'Boreal forest', 'Cold tundra',
-                                        'Persistent land ice')],
+                    'natural_biomes': [{'id': i, 'name': n}
+                                       for i, n in zip(NATURAL_BIOME_IDS, NATURAL_BIOME_NAMES)],
                     'magical_biomes': [{'name': f'variant {i}', 'asset_id': f'terrain.mutation.v{i}'}
                                        for i in range(156)]},
         'history': {'version': 3, 'ages': [{'age': i + 1, 'wars': [], 'events': []} for i in range(ages)]},
@@ -183,6 +231,138 @@ class Catalogue(unittest.TestCase):
                 self.assertIsNotNone(archetype.get('interior'), archetype['id'])
             if archetype['tier'] == 0:
                 self.assertIsNone(archetype.get('interior'), archetype['id'])
+
+    def test_no_archetype_gates_on_a_field_that_is_constant_where_it_may_stand(self):
+        """The property that made three archetypes unplaceable in every world ever generated.
+
+        ``salt_mine`` and ``salt_pans`` were ``domain: land`` gated on ``salinity``, and
+        ``whaling_station`` on ``fishing_productivity``. Both layers are ocean quantities:
+        measured on seed 42 at sizes 17, 33, 65, 129 and 257, each reads identically 0.0 on
+        every land cell. Not sparse, not small - absent. So all three reported
+        ``candidates: 0`` on every world, at every raster, forever. It was not tuning and no
+        seed or ceiling could have rescued it; the archetype asked a question its declared
+        ground cannot answer.
+
+        The audit runs over the whole catalogue rather than over the five known offenders,
+        because the value of a guard is the case nobody has thought of yet. It is measured
+        against ``fields.derive`` output as well as the raw layers, since a derived
+        ``coastal_`` field is exactly how a shore archetype is supposed to ask about the sea.
+
+        **What this catches and what it cannot, stated precisely, because the natural
+        reading is far too generous.** It evaluates the catalogue against the hand-built
+        fixture above rather than against a generated world, so it is exactly as strong as
+        that fixture's fidelity to measured world semantics, and no stronger. It catches
+        unconditionally: an archetype requiring a layer the fixture does not publish at all
+        (the ``assertIsNotNone`` below), and an archetype whose gate field the fixture holds
+        constant inside that archetype's own domain. It does **not** catch a field that is
+        constant in a real world's domain while the fixture gives it variation - which is
+        precisely how the original three defects survived for as long as they did, because
+        the fixture used to give ``salinity`` a smooth gradient with no reference to the
+        water mask. Two gaps of exactly that shape are live in the fixture right now and are
+        left deliberately: ``water_depth`` and ``reef`` are nonzero on fixture land cells
+        while both read identically 0.0 on land in every generated world measured.
+
+        Those two are covered instead by
+        ``test_no_archetype_requires_a_layer_measured_dead_in_its_own_domain``, which checks
+        the catalogue against ``CONSTANT_IN_DOMAIN`` - a measurement from real worlds - and
+        never looks at the fixture. The pair is what closes the class. Neither half alone
+        does: the fixture half sees layers the table does not list, and the table half sees
+        semantics the fixture does not model.
+        """
+        document = catalogue_rules.load()
+        fixture = world()
+        layers = {**fixture['layers'], **fields.derive(fixture, readers)}
+        offenders = []
+        for archetype in document['archetypes']:
+            cells = readers.cells(fixture, archetype['domain'])
+            if not cells:
+                continue
+            for term in archetype.get('requires', []):
+                grid = layers.get(term['layer'])
+                self.assertIsNotNone(grid, f"{archetype['id']} requires an unpublished layer {term['layer']}")
+                values = [grid[c['z']][c['x']] for c in cells]
+                if min(values) == max(values):
+                    offenders.append((archetype['id'], archetype['domain'], term['layer'], min(values)))
+        self.assertEqual(offenders, [],
+                         'a requires term must name a field that varies inside its own domain')
+
+    def test_no_archetype_requires_a_layer_measured_dead_in_its_own_domain(self):
+        """The fixture-independent half of the guard: the catalogue against a measurement.
+
+        ``CONSTANT_IN_DOMAIN`` is a reading from generated worlds, so this catches the case
+        the fixture-based audit above structurally cannot - an archetype gating on a layer
+        the fixture happens to model more generously than the world does. It is the guard
+        that would have caught ``salt_mine`` on ``salinity`` on the day it was written,
+        against the fixture of that day.
+
+        Its own limit, since a guard that overstates itself is worse than none: the table is
+        a curated by-construction subset confirmed on one seed at three rasters, so a layer
+        that is dead in a domain for a reason nobody has written down yet is not in it and
+        will not be caught here. Widening the table is a measurement, not a judgement - run
+        the domain sweep in the comment beside it and add what survives at every raster.
+
+        ``ocean`` and ``lake`` are subsets of ``water``, so a layer constant across the whole
+        water domain is constant across either of them; ``any`` spans both and is exempt.
+
+        Demonstrated rather than asserted, because "it adds coverage" is the easy claim to
+        make and the hard one to check: pointing ``salt_mine`` at ``water_depth`` or ``reef``
+        fails this test and *passes* the fixture audit above, and pointing it at ``salinity``
+        fails both.
+        """
+        for archetype in catalogue_rules.load()['archetypes']:
+            domain = archetype['domain']
+            dead = CONSTANT_IN_DOMAIN.get('water' if domain in ('water', 'ocean', 'lake')
+                                          else domain, ())
+            for term in archetype.get('requires', []):
+                self.assertNotIn(
+                    term['layer'], dead,
+                    f"{archetype['id']} is domain {domain} and requires {term['layer']}, "
+                    f'which carries no data anywhere in that domain in any world measured; '
+                    f'no seed, raster or threshold can make that term select')
+
+    def test_a_scattered_archetype_cannot_declare_a_rate_of_zero(self):
+        """A zero rate is the silent form of "never", and it does not look like one.
+
+        The five tier-3 wonders declared ``per_1000_km2: 0.0`` beside ``max_count: 1``, which
+        reads as "at most one of these in a world" and means "none, in any world, ever":
+        ``budget`` multiplies the rate by land area and zero times any area is zero. They
+        reported ``wanted: 0`` against 15 to 78 qualifying cells and nobody noticed, because
+        a missing archetype looks exactly like an unlucky one.
+
+        This is the case the thinned draw in ``budget`` cannot rescue. Rounding a fractional
+        expectation to zero is the trap that draw exists to avoid, and it was already avoided
+        here - the rate itself was the zero.
+        """
+        for archetype in catalogue_rules.load()['archetypes']:
+            if archetype.get('placement', 'node') != 'node':
+                self.assertIsNone(archetype.get('per_1000_km2'),
+                                  f"{archetype['id']} is composed, so a scatter rate is meaningless")
+                continue
+            self.assertGreater(archetype.get('per_1000_km2', 0.), 0., archetype['id'])
+        # ...and the linter refuses one, so it cannot come back through a catalogue edit.
+        broken = catalogue_rules.load()
+        scattered = next(a for a in broken['archetypes'] if a.get('placement', 'node') == 'node')
+        scattered['per_1000_km2'] = 0.
+        with self.assertRaises(ValueError) as caught:
+            catalogue_rules.lint(broken)
+        self.assertIn('no world ever', str(caught.exception))
+
+    def test_a_wonder_is_rare_rather_than_impossible(self):
+        """The fix has to leave a wonder rare - the defect was never "too few", it was zero."""
+        wonders = [a for a in catalogue_rules.load()['archetypes'] if a['family'] == 'wonder']
+        self.assertEqual(len(wonders), 5)
+        for archetype in wonders:
+            self.assertEqual(archetype.get('max_count'), 1, 'a wonder is singular by declaration')
+            # This planet carries roughly 2,500 km2 of land at size 17 and 4,300 at size 257,
+            # so the expectation stays near 0.4 across the whole raster ladder: each wonder
+            # appears in something under half of worlds and a typical world has one or two of
+            # the five. Asserted as a band because the number is a design choice, not a fit.
+            for land_km2 in (2487., 4294.):
+                expected = archetype['per_1000_km2'] * land_km2 / 1000.
+                self.assertTrue(.2 < expected < 1., f"{archetype['id']} expectation {expected:.3f}")
+            drawn = [placement.budget(archetype, 2487., rng(seed, 'w')) for seed in range(400)]
+            self.assertEqual(set(drawn), {0, 1}, 'a wonder is a coin the world flips, never a crowd')
+            self.assertGreater(sum(drawn), 0, 'and the coin has to be able to land heads')
 
     def test_broken_catalogues_fail_loudly(self):
         good = catalogue_rules.load()
@@ -243,11 +423,61 @@ class Placement(unittest.TestCase):
             self.assertGreaterEqual(self.layers['volcanic'][cell['z']][cell['x']], .05)
 
     def test_the_absolute_floor_beats_the_percentile_on_a_world_without_the_ground(self):
-        """Top eight per cent of nothing is still nothing - this is the lava-tube gate."""
+        """Top eight per cent of not-very-much is still not enough - this is the lava-tube gate.
+
+        The field here **varies** and is merely weak. That matters: a flat-zero field is
+        refused by the zero-variance rule below, so blanking the layer would make this test
+        pass for a reason that has nothing to do with the floor and would keep passing if the
+        floor were deleted. The whole point of the floor is the case the percentile survives.
+        """
         quiet = copy.deepcopy(self.layers)
-        quiet['volcanic'] = full(0.)
+        quiet['volcanic'] = shaped(lambda x, z: .004 * ((x * 5 + z) % 7))
         archetype = {'id': 'x', 'requires': [{'layer': 'volcanic', 'above_percentile': .9, 'min': .05}], 'prefers': []}
+        self.assertTrue(placement.resolve(archetype, quiet, self.cells),
+                        'the field varies, so the percentile resolves and the floor is what decides')
         self.assertEqual(placement.eligible(archetype, quiet, self.cells), [])
+        # ...and without the floor the same percentile admits the top of that weak field, so
+        # the previous assertion is the floor's doing and not the percentile's.
+        loose = {'id': 'x', 'requires': [{'layer': 'volcanic', 'above_percentile': .9}], 'prefers': []}
+        self.assertTrue(placement.eligible(loose, quiet, self.cells))
+
+    def test_a_percentile_over_a_field_with_no_variation_admits_nothing(self):
+        """The fail-open half of the gate asymmetry, which used to admit the whole domain.
+
+        A floor on an empty field admits no cell and the archetype vanishes loudly. A
+        percentile on an empty field computes a cut equal to the one value present, every
+        cell clears it, and the gate reports ``placed`` while enforcing nothing. Measured on
+        the size-17 reference world: ``holy_well`` asks for the nearest 35 per cent of
+        ``freshwater_distance``, that layer reads a flat 0.0 on all 47 land cells, and the
+        archetype was eligible on all 47 of them.
+        """
+        flat = copy.deepcopy(self.layers)
+        flat['freshwater_distance'] = full(0.)
+        term = {'id': 'x', 'requires': [{'layer': 'freshwater_distance', 'below_percentile': .35}],
+                'prefers': [], 'domain': 'land'}
+        self.assertIsNone(placement.resolve(term, flat, self.cells))
+        self.assertEqual(placement.eligible(term, flat, self.cells), [])
+        reason = placement.gap(term, flat, self.cells)
+        self.assertIn('freshwater_distance', reason)
+        self.assertIn('land', reason)
+        # A constant that is not zero fails the same way, because it is the variation that
+        # carries the information, not the magnitude. `river` reads a flat 1.0 on every land
+        # cell of the reference world and `ford` was eligible on all 47.
+        flat['freshwater_distance'] = full(1.)
+        self.assertIsNone(placement.resolve(term, flat, self.cells))
+        # A field with any variation at all still resolves.
+        flat['freshwater_distance'] = shaped(lambda x, z: float(z))
+        self.assertIsNotNone(placement.resolve(term, flat, self.cells))
+        self.assertIsNone(placement.gap(term, flat, self.cells))
+
+    def test_the_gap_reason_separates_a_catalogue_fault_from_an_unlucky_world(self):
+        """Three absences that look identical in a count and point at three different people."""
+        absent = {'id': 'x', 'domain': 'land', 'requires': [{'layer': 'sulphur', 'min': .1}], 'prefers': []}
+        self.assertIn('never generated', placement.gap(absent, self.layers, self.cells))
+        unlucky = {'id': 'x', 'domain': 'land', 'requires': [{'layer': 'volcanic', 'min': 99.}], 'prefers': []}
+        self.assertIsNone(placement.gap(unlucky, self.layers, self.cells),
+                          'a world that simply lacks the ground is not a catalogue fault')
+        self.assertEqual(placement.eligible(unlucky, self.layers, self.cells), [])
 
     def test_budget_scales_with_land_and_respects_its_bounds(self):
         self.assertEqual(placement.budget({'per_1000_km2': 2.}, 1000., rng(1, 'b')), 2)
@@ -303,6 +533,37 @@ class Placement(unittest.TestCase):
         self.assertEqual(derived['ruin_distance'][13][9], 0.)
         self.assertEqual(derived['settlement_distance'][6][6], 0.)
         for row in derived['road_distance']:
+            self.assertEqual(row[0], row[-1], 'the seam column must mirror column zero')
+
+    def test_a_shore_cell_carries_the_value_of_the_sea_it_touches(self):
+        """How a land archetype is allowed to ask about the water, since it cannot ask directly.
+
+        ``fishing_productivity`` is 0.0 on every land cell of every world measured, so a
+        whaling station - a building on land whose whole reason is out at sea - could never
+        gate on it. The derived field answers the question it was actually asking: what is
+        the best water within reach of a boat. Inland reads zero, and so does open water, so
+        the field is only meaningful inside the ``land`` domain.
+        """
+        derived = fields.derive(self.world, readers)
+        shore = derived['coastal_fishing_productivity']
+        raw = self.world['layers']['fishing_productivity']
+        water = self.world['layers']['water_type']
+        land = [(c['x'], c['z']) for c in self.cells]
+        coastal = [(x, z) for x, z in land
+                   if any(water[z + dz][(x + dx) % (SIZE - 1)] != 0.
+                          for dx, dz, _ in fields.STEPS if 0 <= z + dz < SIZE)]
+        self.assertTrue(coastal, 'the fixture continent has a coast')
+        for x, z in coastal:
+            neighbours = [raw[z + dz][(x + dx) % (SIZE - 1)]
+                          for dx, dz, _ in fields.STEPS
+                          if 0 <= z + dz < SIZE and water[z + dz][(x + dx) % (SIZE - 1)] != 0.]
+            self.assertEqual(shore[z][x], max(neighbours), f'shore cell {x},{z} takes the best water it touches')
+        for x, z in land:
+            if (x, z) not in coastal:
+                self.assertEqual(shore[z][x], 0., 'inland ground reads zero, not a default')
+        for cell in readers.cells(self.world, 'water'):
+            self.assertEqual(shore[cell['z']][cell['x']], 0., 'the sea is not its own shore')
+        for row in shore:
             self.assertEqual(row[0], row[-1], 'the seam column must mirror column zero')
 
     def test_the_frontier_field_marks_borders_and_not_coastlines(self):
@@ -410,7 +671,15 @@ class Generation(unittest.TestCase):
         self.assertNotIn('geyser_basin', placed)
         note = next(d for d in block['diagnostics'] if d['archetype'] == 'lava_tube')
         self.assertEqual(note['placed'], 0)
-        self.assertIn('no ground', note['reason'])
+        self.assertEqual(note['candidates'], 0)
+        # This assertion used to be `assertIn('no ground', reason)`, and every absence in the
+        # block said that one sentence. It is changed rather than dropped because the reason
+        # now distinguishes a catalogue fault from an unlucky world, and a blanked layer is
+        # the catalogue-fault shape: the field carries no data in the domain the archetype
+        # declared. Asserting the weaker string would have kept passing after the reasons
+        # diverged and would no longer have said which one this is.
+        self.assertIn('volcanic', note['reason'])
+        self.assertIn('land', note['reason'])
 
     def test_every_archetype_is_accounted_for_in_the_sites_or_the_diagnostics(self):
         reported = {d['archetype'] for d in self.block['diagnostics']} | {r['kind'] for r in self.block['sites']}
@@ -428,7 +697,11 @@ class Generation(unittest.TestCase):
         seen_variant = False
         for record in self.block['sites']:
             env = record['environment']
-            self.assertIn(env['natural_biome'], range(13), record['id'])
+            # The id space, not `range(13)`. Position and id agree only up to 8 and the
+            # catalogue reaches 17, so a length-shaped bound would reject Marsh, Boreal
+            # forest, Cold tundra and Persistent land ice - the four ids that were silently
+            # lost when this map was keyed by offset.
+            self.assertIn(env['natural_biome'], NATURAL_BIOME_IDS, record['id'])
             self.assertTrue(env['natural_biome_name'], record['id'])
             self.assertIsNotNone(env['temperature_c'])
             self.assertIsNotNone(env['moisture'])

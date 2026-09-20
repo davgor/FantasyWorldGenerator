@@ -1,6 +1,8 @@
 """Local physical-metre sampling over a coarse globe, plus explicit micro relief."""
 from dataclasses import dataclass, asdict
 import math
+from .terrain_errors import (cross_field, out_of_range, refused_by_world, unknown_field,
+                             wrong_type)
 from time import perf_counter
 from .terrain_globe import perlin3, sample
 from .terrain_tectonics import child_seed
@@ -18,22 +20,40 @@ class PatchConfig:
     def __post_init__(self):
         for key,value in asdict(self).items():
             if type(value) not in (float,int) or not math.isfinite(value):
-                raise ValueError(f'{key} must be a finite number')
-        if not -90<=self.latitude<=90 or not -180<=self.longitude<=180:
-            raise ValueError('Invalid patch latitude/longitude')
-        if not 4<=self.span<=512 or not .1<=self.spacing<=8:
-            raise ValueError('Patch span is 4..512 m; spacing is 0.1..8 m')
+                raise wrong_type('patch.'+key,value,{'type':'number'})
+        if not -90<=self.latitude<=90:
+            raise out_of_range('patch.latitude',self.latitude,
+                               {'type':'number','min':-90,'max':90,'units':'degrees'})
+        if not -180<=self.longitude<=180:
+            raise out_of_range('patch.longitude',self.longitude,
+                               {'type':'number','min':-180,'max':180,'units':'degrees'})
+        if not 4<=self.span<=512:
+            raise out_of_range('patch.span',self.span,
+                               {'type':'number','min':4,'max':512,'units':'m'})
+        if not .1<=self.spacing<=8:
+            raise out_of_range('patch.spacing',self.spacing,
+                               {'type':'number','min':.1,'max':8,'units':'m'})
         if math.ceil(self.span/self.spacing)>256:
-            raise ValueError('Patch limited to 257 vertices per axis; reduce span or increase spacing')
-        if not 0<=self.detail_height<=5 or not .5<=self.detail_scale<=100:
-            raise ValueError('Detail height is 0..5 m; detail scale is 0.5..100 m')
+            raise cross_field('A patch is at most 257 vertices per axis and span/spacing '
+                              'asks for %d. Reduce span or increase spacing.'
+                              %(math.ceil(self.span/self.spacing)+1),
+                              ('span','spacing'))
+        if not 0<=self.detail_height<=5:
+            raise out_of_range('patch.detail_height',self.detail_height,
+                               {'type':'number','min':0,'max':5,'units':'m'})
+        if not .5<=self.detail_scale<=100:
+            raise out_of_range('patch.detail_scale',self.detail_scale,
+                               {'type':'number','min':.5,'max':100,'units':'m'})
 
 
 def generate_patch(world,cfg):
     started=perf_counter()
     radius=world.get('effective_config',world['config'])['globe_radius']
     if cfg.span>radius*.5 or cfg.detail_height>radius*.01:
-        raise ValueError('Patch extent/detail is too large relative to this globe')
+        raise refused_by_world('patch.span',cfg.span,
+                               'A patch spans at most half this globe\'s radius (%g m) and '
+                               'its detail at most a hundredth (%g m). This world has radius '
+                               '%g m.'%(radius*.5,radius*.01,radius))
     lat=math.radians(cfg.latitude); lon=math.radians(cfg.longitude)
     center=(math.cos(lat)*math.cos(lon),math.sin(lat),math.cos(lat)*math.sin(lon))
     east=(-math.sin(lon),0.,math.cos(lon))
@@ -81,10 +101,21 @@ def generate_patch(world,cfg):
 def patch_request(body):
     """Validated loopback API payload; regenerate the exact submitted world config."""
     from .terrain_lab import Config, generate
-    if not isinstance(body,dict) or set(body)!={'config','patch'}:
-        raise ValueError('Patch request requires config and patch objects')
-    if not isinstance(body['config'],dict) or not isinstance(body['patch'],dict):
-        raise ValueError('config and patch must be objects')
+    if not isinstance(body,dict):
+        raise wrong_type('request',body,{'type':'object'})
+    if set(body)!={'config','patch'}:
+        # Unknown first: a caller who wrote `pathc` is also missing `patch`, and naming
+        # the misspelling is the message that lets them fix it in one step.
+        unknown=sorted(set(body)-{'config','patch'})
+        if unknown:
+            raise unknown_field(unknown[0],('config','patch'),noun='request field')
+        raise cross_field('A patch request takes exactly config and patch; %s is missing.'
+                          %' and '.join(sorted({'config','patch'}-set(body))),
+                          ('config','patch'))
+    if not isinstance(body['config'],dict):
+        raise wrong_type('config',body['config'],{'type':'object'})
+    if not isinstance(body['patch'],dict):
+        raise wrong_type('patch',body['patch'],{'type':'object'})
     cfg=Config(**body['config']); patch=PatchConfig(**body['patch'])
     # This mirrors the world ceiling rather than setting one: the call regenerates the
     # exact submitted world before cutting a patch from it, so refusing a grid the
@@ -93,5 +124,8 @@ def patch_request(body):
     # Regenerating a large world per request is the caller's cost; the lab keeps its own
     # interactive limit of 257 separately.
     if cfg.shape!='globe' or cfg.size>1025 or (cfg.tectonics and cfg.phase<2):
-        raise ValueError('Generate a globe with elevation first; world grid limit is 1025')
+        raise cross_field('A patch is cut from a globe with elevation: shape must be globe, '
+                          'size at most 1025, and phase at least 2 when tectonics run. This '
+                          'config is shape %r, size %s, phase %s.'
+                          %(cfg.shape,cfg.size,cfg.phase),('shape','size','phase'))
     return generate_patch(generate(cfg),patch)

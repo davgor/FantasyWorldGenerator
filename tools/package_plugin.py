@@ -23,6 +23,10 @@ REGISTRY_SOURCE='Contracts/catalogues/unreal-asset-registry-v1.json'
 REGISTRY_TARGET=ARCHIVE_PREFIX+'Data/unreal-asset-registry-v1.json'
 CATALOGUE_SOURCE='Contracts/catalogues/native-catalogues-v1.json'
 CATALOGUE_TARGET=ARCHIVE_PREFIX+'Data/native-catalogues-v1.json'
+# The control catalogue rides the same channel so a packaged game can answer "what can I
+# ask for" with no Python present. The in-game orchestrator reads it before it generates.
+CONTROLS_SOURCE='Contracts/catalogues/world-controls-v1.json'
+CONTROLS_TARGET=ARCHIVE_PREFIX+'Data/world-controls-v1.json'
 # The settlement planners read these four at runtime, by path, exactly as the reference
 # does. They MUST travel: the plugin has to be a folder a game copies and keeps, with
 # nothing reaching back into this repository. Without them a packaged game silently
@@ -112,6 +116,7 @@ def plugin_files(root=ROOT):
     # Authoring traits and habitat rules travel as data; the rules that read them are
     # compiled Core sources, not a JSON world.
     payload[CATALOGUE_TARGET]=(root/CATALOGUE_SOURCE).read_bytes()
+    payload[CONTROLS_TARGET]=(root/CONTROLS_SOURCE).read_bytes()
     for name in PLANNER_CATALOGUES:
         source=root/PLANNER_SOURCE_DIRECTORY/name
         if not source.is_file():

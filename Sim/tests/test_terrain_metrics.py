@@ -104,13 +104,35 @@ class KnobResponsivenessTests(unittest.TestCase):
 class OctaveMirrorTests(unittest.TestCase):
     """resolved_octaves mirrors generate_tectonics; prove it against real output."""
 
-    def test_zero_resolved_octaves_means_an_identically_flat_noise_layer(self):
-        cfg = replace(default_config(3), seed=42, size=17, phase=3)
-        predicted = resolved_octaves(cfg.globe_radius, cfg.size, cfg.wavelength, cfg.octaves)
-        self.assertEqual(predicted['resolved_octaves'], 0)
-        noise = generate(cfg)['layers']['noise']
-        self.assertTrue(all(value == 0. for row in noise for value in row),
-                        'predicted zero octaves but the generator produced noise')
+    def test_the_mirror_tracks_the_generator_up_the_octave_ladder(self):
+        """Both directions, at three sizes, because one direction at one size proves nothing.
+
+        This test used to build seed 42 at size 17 -- the artifacts configuration, exactly --
+        and assert the noise layer was identically zero. It passed, and what it established
+        was not the docstring's claim. A predictor stuck at 0 and a generator that never
+        accumulated would agree just as well, because the only case it looked at was the one
+        where both sides are zero. It was also the repository's own written proof that the
+        world `tools/validate_repo.py` guards for determinism is flat, sitting green.
+
+        The ladder fixes that. 0/1/2 octaves at 17/33/65 is a property of the generator, not
+        of seed 42: admission is 1.6*(size-1)/(2*pi*sqrt(plate_count)), so the globe radius
+        cancels out. Each rung asserts the predictor's count, the count the generator
+        published for itself -- which is what makes this a mirror test rather than a
+        restatement of the predictor -- and that noise is zero exactly when zero octaves
+        resolve, so a generator that stopped accumulating now fails at 33 and 65.
+        """
+        for size, expected in ((17, 0), (33, 1), (65, 2)):
+            with self.subTest(size=size):
+                cfg = replace(default_config(3), seed=42, size=size, phase=3)
+                predicted = resolved_octaves(cfg.globe_radius, cfg.size, cfg.wavelength, cfg.octaves)
+                self.assertEqual(predicted['resolved_octaves'], expected)
+                built = generate(cfg)
+                self.assertEqual(built['resolved_octaves'], expected,
+                                 'the generator disagrees with the predictor it mirrors')
+                flat = all(value == 0. for row in built['layers']['noise'] for value in row)
+                self.assertEqual(flat, expected == 0,
+                                 f'{expected} octaves resolved and the noise layer is '
+                                 f'{"identically zero" if flat else "not flat"}')
 
     def test_design_radius_not_physical_radius(self):
         # The filter runs before apply_world_scale, so it sees the design radius.

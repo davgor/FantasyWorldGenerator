@@ -1,5 +1,7 @@
 """Version 3 staged world history. Artistic deep-time and civilization proxies."""
 import copy
+from .terrain_errors import (cross_field, missing_block, out_of_range, unknown_field,
+                             unsupported_api, wrong_type)
 import math
 import json
 import random
@@ -315,7 +317,7 @@ def rebuild_tail(result,cfg,survivors,label,age,*,evaluate=True,religion=True):
         refresh_astrology(result,cfg)
 
 
-def age_transition(result,cfg,age,moon_day=None):
+def age_transition(result,cfg,age,moon_day=None,final=False):
     from .terrain_nests import add_nests
     from .terrain_wars import participation, resolve_wars
     from .terrain_world import options
@@ -377,6 +379,14 @@ def age_transition(result,cfg,age,moon_day=None):
             from .terrain_visitation import walking_gods, depart_god
             for god_id in walking_gods(result):depart_god(result,cfg,god_id,age,rebuild=False)
     rebuild_tail(result,cfg,survivors,'age',age,evaluate=bool(cfg.magic_enabled))
+    if final:
+        # The simulation ends with promotions. Accumulation alone cannot seat anybody
+        # inside a generation -- two age transitions against a rise the legal range
+        # tops out below -- so the last age is where the world names its antagonists.
+        # Placed before the works pass so a promoted villain sinks its well and stakes
+        # its claims in the same age it rises, exactly as an accumulated one does.
+        from .terrain_villains import promote as promote_villains
+        promote_villains(result,cfg,age,float(o.get('villain_density',3.)))
     if 'villains' in result:
         # Built after the rebuild, on settled ground: a well joins the holdings a
         # villain actually has this age, and a claim names the peoples actually near it.
@@ -395,7 +405,7 @@ def age_transition(result,cfg,age,moon_day=None):
                                     'new_city_ids':new,'order':['nests before fates','wars','city fates','ruins and hamlet removal','leyline update','biomes','civilization','nests','threat assessment']})
 
 
-STATE_KEYS=('world_scene','terrain_detail','wildlife','city_plans','hamlet_plans','castle_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins','villains','heroes','story_web','npcs','key_locations','key_location_plans','nomads','beast_movements','encounters','pending_ley_edits','settlement_candidates',
+STATE_KEYS=('world_scene','terrain_detail','wildlife','city_plans','hamlet_plans','castle_plans','civilizations','history','ocean_archipelagos','sediment_budget','terrain','water','climate','magic','settlements','roads','humans','sky','beast_nests','threat_assessments','ruins','villains','heroes','story_web','npcs','key_locations','key_location_plans','nomads','beast_movements','encounters','settlement_candidates','world_clock','quests',
             'habitats','regions','seasonal_environment','population_budget','peoples','population',
             'population_profiles','seasonal_food','fisheries','transport','world_economy','geological_history','area',
             'astrology','lunar_almanac','religion')
@@ -534,7 +544,10 @@ def generate_history(cfg):
             add_threat_assessments(result,'beast_nests',spacing=cfg.settlement_spacing)
             from .terrain_religion import add_religion
             add_religion(result,cfg)
-        elif stage in (14,15):age_transition(result,cfg,stage-13)
+        # `final` is stage 15 and not min(15,cfg.phase): a phase-14 build must agree
+        # with stage 14 of a phase-16 build, which test_terrain_biome_contract pins,
+        # so a shorter run may not promote at a stage the longer run does not.
+        elif stage in (14,15):age_transition(result,cfg,stage-13,final=(stage==15))
         elif stage==16:
             from .city_planner import fill_cities
             from .hamlet_planner import fill_hamlets
@@ -580,29 +593,60 @@ def generate_history(cfg):
     return result
 
 
+
+def adopt_world(world):
+    """Copy a caller's world for a request API to work on, without mutating theirs.
+
+    Three things every stateless request API needs and must not get subtly different:
+
+    - a deep copy, because the caller's object is never touched;
+    - `build_stages` shared rather than copied, since snapshots are immutable and copying
+      them doubles the cost of the most expensive block in the document;
+    - `timing_ms` present, because `cli.py` strips it to keep an exported world
+      byte-reproducible and roughly thirty producers write into it unguarded. The guard
+      belongs here, at the boundary a persisted world re-enters through, rather than at
+      whichever producer happens to run first.
+    """
+    result=copy.deepcopy({k:v for k,v in world.items() if k!='build_stages'})
+    if 'build_stages' in world:result['build_stages']=list(world['build_stages'])
+    timing=result.setdefault('timing_ms',{})
+    timing.setdefault('total',0.)
+    return result
+
 def validate_age_world(world):
     """Check the versioned state boundary before an externally requested age advance."""
     from .terrain_lab import Config
-    if not isinstance(world,dict):raise ValueError('world must be a generated recipe 3 object')
+    if not isinstance(world,dict):raise wrong_type('world',world,{'type':'object'})
     try:
         json.dumps(world,allow_nan=False)
         cfg=Config(**world['config'])
         if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>1025:
-            raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=1025')
+            raise missing_block('config','Age advancement requires a recipe 3 world '
+                                'generated through creatures (phase 13) on a grid of at most '
+                                '1025. This world is recipe %s at phase %s, size %s.'
+                                %(cfg.world_recipe,cfg.phase,cfg.size))
         if world['terrain']['version']!=6 or world['generator_version']!=16 or world['recipe']['version']!=3:
-            raise ValueError('Retired world contract; regenerate with recipe_version 3')
+            raise missing_block('recipe','This world was built against a retired '
+                                'contract. Regenerate it with recipe_version 3 rather than '
+                                'migrating; generated worlds are disposable by policy.')
         if world['magic']['version']!=4 or world['history']['version']!=3:
             # History 3 is the twelve-school contract. A world built against the eight-school
             # taxonomy has no hidden networks to validate, so it cannot advance an age here.
-            raise ValueError('Unsupported magic or history state version; regenerate for the twelve-school contract')
+            raise missing_block('magic','This world predates the twelve-school contract, '
+                                'so it carries no hidden networks to validate. Regenerate '
+                                'it.')
         astrology=world.get('astrology');almanac=world.get('lunar_almanac');religion=world.get('religion')
         if not isinstance(astrology,dict) or astrology.get('version')!=1 or not isinstance(almanac,dict) or almanac.get('version')!=1:
-            raise ValueError('Retired world without the moon; regenerate')
+            raise missing_block('astrology','This world predates the moon. It is seeded '
+                                'during generation, so regenerate rather than migrate.')
         if not isinstance(religion,dict) or religion.get('version')!=1:
-            raise ValueError('Retired world without a pantheon; regenerate')
+            raise missing_block('religion','This world predates the pantheon. Regenerate '
+                                'rather than migrate.')
         from .terrain_religion import catalogue_identity
         if religion.get('catalogue')!=catalogue_identity():
-            raise ValueError('Pantheon catalogue changed; regenerate or explicitly migrate this world')
+            raise missing_block('religion.catalogue','This world was built against a '
+                                'different pantheon catalogue, so the gods it names may not '
+                                'exist here.')
         from .terrain_astrology import PERIOD_RANGES, TILT_RANGE
         moon=astrology['moon']
         for key,(low,high) in PERIOD_RANGES.items():
@@ -613,15 +657,21 @@ def validate_age_world(world):
             raise ValueError('Invalid moon tilt')
         if moon['great_year_days']!=math.lcm(*moon['periods'].values()):raise ValueError('Invalid great year')
         if world['settlements']['version']!=15 or world['civilizations']['version']!=3:
-            raise ValueError('Unsupported civilization or settlement version')
+            raise missing_block('settlements','This world carries a retired settlement '
+                                'or civilization version. Regenerate it.')
         # A rural report older than 7 pinned its fortresses to a static count. Advancing
         # it would rebuild the hinterland under the derived demand and hand back a world
         # whose two ages disagree about how much route defence it ever wanted.
         if world['humans']['version']!=8:
-            raise ValueError('Retired rural report; regenerate for the derived fortress demand and war history')
+            raise missing_block('humans','This world carries a rural report older than '
+                                'version 8, which pinned fortresses to a static count. '
+                                'Advancing it would hand back a world whose two ages '
+                                'disagree about how much route defence it wanted.')
         from .civilization_registry import registry_identity
         if world['civilizations']['registry']!=registry_identity():
-            raise ValueError('Civilization registry changed; regenerate or explicitly migrate this world')
+            raise missing_block('civilizations.registry','The civilization registry changed '
+                                'since this world was generated, so the entities it names may '
+                                'no longer resolve. Regenerate or explicitly migrate it.')
         from .terrain_detail import attach_detail
         expected_detail={}
         expected_detail['config']=world['config']
@@ -721,26 +771,50 @@ def advance_age_request(body):
     Same input => same output. Persist the returned world to advance again; Config alone
     reproduces genesis, not player-modified runtime state. The caller's object is unchanged.
     """
-    if not isinstance(body,dict) or set(body)-{'api_version','world','steps','leyline_edits','moon_day'}:
-        raise ValueError('Expected api_version, world, optional steps, leyline_edits and moon_day')
+    allowed={'api_version','world','steps','leyline_edits','moon_day'}
+    if not isinstance(body,dict):
+        raise wrong_type('request',body,{'type':'object'})
+    if set(body)-allowed:
+        raise unknown_field(sorted(set(body)-allowed)[0],sorted(allowed),noun='request field')
     if type(body.get('api_version')) is not int or body['api_version']!=1:
-        raise ValueError('Unsupported age API version')
+        raise unsupported_api('api_version',body.get('api_version'),(1,))
     steps=body.get('steps',1)
-    if type(steps) is not int or not 1<=steps<=10:raise ValueError('steps must be 1..10')
+    if type(steps) is not int:
+        raise wrong_type('steps',steps,{'type':'integer'})
+    if not 1<=steps<=10:
+        raise out_of_range('steps',steps,{'type':'integer','min':1,'max':10,'units':'ages'})
     # The orchestrator may say what day the age turns; otherwise the founding year decides.
     moon_day=body.get('moon_day')
-    if moon_day is not None and (type(moon_day) is not int or moon_day<0):raise ValueError('moon_day must be an integer day >= 0')
+    if moon_day is not None and type(moon_day) is not int:
+        raise wrong_type('moon_day',moon_day,{'type':'integer'})
+    if moon_day is not None and moon_day<0:
+        raise out_of_range('moon_day',moon_day,{'type':'integer','min':0,'units':'days'})
     edits=body.get('leyline_edits',[])
-    if not isinstance(edits,list) or len(edits)>128:raise ValueError('leyline_edits must be a list of at most 128 changes')
+    if not isinstance(edits,list):
+        raise wrong_type('leyline_edits',edits,{'type':'array'})
+    if len(edits)>128:
+        raise out_of_range('leyline_edits',len(edits),
+                           {'type':'integer','min':0,'max':128,'units':'edits per request'})
     world=body.get('world');cfg=validate_age_world(world)
-    if edits and not cfg.magic_enabled:raise ValueError('Leyline edits require magic_enabled')
+    if edits and not cfg.magic_enabled:
+        raise cross_field('Leyline edits require a world generated with magic_enabled; this '
+                          'one has no networks to edit.',('leyline_edits','magic_enabled'))
     # Snapshots are immutable; sharing their existing content avoids another full-history copy.
-    result=copy.deepcopy({k:v for k,v in world.items() if k!='build_stages'})
-    if 'build_stages' in world:result['build_stages']=list(world['build_stages'])
+    result=adopt_world(world)
     for edit in edits:
-        if not isinstance(edit,dict) or set(edit)-{'school','node_id','line_id','intensity','new_node'} or edit.get('school') not in KNOWN_SCHOOLS:
-            raise ValueError('Invalid leyline edit')
-        if 'new_node' in edit and 'intensity' in edit:raise ValueError('Put new-node intensity inside new_node')
+        if not isinstance(edit,dict):
+            raise wrong_type('leyline_edits[]',edit,{'type':'object'})
+        if set(edit)-{'school','node_id','line_id','intensity','new_node'}:
+            raise unknown_field(sorted(set(edit)-{'school','node_id','line_id','intensity','new_node'})[0],
+                                ('school','node_id','line_id','intensity','new_node'),
+                                noun='leyline edit field')
+        if edit.get('school') not in KNOWN_SCHOOLS:
+            from .terrain_errors import invalid_choice
+            raise invalid_choice('leyline_edits[].school',edit.get('school'),
+                                 {'type':'string','choices':sorted(KNOWN_SCHOOLS)})
+        if 'new_node' in edit and 'intensity' in edit:
+            raise cross_field('Put a new node intensity inside new_node; the outer intensity '
+                              'edits an existing node.',('new_node','intensity'))
         school=edit['school']
         result['magic']['networks'][school]=edit_network(result['magic']['networks'][school],**{k:v for k,v in edit.items() if k!='school'})
     # Without edits, result is a deepcopy of a world validate_age_world has just accepted
@@ -768,7 +842,7 @@ def advance_age_request(body):
         result.pop('hamlet_plans',None)
         result.pop('castle_plans',None)
         result.pop('world_scene',None)
-        age_transition(result,cfg,age,moon_day)
+        age_transition(result,cfg,age,moon_day,final=(age==start_age+steps))
         if age==start_age+steps:
             from .city_planner import fill_cities
             from .hamlet_planner import fill_hamlets

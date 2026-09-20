@@ -245,12 +245,27 @@ Humans add_humans(const WorldConfig& cfg,double radius,const SphereGrid& grid,co
         hamlet.delivered_materials+=100*area*resource[i]*delivery*(hamlet.role=="resource" ? 1 : .25);
     }
     // Fortresses watch route junctions and river crossings from defensible ground.
+    //
+    // `route_neighbors` is a dict in the reference, so it iterates in INSERTION order --
+    // first appearance while walking the routes -- while a std::map iterates in ascending
+    // key order. That would be invisible except that `strategic` below keeps the first node
+    // to reach a value, with a strict `>`, so wherever two route nodes tie on defence value
+    // the two sides record different ones: identical `defence_score`, different
+    // `protected_route_node`. Measured as exactly that at seed 42 size 33 -- fortress-19
+    // reported route node 390 against the reference's 454 with the score matching to the
+    // last bit. So keep the arrival order beside the map and walk that.
     std::map<std::size_t,std::set<std::size_t>> route_neighbors;
+    std::vector<std::size_t> route_order;
     std::set<std::size_t> crossings;
     std::set<std::pair<std::size_t,std::size_t>> crossing_edges;
     Sum road_length;
     for(const Road& road:roads) {
         for(std::size_t k=0;k+1<road.nodes.size();++k) {
+            // setdefault(i) then setdefault(j), in that order, exactly as the reference does.
+            if(route_neighbors.find(road.nodes[k])==route_neighbors.end())
+                route_order.push_back(road.nodes[k]);
+            if(route_neighbors.find(road.nodes[k+1])==route_neighbors.end())
+                route_order.push_back(road.nodes[k+1]);
             route_neighbors[road.nodes[k]].insert(road.nodes[k+1]);
             route_neighbors[road.nodes[k+1]].insert(road.nodes[k]);
         }
@@ -280,9 +295,9 @@ Humans add_humans(const WorldConfig& cfg,double radius,const SphereGrid& grid,co
     const std::int64_t fortress_limit=std::min({cfg.fortress_count,proposed,
                                                 static_cast<std::int64_t>(sites.size())+veteran_demand});
     std::map<std::size_t,std::pair<double,std::size_t>> strategic;
-    for(const auto& entry:route_neighbors) {
-        const std::size_t node=entry.first;
-        const double base=1+std::min<double>(2,std::max<double>(0,static_cast<double>(entry.second.size())-2))
+    for(const std::size_t node:route_order) {
+        const std::set<std::size_t>& links=route_neighbors[node];
+        const double base=1+std::min<double>(2,std::max<double>(0,static_cast<double>(links.size())-2))
             +(crossings.count(node)!=0 ? 1 : 0);
         std::vector<std::pair<std::size_t,double>> around{{node,0.}};
         for(const auto& edge:grid.neighbors[node])

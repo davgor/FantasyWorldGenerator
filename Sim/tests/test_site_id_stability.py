@@ -79,13 +79,21 @@ def castellans(block, world):
 
     The person record carries the fortress id, not the node, so the join goes through the
     world -- which is the defect in miniature: the id alone does not say where anyone is.
+
+    Both spellings are accepted deliberately. Today `presence.uid` is the ordinal id, so the
+    ordinal map is what resolves. When the fix lands and it becomes `fortress-node-<n>`, the
+    node map resolves instead and this harness keeps working -- so a green harness after the
+    fix means the harness followed the product, not that it stopped looking. Node first,
+    because the node key is the answer the fix is supposed to give.
     """
     by_id = {f['id']: f for f in world['humans']['fortresses']}
+    by_node = {f"fortress-node-{f['node']}": f for f in world['humans']['fortresses']}
     found = {}
     for person in block['people']:
         if person.get('role') != 'castellan':
             continue
-        fortress = by_id.get(person['presence']['uid'])
+        anchor = person['presence']['uid']
+        fortress = by_node.get(anchor) or by_id.get(anchor)
         if fortress is not None:
             found[fortress['node']] = person
     return found
@@ -158,10 +166,23 @@ class SiteIdStabilityTests(unittest.TestCase):
         and `npc_roster` refuses `culture_id` on the same grounds. The cast spends the
         ordinal in four places, so a fix that repairs `uid` alone still leaves three ways
         to join the wrong row.
+
+        The ordinal is read out of the WORLD, and it used to be read off the person:
+
+            ordinal = person['presence']['uid']
+
+        `presence.uid` is one of the four fields checked below, so that line compared a
+        field against itself and made it an offender for ANY value it could ever hold --
+        including `fortress-node-13`, the value the fix is supposed to produce. The
+        assertion could not hold however the product changed, so this test was pinned to
+        fail forever rather than pinned to a defect. Taking the ordinal from
+        `world['humans']['fortresses']` asks the question that was meant: does the person
+        record carry the number that renumbers? It is still red today, because the answer
+        is yes, four times.
         """
         world = after_advance()
         person = castellans(cast(world), world)[13]
-        ordinal = person['presence']['uid']
+        ordinal = next(f['id'] for f in world['humans']['fortresses'] if f['node'] == 13)
         carried = {'uid': person['uid'],
                    'presence.uid': person['presence']['uid'],
                    'claim.target_uid': person['claim']['target_uid'],
