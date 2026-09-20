@@ -84,10 +84,12 @@ class GenerateRequestParityTests(unittest.TestCase):
         bounds = registry(3)['size']
         self.assertEqual(bounds['min'], 3)
         self.assertEqual(bounds['max'], 1025)
-        # Read the native constants and compare VALUES against the Python reference. The
-        # previous form asserted the literal text 'max_grid=257' on both sides, so either
-        # ceiling could move alone and this test still passed -- which is how a divergence
-        # survives review. A value comparison cannot pass one-sided.
+        # Read the native constants and compare VALUES against the Python reference.
+        # The previous form used assertIn, which is CONTAINMENT, not identity: a native
+        # ceiling of 2570 contains the text 'max_grid=257' and passed, because the old
+        # value is a prefix of the new one. A divergence could therefore survive with
+        # both assertions green. Identity, not containment -- parse the number and
+        # compare it.
         genesis = (ROOT / 'Core/genesis.hpp').read_text(encoding='utf-8')
         native = {name: int(value) for name, value in re.findall('(min_grid|max_grid)=([0-9]+)', genesis)}
         self.assertEqual(native.get('min_grid'), bounds['min'],
