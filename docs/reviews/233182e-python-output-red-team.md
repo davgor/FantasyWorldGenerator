@@ -89,14 +89,150 @@ turned up the sharper fact:
   score on the next line is `clamp(f.get(k,0)) * w / total` — raw field magnitudes throughout, no
   percentile anywhere.
 
-`brimstone-bats` is the clean case, and it changes what that card is about. Its *hard* requirement
-is magical (`ley_infernal >= 0.025`); its *score* is `{mountain: 2, volcanic: 2, ley_infernal: 2}`
-— two thirds terrain-derived. On a world with no fine relief the terrain terms cannot contribute
-much, so the achievable score is capped near the ley term alone and the 0.3 suitability floor
-becomes very hard to clear. **`BESTIARY-BRIMSTONE-BATS` may be a terrain defect wearing a
-catalogue defect's clothes, and the same reasoning covers a large share of the 267 species that
-never place.** That should be checked before the catalogue is retuned, because retuning a
-catalogue against a degenerate heightfield would bake the degeneracy in.
+#### Scope correction: relief starvation explains 11% of the catalogue, not the catalogue
+
+An earlier revision said the zero-octave terrain "may be the real reason 267 of 358 species never
+place." **That was too broad and the source refutes it.** Tallying what the 369 monster profiles
+actually gate on:
+
+- **Hard gates (`requires`)** are overwhelmingly magical: `ley_umbral` 75 profiles, `ley_weave`
+  71, `ley_primordial` 70, `ley_holy` 34, `ley_infernal` 33, `wetland` 28. Relief fields are a
+  tail — `mountain` 9, `volcanic` 6, `depth` 5.
+- **Score terms (`weights`)** are led by `moisture` (220 profiles) and the same ley fields. Only
+  three weight fields are relief-derived at all: `mountain`, `volcanic`, `depth`.
+- **42 of 369 monsters (11%) carry any relief-derived weight; 22 (6%) draw half or more of their
+  score from one.** The other 327 gate on magic, moisture and wetland, none of which are surface
+  noise.
+
+So most of the catalogue's non-placement is not a terrain story. **But for the 11% that is, the
+effect is severe and measurable** — placement rates by relief dependence, across the two rasters:
+
+| profile group | n | placed at size 17 (0 octaves) | placed at size 33 (1 octave) |
+|---|---|---|---|
+| relief-dominant (≥50% of score) | 22 | 2 (9.1%) | 12 (**54.5%**) |
+| relief-touched (<50%, >0) | 20 | 0 (0.0%) | 3 (15.0%) |
+| no relief term | 327 | 74 (22.6%) | 131 (40.1%) |
+
+**One octave raised relief-dominant placement six-fold while the relief-free majority improved
+1.8×.** That is direct evidence that octave admission gates this group specifically, which is
+what the hedge got right.
+
+#### The 513 run is now a binary test, not an investigation
+
+`brimstone-bats` sits in the 6%: hard gate magical (`ley_infernal >= 0.025`), score
+`{mountain: 2, volcanic: 2, ley_infernal: 2}` — two thirds relief. It places **zero at both 0 and
+1 octave**. So does **every one of the six species requiring `volcanic`**, at both rasters, while
+`requires: mountain` went 1 of 9 to 6 of 9 with the first octave.
+
+That splits the question cleanly, and either outcome is informative:
+
+- **If relief starvation is the cause**, five octaves at size 513 should lift the relief-dominant
+  group further and start placing the `volcanic`-gated six, `brimstone-bats` among them.
+  `BESTIARY-BRIMSTONE-BATS` is then a terrain defect and the catalogue needs no retune.
+- **If the `volcanic` field is itself degenerate** — never reaching any profile's threshold
+  regardless of resolution — the six stay at zero while `mountain`-gated species keep improving.
+  That is a sharper defect than the card currently describes, and it is in the field rather than
+  in the creature.
+
+`mountain` already separating from `volcanic` at one octave is weak evidence for the second. The
+measurement is twenty lines against the document and the script is written.
+
+#### Four causes wearing one symptom — and my "degenerate field" hypothesis was wrong
+
+I proposed that the `volcanic` field is degenerate and that two key-location archetypes plus six
+creature profiles failing identically pointed at the field. **That is refuted, by the coordinator
+and the gamer-persona session independently, and they were right: I reasoned from gate
+definitions and never read the field values.** Reading them separates four distinct causes that
+had been wearing one symptom. Only the first is mine and only the first is new.
+
+**1. Domain/field mismatch — resolution-independent, and nothing else explains it.**
+Three archetypes declare `domain: land` and gate on a field that is **identically zero on land**:
+
+| archetype | gate | land cells ≥ floor | water cells ≥ floor | land max |
+|---|---|---|---|---|
+| `salt_mine` | `salinity ≥ 0.02` | 0 of 50 | 239 of 239 | **0.0000** |
+| `salt_pans` | `salinity ≥ 0.02` | 0 of 50 | 239 of 239 | **0.0000** |
+| `whaling_station` | `fishing_productivity ≥ 0.02` | 0 of 50 | 239 of 239 | **0.0000** |
+
+At size 17 these fields are nonzero on every water cell and zero on every land cell. At size 33
+they reach 2 of 279 land cells, which are coastal straddles. **Raising the raster does not put
+ocean salinity inland**, so unlike everything else in this section these do not recover — they
+report `candidates: 0`, *"no ground in this world satisfies the requirements"*, and that will be
+true at 1025. A land-domain archetype gated on an ocean-only field is unplaceable by
+construction.
+
+**2. Tail calibration — the gamer-persona session's diagnosis, and the correct one for
+`volcanic`.** The field fires; its useful range is a sliver. Roughly half of cells are nonzero,
+the median is 0.0000 and the 90th percentile 0.0067, while every gate in either package sits at
+0.04–0.08 — the 98th to 99.9th percentile of a field whose maximum is 0.05 to 0.15. Decisively,
+**`volcanic` on land** has max **0.0286 at size 17**, below `geyser_basin`'s 0.05 floor, and
+**0.1524 at size 33**, above it. That is exactly why the diagnostics change:
+
+```
+size 17   geyser_basin  wanted 2  candidates 0   "no ground in this world satisfies the requirements"
+          lava_tube     wanted 1  candidates 0   same
+size 33   geyser_basin  wanted 3  candidates 8   "spacing and clearance left room for fewer"
+          lava_tube     wanted 1  candidates 3   same
+```
+
+**The archetypes change failure mode between rasters.** They are not a second consumer of a dead
+field, and they are not evidence for my hypothesis. `volcanic` is not in class 1: it is nonzero
+on 25 of 50 land cells at size 17 and 129 of 279 at size 33.
+
+**3. Spacing squeeze.** The dominant mode across the whole catalogue — 60 of 98 archetypes at
+size 17, 36 at size 33 — and what kills `geyser_basin` and `lava_tube` once the ground exists.
+Orthogonal to resolution in the sense that raising it does not remove the squeeze.
+
+**4. Area-scaled rounding.** The wonders, and in the creature package `phoenixes`, which gates on
+`volcanic ≥ 0.04` alone with no ley conjunct and still places zero where cells clear it.
+
+**What this does to the 513 run.** It is no longer a decisive test of anything, which is the
+honest correction. Expect **partial** recovery: the field's land maximum rises with octaves, so
+some of class 2 recovers, class 1 recovers never, and classes 3 and 4 are untouched by
+resolution. It remains worth running for bestiary coverage generally, and the prediction to hold
+it to is "partial, concentrated in the relief-dominant group", not "they all place" or "they all
+stay dead".
+
+`BESTIARY-BRIMSTONE-BATS` sits in class 2 with a ley conjunct, not in class 1.
+
+#### The `key_locations` gate tally, and what it does to the wonder conclusion
+
+97 archetypes: **69 percentile-only, 20 carrying both, 7 with no numeric terms, 1 absolute-only**
+(`border_fort`). So 21 of 97 carry an absolute floor or ceiling.
+
+It matters because of how the two combine, at `Sim/key_locations/core/placement.py:110-115`:
+
+```python
+cut = percentile(values, term['above_percentile'])
+rule['min'] = max(cut, term['min']) if 'min' in term else cut
+```
+
+**The stricter of the two wins.** On a low-magnitude world the percentile cut falls below the
+absolute floor and the floor dominates — so percentile-invariance does not protect those 21, and
+the blanket claim that `key_locations` is octave-invariant is too strong.
+
+**The wonders are not among them.** `maelstrom`, `titan_skeleton`, `fallen_star`, `great_stump`,
+`the_scar`, `drowned_temple`, `library_ruin` and `colossus` are all pure percentile, so their
+`wanted: 0` against 24–289 qualifying candidates is the area-scaled rounding the gamer-persona
+session diagnosed, not a floor. The conclusion that raising the raster will not by itself produce
+a wonder stands — it needs "for the wonders, which are percentile-only" attached rather than
+being stated of the block.
+
+The 21 floors cluster on the fields a degenerate world suppresses: `metal_richness` 6,
+`coastal_exposure` 5, `temperature` 3, `salinity` 2, `frontier` 2, `volcanic` 2.
+
+#### The animal catalogue is less relief-exposed than the monster one
+
+311 animal profiles: 22 relief-dominant, 2 relief-touched — **24 of 311 (7.7%)**, against
+monsters' 42 of 369 (11.4%). Animal hard gates are `wetland` 45, with `mountain` 2 and `depth` 3;
+score terms are led by `moisture` 114 and `wetland` 54, and exactly one animal profile carries a
+`volcanic` weight. The animal layer is a moisture-and-wetland system almost end to end, so the
+513 run informs the monster half of the world and barely touches the half that reaches the
+player.
+
+**What still holds regardless:** retuning the catalogue against a zero-octave heightfield would
+bake the degeneracy in, and that is the mistake worth preventing. It is just a mistake available
+for 42 profiles, not 267.
 
 `beast_movements` stranding (5) routes over the same terrain and carries the same caveat; I have
 added it to that card.
@@ -423,10 +559,30 @@ faster than the land they stand on, from one per 95.6 km² to one per 17.3 km².
 
 Two consequences for anyone treating `size` as a quality setting:
 
-- **The interactable set scales but its composition does not.** `key_locations.kind` — the
-  archetype field, distinct from the unique `id` — has **10 distinct values at size 17, of which
-  `waystone` is 38 of 48 (79%)**, and 49 distinct at size 33 with `waystone` 131 of 247 (53%). A
-  reference world at the documented size is four-fifths roadside furniture by archetype.
+- **The interactable set scales but its composition does not — and the filler share moves in
+  opposite directions along the two axes.** `key_locations.kind` is the archetype field, distinct
+  from the unique `id`. Across three worlds (the seed-73 column measured by the gamer-persona
+  session):
+
+  | world | land | sites | tier 0 | share | distinct kinds |
+  |---|---|---|---|---|---|
+  | seed 42, size 17 | 2,487 km² | 48 | 38 | 79.2% | 10 |
+  | seed 73, size 17 | 5,434 km² | 175 | 148 | 84.6% | 17 |
+  | seed 42, size 33 | 3,665 km² | 247 | 131 | 53.0% | 49 |
+
+  **More land at a fixed raster makes it worse (79.2% → 84.6%); more raster at a fixed seed makes
+  it better (79.2% → 53.0%).** Adding land without resolution qualifies almost nothing new
+  (10 → 17 kinds) and just extends the road network that waystones are strung along, while
+  raising the raster admits an octave, the terrain gains variety, and 49 archetypes qualify.
+  **Filler share is driven by how many archetypes the terrain can qualify, not by how much
+  terrain there is.** State it per-raster; at the sizes 1025 makes available the concentration
+  falls, though 53% is still a majority of every place in the world being one line of text.
+
+  Two distinctions worth keeping: **every tier-0 site is a waystone on seed 42 at both rasters
+  (38/38, 131/131) but not on seed 73**, whose 148 tier-0 sites are 143 waystones plus 5
+  `boundary_stone`. And the **`wayside` family is wider than the `waystone` kind** — 145 against
+  131 at size 33, the difference being hedge inns, bridges and ferry crossings, which are tier 1
+  and enterable. Any argument about how much is enterable depends on not conflating the two.
 - **The story a player is most likely to be offered changes with the grid.** `story_web`'s
   most-offered arc is `the_court` (8 of 54) at size 17 and `the_siege` (42 of 225) at size 33,
   same seed, because tropes read war pressure and threat and those follow settlement count.

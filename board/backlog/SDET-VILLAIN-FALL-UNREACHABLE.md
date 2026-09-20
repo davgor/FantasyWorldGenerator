@@ -110,8 +110,33 @@ produced must either fall or remain reachable by the loop.
   `SDET-WORLD-SCHEMA-SURFACE.md` — so the terrain the villain regions are drawn over is
   flat. Concentration is computed from threat assessments rather than from relief, so this
   does not invalidate the static result; it does mean a size-17 run is not evidence that
-  regions behave, and the confirming run should be at 513 or above, where all five octaves
-  resolve.
+  regions behave.
+
+  **The run, specified, so whoever resumes does not re-derive it.** It was attempted on
+  2026-09-20 and never got a quiet machine — see `SDET-PRODUCER-CALL-GRAPH.md` for the
+  negative result. It is cheap and does **not** need a 513 world:
+
+  1. **Size is not the constraint — `villain_rise` is.** A seed-42 size-17 phase-16 run at
+     `villain_rise 1.0` already seats a villain (1 standing, 12 tier anchors, `max_tier`
+     1.198, `works` built). The villain paths execute at 17. Earlier framing that this
+     needed 513 confused *determinism* with *terrain fidelity*; they are separate questions
+     and only the second needs the octaves.
+  2. **Ladder the cost first**: phase 16 at 33, 65, 129, one process per size, stopping at
+     the first size that is expensive. Nobody knows how phase-16 cost scales with the raster
+     and guessing it is what the ladder is for.
+  3. **Then the comparison**: the same seed twice at the largest affordable size (must be
+     byte-identical), the same seed at two sizes and two seeds at one size (must differ).
+     Compare canonical digests per block, not whole documents, so a disagreement names the
+     block that drifted. Exclude `timing_ms` and `debug_stats`: both are clock readings and
+     differ between identical runs.
+  4. **Take it on a verified-quiet machine.** Poll the process table directly rather than
+     relying on a report that it is clear; wall clock and peak memory are corrupted by
+     contention, and this is a first-ever measurement that will be quoted.
+
+  A harness that does all of this exists at
+  `scratchpad/run_world.py` from the 2026-09-20 session — digests per block, peak RSS, wall
+  clock, villain summary — but scratchpads are session-scoped, so assume it is gone and
+  rebuild it; it is about seventy lines.
 
 ## Sources consulted
 
