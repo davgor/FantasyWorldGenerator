@@ -64,6 +64,18 @@ def _sampler(world,site,half):
                 'flood':flood,
                 'height':field.height(p),'moisture':.5 if _moisture is None else _moisture[gz][gx],
                 'biome':3 if _biome is None else _biome[gz][gx],'variant':-1 if _variant is None else _variant[gz][gx]}
+    def height_at(x,z):
+        """Elevation alone, for the callers that read only v['height'].
+
+        direction_at builds and normalises the very same vector sample() does and
+        field.height is a pure function of it, so this returns the identical float.
+        What it skips is what a height-only caller discards anyway: the river
+        distance loop, two inverse trigonometric grid-index calls, six layer
+        lookups and a seven-key dict. The surface grid alone asks for this
+        (size+1) squared times per city.
+        """
+        return field.height(direction_at(x,z))
+    sample.height_at=height_at
     return sample,math.pi*radius/(n-1)
 
 
@@ -96,7 +108,7 @@ def plan_city(world,site,nearby_counts=None):
         terrain.append(row);biomes.append(biome_row);mutations.append(mutation_row)
     surface_size=size+1
     surface={'size':surface_size,'step_m':2*half/(surface_size-1),
-             'heights_m':[[round(sample(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1),False)['height'],4) for i in range(surface_size)] for j in range(surface_size)],
+             'heights_m':[[round(sample.height_at(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1)),4) for i in range(surface_size)] for j in range(surface_size)],
              'source':'canonical terrain height in metres','terrain_detail':world.get('terrain_detail'),
              'coordinates':'local east/north gnomonic coordinates; radial elevation above reference sphere'}
     center=sample(0,0)
@@ -188,7 +200,7 @@ def plan_city(world,site,nearby_counts=None):
                 footprint=cells(x,z,w,d,angle)
                 if not footprint<=valid or footprint&road:continue
                 # Check the actual interpolated ground, including within coarse raster cells.
-                ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,w,d,angle)]
+                ground=[sample.height_at(px,pz) for px,pz in corners(x,z,w,d,angle)]
                 # Only max() and min() are ever read from this list, so the sort was
                 # ordering a few hundred thousand short lists for nothing.
                 ground += [heights[c] for c in footprint]
@@ -246,8 +258,8 @@ def plan_city(world,site,nearby_counts=None):
             angle=math.atan2(approach[1]-z,approach[0]-x)
             degrees=round(math.degrees(angle),4)
             footprint=cells(x,z,gate_def['plot_m']['width'],gate_def['plot_m']['depth'],angle)
-            ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,gate_def['plot_m']['width'],gate_def['plot_m']['depth'],angle)]
-            ground+=[heights[c] for c in sorted(footprint) if c in heights] or [sample(x,z,False)['height']]
+            ground=[sample.height_at(px,pz) for px,pz in corners(x,z,gate_def['plot_m']['width'],gate_def['plot_m']['depth'],angle)]
+            ground+=[heights[c] for c in sorted(footprint) if c in heights] or [sample.height_at(x,z)]
             corridor=footprint
             if install(gate_def,'fortification','service',(x,z,degrees,x,z,footprint,corridor,ground)):
                 placed_gates+=1;gate['plot_id']=result['plots'][-1]['id']
@@ -258,7 +270,7 @@ def plan_city(world,site,nearby_counts=None):
             x,z=tower['position_m'];degrees=0.
             footprint=cells(x,z,tower_row['plot_m']['width'],tower_row['plot_m']['depth'],0)
             if not footprint<=valid or footprint&road or footprint&occupied:continue
-            ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,tower_row['plot_m']['width'],tower_row['plot_m']['depth'],0)]
+            ground=[sample.height_at(px,pz) for px,pz in corners(x,z,tower_row['plot_m']['width'],tower_row['plot_m']['depth'],0)]
             ground+=[heights[c] for c in sorted(footprint)]
             if install(tower_row,'fortification','service',(x,z,degrees,x,z,footprint,footprint,ground)):
                 placed_towers+=1;tower['plot_id']=result['plots'][-1]['id']

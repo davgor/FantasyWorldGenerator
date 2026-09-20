@@ -104,7 +104,7 @@ def plan_hamlet(world,hamlet):
         terrain.append(row);biomes.append(biome_row);mutations.append(mutation_row)
     surface_size=size+1
     surface={'size':surface_size,'step_m':2*half/(surface_size-1),
-             'heights_m':[[round(sample(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1),False)['height'],4)
+             'heights_m':[[round(sample.height_at(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1)),4)
                            for i in range(surface_size)] for j in range(surface_size)],
              'source':'canonical terrain height in metres','terrain_detail':world.get('terrain_detail'),
              'coordinates':'local east/north gnomonic coordinates; radial elevation above reference sphere'}
@@ -184,7 +184,7 @@ def plan_hamlet(world,hamlet):
                 degrees=round(math.degrees(angle),4);angle=math.radians(degrees)
                 footprint=cells(x,z,w,d,angle)
                 if not footprint<=valid or footprint&road:continue
-                ground=[sample(px,pz,False)['height'] for px,pz in corners(x,z,w,d,angle)]
+                ground=[sample.height_at(px,pz) for px,pz in corners(x,z,w,d,angle)]
                 ground+=[heights[c] for c in sorted(footprint)]
                 if max(ground)-min(ground)>math.hypot(w,d)*math.tan(math.radians(25)):continue
                 ex=x-dx*d/2;ez=z-dz*d/2;corridor=set()
