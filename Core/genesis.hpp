@@ -5,7 +5,7 @@
 namespace fantasy_world_generator {
 // Request boundary for world genesis. No Unreal, engine, asset or Python dependency:
 // Unreal centimetres are plain integers here and a future adapter owns engine types.
-constexpr std::int64_t genesis_recipe=3, max_seed=4294967295LL, min_grid=3, max_grid=257,
+constexpr std::int64_t genesis_recipe=3, max_seed=4294967295LL, min_grid=3, max_grid=1025,
                       centimetres_per_metre=100, max_metres=max_safe/centimetres_per_metre;
 constexpr std::size_t max_offset_text=24;
 // The reference's own override range for the shared world scale, so a request cannot

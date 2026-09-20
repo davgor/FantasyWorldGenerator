@@ -86,6 +86,12 @@ def patch_request(body):
     if not isinstance(body['config'],dict) or not isinstance(body['patch'],dict):
         raise ValueError('config and patch must be objects')
     cfg=Config(**body['config']); patch=PatchConfig(**body['patch'])
-    if cfg.shape!='globe' or cfg.size>257 or (cfg.tectonics and cfg.phase<2):
-        raise ValueError('Generate a globe with elevation first; world grid limit is 257')
+    # This mirrors the world ceiling rather than setting one: the call regenerates the
+    # exact submitted world before cutting a patch from it, so refusing a grid the
+    # generator accepts would refuse a world that exists. The patch's own bounds (span,
+    # spacing, 257 vertices per axis) are unchanged and are what actually limit a patch.
+    # Regenerating a large world per request is the caller's cost; the lab keeps its own
+    # interactive limit of 257 separately.
+    if cfg.shape!='globe' or cfg.size>1025 or (cfg.tectonics and cfg.phase<2):
+        raise ValueError('Generate a globe with elevation first; world grid limit is 1025')
     return generate_patch(generate(cfg),patch)

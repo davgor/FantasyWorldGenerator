@@ -58,5 +58,5 @@ class PatchTests(unittest.TestCase):
     def test_request_rejects_invalid_world_before_sampling(self):
         from icarus_sim.terrain_patch import patch_request
         for body in ([],{}, {'config':[], 'patch':{}}, {'config':{'shape':'plane'},'patch':{}},
-                     {'config':{'shape':'globe','size':1025},'patch':{}}):
+                     {'config':{'shape':'globe','size':1026},'patch':{}}):
             with self.assertRaises(ValueError): patch_request(body)

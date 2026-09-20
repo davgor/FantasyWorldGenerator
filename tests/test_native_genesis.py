@@ -1,6 +1,7 @@
 """Headless native genesis slice: Unreal centimetre frame and generate-request validation."""
 import json
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -80,10 +81,18 @@ class GenerateRequestParityTests(unittest.TestCase):
 
     def test_python_reference_accepts_the_shared_valid_grid_bounds(self):
         from icarus_sim.terrain_world import registry
-        self.assertEqual(registry(3)['size']['min'], 3)
-        self.assertEqual(registry(3)['size']['max'], 257)
+        bounds = registry(3)['size']
+        self.assertEqual(bounds['min'], 3)
+        self.assertEqual(bounds['max'], 1025)
+        # Read the native constants and compare VALUES against the Python reference. The
+        # previous form asserted the literal text 'max_grid=257' on both sides, so either
+        # ceiling could move alone and this test still passed -- which is how a divergence
+        # survives review. A value comparison cannot pass one-sided.
         genesis = (ROOT / 'Core/genesis.hpp').read_text(encoding='utf-8')
-        self.assertIn('min_grid=3', genesis, 'native grid minimum must match the Python reference')
-        self.assertIn('max_grid=257', genesis, 'native grid maximum must match the Python reference')
+        native = {name: int(value) for name, value in re.findall('(min_grid|max_grid)=([0-9]+)', genesis)}
+        self.assertEqual(native.get('min_grid'), bounds['min'],
+                         'native grid minimum must match the Python reference')
+        self.assertEqual(native.get('max_grid'), bounds['max'],
+                         'native grid maximum must match the Python reference')
         # The plugin no longer restates these bounds: it compiles Core. That absence is
         # asserted by tests/test_plugin_frame.py rather than by a third copy here.

@@ -72,7 +72,7 @@ Native structs are not a stable binary ABI or a persistence format.
   rounded, and no float arithmetic enters the conversion. Winding reversal and
   metre-to-centimetre scaling of meshes stay with a future adapter.
 - `generate_request` validates a request only: recipe version exactly 3, a seed
-  in `0..2^32-1`, and an optional `overrides` object limited to `size` (1..257)
+  in `0..2^32-1`, and an optional `overrides` object limited to `size` (1..1025)
   and `shape` (`globe`, because recipe 3 is a tectonic globe). Unknown override
   keys are rejected. `generate_request_json` returns
   `{"ok": true, "recipe_version": 3, "seed": <seed>}`; accepting a request is not

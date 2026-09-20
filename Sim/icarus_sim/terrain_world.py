@@ -268,9 +268,23 @@ def generate_request(body):
             else:raw[target]=value
             biases[target]={'value':value,'source':zone+' request biases suitable conditions; placement remains conditional'}
     if raw['shape']!='globe' or raw['tectonics']!=1:raise ValueError('World recipe requires a tectonic globe')
-    # 257 stays the interactive ceiling in practice; larger grids are for offline worlds
-    # and cost roughly the square of the size. Age advancement still refuses above 257
-    # (terrain_history.validate_age_world), so a 513 world generates but cannot be aged.
+    # 257 stays the INTERACTIVE ceiling (tools/terrain_lab.py), not the world's: larger
+    # grids are for offline worlds and cost roughly the square of the size. Age
+    # advancement accepts the same 1025 generation does, so a world can hold both its
+    # history and all five of its noise octaves.
+    #
+    # Octave admission needs step <= wavelength/2^k, and the globe radius cancels out of
+    # that comparison -- wavelength is radius*1.6/sqrt(plate_count) and step is
+    # 2*pi*radius/(n-1), so wavelength/step = 1.6*(n-1)/(2*pi*sqrt(plate_count)). It is a
+    # function of grid size and plate count only, identical on an 11 km world and a 200 km
+    # one, and apply_world_scale scales radius and wavelength together so it survives
+    # scaling. Do not restate it as a metre figure for one planet: a reader on another
+    # radius recomputes and gets crossovers this generator will never produce for them.
+    #
+    # At the default plate count that admits 0 of 5 octaves at size 17, 1 at 33, 2 at 65,
+    # 3 at 129, 4 at 257 and all 5 at 513. 1025 adds no octave over 513 -- it buys a finer
+    # cell step at four times the cells -- so 513 is the size to validate terrain at, and
+    # nothing needs a 1025 run to resolve its terrain.
     if type(raw['size']) is not int or raw['size']>1025:raise ValueError('Grid maximum is 1025')
     raw['world_options']=json.dumps(extra,sort_keys=True)
     cfg=Config(**raw)

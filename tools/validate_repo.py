@@ -105,6 +105,34 @@ def artifacts(env) -> None:
         if world_first.read_bytes() != world_second.read_bytes():
             raise ValueError("world generation is not byte-reproducible")
 
+        # The size-17 world above resolves NONE of its five noise octaves. Octave
+        # admission needs step <= wavelength/2^k, and 17 is far too coarse to admit even
+        # the first, so the multi-octave surface accumulation -- the filtered loop, the
+        # .5**k falloff, the ridge term -- contributes identically zero and never runs.
+        # Sim/tests/test_terrain_metrics.py already asserts the noise layer is zero at
+        # exactly this configuration. So the guarantee above covers a world with no
+        # surface relief, which is not a world anyone ships.
+        #
+        # 513 is the first size that admits all five octaves, and phase 5 stops before
+        # settlements, ages and city planning, so this pair costs about four minutes
+        # rather than the hours a full phase-16 world at 513 would take.
+        octaves_first = Path(directory) / "world-octaves-first.json"
+        octaves_second = Path(directory) / "world-octaves-second.json"
+        for target in (octaves_first, octaves_second):
+            run(sys.executable, "-m", "fantasy_world_generator", "generate",
+                "--seed", "42", "--size", "513", "--phase", "5", "--output", str(target), env=env)
+        if octaves_first.read_bytes() != octaves_second.read_bytes():
+            raise ValueError("full-octave world generation is not byte-reproducible")
+        # Moving the size fixes today; asserting the octaves resolved keeps it fixed. If a
+        # future wavelength or plate-count change stops admitting the fifth octave here,
+        # this fails loudly instead of quietly guaranteeing determinism over nothing.
+        document = json.loads(octaves_first.read_text(encoding="utf-8"))
+        resolved = document.get("resolved_octaves")
+        requested = document.get("effective_config", document.get("config", {})).get("octaves")
+        if resolved != requested:
+            raise ValueError("size 513 must resolve every noise octave for the determinism "
+                             f"guarantee to cover the accumulation path; resolved {resolved} of {requested}")
+
 
 RUNNERS = {"checks": checks, "sim-tests": sim_tests, "repo-tests": repo_tests, "artifacts": artifacts}
 

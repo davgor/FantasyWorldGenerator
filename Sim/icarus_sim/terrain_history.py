@@ -587,8 +587,8 @@ def validate_age_world(world):
     try:
         json.dumps(world,allow_nan=False)
         cfg=Config(**world['config'])
-        if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>257:
-            raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=257')
+        if cfg.world_recipe!=3 or cfg.phase<13 or cfg.size>1025:
+            raise ValueError('Age advancement requires recipe 3 through creatures (phase 13), grid <=1025')
         if world['terrain']['version']!=6 or world['generator_version']!=16 or world['recipe']['version']!=3:
             raise ValueError('Retired world contract; regenerate with recipe_version 3')
         if world['magic']['version']!=4 or world['history']['version']!=3:
