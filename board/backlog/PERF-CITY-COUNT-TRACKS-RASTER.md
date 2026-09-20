@@ -50,9 +50,33 @@ by city class), roughly 40,000 terrain cells plus a `(size+1)²` surface grid, a
 detailed `HeightField.height` evaluations per terrain cell — about 240,000 multi-octave 3D
 Perlin evaluations per city regardless of world size.
 
-`fill_cities` was measured at 46.2% of generation at size 17 and 36.9% at size 33, and
-`age_transition` (which re-runs settlement work) at 39.4% and 44.1%. Together with
-`add_nests` they are 94.6% of the run at size 17.
+At size 17, on the tree at `651ab00`, with every producer wrapped and exclusive time
+charged (41 of 41 instrumented, none skipped):
+
+| producer | executions | share |
+|---|---|---|
+| `add_nests` | 10 | 49.2% |
+| `fill_cities` | 1 | 44.6% |
+| `fill_hamlets` | 1 | 2.4% |
+| `age_transition` | 2 | **26 ms exclusive** |
+
+`add_nests` and `fill_cities` are **93.9%** of the run between them.
+
+Two corrections to earlier figures from this pass, recorded because they were published
+before they were corrected. `add_nests` was reported as 9.0% and `age_transition` as 39.4%:
+the first instrument charged exclusive time by suppressing any wrapped call nested inside
+another wrapped call, which is correct only for a producer that runs once. `add_nests` runs
+ten times from four sites, four of them inside `age_transition`, so its time was charged to
+its caller. `age_transition` is not a producer at all — it is a scheduler, and 99.9% of the
+time credited to it belonged to ten producers running inside it.
+
+Every share above is from the tree at `651ab00`. The earlier `fill_cities` figure of 46.2%
+was taken **before** `422f9c3` and is not comparable: that commit moved `fill_cities` -8.0%
+and `fill_hamlets` -7.8%. Do not reconcile a pre-`422f9c3` share against a post one.
+
+The size-33 shares quoted earlier in this pass (`fill_cities` 36.9%, `age_transition`
+44.1%) came from the defective instrument and are **withdrawn**, not corrected — a
+corrected size-33 run has not been taken.
 
 Extrapolating the observed 0.035 cities per cell to 513 (263,169 cells) gives roughly
 **9,000 cities**, which at the measured per-city cost is hours of city planning alone. So
@@ -88,8 +112,9 @@ that can be landed quietly on the grounds that it makes things faster.
 
 Seed 42 and seed 73, phase 16, published documents (no `build_stages`, no `timing_ms`),
 Windows 11, CPython 3.12, machine contended — shares are reliable, absolute times inflated.
-Profiler wrapped producer entry points by module attribute and accounted for 99% of wall
-time. Per-producer shares and the entity census are in the generation-performance pass
+Profiler wrapped producer entry points by module attribute, charged exclusive time with a
+stack (children subtracted from parents), reported its own coverage explicitly rather than
+skipping silently, and accounted for 99% of wall time. Per-producer shares and the entity census are in the generation-performance pass
 transcript; the documents themselves were generated at seed 42 sizes 17 and 33 and seed 73
 size 17.
 
