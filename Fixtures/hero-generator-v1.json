@@ -1,0 +1,1197 @@
+{
+  "schema": "fantasy-world-generator.hero-generator-fixture",
+  "fixture_version": 8,
+  "notes": "A hand-built two-age world (four ruins including a self-destroyed college, two wars, one dragon, ley key points, two realms) and the projection of the cast it must yield under the recorded policy revisions, including every precipitation roll across all four wells. Names now come from the heritage language genome keyed on civilization_id rather than from parent-race syllable tables, and realms carry a native name beside the English english_name. Regenerate with Sim/tests/test_hero_generator.world() when a policy or heritage revision changes, and bump fixture_version. Fixture 8 (names revision 6): one display name only, `Keeper of the fire Stone` to `Keeper of the Fire Stone`. A school filled inside a title now uses the capitalised `{School}` token; no draw changed, so exactly one rendered string moved and nothing else in the cast did.",
+  "policy_revision": {
+    "archetypes": 4,
+    "axis_overlays": 1,
+    "alignment": 1,
+    "names": 6,
+    "wells": 5
+  },
+  "world": {
+    "config": {
+      "seed": 42,
+      "size": 17
+    },
+    "effective_config": {
+      "globe_radius": 31831.0
+    },
+    "history": {
+      "version": 2,
+      "ages": [
+        {
+          "age": 1,
+          "events": [
+            {
+              "uid": "surface-city-0-40-human_heartland",
+              "name": "Bracken City",
+              "node": 40,
+              "x": 6,
+              "z": 2,
+              "direction": [
+                0.9567727288213006,
+                0.20791169081775934,
+                0.20336832153790013
+              ],
+              "population_profile": "human_heartland",
+              "civilization_id": "human_heartland",
+              "city_class": "small",
+              "source_culture": "human_heartland-seed",
+              "founded_age": 0,
+              "war_history": [
+                {
+                  "war_id": "war-1-0",
+                  "age": 1,
+                  "kind": "civil",
+                  "outcome": "defeated",
+                  "opponent_uid": "surface-city-0-10-human_heartland",
+                  "opponent_civilization_id": "human_heartland",
+                  "opponent_parent_race_id": "human"
+                }
+              ],
+              "id": "ruin-surface-city-0-40-human_heartland",
+              "kind": "ruins",
+              "destroyed_age": 1,
+              "asset_id": "marker.city_ruins",
+              "cause": "war_civil",
+              "reason": "test",
+              "evidence": {
+                "war_id": "war-1-0"
+              },
+              "new_node_school": "radiant"
+            },
+            {
+              "uid": "surface-city-0-90-elf",
+              "name": "Cedar City",
+              "node": 90,
+              "x": 5,
+              "z": 5,
+              "direction": [
+                0.8137976813493738,
+                -0.3420201433256687,
+                -0.46984631039295416
+              ],
+              "population_profile": "elf",
+              "civilization_id": "elf",
+              "city_class": "capital",
+              "source_culture": "elf-seed",
+              "founded_age": 0,
+              "war_history": [
+                {
+                  "war_id": "war-1-1",
+                  "age": 1,
+                  "kind": "international",
+                  "outcome": "defeated",
+                  "opponent_uid": "surface-city-0-120-dwarf",
+                  "opponent_civilization_id": "dwarf",
+                  "opponent_parent_race_id": "dwarf"
+                }
+              ],
+              "id": "ruin-surface-city-0-90-elf",
+              "kind": "ruins",
+              "destroyed_age": 1,
+              "asset_id": "marker.city_ruins",
+              "cause": "war_international",
+              "reason": "test",
+              "evidence": {
+                "war_id": "war-1-1"
+              },
+              "new_node_school": "water"
+            },
+            {
+              "uid": "surface-city-0-60-human_heartland",
+              "name": "Glen City",
+              "node": 60,
+              "x": 9,
+              "z": 3,
+              "direction": [
+                0.9666034580972273,
+                0.24192189559966773,
+                0.08456684470846289
+              ],
+              "population_profile": "human_heartland",
+              "civilization_id": "human_heartland",
+              "city_class": "medium",
+              "source_culture": "human_heartland-seed",
+              "founded_age": 0,
+              "war_history": [],
+              "id": "ruin-surface-city-0-60-human_heartland",
+              "kind": "ruins",
+              "destroyed_age": 1,
+              "asset_id": "marker.city_ruins",
+              "cause": "self_magic",
+              "reason": "test",
+              "evidence": {},
+              "new_node_school": "weave"
+            },
+            {
+              "uid": "surface-city-0-150-dwarf",
+              "name": "Ember City",
+              "node": 150,
+              "x": 14,
+              "z": 8,
+              "direction": [
+                0.3544374975981803,
+                0.5446390350150271,
+                0.7600936664873876
+              ],
+              "population_profile": "dwarf",
+              "civilization_id": "dwarf",
+              "city_class": "small",
+              "source_culture": "dwarf-seed",
+              "founded_age": 0,
+              "war_history": [],
+              "id": "ruin-surface-city-0-150-dwarf",
+              "kind": "ruins",
+              "destroyed_age": 1,
+              "asset_id": "marker.city_ruins",
+              "cause": "dragon",
+              "reason": "test",
+              "evidence": {
+                "nest_id": "nest-ashen-wyrm-151",
+                "distance_m": 900.0,
+                "reach_m": 2500.0
+              },
+              "new_node_school": "fire"
+            }
+          ],
+          "wars": [
+            {
+              "id": "war-1-0",
+              "age": 1,
+              "kind": "civil",
+              "participants": [
+                "surface-city-0-10-human_heartland",
+                "surface-city-0-40-human_heartland"
+              ],
+              "victor_uid": "surface-city-0-10-human_heartland",
+              "defeated_uid": "surface-city-0-40-human_heartland",
+              "victor_civilization_id": "human_heartland",
+              "defeated_civilization_id": "human_heartland",
+              "victor_parent_race_id": "human",
+              "defeated_parent_race_id": "human",
+              "pressure": 1.0,
+              "chance": 0.9,
+              "roll": 0.3,
+              "reason": "contested ground"
+            },
+            {
+              "id": "war-1-1",
+              "age": 1,
+              "kind": "international",
+              "participants": [
+                "surface-city-0-120-dwarf",
+                "surface-city-0-90-elf"
+              ],
+              "victor_uid": "surface-city-0-120-dwarf",
+              "defeated_uid": "surface-city-0-90-elf",
+              "victor_civilization_id": "dwarf",
+              "defeated_civilization_id": "elf",
+              "victor_parent_race_id": "dwarf",
+              "defeated_parent_race_id": "elf",
+              "pressure": 1.0,
+              "chance": 0.9,
+              "roll": 0.3,
+              "reason": "contested ground"
+            }
+          ],
+          "surviving_city_ids": [
+            "surface-city-0-10-human_heartland",
+            "surface-city-0-120-dwarf"
+          ],
+          "new_city_ids": []
+        },
+        {
+          "age": 2,
+          "events": [],
+          "wars": [],
+          "surviving_city_ids": [
+            "surface-city-0-10-human_heartland",
+            "surface-city-0-120-dwarf"
+          ],
+          "new_city_ids": []
+        }
+      ]
+    },
+    "ruins": [
+      {
+        "uid": "surface-city-0-40-human_heartland",
+        "name": "Bracken City",
+        "node": 40,
+        "x": 6,
+        "z": 2,
+        "direction": [
+          0.9567727288213006,
+          0.20791169081775934,
+          0.20336832153790013
+        ],
+        "population_profile": "human_heartland",
+        "civilization_id": "human_heartland",
+        "city_class": "small",
+        "source_culture": "human_heartland-seed",
+        "founded_age": 0,
+        "war_history": [
+          {
+            "war_id": "war-1-0",
+            "age": 1,
+            "kind": "civil",
+            "outcome": "defeated",
+            "opponent_uid": "surface-city-0-10-human_heartland",
+            "opponent_civilization_id": "human_heartland",
+            "opponent_parent_race_id": "human"
+          }
+        ],
+        "id": "ruin-surface-city-0-40-human_heartland",
+        "kind": "ruins",
+        "destroyed_age": 1,
+        "asset_id": "marker.city_ruins",
+        "cause": "war_civil",
+        "reason": "test",
+        "evidence": {
+          "war_id": "war-1-0"
+        },
+        "new_node_school": "radiant"
+      },
+      {
+        "uid": "surface-city-0-90-elf",
+        "name": "Cedar City",
+        "node": 90,
+        "x": 5,
+        "z": 5,
+        "direction": [
+          0.8137976813493738,
+          -0.3420201433256687,
+          -0.46984631039295416
+        ],
+        "population_profile": "elf",
+        "civilization_id": "elf",
+        "city_class": "capital",
+        "source_culture": "elf-seed",
+        "founded_age": 0,
+        "war_history": [
+          {
+            "war_id": "war-1-1",
+            "age": 1,
+            "kind": "international",
+            "outcome": "defeated",
+            "opponent_uid": "surface-city-0-120-dwarf",
+            "opponent_civilization_id": "dwarf",
+            "opponent_parent_race_id": "dwarf"
+          }
+        ],
+        "id": "ruin-surface-city-0-90-elf",
+        "kind": "ruins",
+        "destroyed_age": 1,
+        "asset_id": "marker.city_ruins",
+        "cause": "war_international",
+        "reason": "test",
+        "evidence": {
+          "war_id": "war-1-1"
+        },
+        "new_node_school": "water"
+      },
+      {
+        "uid": "surface-city-0-60-human_heartland",
+        "name": "Glen City",
+        "node": 60,
+        "x": 9,
+        "z": 3,
+        "direction": [
+          0.9666034580972273,
+          0.24192189559966773,
+          0.08456684470846289
+        ],
+        "population_profile": "human_heartland",
+        "civilization_id": "human_heartland",
+        "city_class": "medium",
+        "source_culture": "human_heartland-seed",
+        "founded_age": 0,
+        "war_history": [],
+        "id": "ruin-surface-city-0-60-human_heartland",
+        "kind": "ruins",
+        "destroyed_age": 1,
+        "asset_id": "marker.city_ruins",
+        "cause": "self_magic",
+        "reason": "test",
+        "evidence": {},
+        "new_node_school": "weave"
+      },
+      {
+        "uid": "surface-city-0-150-dwarf",
+        "name": "Ember City",
+        "node": 150,
+        "x": 14,
+        "z": 8,
+        "direction": [
+          0.3544374975981803,
+          0.5446390350150271,
+          0.7600936664873876
+        ],
+        "population_profile": "dwarf",
+        "civilization_id": "dwarf",
+        "city_class": "small",
+        "source_culture": "dwarf-seed",
+        "founded_age": 0,
+        "war_history": [],
+        "id": "ruin-surface-city-0-150-dwarf",
+        "kind": "ruins",
+        "destroyed_age": 1,
+        "asset_id": "marker.city_ruins",
+        "cause": "dragon",
+        "reason": "test",
+        "evidence": {
+          "nest_id": "nest-ashen-wyrm-151",
+          "distance_m": 900.0,
+          "reach_m": 2500.0
+        },
+        "new_node_school": "fire"
+      }
+    ],
+    "settlements": {
+      "version": 14,
+      "sites": [
+        {
+          "uid": "surface-city-0-10-human_heartland",
+          "id": 0,
+          "name": "Alder City",
+          "population_profile": "human_heartland",
+          "civilization_id": "human_heartland",
+          "parent_race_id": "human",
+          "city_class": "capital",
+          "direction": [
+            0.984807753012208,
+            0.17364817766693033,
+            0.0
+          ],
+          "node": 10,
+          "x": 10,
+          "z": 0,
+          "suitability": 0.7,
+          "population_estimate": 3000,
+          "founded_age": 0,
+          "source_culture": "human_heartland-seed",
+          "war_history": [
+            {
+              "war_id": "war-1-0",
+              "age": 1,
+              "kind": "civil",
+              "outcome": "victor",
+              "opponent_uid": "surface-city-0-40-human_heartland",
+              "opponent_civilization_id": "human_heartland",
+              "opponent_parent_race_id": "human"
+            }
+          ],
+          "founding_capital": true
+        },
+        {
+          "uid": "surface-city-0-120-dwarf",
+          "id": 3,
+          "name": "Dunlin City",
+          "population_profile": "dwarf",
+          "civilization_id": "dwarf",
+          "parent_race_id": "dwarf",
+          "city_class": "medium",
+          "direction": [
+            0.43301270189221946,
+            0.49999999999999994,
+            0.75
+          ],
+          "node": 120,
+          "x": 1,
+          "z": 7,
+          "suitability": 0.7,
+          "population_estimate": 3000,
+          "founded_age": 0,
+          "source_culture": "dwarf-seed",
+          "war_history": [
+            {
+              "war_id": "war-1-1",
+              "age": 1,
+              "kind": "international",
+              "outcome": "victor",
+              "opponent_uid": "surface-city-0-90-elf",
+              "opponent_civilization_id": "elf",
+              "opponent_parent_race_id": "elf"
+            }
+          ]
+        }
+      ]
+    },
+    "civilizations": {
+      "entities": [
+        {
+          "id": "human_heartland",
+          "name": "Heartland humans",
+          "parent_race_id": "human",
+          "region_index": 0
+        },
+        {
+          "id": "elf",
+          "name": "High Elves",
+          "parent_race_id": "elf",
+          "region_index": 1
+        },
+        {
+          "id": "dwarf",
+          "name": "Dwarves",
+          "parent_race_id": "dwarf",
+          "region_index": 2
+        }
+      ]
+    },
+    "humans": {
+      "version": 8,
+      "cultures": [
+        {
+          "index": 0,
+          "id": "human_heartland-aaaa",
+          "city_ids": [
+            0
+          ],
+          "population_profile": "human_heartland",
+          "civilization_id": "human_heartland"
+        },
+        {
+          "index": 1,
+          "id": "dwarf-bbbb",
+          "city_ids": [
+            3
+          ],
+          "population_profile": "dwarf",
+          "civilization_id": "dwarf"
+        }
+      ],
+      "cores": []
+    },
+    "beast_nests": {
+      "version": 1,
+      "sites": [
+        {
+          "id": "nest-ashen-wyrm-151",
+          "species_id": "ashen-wyrm",
+          "name": "Ashen wyrm",
+          "node": 151,
+          "x": 15,
+          "z": 8,
+          "direction": [
+            0.3371999592447478,
+            0.5591929034707469,
+            0.7573635086227065
+          ],
+          "biome": 3,
+          "tier": 5,
+          "family": "draconic",
+          "kind": "greater lair",
+          "size": "huge",
+          "role": null,
+          "range_m": 2500.0,
+          "layer": "surface",
+          "real": false
+        }
+      ]
+    },
+    "magic": {
+      "enabled": true,
+      "networks": {
+        "weave": {
+          "name": "weave",
+          "nodes": [
+            {
+              "id": "weave-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            },
+            {
+              "id": "ruin-surface-city-0-60-human_heartland-key",
+              "direction": [
+                0.9666034580972273,
+                0.24192189559966773,
+                0.08456684470846289
+              ],
+              "intensity": 2.5
+            }
+          ],
+          "edges": []
+        },
+        "umbral": {
+          "name": "umbral",
+          "nodes": [
+            {
+              "id": "umbral-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            }
+          ],
+          "edges": []
+        },
+        "infernal": {
+          "name": "infernal",
+          "nodes": [
+            {
+              "id": "infernal-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            }
+          ],
+          "edges": []
+        },
+        "radiant": {
+          "name": "radiant",
+          "nodes": [
+            {
+              "id": "radiant-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            },
+            {
+              "id": "ruin-surface-city-0-40-human_heartland-key",
+              "direction": [
+                0.9567727288213006,
+                0.20791169081775934,
+                0.20336832153790013
+              ],
+              "intensity": 2.5
+            }
+          ],
+          "edges": []
+        },
+        "fire": {
+          "name": "fire",
+          "nodes": [
+            {
+              "id": "fire-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            },
+            {
+              "id": "ruin-surface-city-0-150-dwarf-key",
+              "direction": [
+                0.3544374975981803,
+                0.5446390350150271,
+                0.7600936664873876
+              ],
+              "intensity": 2.5
+            }
+          ],
+          "edges": []
+        },
+        "water": {
+          "name": "water",
+          "nodes": [
+            {
+              "id": "water-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            },
+            {
+              "id": "ruin-surface-city-0-90-elf-key",
+              "direction": [
+                0.8137976813493738,
+                -0.3420201433256687,
+                -0.46984631039295416
+              ],
+              "intensity": 2.5
+            }
+          ],
+          "edges": []
+        },
+        "earth": {
+          "name": "earth",
+          "nodes": [
+            {
+              "id": "earth-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            }
+          ],
+          "edges": []
+        },
+        "air": {
+          "name": "air",
+          "nodes": [
+            {
+              "id": "air-node-0",
+              "direction": [
+                0.8830222215594891,
+                0.3420201433256687,
+                0.3213938048432697
+              ],
+              "intensity": 1.0
+            }
+          ],
+          "edges": []
+        }
+      },
+      "colleges": []
+    }
+  },
+  "expected": {
+    "summary": {
+      "living": 13,
+      "legends": 0,
+      "dreads": 1,
+      "realms": 2,
+      "orgs": 5,
+      "camps": 1,
+      "hooks": 17,
+      "candidates": 28,
+      "precipitated": 15
+    },
+    "people": [
+      {
+        "uid": "hero-champion-surface-city-0-150-dwarf",
+        "role": "champion",
+        "status": "living",
+        "archetype": "knight_errant",
+        "tier": "notable",
+        "fame": 1.625,
+        "display_name": "Krumbor Wyrmward",
+        "realm_uid": null,
+        "predecessor_uid": null,
+        "alignment": "Lawful Neutral",
+        "home": "surface-city-0-120-dwarf"
+      },
+      {
+        "uid": "hero-domain-surface-city-0-150-dwarf",
+        "role": "domain_holder",
+        "status": "living",
+        "archetype": "oathbound",
+        "tier": "notable",
+        "fame": 0.75,
+        "display_name": "Sirnbor Keeper of the Fire Stone",
+        "realm_uid": null,
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": null
+      },
+      {
+        "uid": "hero-domain-surface-city-0-60-human_heartland",
+        "role": "domain_holder",
+        "status": "living",
+        "archetype": "oathbound",
+        "tier": "notable",
+        "fame": 1.5,
+        "display_name": "Grafbrand Who Stayed",
+        "realm_uid": null,
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": null
+      },
+      {
+        "uid": "hero-magister-surface-city-0-60-human_heartland",
+        "role": "magister",
+        "status": "living",
+        "archetype": "hermit_sage",
+        "tier": "notable",
+        "fame": 3.0,
+        "display_name": "Fensel the Unburnt",
+        "realm_uid": null,
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": null
+      },
+      {
+        "uid": "hero-pretender-surface-city-0-150-dwarf",
+        "role": "pretender",
+        "status": "living",
+        "archetype": "obsessed_hunter",
+        "tier": "notable",
+        "fame": 3.25,
+        "display_name": "Legsulk of Ember",
+        "realm_uid": "realm-dwarf-bbbb",
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": "surface-city-0-120-dwarf"
+      },
+      {
+        "uid": "hero-pretender-surface-city-0-60-human_heartland",
+        "role": "pretender",
+        "status": "living",
+        "archetype": "exiled_hero",
+        "tier": "renowned",
+        "fame": 8.5,
+        "display_name": "Nerbrand Heir of Glen",
+        "realm_uid": "realm-human_heartland-aaaa",
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": "surface-city-0-10-human_heartland"
+      },
+      {
+        "uid": "hero-champion-surface-city-0-120-dwarf",
+        "role": "champion",
+        "status": "living",
+        "archetype": "warden",
+        "tier": "renowned",
+        "fame": 9.75,
+        "display_name": "Legnar Who Held Dunlin",
+        "realm_uid": "realm-dwarf-bbbb",
+        "predecessor_uid": null,
+        "alignment": "True Neutral",
+        "home": "surface-city-0-120-dwarf"
+      },
+      {
+        "uid": "hero-council-surface-city-0-10-human_heartland-commander",
+        "role": "council",
+        "status": "living",
+        "archetype": "kingmaker",
+        "tier": "notable",
+        "fame": 6.375,
+        "display_name": "Seleld Commander of Alder",
+        "realm_uid": "realm-human_heartland-aaaa",
+        "predecessor_uid": null,
+        "alignment": "Lawful Neutral",
+        "home": "surface-city-0-10-human_heartland"
+      },
+      {
+        "uid": "hero-council-surface-city-0-10-human_heartland-mage",
+        "role": "council",
+        "status": "living",
+        "archetype": "mastermind",
+        "tier": "notable",
+        "fame": 4.25,
+        "display_name": "Grafsel the Court Mage",
+        "realm_uid": "realm-human_heartland-aaaa",
+        "predecessor_uid": null,
+        "alignment": "Neutral Good",
+        "home": "surface-city-0-10-human_heartland"
+      },
+      {
+        "uid": "hero-council-surface-city-0-120-dwarf-commander",
+        "role": "council",
+        "status": "living",
+        "archetype": "oathbound",
+        "tier": "notable",
+        "fame": 4.875,
+        "display_name": "Mokhulk of the Dunlin Bench",
+        "realm_uid": "realm-dwarf-bbbb",
+        "predecessor_uid": null,
+        "alignment": "Lawful Neutral",
+        "home": "surface-city-0-120-dwarf"
+      },
+      {
+        "uid": "hero-council-surface-city-0-120-dwarf-market_steward",
+        "role": "council",
+        "status": "living",
+        "archetype": "oathbound",
+        "tier": "notable",
+        "fame": 3.9,
+        "display_name": "Tormek of the Dunlin Bench",
+        "realm_uid": "realm-dwarf-bbbb",
+        "predecessor_uid": null,
+        "alignment": "Lawful Neutral",
+        "home": "surface-city-0-120-dwarf"
+      },
+      {
+        "uid": "hero-sovereign-surface-city-0-10-human_heartland",
+        "role": "sovereign",
+        "status": "living",
+        "archetype": "incarnate",
+        "tier": "renowned",
+        "fame": 17.0,
+        "display_name": "Grafsel of Alder",
+        "realm_uid": "realm-human_heartland-aaaa",
+        "predecessor_uid": null,
+        "alignment": "Lawful Evil",
+        "home": "surface-city-0-10-human_heartland"
+      },
+      {
+        "uid": "hero-sovereign-surface-city-0-120-dwarf",
+        "role": "sovereign",
+        "status": "living",
+        "archetype": "incarnate",
+        "tier": "renowned",
+        "fame": 19.5,
+        "display_name": "Gundbor First of the Line",
+        "realm_uid": "realm-dwarf-bbbb",
+        "predecessor_uid": null,
+        "alignment": "Lawful Evil",
+        "home": "surface-city-0-120-dwarf"
+      }
+    ],
+    "dreads": [
+      {
+        "uid": "dread-nest-ashen-wyrm-151",
+        "role": "dread",
+        "status": "living",
+        "archetype": "ancient",
+        "tier": "renowned",
+        "fame": 10.5,
+        "display_name": "Ashen wyrm, Who Ate Ember",
+        "realm_uid": null,
+        "predecessor_uid": null,
+        "alignment": "Lawful Evil",
+        "home": null
+      }
+    ],
+    "rolls": [
+      {
+        "candidate_uid": "hero-pretender-surface-city-0-40-human_heartland",
+        "kind": "heir",
+        "event_id": "ruin-surface-city-0-40-human_heartland",
+        "age": 1,
+        "chance": 0.4,
+        "roll": 0.763823,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-pretender-surface-city-0-90-elf",
+        "kind": "heir",
+        "event_id": "ruin-surface-city-0-90-elf",
+        "age": 1,
+        "chance": 0.8,
+        "roll": 0.985804,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-pretender-surface-city-0-60-human_heartland",
+        "kind": "heir",
+        "event_id": "ruin-surface-city-0-60-human_heartland",
+        "age": 1,
+        "chance": 0.6,
+        "roll": 0.443647,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-pretender-surface-city-0-150-dwarf",
+        "kind": "heir",
+        "event_id": "ruin-surface-city-0-150-dwarf",
+        "age": 1,
+        "chance": 0.4,
+        "roll": 0.389096,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-warlord-1-surface-city-0-10-human_heartland",
+        "kind": "warlord",
+        "event_id": "war-1-0",
+        "age": 1,
+        "chance": 0.35,
+        "roll": 0.518508,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-warlord-1-surface-city-0-120-dwarf",
+        "kind": "warlord",
+        "event_id": "war-1-1",
+        "age": 1,
+        "chance": 0.65,
+        "roll": 0.922699,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "dread-nest-ashen-wyrm-151",
+        "kind": "dread",
+        "event_id": "ruin-surface-city-0-150-dwarf",
+        "age": 1,
+        "chance": 0.9,
+        "roll": 0.774232,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-domain-surface-city-0-40-human_heartland",
+        "kind": "domain_holder",
+        "event_id": "ruin-surface-city-0-40-human_heartland",
+        "age": 1,
+        "chance": 0.5,
+        "roll": 0.711458,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-domain-surface-city-0-90-elf",
+        "kind": "domain_holder",
+        "event_id": "ruin-surface-city-0-90-elf",
+        "age": 1,
+        "chance": 0.5,
+        "roll": 0.767528,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-domain-surface-city-0-60-human_heartland",
+        "kind": "domain_holder",
+        "event_id": "ruin-surface-city-0-60-human_heartland",
+        "age": 1,
+        "chance": 0.5,
+        "roll": 0.124476,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-magister-surface-city-0-60-human_heartland",
+        "kind": "magister",
+        "event_id": "ruin-surface-city-0-60-human_heartland",
+        "age": 1,
+        "chance": 0.75,
+        "roll": 0.613997,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-domain-surface-city-0-150-dwarf",
+        "kind": "domain_holder",
+        "event_id": "ruin-surface-city-0-150-dwarf",
+        "age": 1,
+        "chance": 0.5,
+        "roll": 0.077427,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-sovereign-surface-city-0-10-human_heartland",
+        "kind": "sovereign",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.9,
+        "roll": 0.192013,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-sovereign-surface-city-0-120-dwarf",
+        "kind": "sovereign",
+        "event_id": "surface-city-0-120-dwarf",
+        "age": 2,
+        "chance": 0.9,
+        "roll": 0.610198,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-10-human_heartland-magistrate",
+        "kind": "council",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.45,
+        "roll": 0.801191,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-10-human_heartland-commander",
+        "kind": "council",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.45,
+        "roll": 0.404876,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-10-human_heartland-chaplain",
+        "kind": "council",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.45,
+        "roll": 0.79011,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-10-human_heartland-market_steward",
+        "kind": "council",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.45,
+        "roll": 0.726638,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-10-human_heartland-mage",
+        "kind": "council",
+        "event_id": "surface-city-0-10-human_heartland",
+        "age": 2,
+        "chance": 0.45,
+        "roll": 0.155232,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-120-dwarf-magistrate",
+        "kind": "council",
+        "event_id": "surface-city-0-120-dwarf",
+        "age": 2,
+        "chance": 0.3,
+        "roll": 0.822894,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-120-dwarf-commander",
+        "kind": "council",
+        "event_id": "surface-city-0-120-dwarf",
+        "age": 2,
+        "chance": 0.3,
+        "roll": 0.019941,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-council-surface-city-0-120-dwarf-market_steward",
+        "kind": "council",
+        "event_id": "surface-city-0-120-dwarf",
+        "age": 2,
+        "chance": 0.3,
+        "roll": 0.008067,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-champion-surface-city-0-120-dwarf",
+        "kind": "champion",
+        "event_id": "nest-ashen-wyrm-151",
+        "age": 2,
+        "chance": 0.85,
+        "roll": 0.437155,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "hero-champion-surface-city-0-150-dwarf",
+        "kind": "champion",
+        "event_id": "ruin-surface-city-0-150-dwarf",
+        "age": 1,
+        "chance": 0.85,
+        "roll": 0.609383,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "camp-surface-city-0-40-human_heartland",
+        "kind": "camp",
+        "event_id": "ruin-surface-city-0-40-human_heartland",
+        "age": 1,
+        "chance": 0.3,
+        "roll": 0.605064,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "camp-surface-city-0-90-elf",
+        "kind": "camp",
+        "event_id": "ruin-surface-city-0-90-elf",
+        "age": 1,
+        "chance": 0.5,
+        "roll": 0.617592,
+        "precipitated": false
+      },
+      {
+        "candidate_uid": "camp-surface-city-0-60-human_heartland",
+        "kind": "camp",
+        "event_id": "ruin-surface-city-0-60-human_heartland",
+        "age": 1,
+        "chance": 0.4,
+        "roll": 0.382643,
+        "precipitated": true
+      },
+      {
+        "candidate_uid": "camp-surface-city-0-150-dwarf",
+        "kind": "camp",
+        "event_id": "ruin-surface-city-0-150-dwarf",
+        "age": 1,
+        "chance": 0.3,
+        "roll": 0.757988,
+        "precipitated": false
+      }
+    ],
+    "bonds": [
+      {
+        "a": "hero-pretender-surface-city-0-150-dwarf",
+        "b": "hero-domain-surface-city-0-150-dwarf",
+        "kind": "rival",
+        "from_event": "ruin-surface-city-0-150-dwarf"
+      },
+      {
+        "a": "hero-pretender-surface-city-0-60-human_heartland",
+        "b": "hero-domain-surface-city-0-60-human_heartland",
+        "kind": "rival",
+        "from_event": "ruin-surface-city-0-60-human_heartland"
+      },
+      {
+        "a": "hero-pretender-surface-city-0-60-human_heartland",
+        "b": "hero-magister-surface-city-0-60-human_heartland",
+        "kind": "kin",
+        "from_event": "ruin-surface-city-0-60-human_heartland"
+      },
+      {
+        "a": "hero-pretender-surface-city-0-150-dwarf",
+        "b": "dread-nest-ashen-wyrm-151",
+        "kind": "rival",
+        "from_event": "ruin-surface-city-0-150-dwarf"
+      },
+      {
+        "a": "hero-pretender-surface-city-0-60-human_heartland",
+        "b": "hero-council-surface-city-0-10-human_heartland-commander",
+        "kind": "mentor",
+        "from_event": "ruin-surface-city-0-60-human_heartland"
+      },
+      {
+        "a": "hero-council-surface-city-0-10-human_heartland-commander",
+        "b": "hero-sovereign-surface-city-0-10-human_heartland",
+        "kind": "ally",
+        "from_event": "surface-city-0-10-human_heartland"
+      },
+      {
+        "a": "hero-council-surface-city-0-10-human_heartland-mage",
+        "b": "hero-sovereign-surface-city-0-10-human_heartland",
+        "kind": "ally",
+        "from_event": "surface-city-0-10-human_heartland"
+      },
+      {
+        "a": "hero-council-surface-city-0-120-dwarf-commander",
+        "b": "hero-sovereign-surface-city-0-120-dwarf",
+        "kind": "ally",
+        "from_event": "surface-city-0-120-dwarf"
+      },
+      {
+        "a": "hero-council-surface-city-0-120-dwarf-market_steward",
+        "b": "hero-sovereign-surface-city-0-120-dwarf",
+        "kind": "ally",
+        "from_event": "surface-city-0-120-dwarf"
+      }
+    ],
+    "mantles": [],
+    "realms": [
+      {
+        "uid": "realm-human_heartland-aaaa",
+        "name": "Aldermark",
+        "english_name": "Realm of Alder",
+        "civilization_id": "human_heartland",
+        "civilization_name": "Heartland humans",
+        "parent_race_id": "human",
+        "capital_uid": "surface-city-0-10-human_heartland",
+        "city_uids": [
+          "surface-city-0-10-human_heartland"
+        ],
+        "culture_id": "human_heartland-aaaa",
+        "sovereign_uid": "hero-sovereign-surface-city-0-10-human_heartland"
+      },
+      {
+        "uid": "realm-dwarf-bbbb",
+        "name": "Dunlinrik",
+        "english_name": "Realm of Dunlin",
+        "civilization_id": "dwarf",
+        "civilization_name": "Dwarves",
+        "parent_race_id": "dwarf",
+        "capital_uid": "surface-city-0-120-dwarf",
+        "city_uids": [
+          "surface-city-0-120-dwarf"
+        ],
+        "culture_id": "dwarf-bbbb",
+        "sovereign_uid": "hero-sovereign-surface-city-0-120-dwarf"
+      }
+    ]
+  }
+}

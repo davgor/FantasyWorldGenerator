@@ -39,12 +39,12 @@ def benchmark(cfg, repeats):
 def serve(cfg, port):
     class Handler(BaseHTTPRequestHandler):
         def do_POST(self):
-            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate', '/world/advance-age'):
+            if self.path not in ('/seed/manual', '/seed/prompt', '/patch', '/world/generate', '/world/advance-age', '/world/summon', '/world/moon'):
                 self.send_error(404)
                 return
             try:
                 length = int(self.headers.get('Content-Length','0'))
-                limit=256*1024*1024 if self.path=='/world/advance-age' else 65536
+                limit=256*1024*1024 if self.path in ('/world/advance-age', '/world/summon', '/world/moon') else 65536
                 if not 0 < length <= limit:
                     raise ValueError(f'JSON body must be 1..{limit} bytes')
                 body = json.loads(self.rfile.read(length))
@@ -54,6 +54,14 @@ def serve(cfg, port):
                 elif self.path == '/world/advance-age':
                     from icarus_sim.terrain_history import advance_age_request
                     result=advance_age_request(body)
+                elif self.path == '/world/summon':
+                    # The orchestrator summons a god (or sends a walking one home); stateless like advance-age.
+                    from icarus_sim.terrain_visitation import visitation_request
+                    result=visitation_request(body)
+                elif self.path == '/world/moon':
+                    # The sky and the surge at any day or hour, for an orchestrator driving a clock.
+                    from icarus_sim.terrain_astrology import lunar_request
+                    result=lunar_request(body)
                 elif self.path == '/patch':
                     result=patch_request(body)
                 else:

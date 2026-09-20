@@ -80,7 +80,7 @@
             "items": {
               "type": "integer",
               "minimum": -1,
-              "maximum": 103
+              "maximum": 155
             }
           }
         }
@@ -141,8 +141,8 @@
         },
         "magical_biomes": {
           "type": "array",
-          "minItems": 104,
-          "maxItems": 104,
+          "minItems": 156,
+          "maxItems": 156,
           "items": {
             "$ref": "#/$defs/magicalBiome"
           }
@@ -245,7 +245,7 @@
       ],
       "properties": {
         "version": {
-          "const": 2
+          "const": 3
         },
         "entities": {
           "type": "array"
@@ -656,6 +656,49 @@
         }
       }
     },
+    "astrology": {
+      "type": "object",
+      "required": ["version", "calendar", "moon", "formulas"],
+      "properties": {
+        "version": {"const": 1},
+        "calendar": {"type": "object"},
+        "moon": {
+          "type": "object",
+          "required": ["periods", "offsets", "tilt_max_degrees", "great_year_days", "hemispheres", "regions"],
+          "properties": {
+            "periods": {"type": "object"},
+            "offsets": {"type": "object"},
+            "tilt_max_degrees": {"type": "number", "minimum": 10, "maximum": 35},
+            "great_year_days": {"type": "integer", "minimum": 1}
+          }
+        },
+        "formulas": {"type": "object"}
+      }
+    },
+    "lunar_almanac": {
+      "type": "object",
+      "required": ["version", "reported_year", "now", "months", "events"],
+      "properties": {
+        "version": {"const": 1},
+        "reported_year": {"type": "integer", "minimum": 0},
+        "now": {"type": "object"},
+        "months": {"type": "array", "minItems": 12, "maxItems": 12},
+        "events": {"type": "array"}
+      }
+    },
+    "religion": {
+      "type": "object",
+      "required": ["version", "catalogue", "cosmology", "gods", "faiths", "sites", "visitations"],
+      "properties": {
+        "version": {"const": 1},
+        "catalogue": {"type": "object"},
+        "cosmology": {"type": "object"},
+        "gods": {"type": "array"},
+        "faiths": {"type": "object"},
+        "sites": {"type": "array"},
+        "visitations": {"type": "array"}
+      }
+    },
     "debug_stats": {
       "type": "object",
       "required": [
@@ -864,7 +907,59 @@
             "land_ice.fire",
             "land_ice.water",
             "land_ice.earth",
-            "land_ice.air"
+            "land_ice.air",
+            "ocean.blood",
+            "ocean.void",
+            "ocean.rot",
+            "ocean.eldritch",
+            "tundra.blood",
+            "tundra.void",
+            "tundra.rot",
+            "tundra.eldritch",
+            "desert.blood",
+            "desert.void",
+            "desert.rot",
+            "desert.eldritch",
+            "grassland.blood",
+            "grassland.void",
+            "grassland.rot",
+            "grassland.eldritch",
+            "forest.blood",
+            "forest.void",
+            "forest.rot",
+            "forest.eldritch",
+            "exposed_rock.blood",
+            "exposed_rock.void",
+            "exposed_rock.rot",
+            "exposed_rock.eldritch",
+            "snow.blood",
+            "snow.void",
+            "snow.rot",
+            "snow.eldritch",
+            "rainforest.blood",
+            "rainforest.void",
+            "rainforest.rot",
+            "rainforest.eldritch",
+            "lake.blood",
+            "lake.void",
+            "lake.rot",
+            "lake.eldritch",
+            "marsh.blood",
+            "marsh.void",
+            "marsh.rot",
+            "marsh.eldritch",
+            "boreal_forest.blood",
+            "boreal_forest.void",
+            "boreal_forest.rot",
+            "boreal_forest.eldritch",
+            "cold_tundra.blood",
+            "cold_tundra.void",
+            "cold_tundra.rot",
+            "cold_tundra.eldritch",
+            "land_ice.blood",
+            "land_ice.void",
+            "land_ice.rot",
+            "land_ice.eldritch"
           ]
         },
         "core": {
@@ -910,7 +1005,11 @@
             "fire",
             "water",
             "earth",
-            "air"
+            "air",
+            "blood",
+            "void",
+            "rot",
+            "eldritch"
           ]
         },
         "group": {

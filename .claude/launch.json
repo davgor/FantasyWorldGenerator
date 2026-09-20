@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "terrain-lab",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "tools/terrain_lab.py",
+        "--serve",
+        "--port",
+        "8765",
+        "--size",
+        "17",
+        "--phase",
+        "1"
+      ],
+      "port": 8765
+    }
+  ]
+}

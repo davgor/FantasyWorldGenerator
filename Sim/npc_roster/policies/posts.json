@@ -1,0 +1,1097 @@
+{
+ "schema": "fantasy-world-generator.npc-posts",
+ "revision": 1,
+ "notes": "Post labels per building, the verbs each post can plausibly offer, and the authored earmark rules. The buildings map is a snapshot of buildings.json staffing rosters, copied so this package never imports the generator; test_npc_roster re-reads the registry and fails if it drifts. Role order is seniority order: the first role of a building is its senior post. Verbs are the ten the quest generator pinned; a role with no verbs can hold a post but never becomes a giver.",
+ "verbs": [
+  "reclaim",
+  "recover",
+  "defend",
+  "slay",
+  "trade",
+  "tend",
+  "convert",
+  "supply",
+  "cleanse",
+  "investigate"
+ ],
+ "caps": {
+  "capital": 6,
+  "medium": 4,
+  "small": 3,
+  "hamlet": 1,
+  "fortress": 2
+ },
+ "giver_rank": [
+  "building.guildhall",
+  "building.keep",
+  "building.keep_tower",
+  "building.great_temple",
+  "building.civic_hall",
+  "building.court",
+  "building.inn",
+  "building.tavern",
+  "building.temple",
+  "building.barracks",
+  "building.castle_barracks",
+  "building.guardhouse",
+  "building.market_square",
+  "building.dock",
+  "building.library",
+  "building.laboratory",
+  "building.infirmary",
+  "building.apothecary",
+  "building.smithy",
+  "building.treasury",
+  "building.warehouse",
+  "building.observatory",
+  "building.magical_worksite",
+  "building.ward_anchor",
+  "building.school",
+  "building.great_hall",
+  "building.castle_chapel",
+  "building.barbican",
+  "building.gatehouse",
+  "building.brewery",
+  "building.mine",
+  "building.boatyard",
+  "building.stable",
+  "building.hamlet_meeting_shed",
+  "building.hamlet_shrine",
+  "building.hamlet_smith_shed",
+  "building.hamlet_farmyard",
+  "building.hamlet_landing",
+  "building.hamlet_food_store"
+ ],
+ "role_verbs": {
+  "administrator": [
+   "investigate",
+   "supply"
+  ],
+  "animal_keeper": [
+   "tend",
+   "supply"
+  ],
+  "apothecary": [
+   "tend",
+   "recover"
+  ],
+  "armorer": [
+   "supply",
+   "trade"
+  ],
+  "astronomer": [
+   "investigate"
+  ],
+  "baker": [
+   "supply"
+  ],
+  "bartender": [
+   "trade",
+   "investigate"
+  ],
+  "bath_attendant": [
+   "tend"
+  ],
+  "boatman": [
+   "supply",
+   "trade"
+  ],
+  "brewer": [
+   "supply",
+   "trade"
+  ],
+  "butcher": [
+   "supply"
+  ],
+  "care_assistant": [
+   "tend"
+  ],
+  "caretaker": [
+   "tend",
+   "cleanse"
+  ],
+  "cargo_clerk": [
+   "trade",
+   "supply"
+  ],
+  "carpenter": [
+   "supply"
+  ],
+  "carter": [
+   "supply",
+   "trade"
+  ],
+  "chaplain": [
+   "tend",
+   "convert"
+  ],
+  "charcoal_burner": [
+   "supply"
+  ],
+  "clay_worker": [
+   "supply"
+  ],
+  "clerk": [
+   "investigate"
+  ],
+  "commander": [
+   "defend",
+   "slay",
+   "reclaim"
+  ],
+  "cook": [
+   "supply"
+  ],
+  "court_clerk": [
+   "investigate"
+  ],
+  "dockmaster": [
+   "trade",
+   "supply"
+  ],
+  "dockworker": [
+   "supply"
+  ],
+  "dyer": [
+   "supply",
+   "trade"
+  ],
+  "equipment_keeper": [
+   "supply"
+  ],
+  "farmer": [
+   "supply",
+   "tend"
+  ],
+  "farrier": [
+   "tend",
+   "supply"
+  ],
+  "fisher": [
+   "supply"
+  ],
+  "food_preserver": [
+   "supply"
+  ],
+  "fuel_handler": [
+   "supply"
+  ],
+  "furnace_worker": [
+   "supply"
+  ],
+  "garrison_officer": [
+   "defend",
+   "slay",
+   "reclaim"
+  ],
+  "garrison_trooper": [
+   "defend",
+   "slay"
+  ],
+  "gate_captain": [
+   "defend",
+   "investigate"
+  ],
+  "gate_guard": [
+   "defend"
+  ],
+  "groundskeeper": [
+   "tend",
+   "cleanse"
+  ],
+  "grower": [
+   "supply",
+   "tend"
+  ],
+  "hauler": [
+   "supply"
+  ],
+  "healer": [
+   "tend",
+   "recover"
+  ],
+  "herbalist": [
+   "recover",
+   "tend"
+  ],
+  "herder": [
+   "supply",
+   "tend"
+  ],
+  "host": [
+   "trade",
+   "investigate"
+  ],
+  "jailer": [
+   "investigate"
+  ],
+  "keep_guard": [
+   "defend"
+  ],
+  "keeper": [
+   "cleanse",
+   "tend"
+  ],
+  "librarian": [
+   "investigate",
+   "recover"
+  ],
+  "lookout": [
+   "investigate",
+   "defend"
+  ],
+  "mage": [
+   "cleanse",
+   "investigate",
+   "recover"
+  ],
+  "magistrate": [
+   "investigate",
+   "defend"
+  ],
+  "market_steward": [
+   "trade",
+   "supply"
+  ],
+  "mason": [
+   "supply"
+  ],
+  "merchant": [
+   "trade",
+   "supply"
+  ],
+  "miller": [
+   "supply"
+  ],
+  "miner": [
+   "recover",
+   "supply"
+  ],
+  "officiant": [
+   "tend",
+   "convert",
+   "cleanse"
+  ],
+  "postern_guard": [
+   "defend"
+  ],
+  "potter": [
+   "supply",
+   "trade"
+  ],
+  "quarry_worker": [
+   "supply"
+  ],
+  "quartermaster": [
+   "supply",
+   "trade"
+  ],
+  "researcher": [
+   "investigate",
+   "recover"
+  ],
+  "sanitation_worker": [
+   "cleanse"
+  ],
+  "scribe": [
+   "investigate"
+  ],
+  "sergeant": [
+   "defend",
+   "slay"
+  ],
+  "shipwright": [
+   "supply",
+   "trade"
+  ],
+  "smith": [
+   "supply",
+   "trade"
+  ],
+  "soldier": [
+   "defend",
+   "slay"
+  ],
+  "steward": [
+   "supply",
+   "trade"
+  ],
+  "store_keeper": [
+   "supply",
+   "trade"
+  ],
+  "storekeeper": [
+   "supply",
+   "trade"
+  ],
+  "tanner": [
+   "supply",
+   "trade"
+  ],
+  "tavern_keeper": [
+   "trade",
+   "investigate"
+  ],
+  "teacher": [
+   "investigate",
+   "tend"
+  ],
+  "textile_worker": [
+   "supply",
+   "trade"
+  ],
+  "timber_worker": [
+   "supply"
+  ],
+  "toll_clerk": [
+   "trade"
+  ],
+  "tower_watch": [
+   "defend",
+   "investigate"
+  ],
+  "treasurer": [
+   "trade",
+   "recover"
+  ],
+  "ward_keeper": [
+   "cleanse",
+   "defend"
+  ],
+  "watch_guard": [
+   "defend",
+   "investigate"
+  ],
+  "watch_officer": [
+   "defend",
+   "slay",
+   "investigate"
+  ],
+  "water_keeper": [
+   "tend",
+   "cleanse"
+  ],
+  "well_keeper": [
+   "tend",
+   "cleanse"
+  ]
+ },
+ "buildings": {
+  "building.apothecary": [
+   [
+    "apothecary",
+    1
+   ],
+   [
+    "herbalist",
+    1
+   ]
+  ],
+  "building.armory": [
+   [
+    "armorer",
+    2
+   ]
+  ],
+  "building.bakery": [
+   [
+    "baker",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.barbican": [
+   [
+    "gate_captain",
+    1
+   ],
+   [
+    "gate_guard",
+    4
+   ]
+  ],
+  "building.barracks": [
+   [
+    "garrison_officer",
+    2
+   ],
+   [
+    "soldier",
+    12
+   ],
+   [
+    "quartermaster",
+    2
+   ]
+  ],
+  "building.bathhouse": [
+   [
+    "bath_attendant",
+    4
+   ]
+  ],
+  "building.boatyard": [
+   [
+    "shipwright",
+    4
+   ],
+   [
+    "assistant",
+    4
+   ]
+  ],
+  "building.brewery": [
+   [
+    "brewer",
+    2
+   ],
+   [
+    "assistant",
+    3
+   ]
+  ],
+  "building.butchery": [
+   [
+    "butcher",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.carpenter": [
+   [
+    "carpenter",
+    2
+   ],
+   [
+    "apprentice",
+    1
+   ]
+  ],
+  "building.cart_yard": [
+   [
+    "cart_handler",
+    2
+   ]
+  ],
+  "building.castle_armory": [
+   [
+    "armorer",
+    1
+   ]
+  ],
+  "building.castle_barracks": [
+   [
+    "sergeant",
+    2
+   ],
+   [
+    "garrison_trooper",
+    8
+   ]
+  ],
+  "building.castle_chapel": [
+   [
+    "chaplain",
+    1
+   ]
+  ],
+  "building.cemetery": [
+   [
+    "groundskeeper",
+    2
+   ]
+  ],
+  "building.charcoal_yard": [
+   [
+    "charcoal_burner",
+    2
+   ]
+  ],
+  "building.cistern": [
+   [
+    "water_keeper",
+    2
+   ]
+  ],
+  "building.civic_hall": [
+   [
+    "administrator",
+    2
+   ],
+   [
+    "clerk",
+    2
+   ]
+  ],
+  "building.clay_pit": [
+   [
+    "clay_worker",
+    4
+   ]
+  ],
+  "building.corner_tower": [
+   [
+    "tower_watch",
+    2
+   ]
+  ],
+  "building.court": [
+   [
+    "magistrate",
+    1
+   ],
+   [
+    "court_clerk",
+    2
+   ]
+  ],
+  "building.crypt": [
+   [
+    "caretaker",
+    1
+   ]
+  ],
+  "building.dock": [
+   [
+    "dockmaster",
+    1
+   ],
+   [
+    "dockworker",
+    4
+   ]
+  ],
+  "building.dyeworks": [
+   [
+    "dyer",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.farmstead": [
+   [
+    "farmer",
+    4
+   ]
+  ],
+  "building.fire_shed": [
+   [
+    "equipment_keeper",
+    1
+   ]
+  ],
+  "building.fuel_depot": [
+   [
+    "fuel_handler",
+    2
+   ]
+  ],
+  "building.garden_orchard": [
+   [
+    "grower",
+    3
+   ]
+  ],
+  "building.gatehouse": [
+   [
+    "gate_guard",
+    6
+   ],
+   [
+    "toll_clerk",
+    2
+   ]
+  ],
+  "building.granary": [
+   [
+    "storekeeper",
+    2
+   ],
+   [
+    "porter",
+    2
+   ]
+  ],
+  "building.great_hall": [
+   [
+    "steward",
+    1
+   ],
+   [
+    "hall_attendant",
+    2
+   ]
+  ],
+  "building.great_temple": [
+   [
+    "officiant",
+    4
+   ],
+   [
+    "caretaker",
+    4
+   ]
+  ],
+  "building.guardhouse": [
+   [
+    "watch_officer",
+    2
+   ],
+   [
+    "watch_guard",
+    6
+   ]
+  ],
+  "building.guildhall": [
+   [
+    "cook",
+    1
+   ],
+   [
+    "bartender",
+    1
+   ]
+  ],
+  "building.hamlet_barn": [
+   [
+    "farm_hand",
+    2
+   ]
+  ],
+  "building.hamlet_cart_shed": [
+   [
+    "carter",
+    1
+   ]
+  ],
+  "building.hamlet_farmyard": [
+   [
+    "farmer",
+    3
+   ]
+  ],
+  "building.hamlet_food_store": [
+   [
+    "store_keeper",
+    1
+   ]
+  ],
+  "building.hamlet_landing": [
+   [
+    "boatman",
+    2
+   ]
+  ],
+  "building.hamlet_latrine": [
+   [
+    "sanitation_worker",
+    1
+   ]
+  ],
+  "building.hamlet_meeting_shed": [
+   [
+    "steward",
+    1
+   ]
+  ],
+  "building.hamlet_net_shed": [
+   [
+    "fisher",
+    2
+   ]
+  ],
+  "building.hamlet_shrine": [
+   [
+    "caretaker",
+    1
+   ]
+  ],
+  "building.hamlet_smith_shed": [
+   [
+    "smith",
+    1
+   ]
+  ],
+  "building.hamlet_staging_yard": [
+   [
+    "hauler",
+    2
+   ]
+  ],
+  "building.hamlet_well": [
+   [
+    "well_keeper",
+    1
+   ]
+  ],
+  "building.hand_mill": [
+   [
+    "miller",
+    2
+   ]
+  ],
+  "building.holding_cells": [
+   [
+    "jailer",
+    4
+   ]
+  ],
+  "building.infirmary": [
+   [
+    "healer",
+    2
+   ],
+   [
+    "care_assistant",
+    3
+   ]
+  ],
+  "building.inn": [
+   [
+    "host",
+    1
+   ],
+   [
+    "cook",
+    2
+   ],
+   [
+    "service_worker",
+    2
+   ]
+  ],
+  "building.isolation_house": [
+   [
+    "healer",
+    2
+   ],
+   [
+    "care_assistant",
+    4
+   ]
+  ],
+  "building.keep": [
+   [
+    "commander",
+    2
+   ],
+   [
+    "keep_guard",
+    6
+   ],
+   [
+    "steward",
+    2
+   ]
+  ],
+  "building.keep_tower": [
+   [
+    "commander",
+    2
+   ],
+   [
+    "keep_guard",
+    6
+   ]
+  ],
+  "building.laboratory": [
+   [
+    "researcher",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.latrine": [
+   [
+    "sanitation_worker",
+    2
+   ]
+  ],
+  "building.library": [
+   [
+    "librarian",
+    2
+   ],
+   [
+    "scribe",
+    2
+   ]
+  ],
+  "building.livestock_yard": [
+   [
+    "herder",
+    3
+   ]
+  ],
+  "building.magic_well": [
+   [
+    "keeper",
+    2
+   ]
+  ],
+  "building.magical_worksite": [
+   [
+    "mage",
+    2
+   ],
+   [
+    "assistant",
+    3
+   ]
+  ],
+  "building.market_shelter": [
+   [
+    "merchant",
+    2
+   ],
+   [
+    "assistant",
+    1
+   ]
+  ],
+  "building.market_square": [
+   [
+    "market_steward",
+    1
+   ]
+  ],
+  "building.mason": [
+   [
+    "mason",
+    2
+   ],
+   [
+    "maintenance_laborer",
+    3
+   ]
+  ],
+  "building.mine": [
+   [
+    "miner",
+    8
+   ],
+   [
+    "support_worker",
+    4
+   ]
+  ],
+  "building.observatory": [
+   [
+    "astronomer",
+    2
+   ],
+   [
+    "assistant",
+    1
+   ]
+  ],
+  "building.postern": [
+   [
+    "postern_guard",
+    2
+   ]
+  ],
+  "building.pottery": [
+   [
+    "potter",
+    2
+   ],
+   [
+    "apprentice",
+    1
+   ]
+  ],
+  "building.preservation_house": [
+   [
+    "food_preserver",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.quarry": [
+   [
+    "quarry_worker",
+    6
+   ]
+  ],
+  "building.root_cellar": [
+   [
+    "storekeeper",
+    1
+   ]
+  ],
+  "building.school": [
+   [
+    "teacher",
+    2
+   ]
+  ],
+  "building.smelter": [
+   [
+    "furnace_worker",
+    4
+   ],
+   [
+    "ore_handler",
+    2
+   ]
+  ],
+  "building.smithy": [
+   [
+    "smith",
+    1
+   ],
+   [
+    "apprentice",
+    1
+   ]
+  ],
+  "building.stable": [
+   [
+    "animal_keeper",
+    2
+   ],
+   [
+    "farrier",
+    1
+   ]
+  ],
+  "building.tannery": [
+   [
+    "tanner",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.tavern": [
+   [
+    "tavern_keeper",
+    1
+   ],
+   [
+    "cook",
+    1
+   ],
+   [
+    "service_worker",
+    2
+   ]
+  ],
+  "building.temple": [
+   [
+    "officiant",
+    2
+   ],
+   [
+    "caretaker",
+    2
+   ]
+  ],
+  "building.timber_yard": [
+   [
+    "timber_worker",
+    4
+   ]
+  ],
+  "building.tower": [
+   [
+    "lookout",
+    3
+   ]
+  ],
+  "building.treasury": [
+   [
+    "treasurer",
+    1
+   ],
+   [
+    "clerk",
+    2
+   ]
+  ],
+  "building.ward_anchor": [
+   [
+    "ward_keeper",
+    2
+   ]
+  ],
+  "building.warehouse": [
+   [
+    "storekeeper",
+    2
+   ],
+   [
+    "porter",
+    3
+   ]
+  ],
+  "building.waste_yard": [
+   [
+    "sanitation_worker",
+    4
+   ]
+  ],
+  "building.water_point": [
+   [
+    "water_carrier",
+    2
+   ]
+  ],
+  "building.watermill": [
+   [
+    "miller",
+    2
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ],
+  "building.weaver": [
+   [
+    "textile_worker",
+    2
+   ]
+  ],
+  "building.weigh_house": [
+   [
+    "cargo_clerk",
+    2
+   ]
+  ],
+  "building.well": [
+   [
+    "water_keeper",
+    1
+   ]
+  ],
+  "building.windmill": [
+   [
+    "miller",
+    1
+   ],
+   [
+    "assistant",
+    2
+   ]
+  ]
+ }
+}

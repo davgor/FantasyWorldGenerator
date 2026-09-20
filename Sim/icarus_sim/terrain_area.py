@@ -86,7 +86,11 @@ def apply_world_scale(result,cfg):
         result['timing_ms']['world_society']=elapsed;result['timing_ms']['total']+=elapsed
         from .terrain_world import registry,options
         definitions=registry();resolved={**result['config'],**options(cfg)}
-        overrides={k:resolved[k] for k,v in definitions.items() if k!='seed' and resolved[k]!=v['default']}
+        # Some registry entries are authored inputs the request builder consumes rather
+        # than config fields, so they never appear in the resolved document; their effect
+        # shows up in the terms they derive.
+        overrides={k:resolved[k] for k,v in definitions.items()
+                   if k!='seed' and k in resolved and resolved[k]!=v['default']}
         result.setdefault('recipe',{'version':3,'seed':cfg.seed,'overrides':overrides,'parameters':definitions,
                                    'resolved':resolved,'provenance':{k:'override' if k in overrides else 'default' for k in definitions}})
     result['generator_version']=8

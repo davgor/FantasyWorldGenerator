@@ -1,0 +1,21 @@
+{
+  "schema": "fantasy-world-generator.story-weights",
+  "revision": 3,
+  "notes": "The deterministic assignment equation. weight = round(boosts, 4) * round(alignment_fit, 4) * archetype_fit * claim_fit, rounded to 4 places, so the exported breakdown reproduces it. alignment_fit = max(fit_floor, 1 + fit_gain * (pull . alignment) / max(|pull|, pull_floor)); archetype_fit = fits_factor when the hero's archetype is in the trope's `fits`, else 1; claim_fit = claim_factor when the hero's claim verb is in `claims`, else 1. The offered hook is the highest weight; ties break on trope id. Threads read `gainable_features` (facts a runtime event can add); `threshold` is the alignment pole boundary the lab and docs quote.",
+  "fit_gain": 0.75,
+  "fit_floor": 0.25,
+  "pull_floor": 0.5,
+  "fits_factor": 1.6,
+  "claim_factor": 1.5,
+  "threshold": 0.34,
+  "node_intense_threshold": 1.5,
+  "famine_coverage": 0.5,
+  "gainable_features": ["rival:spared", "stake:regained", "villain:prior_age", "dread:failed_against", "defence:failed",
+                        "deed:credited_not_actual", "bond:betrayed", "bond:debt", "bond:mentor", "bond:ally", "stake:none",
+                        "world:war_pressure", "world:war_recent", "world:enemy_living", "world:war_risk", "world:war_hunger", "world:famine",
+                        "world:food_deficit", "world:surge", "world:node_intense", "world:mantle_open",
+                        "world:threatened", "world:realm_tyrant", "realm:tyrant", "fame:renowned", "fame:legendary",
+                        "war:victor_recent", "war:defeated_recent"],
+  "max_threads_per_act": 6,
+  "initiative_days": 90
+}

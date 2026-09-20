@@ -1,4 +1,5 @@
 #pragma once
+#include "astrology.hpp"
 #include "biomes.hpp"
 #include "climate.hpp"
 #include "config.hpp"
@@ -28,6 +29,8 @@ struct WorldEnvelope {
     ClimateResult climate;
     std::vector<LeyNetwork> networks;
     std::vector<RegionInfluence> regions;
+    // The seeded moon (astrology schema 1); its tide is read by the age lottery.
+    Moon moon;
     std::vector<DetailBand> bands;
     Grid detail_strength;
     std::uint32_t detail_seed=0;

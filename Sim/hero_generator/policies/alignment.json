@@ -1,0 +1,40 @@
+{
+  "schema": "fantasy-world-generator.hero-alignment-policy",
+  "revision": 1,
+  "notes": "Centres per civilization are authored flavour, not derived from the registry; deed shifts decide a sign that jitter may never flip. Values are in the -1..1 axis space.",
+  "jitter": 0.35,
+  "civilization_bias": {
+    "human_maritime": {"law": -0.1, "good": 0.05},
+    "human_desert": {"law": 0.1, "good": 0.0},
+    "human_cold": {"law": 0.15, "good": 0.05},
+    "human_large_island": {"law": -0.15, "good": 0.05},
+    "human_rainforest": {"law": -0.1, "good": 0.1},
+    "human_heartland": {"law": 0.2, "good": 0.1},
+    "dwarf": {"law": 0.35, "good": 0.05},
+    "hill_dwarf": {"law": 0.15, "good": 0.25},
+    "frosthold_dwarf": {"law": 0.3, "good": -0.05},
+    "gnome": {"law": -0.2, "good": 0.1},
+    "elf": {"law": 0.25, "good": 0.15},
+    "tidekin": {"law": -0.25, "good": 0.0}
+  },
+  "deed_shifts": {
+    "ruin_heir": {"law": 0.0, "good": 0.1},
+    "ruin_heir_capital": {"law": 0.15, "good": 0.05},
+    "war_civil_victor": {"law": 0.25, "good": -0.3},
+    "war_regional_victor": {"law": 0.15, "good": -0.15},
+    "war_international_victor": {"law": 0.1, "good": -0.1},
+    "war_civil_defeated": {"law": -0.1, "good": 0.05},
+    "war_regional_defeated": {"law": -0.05, "good": 0.05},
+    "war_international_defeated": {"law": 0.0, "good": 0.1}
+  },
+  "dread_base": {"law": -0.4, "good": -0.7},
+  "dread_family": {
+    "draconic": {"law": 0.6, "good": 0.1},
+    "undead": {"law": 0.3, "good": -0.2},
+    "infernal": {"law": 0.2, "good": -0.25},
+    "aberrant": {"law": -0.5, "good": 0.0},
+    "fantastic": {"law": 0.0, "good": 0.3},
+    "primordial": {"law": 0.0, "good": 0.4},
+    "holy": {"law": 0.5, "good": 0.9}
+  }
+}

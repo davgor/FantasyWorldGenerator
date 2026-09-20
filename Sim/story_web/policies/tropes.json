@@ -1,0 +1,7401 @@
+{
+  "schema": "fantasy-world-generator.story-tropes",
+  "revision": 7,
+  "notes": "Spokes of the story web (revision 6: The Siege reads the forward war outlook, The Famine the seasonal food model, and victors have The Spoils, The Veteran, The Peace and The Pursuit). History casts and personality tilts: boosts read facts from the record and the world, the archetype and claim fits are modest multipliers, and the two personality spokes (The Absolute, The Ascension) carry no claim fit so they only win when the log is quiet. `requires` is a list of conjunctions over facts the compiler derives from a hero record and the world (`story_web.facts.FACTS`); a leading `!` negates. `pull` is the alignment prior that places the spoke on the web and weights fit; it never clamps. `fits` names archetypes that multiply the weight; `claims` names claim verbs that multiply it; `cast` says whether people, Dreads or both may walk the spoke. Each act has one prompt, one completion predicate, one abandonment predicate and two to four typed options carrying a bounded alignment delta. `examples` are prose and are never evaluated.",
+  "tropes": [
+    {
+      "id": "revenge",
+      "name": "Revenge",
+      "pull": {
+        "law": -0.2,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "claim:retake",
+          "bond:rival"
+        ],
+        [
+          "claim:avenge"
+        ],
+        [
+          "claim:kill",
+          "bond:rival"
+        ]
+      ],
+      "boosts": {
+        "world:rival_living": 1.5,
+        "home:fell": 1.2,
+        "civ:lost_many": 1.2
+      },
+      "fits": [
+        "broken_soul",
+        "obsessed_hunter",
+        "inherited_hero",
+        "fallen_hero"
+      ],
+      "claims": [
+        "avenge",
+        "retake",
+        "kill"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "wound",
+          "title": "The wound",
+          "prompt": "Find me proof of who did this to {lost}, and where {rival} stands now.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "located"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "witness",
+              "text": "Find a witness in {rival}'s own city.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "relic",
+              "text": "Recover what was left in the ruins of {lost}.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.0
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "counsel",
+              "text": "Ask whether the wound is worth reopening.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.15
+              },
+              "effect": "counsel"
+            }
+          ]
+        },
+        {
+          "id": "reckoning",
+          "title": "The reckoning",
+          "prompt": "Bring me to {rival}.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "confronted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "kill",
+              "text": "Stand aside while {hero} finishes it.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.25
+              },
+              "effect": "kill"
+            },
+            {
+              "id": "spare",
+              "text": "Stay {hero}'s hand at the last moment.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.25
+              },
+              "effect": "spare"
+            },
+            {
+              "id": "duel",
+              "text": "Insist it be settled openly, by the old forms.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.0
+              },
+              "effect": "duel"
+            }
+          ]
+        },
+        {
+          "id": "ledger",
+          "title": "The empty ledger",
+          "prompt": "It is done. Tell me what I am for now.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "resettled"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "mantle",
+              "text": "Point {hero} at an open mantle of their people.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "mantle"
+            },
+            {
+              "id": "home",
+              "text": "Bring {hero} back to {home}.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "resettle"
+            },
+            {
+              "id": "road",
+              "text": "Let {hero} walk away from all of it.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.0
+              },
+              "effect": "wander"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The proof shows the credited actor was not the actual one, and the hero is recast into Unmasking.",
+        "The rival is spared; the hero gains rival:spared and rests with a Redemption hook."
+      ]
+    },
+    {
+      "id": "redemption",
+      "name": "Redemption",
+      "pull": {
+        "law": 0.0,
+        "good": 0.6
+      },
+      "requires": [
+        [
+          "villain:prior_age",
+          "stake:regained"
+        ],
+        [
+          "rival:spared"
+        ]
+      ],
+      "boosts": {
+        "bond:debt": 1.3
+      },
+      "fits": [
+        "redeemed",
+        "forgiving",
+        "fallen_hero"
+      ],
+      "claims": [
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "ledger",
+          "title": "The ledger",
+          "prompt": "There is a debt in my name. Help me pay it where it was made.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "served"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "repair",
+              "text": "Work the repair beside {hero}, openly.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "repair"
+            },
+            {
+              "id": "quiet",
+              "text": "Pay the debt without a name attached.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.1
+              },
+              "effect": "repair"
+            }
+          ]
+        },
+        {
+          "id": "shortcut",
+          "title": "The shortcut",
+          "prompt": "I know a faster way. Stop me if you have to.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "left_alone"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "refuse",
+              "text": "Refuse the shortcut and find the slow road.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.2
+              },
+              "effect": "refuse"
+            },
+            {
+              "id": "take",
+              "text": "Take the shortcut this once.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.25
+              },
+              "effect": "shortcut"
+            }
+          ]
+        },
+        {
+          "id": "witness",
+          "title": "The witness",
+          "prompt": "Someone remembers what I was. Let me face them.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "met"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "plead",
+              "text": "Speak for {hero} before the one they wronged.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "plead"
+            },
+            {
+              "id": "silent",
+              "text": "Let {hero} stand alone and take the answer.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "stand"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Forgiven, the hero's claim becomes protect and they rest with a Succession hook as a mentor.",
+        "The shortcut is taken and drift reverses; the hero is recast into Temptation."
+      ]
+    },
+    {
+      "id": "fall",
+      "name": "Fall",
+      "pull": {
+        "law": 0.0,
+        "good": -0.6
+      },
+      "requires": [
+        [
+          "home:fell_later"
+        ],
+        [
+          "defence:failed"
+        ],
+        [
+          "deed:credited_not_actual",
+          "status:living"
+        ],
+        [
+          "ley:tainted_home",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "stake:lost": 1.3,
+        "bond:betrayed": 1.3
+      },
+      "fits": [
+        "fallen_hero",
+        "tainted_one",
+        "turncoat",
+        "false_hero"
+      ],
+      "claims": [
+        "exploit",
+        "avenge"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "slight",
+          "title": "The slight",
+          "prompt": "They took what was mine. Help me take something back.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "raided"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "raid",
+              "text": "Raid {rival}'s holding with {hero}.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.2
+              },
+              "effect": "raid"
+            },
+            {
+              "id": "restitution",
+              "text": "Turn it into a claim for restitution instead.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.15
+              },
+              "effect": "petition"
+            }
+          ]
+        },
+        {
+          "id": "accomplice",
+          "title": "The accomplice",
+          "prompt": "Do this one thing and do not ask what it is for.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "obey",
+              "text": "Do it without asking.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.25
+              },
+              "effect": "unwitting"
+            },
+            {
+              "id": "uncover",
+              "text": "Find out what it is really for first.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "seat",
+          "title": "The seat",
+          "prompt": "Now help me hold it.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "held"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "hold",
+              "text": "Defend the seized holding at {hero}'s side.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "leave",
+              "text": "Leave {hero} to hold it alone.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.05
+              },
+              "effect": "leave"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The raid becomes restitution and the hero is recast into Redemption.",
+        "The seat is held and the hero rests with a Tyranny hook."
+      ]
+    },
+    {
+      "id": "reclamation",
+      "name": "Reclamation",
+      "pull": {
+        "law": 0.3,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "role:pretender",
+          "status:living",
+          "lost:set"
+        ]
+      ],
+      "boosts": {
+        "world:camp_at_lost": 1.3,
+        "world:relic_resting": 1.2,
+        "heir:capital": 1.4,
+        "heir:medium": 1.2
+      },
+      "fits": [
+        "exiled_hero",
+        "reluctant_hero",
+        "inherited_hero"
+      ],
+      "claims": [
+        "retake"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "ruin",
+          "title": "The ruin",
+          "prompt": "Go to what was ours at {lost}. Tell me what is left.",
+          "completion": {
+            "kind": "target",
+            "target": "lost",
+            "state": "scouted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "scout",
+              "text": "Scout the ruin and report what holds it.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "scout"
+            },
+            {
+              "id": "relic",
+              "text": "Bring back {relic} as proof.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "recover"
+            }
+          ]
+        },
+        {
+          "id": "claim",
+          "title": "The claim",
+          "prompt": "Clear it, and I will bring my people.",
+          "completion": {
+            "kind": "target",
+            "target": "lost",
+            "state": "cleared"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "force",
+              "text": "Drive out whoever squats there.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.15
+              },
+              "effect": "clear"
+            },
+            {
+              "id": "terms",
+              "text": "Buy or bargain their departure.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "stay",
+              "text": "Tell {hero} the living home matters more than the dead one.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.2
+              },
+              "effect": "counsel"
+            }
+          ]
+        },
+        {
+          "id": "founding",
+          "title": "The founding",
+          "prompt": "Stand with me when they come to take {lost} back.",
+          "completion": {
+            "kind": "target",
+            "target": "lost",
+            "state": "defended"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "defend",
+              "text": "Hold the resettlement against its old enemy.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "crush",
+              "text": "Crush dissent inside the walls first.",
+              "delta": {
+                "law": 0.2,
+                "good": -0.25
+              },
+              "effect": "purge"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The ruin is a Dread's lair and the hero is recast into The Hunt.",
+        "Held harshly, the hero rests with a Tyranny hook."
+      ]
+    },
+    {
+      "id": "homecoming",
+      "name": "Homecoming",
+      "pull": {
+        "law": 0.2,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "role:pretender",
+          "status:living",
+          "home:set"
+        ]
+      ],
+      "boosts": {
+        "claim:protect": 1.5,
+        "presence:refugee": 1.3
+      },
+      "fits": [
+        "exiled_hero"
+      ],
+      "claims": [
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "wall",
+          "title": "The wall",
+          "prompt": "{home} took us in. Help me make it safe.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "secured"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "wall",
+              "text": "Raise defences at {home}.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "fortify"
+            },
+            {
+              "id": "nest",
+              "text": "Clear the nearest threat to {home}.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "clear"
+            }
+          ]
+        },
+        {
+          "id": "banner",
+          "title": "The old banner",
+          "prompt": "Someone from before has come. Find out what they want.",
+          "completion": {
+            "kind": "target",
+            "target": "envoy",
+            "state": "met"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "refuse",
+              "text": "Help {hero} refuse the old people's summons.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "refuse"
+            },
+            {
+              "id": "waver",
+              "text": "Let {hero} hear the summons out.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "listen"
+            }
+          ]
+        },
+        {
+          "id": "choice",
+          "title": "The choice",
+          "prompt": "Both places need me tonight. Choose for me.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "defended"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "new",
+              "text": "Save {home}.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.2
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "old",
+              "text": "Ride for {lost} instead.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.05
+              },
+              "effect": "retake"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The old realm sends for the hero and they are recast into Reclamation.",
+        "The new home is saved and the hero rests as its warden."
+      ]
+    },
+    {
+      "id": "usurpation",
+      "name": "Usurpation",
+      "pull": {
+        "law": 0.2,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "realm:contested",
+          "role:warlord"
+        ],
+        [
+          "claim:overthrow"
+        ],
+        [
+          "claim:unify"
+        ],
+        [
+          "role:schemer",
+          "world:realm_has_sovereign"
+        ]
+      ],
+      "boosts": {
+        "fame:renowned": 1.3,
+        "realm:contested": 1.3
+      },
+      "fits": [
+        "conqueror",
+        "rebel",
+        "mastermind"
+      ],
+      "claims": [
+        "overthrow",
+        "unify"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "faction",
+          "title": "The faction",
+          "prompt": "The seat is weak. Help me find who else thinks so.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "faction_formed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "allies",
+              "text": "Sound out the realm's other notables.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "recruit"
+            },
+            {
+              "id": "camps",
+              "text": "Buy the camps and remnants outside the walls.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.1
+              },
+              "effect": "recruit"
+            }
+          ]
+        },
+        {
+          "id": "stroke",
+          "title": "The stroke",
+          "prompt": "Tonight. Be at the gate.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "taken"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "coup",
+              "text": "Open the gate.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "coup"
+            },
+            {
+              "id": "duel",
+              "text": "Force a challenge by the old forms instead.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.0
+              },
+              "effect": "duel"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the seat.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "crown",
+          "title": "The crown",
+          "prompt": "They say I am not the rightful one. Prove them wrong, or quiet them.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "held"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "council",
+              "text": "Win the council over.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "persuade"
+            },
+            {
+              "id": "purge",
+              "text": "Remove the council.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.3
+              },
+              "effect": "purge"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The stroke fails and the hero is recast onto Exile's Road.",
+        "The council is removed and the hero rests with a Tyranny hook."
+      ]
+    },
+    {
+      "id": "tyranny",
+      "name": "Tyranny",
+      "pull": {
+        "law": 0.4,
+        "good": -0.6
+      },
+      "requires": [
+        [
+          "war:civil_victor",
+          "role:warlord"
+        ],
+        [
+          "role:sovereign",
+          "realm:cold_conflicts_2"
+        ],
+        [
+          "role:sovereign",
+          "civ:lost_many"
+        ],
+        [
+          "archetype:tyrant",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "civ:lost_many": 1.3,
+        "archetype:tyrant": 2.0
+      },
+      "fits": [
+        "tyrant",
+        "conqueror",
+        "puppet_sovereign"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "census",
+          "title": "The census",
+          "prompt": "Find the ones who still speak against me.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "dissent_listed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "names",
+              "text": "Deliver the names.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.25
+              },
+              "effect": "inform"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the dissenters first.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.2
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "heir",
+          "title": "The heir",
+          "prompt": "My own blood conspires. Bring them to me.",
+          "completion": {
+            "kind": "target",
+            "target": "kin",
+            "state": "confronted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "capture",
+              "text": "Bring the kin in chains.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "capture"
+            },
+            {
+              "id": "broker",
+              "text": "Broker peace between them.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.25
+              },
+              "effect": "broker"
+            }
+          ]
+        },
+        {
+          "id": "mirror",
+          "title": "The mirror",
+          "prompt": "Stand beside me when they come.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "defended"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "stand",
+              "text": "Hold the seat with {hero}.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.15
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "open",
+              "text": "Open the gate to the rebels.",
+              "delta": {
+                "law": -0.2,
+                "good": 0.15
+              },
+              "effect": "betray"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The player warns the dissenters and is cast as an ally in a Rebellion.",
+        "The tyrant wins and the realm gains realm:tyrant, seeding Rebellion entries for others."
+      ]
+    },
+    {
+      "id": "rebellion",
+      "name": "Rebellion",
+      "pull": {
+        "law": -0.6,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "realm:tyrant",
+          "seat:none"
+        ],
+        [
+          "world:realm_tyrant",
+          "seat:none",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:rebel": 2.0,
+        "role:camp_leader": 1.3
+      },
+      "fits": [
+        "rebel",
+        "trickster",
+        "knight_errant"
+      ],
+      "claims": [
+        "overthrow"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "spark",
+          "title": "The spark",
+          "prompt": "Show them the tyrant can bleed.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "noticed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "free",
+              "text": "Free a prisoner from the tyrant's cells.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.2
+              },
+              "effect": "free"
+            },
+            {
+              "id": "burn",
+              "text": "Burn the census and whoever guards it.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.15
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "camp",
+          "title": "The camp",
+          "prompt": "We have a cause. Get us an army.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "army_raised"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "camps",
+              "text": "Recruit the camps and remnants.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.05
+              },
+              "effect": "recruit"
+            },
+            {
+              "id": "realm",
+              "text": "Ask a rival realm for soldiers.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.05
+              },
+              "effect": "recruit"
+            },
+            {
+              "id": "terms",
+              "text": "Carry the tyrant's offer of terms to {hero}.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "terms"
+            }
+          ]
+        },
+        {
+          "id": "gate",
+          "title": "The fall of the seat",
+          "prompt": "Open the gate.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "fallen"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "refuse",
+              "text": "Help {hero} refuse the seat afterwards.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.2
+              },
+              "effect": "refuse"
+            },
+            {
+              "id": "take",
+              "text": "Help {hero} take the seat.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.15
+              },
+              "effect": "coup"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Innocents die in the spark and the hero is recast into Fall.",
+        "The hero takes the seat and rests with a Usurpation hook."
+      ]
+    },
+    {
+      "id": "the_hunt",
+      "name": "The Hunt",
+      "pull": {
+        "law": 0.0,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "dread:living"
+        ],
+        [
+          "claim:kill",
+          "world:rival_dread"
+        ],
+        [
+          "role:champion",
+          "world:dread_living"
+        ],
+        [
+          "dread:failed_against"
+        ],
+        [
+          "hamlet:threatened"
+        ]
+      ],
+      "boosts": {
+        "archetype:obsessed_hunter": 2.0,
+        "dread:failed_against": 1.4,
+        "bond:rival": 1.2,
+        "hamlet:threatened": 1.8
+      },
+      "fits": [
+        "obsessed_hunter",
+        "warden",
+        "knight_errant"
+      ],
+      "claims": [
+        "kill"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "trail",
+          "title": "The trail",
+          "prompt": "{rival} has been seen. Find the lair.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "located"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "track",
+              "text": "Track it through its range.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "bait",
+              "text": "Bait it with a hamlet's herd.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "bait"
+            }
+          ]
+        },
+        {
+          "id": "cost",
+          "title": "The cost",
+          "prompt": "I need one thing before I face it.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "obtained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "earn",
+              "text": "Earn the ward or relic honestly.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "take",
+              "text": "Take it from whoever holds it.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.2
+              },
+              "effect": "steal"
+            }
+          ]
+        },
+        {
+          "id": "lair",
+          "title": "The lair",
+          "prompt": "Come with me, or hold the door.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "dead"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "fight",
+              "text": "Fight beside {hero}.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.1
+              },
+              "effect": "fight"
+            },
+            {
+              "id": "door",
+              "text": "Hold the door and let {hero} go in alone.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "wait"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The Dread is long-lived and speaks; the hero is recast into The Bargain.",
+        "The hero dies and the Dread lives; a mantle opens for the player."
+      ]
+    },
+    {
+      "id": "the_bargain",
+      "name": "The Bargain",
+      "pull": {
+        "law": 0.3,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "world:rival_dread",
+          "status:living"
+        ],
+        [
+          "role:dread",
+          "dread:long_lived",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:hermit_sage": 1.4,
+        "archetype:warden": 1.3,
+        "archetype:ancient": 1.3
+      },
+      "fits": [
+        "hermit_sage",
+        "ancient",
+        "warden",
+        "oathbound"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person",
+        "dread"
+      ],
+      "acts": [
+        {
+          "id": "terms",
+          "title": "The terms",
+          "prompt": "It will talk. Carry its words.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "terms_set"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "bargain",
+              "text": "Negotiate a boundary between lair and town.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "refuse",
+              "text": "Refuse to bargain with it at all.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.05
+              },
+              "effect": "refuse"
+            }
+          ]
+        },
+        {
+          "id": "breach",
+          "title": "The breach",
+          "prompt": "Someone has crossed the line. Find out who.",
+          "completion": {
+            "kind": "target",
+            "target": "camp",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "camp",
+              "text": "Find the camp encroaching on the range.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "doubt",
+              "text": "Ask whether the Dread lied about the breach.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "keeping",
+          "title": "The keeping",
+          "prompt": "Hold the line for both sides.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "peace_kept"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 90
+          },
+          "options": [
+            {
+              "id": "keep",
+              "text": "Warden the boundary through the season.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "warden"
+            },
+            {
+              "id": "break",
+              "text": "Let the town break the terms.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.1
+              },
+              "effect": "break"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Peace persists and the hero rests with a Warden's Line hook.",
+        "The town breaks the terms and the Dread's next city makes an Obsessed Hunter."
+      ]
+    },
+    {
+      "id": "unmasking",
+      "name": "Unmasking",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "faces:two",
+          "status:living"
+        ],
+        [
+          "deed:credited_not_actual",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:deceiver": 1.8,
+        "archetype:false_hero": 1.5,
+        "archetype:fractured_heart": 1.5
+      },
+      "fits": [
+        "deceiver",
+        "false_hero",
+        "fractured_heart"
+      ],
+      "claims": [
+        "exploit",
+        "expose"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "favour",
+          "title": "The favour",
+          "prompt": "You saved my life. Let me repay it.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "do",
+              "text": "Do the stated task.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "unwitting"
+            },
+            {
+              "id": "check",
+              "text": "Check what the task actually does first.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "pattern",
+          "title": "The pattern",
+          "prompt": "One more. The valley is still sick.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "again",
+              "text": "Do the second task.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.05
+              },
+              "effect": "unwitting"
+            },
+            {
+              "id": "witness",
+              "text": "Find an honest witness to the first result.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "face",
+          "title": "The face",
+          "prompt": "You know. So now you choose.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "face_revealed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "expose",
+              "text": "Expose {hero} to the realm.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "expose"
+            },
+            {
+              "id": "join",
+              "text": "Join the true claim.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.25
+              },
+              "effect": "join"
+            },
+            {
+              "id": "prove",
+              "text": "Show the hidden goal was benign after all.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.2
+              },
+              "effect": "prove"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Exposed and driven out, the hero is recast into Fall.",
+        "The hidden goal proves benign; the hero gains stake:regained and rests with a Redemption hook."
+      ]
+    },
+    {
+      "id": "betrayal",
+      "name": "Betrayal",
+      "pull": {
+        "law": -0.5,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "sides:both"
+        ],
+        [
+          "bond:betrayed"
+        ],
+        [
+          "role:council",
+          "bond:ally",
+          "seat:trade"
+        ]
+      ],
+      "boosts": {
+        "archetype:turncoat": 2.0,
+        "archetype:kingmaker": 1.3,
+        "archetype:corrupt": 1.3
+      },
+      "fits": [
+        "turncoat",
+        "kingmaker",
+        "corrupt"
+      ],
+      "claims": [
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "offer",
+          "title": "The offer",
+          "prompt": "Carry a message to the other side. Quietly.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "message_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "carry",
+              "text": "Carry it unread.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "read",
+              "text": "Read it, then decide.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "price",
+          "title": "The price",
+          "prompt": "They want proof of loyalty.",
+          "completion": {
+            "kind": "target",
+            "target": "ally",
+            "state": "harmed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "act",
+              "text": "Strike at {hero}'s former allies.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.25
+              },
+              "effect": "raid"
+            },
+            {
+              "id": "sabotage",
+              "text": "Sabotage the proof and expose {hero}.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "expose"
+            }
+          ]
+        },
+        {
+          "id": "reckoning",
+          "title": "The reckoning",
+          "prompt": "They know. Get me out, or stand with me.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "escaped"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "flee",
+              "text": "Get {hero} across the border.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.0
+              },
+              "effect": "flee"
+            },
+            {
+              "id": "mercy",
+              "text": "Argue for mercy when {hero} is caught.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.2
+              },
+              "effect": "plead"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The hero escapes to the new side and rests with a Usurpation hook.",
+        "Caught, and spared at the player's word, the hero gains rival:spared."
+      ]
+    },
+    {
+      "id": "crusade",
+      "name": "Crusade",
+      "pull": {
+        "law": 0.5,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "claim:convert"
+        ],
+        [
+          "role:prophet"
+        ],
+        [
+          "role:heresiarch"
+        ]
+      ],
+      "boosts": {
+        "archetype:zealot": 2.0,
+        "presence:pulpit": 1.3
+      },
+      "fits": [
+        "zealot",
+        "malevolent_benevolent"
+      ],
+      "claims": [
+        "convert"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "sign",
+          "title": "The sign",
+          "prompt": "The heavens have spoken. Bring the word to the next town.",
+          "completion": {
+            "kind": "target",
+            "target": "city",
+            "state": "converted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "preach",
+              "text": "Carry the word and feed the listeners.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "convert"
+            },
+            {
+              "id": "fire",
+              "text": "Answer refusal with fire.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.3
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "rival_faith",
+          "title": "The rival faith",
+          "prompt": "Their shrine stands on our ground.",
+          "completion": {
+            "kind": "target",
+            "target": "site",
+            "state": "reconsecrated"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "peaceful",
+              "text": "Reconsecrate it by persuasion.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.15
+              },
+              "effect": "convert"
+            },
+            {
+              "id": "purge",
+              "text": "Cleanse it and its keepers.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.3
+              },
+              "effect": "purge"
+            }
+          ]
+        },
+        {
+          "id": "silence",
+          "title": "The silence",
+          "prompt": "The heavens are quiet. Tell me I was right.",
+          "completion": {
+            "kind": "target",
+            "target": "site",
+            "state": "sign_sought"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "pilgrim",
+              "text": "Take {hero} to the nearest theophany site.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "pilgrimage"
+            },
+            {
+              "id": "doubt",
+              "text": "Tell {hero} the silence is the answer.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "counsel"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A massacre at the rival shrine; the hero rests with a Tyranny hook.",
+        "No sign comes and the hero is recast into Redemption or Exile's Road."
+      ]
+    },
+    {
+      "id": "temptation",
+      "name": "Temptation",
+      "pull": {
+        "law": 0.0,
+        "good": -0.4
+      },
+      "requires": [
+        [
+          "ley:tainted_home"
+        ],
+        [
+          "school:dark",
+          "status:living"
+        ],
+        [
+          "role:magister",
+          "school:dark"
+        ]
+      ],
+      "boosts": {
+        "world:node_intense": 1.4,
+        "archetype:tainted_one": 1.8,
+        "archetype:redeemed": 1.3
+      },
+      "fits": [
+        "tainted_one",
+        "hermit_sage",
+        "redeemed",
+        "deceiver"
+      ],
+      "claims": [
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "whisper",
+          "title": "The whisper",
+          "prompt": "The ground here answers me. Help me learn why.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "study",
+              "text": "Study the node with {hero}.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.05
+              },
+              "effect": "study"
+            },
+            {
+              "id": "suppress",
+              "text": "Show {hero} a way to suppress it.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.2
+              },
+              "effect": "suppress"
+            }
+          ]
+        },
+        {
+          "id": "use",
+          "title": "The use",
+          "prompt": "Once. To save them. Then never again.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "used"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "use",
+              "text": "Let {hero} use the taint against the threat.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.25
+              },
+              "effect": "use"
+            },
+            {
+              "id": "other",
+              "text": "Find another way to meet the threat.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.2
+              },
+              "effect": "refuse"
+            }
+          ]
+        },
+        {
+          "id": "mask",
+          "title": "The mask slips",
+          "prompt": "Bind me, or follow me.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "bound_or_loosed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "bind",
+              "text": "Bind {hero} before it takes them.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.2
+              },
+              "effect": "bind"
+            },
+            {
+              "id": "follow",
+              "text": "Follow {hero} into it.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.3
+              },
+              "effect": "join"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Suppressed with help; the hero is recast into The Warden's Line.",
+        "Embraced; the claim becomes exploit on the node and the hero rests with a Fall hook."
+      ]
+    },
+    {
+      "id": "succession",
+      "name": "Succession",
+      "pull": {
+        "law": 0.2,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "mentor:successor"
+        ],
+        [
+          "bond:mentor"
+        ],
+        [
+          "legend:predecessor",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:mentor": 2.0,
+        "fame:renowned": 1.2
+      },
+      "fits": [
+        "mentor",
+        "inherited_hero",
+        "reluctant_hero"
+      ],
+      "claims": [
+        "protect",
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "test",
+          "title": "The test",
+          "prompt": "Take my successor into the field. Do not help them.",
+          "completion": {
+            "kind": "target",
+            "target": "successor",
+            "state": "tested"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "watch",
+              "text": "Escort and do not intervene.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "escort"
+            },
+            {
+              "id": "help",
+              "text": "Help when it goes wrong.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.15
+              },
+              "effect": "assist"
+            }
+          ]
+        },
+        {
+          "id": "doom",
+          "title": "The doom",
+          "prompt": "I am dying. Do not tell them.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "keep",
+              "text": "Keep the secret and finish the errand.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "keep"
+            },
+            {
+              "id": "tell",
+              "text": "Tell the successor.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "reveal"
+            }
+          ]
+        },
+        {
+          "id": "passing",
+          "title": "The passing",
+          "prompt": "Bring them to me.",
+          "completion": {
+            "kind": "target",
+            "target": "successor",
+            "state": "met"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "bring",
+              "text": "Bring the successor for the last meeting.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "escort"
+            },
+            {
+              "id": "claim",
+              "text": "Ask {hero} to pass the mantle to you instead.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "usurp"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The heir fails badly and the mentor takes the player on; recast into Inheritance.",
+        "The mantle passes and the mentor becomes legend."
+      ]
+    },
+    {
+      "id": "inheritance",
+      "name": "Inheritance",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "world:mantle_open",
+          "status:living",
+          "claim:none"
+        ],
+        [
+          "heir:unclaimed"
+        ],
+        [
+          "legend:predecessor",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:inherited_hero": 2.0,
+        "archetype:reluctant_hero": 1.5
+      },
+      "fits": [
+        "inherited_hero",
+        "reluctant_hero"
+      ],
+      "claims": [
+        "retake"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "relic",
+          "title": "The relic",
+          "prompt": "{relic} rests in the ruin. Take it up or leave it.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "obtained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "take",
+              "text": "Take up the relic.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "leave",
+              "text": "Leave it where it lies.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.0
+              },
+              "effect": "leave"
+            }
+          ]
+        },
+        {
+          "id": "enemy",
+          "title": "The predecessor's enemy",
+          "prompt": "The one they never finished with still lives.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "confronted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "confront",
+              "text": "Confront the legend's rival.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "confront"
+            },
+            {
+              "id": "listen",
+              "text": "Hear the rival's side of the story.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.15
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "claim",
+          "title": "The claim",
+          "prompt": "Finish what they started, or finish it your way.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "as_left",
+              "text": "Finish the claim exactly as it was left.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.0
+              },
+              "effect": "resolve"
+            },
+            {
+              "id": "changed",
+              "text": "Change the claim's target.",
+              "delta": {
+                "law": -0.2,
+                "good": 0.05
+              },
+              "effect": "resolve"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The rival tells the other side; the legend is recast into Unmasking posthumously.",
+        "Finished as left, the hero becomes legend and the next heir gains legend:predecessor."
+      ]
+    },
+    {
+      "id": "sacrifice",
+      "name": "Sacrifice",
+      "pull": {
+        "law": 0.5,
+        "good": 0.7
+      },
+      "requires": [
+        [
+          "fame:renowned",
+          "world:war_pressure",
+          "status:living"
+        ],
+        [
+          "fame:renowned",
+          "world:threatened",
+          "status:living"
+        ],
+        [
+          "role:champion",
+          "world:threatened"
+        ]
+      ],
+      "boosts": {
+        "archetype:warden": 1.3,
+        "archetype:knight_errant": 1.3,
+        "archetype:oathbound": 1.3
+      },
+      "fits": [
+        "fallen_hero",
+        "warden",
+        "knight_errant",
+        "oathbound"
+      ],
+      "claims": [
+        "protect",
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "threat",
+          "title": "The threat",
+          "prompt": "They are coming and I cannot stop them alone.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "alarm_raised"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "alarm",
+              "text": "Raise the realm.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "alarm"
+            },
+            {
+              "id": "gather",
+              "text": "Gather what fighters can be found.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "recruit"
+            }
+          ]
+        },
+        {
+          "id": "cost",
+          "title": "The cost",
+          "prompt": "Someone has to hold the pass.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "volunteered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 10
+          },
+          "options": [
+            {
+              "id": "hero",
+              "text": "Let {hero} volunteer.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "accept"
+            },
+            {
+              "id": "avoid",
+              "text": "Find a way that spares everyone.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.2
+              },
+              "effect": "avoid"
+            }
+          ]
+        },
+        {
+          "id": "stand",
+          "title": "The stand",
+          "prompt": "Go. Do not look back.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "survived"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 10
+          },
+          "options": [
+            {
+              "id": "go",
+              "text": "Go, as asked.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "leave"
+            },
+            {
+              "id": "stay",
+              "text": "Stay and stand with {hero}.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.25
+              },
+              "effect": "fight"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The hero dies and the stake survives; a mantle opens.",
+        "The player finds a way that spares everyone; recast into The Warden's Line."
+      ]
+    },
+    {
+      "id": "the_wardens_line",
+      "name": "The Warden's Line",
+      "pull": {
+        "law": 0.6,
+        "good": 0.2
+      },
+      "requires": [
+        [
+          "warden:post"
+        ],
+        [
+          "role:domain_holder",
+          "seat:none"
+        ],
+        [
+          "claim:hold",
+          "role:champion"
+        ]
+      ],
+      "boosts": {
+        "archetype:warden": 2.0,
+        "archetype:oathbound": 1.4,
+        "world:node_intense": 1.2,
+        "role:castellan": 1.3
+      },
+      "fits": [
+        "warden",
+        "oathbound",
+        "ancient"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "post",
+          "title": "The post",
+          "prompt": "The ward was tested again. Find what tested it.",
+          "completion": {
+            "kind": "target",
+            "target": "threat",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "patrol",
+              "text": "Patrol the line with {hero}.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "patrol"
+            },
+            {
+              "id": "realm",
+              "text": "Ask whether the realm itself is moving the line.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "relief",
+          "title": "The relief",
+          "prompt": "I asked for relief. None came. Go ask why.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "petitioned"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "petition",
+              "text": "Petition the seat for relief.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "petition"
+            },
+            {
+              "id": "leave",
+              "text": "Tell {hero} to walk away from the post.",
+              "delta": {
+                "law": -0.25,
+                "good": 0.0
+              },
+              "effect": "counsel"
+            }
+          ]
+        },
+        {
+          "id": "breach",
+          "title": "The breach",
+          "prompt": "It is through. Hold with me.",
+          "completion": {
+            "kind": "target",
+            "target": "threat",
+            "state": "held"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "hold",
+              "text": "Hold the breach.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "fall_back",
+              "text": "Fall back and warn the towns.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "alarm"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The realm is moving the line; the hero is recast into Rebellion.",
+        "The breach is held and the hero rests at the post."
+      ]
+    },
+    {
+      "id": "exiles_road",
+      "name": "Exile's Road",
+      "pull": {
+        "law": -0.3,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "stake:none",
+          "home:none",
+          "status:living"
+        ],
+        [
+          "role:exile"
+        ],
+        [
+          "presence:refugee"
+        ]
+      ],
+      "boosts": {
+        "archetype:knight_errant": 1.6,
+        "archetype:trickster": 1.3,
+        "companion:eligible": 1.5
+      },
+      "fits": [
+        "knight_errant",
+        "fallen_hero",
+        "trickster",
+        "exiled_hero"
+      ],
+      "claims": [
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "road",
+          "title": "The road",
+          "prompt": "I have nowhere. Let me travel with you a while.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "travelled"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "take",
+              "text": "Take {hero} along.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.15
+              },
+              "effect": "companion"
+            },
+            {
+              "id": "shelter",
+              "text": "Find {hero} a settlement that will take them.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "resettle"
+            }
+          ]
+        },
+        {
+          "id": "pursuit",
+          "title": "The pursuit",
+          "prompt": "They will not stop. Help me end it or lose them.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "shaken"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "ambush",
+              "text": "Ambush the pursuers.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.1
+              },
+              "effect": "fight"
+            },
+            {
+              "id": "border",
+              "text": "Cross into another realm.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.05
+              },
+              "effect": "flee"
+            }
+          ]
+        },
+        {
+          "id": "return",
+          "title": "The return",
+          "prompt": "I could go back. Tell me if I should.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "decided"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "back",
+              "text": "Send {hero} home to their claim.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "resettle"
+            },
+            {
+              "id": "road",
+              "text": "Keep {hero} on the road.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.05
+              },
+              "effect": "wander"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A settlement offers shelter and the hero is recast into Homecoming.",
+        "The hero returns and rests with a Reclamation or Revenge hook."
+      ]
+    },
+    {
+      "id": "the_vow",
+      "name": "The Vow",
+      "pull": {
+        "law": 0.7,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "order:member"
+        ],
+        [
+          "keypoint:ruin_born"
+        ],
+        [
+          "role:keeper"
+        ]
+      ],
+      "boosts": {
+        "archetype:oathbound": 2.0,
+        "archetype:warden": 1.3,
+        "role:keeper": 1.3
+      },
+      "fits": [
+        "oathbound",
+        "warden"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "letter",
+          "title": "The letter",
+          "prompt": "The charter says one thing. Read it to me again.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "witnessed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "read",
+              "text": "Retrieve the charter and read it aloud.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "spirit",
+              "text": "Argue for the oath's spirit over its letter.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "counsel"
+            }
+          ]
+        },
+        {
+          "id": "cost",
+          "title": "The cost",
+          "prompt": "Keeping it will hurt someone. Help me see who.",
+          "completion": {
+            "kind": "target",
+            "target": "victim",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "see",
+              "text": "Name who the oath will harm.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "ignore",
+              "text": "Tell {hero} the oath comes first regardless.",
+              "delta": {
+                "law": 0.2,
+                "good": -0.15
+              },
+              "effect": "counsel"
+            }
+          ]
+        },
+        {
+          "id": "keeping",
+          "title": "The keeping",
+          "prompt": "I will keep it. Stand where I can see you.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "kept"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "witness",
+              "text": "Witness the keeping.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "witness"
+            },
+            {
+              "id": "stop",
+              "text": "Stop {hero} before it is done.",
+              "delta": {
+                "law": -0.25,
+                "good": 0.15
+              },
+              "effect": "prevent"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A warden closes a pass against refugees and keeps the vow.",
+        "The player stops the keeping; the oath is broken and the hero is recast into Fall."
+      ]
+    },
+    {
+      "id": "the_regency",
+      "name": "The Regency",
+      "pull": {
+        "law": 0.5,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "council:outranks_sovereign"
+        ]
+      ],
+      "boosts": {
+        "archetype:kingmaker": 2.0,
+        "archetype:mastermind": 1.5
+      },
+      "fits": [
+        "kingmaker",
+        "mastermind"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "debt",
+          "title": "The debt",
+          "prompt": "The sovereign owes me. Collect it quietly.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "favour_collected"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "collect",
+              "text": "Collect the favour.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the sovereign what is being collected.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "rival",
+          "title": "The rival",
+          "prompt": "Someone else has the sovereign's ear.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "removed_or_turned"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "remove",
+              "text": "Remove the rival from court.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.25
+              },
+              "effect": "purge"
+            },
+            {
+              "id": "turn",
+              "text": "Turn the rival instead.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "persuade"
+            }
+          ]
+        },
+        {
+          "id": "choice",
+          "title": "The choice",
+          "prompt": "The seat will empty. Help me choose who sits.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "successor_seated"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "puppet",
+              "text": "Seat someone who owes {hero}.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.15
+              },
+              "effect": "seat"
+            },
+            {
+              "id": "worthy",
+              "text": "Seat the one who would rule well.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.2
+              },
+              "effect": "seat"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A chancellor runs a puppet sovereign.",
+        "The regent is exposed by a Trickster's jest and recast into Fall."
+      ]
+    },
+    {
+      "id": "the_strings",
+      "name": "The Strings",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "sovereign:advised"
+        ]
+      ],
+      "boosts": {
+        "archetype:puppet_sovereign": 2.0
+      },
+      "fits": [
+        "puppet_sovereign"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "ceremony",
+          "title": "The ceremony",
+          "prompt": "Attend me. Say nothing the chancellor would not.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "ceremony_held"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "attend",
+              "text": "Attend and say nothing.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "attend"
+            },
+            {
+              "id": "speak",
+              "text": "Say the thing the chancellor would not.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "speak"
+            }
+          ]
+        },
+        {
+          "id": "doubt",
+          "title": "The doubt",
+          "prompt": "Tell me what you saw. Not what he told you.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "fact_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "truth",
+              "text": "Tell the sovereign what was withheld.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "reveal"
+            },
+            {
+              "id": "line",
+              "text": "Repeat the chancellor's line.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.1
+              },
+              "effect": "keep"
+            }
+          ]
+        },
+        {
+          "id": "cut",
+          "title": "The cut",
+          "prompt": "If I refuse him, will anyone stand with me?",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "order_issued"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "stand",
+              "text": "Stand with the sovereign against the adviser.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.2
+              },
+              "effect": "support"
+            },
+            {
+              "id": "stay",
+              "text": "Advise the sovereign to keep the strings.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.1
+              },
+              "effect": "counsel"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A sovereign finds courage and is recast into Rebellion against their own court.",
+        "The strings are cut and the sovereign hangs."
+      ]
+    },
+    {
+      "id": "the_design",
+      "name": "The Design",
+      "pull": {
+        "law": 0.4,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "role:schemer",
+          "stakes:2"
+        ],
+        [
+          "role:schemer"
+        ]
+      ],
+      "boosts": {
+        "archetype:mastermind": 2.0,
+        "archetype:deceiver": 1.4,
+        "stakes:2": 1.3
+      },
+      "fits": [
+        "mastermind",
+        "deceiver"
+      ],
+      "claims": [
+        "exploit",
+        "overthrow"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "fallback",
+          "title": "The fallback",
+          "prompt": "Do this, and if it fails, this.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "first",
+              "text": "Do the first thing.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.05
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "neither",
+              "text": "Do neither and see what {hero} does.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.05
+              },
+              "effect": "refuse"
+            }
+          ]
+        },
+        {
+          "id": "variable",
+          "title": "The variable",
+          "prompt": "Something I did not model. Find out what.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Identify who broke the plan.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "hide",
+              "text": "Hide that it was you.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.1
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "end_state",
+          "title": "The end state",
+          "prompt": "Now the last piece.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "changed_hands"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "place",
+              "text": "Place the last piece.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "break",
+              "text": "Break the design at the end.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.2
+              },
+              "effect": "expose"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The unmodelled variable is the player.",
+        "The plan completes with the player as the useful piece."
+      ]
+    },
+    {
+      "id": "the_skim",
+      "name": "The Skim",
+      "pull": {
+        "law": 0.0,
+        "good": -0.6
+      },
+      "requires": [
+        [
+          "seat:trade"
+        ],
+        [
+          "seat:market_steward"
+        ]
+      ],
+      "boosts": {
+        "archetype:corrupt": 2.0,
+        "world:food_deficit": 1.3,
+        "role:harbourmaster": 1.3
+      },
+      "fits": [
+        "corrupt"
+      ],
+      "claims": [
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "invoice",
+          "title": "The invoice",
+          "prompt": "A shipment went missing. Find it before the audit.",
+          "completion": {
+            "kind": "target",
+            "target": "shipment",
+            "state": "found_or_explained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the shipment.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "cover",
+              "text": "Forge the paperwork that explains it.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.2
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "equal",
+          "title": "The equal",
+          "prompt": "A new merchant undercuts me. Learn their price.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "route_identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "learn",
+              "text": "Learn the rival's route.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.05
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the rival instead.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "fire",
+          "title": "The fire",
+          "prompt": "The ledger has to burn. Or the auditor does.",
+          "completion": {
+            "kind": "target",
+            "target": "evidence",
+            "state": "destroyed_or_bought"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "burn",
+              "text": "Burn the ledger.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.2
+              },
+              "effect": "destroy"
+            },
+            {
+              "id": "auditor",
+              "text": "Bring the ledger to the auditor.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.15
+              },
+              "effect": "expose"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A crooked steward funds an orphanage.",
+        "One sells the city's granary during a famine and is recast into The Trial."
+      ]
+    },
+    {
+      "id": "the_monopoly",
+      "name": "The Monopoly",
+      "pull": {
+        "law": 0.4,
+        "good": -0.4
+      },
+      "requires": [
+        [
+          "seat:trade",
+          "routes:2"
+        ],
+        [
+          "seat:trade",
+          "world:food_deficit"
+        ]
+      ],
+      "boosts": {
+        "archetype:magnate": 2.0,
+        "world:food_deficit": 1.4
+      },
+      "fits": [
+        "magnate"
+      ],
+      "claims": [
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "deficit",
+          "title": "The deficit",
+          "prompt": "Their granary is short. Confirm the number.",
+          "completion": {
+            "kind": "target",
+            "target": "core",
+            "state": "measured"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "count",
+              "text": "Count the shortfall at the neighbouring core.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "measure"
+            },
+            {
+              "id": "inflate",
+              "text": "Report it larger than it is.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "squeeze",
+          "title": "The squeeze",
+          "prompt": "Close the second road.",
+          "completion": {
+            "kind": "target",
+            "target": "route",
+            "state": "closed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "close",
+              "text": "Block or buy the second route.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.25
+              },
+              "effect": "block"
+            },
+            {
+              "id": "open",
+              "text": "Keep the road open and tell the seat.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.2
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "price",
+          "title": "The price",
+          "prompt": "Now they buy from me. Carry the terms.",
+          "completion": {
+            "kind": "target",
+            "target": "core",
+            "state": "terms_accepted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "fair",
+              "text": "Carry fair terms.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "ruin",
+              "text": "Carry ruinous terms.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.3
+              },
+              "effect": "deliver"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A magnate feeds a famine at a fair price and is remembered.",
+        "One buys a city and seeds a Rebellion."
+      ]
+    },
+    {
+      "id": "the_chronicle",
+      "name": "The Chronicle",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "deed:credited_not_actual"
+        ]
+      ],
+      "boosts": {
+        "archetype:false_hero": 2.0
+      },
+      "fits": [
+        "false_hero"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "retelling",
+          "title": "The retelling",
+          "prompt": "Tell the story as they know it, where I can hear.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "story_retold"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "retell",
+              "text": "Retell the credited deed in the hall.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.05
+              },
+              "effect": "retell"
+            },
+            {
+              "id": "question",
+              "text": "Ask the awkward question in the hall.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            }
+          ]
+        },
+        {
+          "id": "witness",
+          "title": "The witness",
+          "prompt": "Someone was there. Find out what they remember.",
+          "completion": {
+            "kind": "target",
+            "target": "actual",
+            "state": "located"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the actual actor.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "lose",
+              "text": "Make sure nobody finds them.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "record",
+          "title": "The record",
+          "prompt": "The chronicle holds, or it does not. Decide.",
+          "completion": {
+            "kind": "target",
+            "target": "actual",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "confess",
+              "text": "Help {hero} confess.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.2
+              },
+              "effect": "confess"
+            },
+            {
+              "id": "pay",
+              "text": "Pay the actual actor for silence.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.15
+              },
+              "effect": "bribe"
+            },
+            {
+              "id": "silence",
+              "text": "Silence the witness.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.3
+              },
+              "effect": "kill"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A hero confesses and walks Redemption.",
+        "One silences the witness and walks Fall."
+      ]
+    },
+    {
+      "id": "the_pardon",
+      "name": "The Pardon",
+      "pull": {
+        "law": 0.0,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "rival:spared",
+          "world:rival_living"
+        ]
+      ],
+      "boosts": {
+        "archetype:forgiving": 2.0
+      },
+      "fits": [
+        "forgiving"
+      ],
+      "claims": [
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "terms",
+          "title": "The terms",
+          "prompt": "I let {rival} live. Make sure they know why.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "terms_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "deliver",
+              "text": "Carry the terms to {rival}.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "threat",
+              "text": "Carry them as a threat instead.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.15
+              },
+              "effect": "deliver"
+            }
+          ]
+        },
+        {
+          "id": "relapse",
+          "title": "The relapse",
+          "prompt": "They did it again. Find out if it is true.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "deed_confirmed_or_disproved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "check",
+              "text": "Confirm or disprove the new deed.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "assume",
+              "text": "Assume the worst and act.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "title": "The second chance",
+          "prompt": "One more. Then no more.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "bond_changed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "again",
+              "text": "Give {rival} the second chance.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.2
+              },
+              "effect": "spare"
+            },
+            {
+              "id": "end",
+              "text": "End it.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.25
+              },
+              "effect": "kill"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The rival becomes an ally and later a Turncoat.",
+        "A Forgiving who is right about people too late."
+      ]
+    },
+    {
+      "id": "the_cage",
+      "name": "The Cage",
+      "pull": {
+        "law": -0.5,
+        "good": -0.1
+      },
+      "requires": [
+        [
+          "dread:person_shaped"
+        ],
+        [
+          "deed:dark_nest",
+          "role:champion"
+        ],
+        [
+          "archetype:beast",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:beast": 2.0
+      },
+      "fits": [
+        "beast"
+      ],
+      "claims": [
+        "kill",
+        "protect"
+      ],
+      "cast": [
+        "person",
+        "dread"
+      ],
+      "acts": [
+        {
+          "id": "rules",
+          "title": "The rules",
+          "prompt": "When it comes out, you leave. Agree to that.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "unleashed_witnessed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "agree",
+              "text": "Agree and keep the rule.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "keep"
+            },
+            {
+              "id": "stay",
+              "text": "Stay and watch.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.05
+              },
+              "effect": "witness"
+            }
+          ]
+        },
+        {
+          "id": "pack",
+          "title": "The pack",
+          "prompt": "Someone I love is near it now. Get them clear.",
+          "completion": {
+            "kind": "target",
+            "target": "ally",
+            "state": "moved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "move",
+              "text": "Move the ally out of reach.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "escort"
+            },
+            {
+              "id": "use",
+              "text": "Use the ally to draw it out.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.25
+              },
+              "effect": "bait"
+            }
+          ]
+        },
+        {
+          "id": "use",
+          "title": "The use",
+          "prompt": "Point it at something that deserves it.",
+          "completion": {
+            "kind": "target",
+            "target": "threat",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "deserving",
+              "text": "Point it at a real threat.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "fight"
+            },
+            {
+              "id": "convenient",
+              "text": "Point it at whoever is convenient.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.25
+              },
+              "effect": "raid"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A rage kills a Dread.",
+        "A rage kills the pack and opens Revenge for someone else."
+      ]
+    },
+    {
+      "id": "the_two_faces",
+      "name": "The Two Faces",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "deeds:two_civilizations"
+        ],
+        [
+          "deeds:two_schools"
+        ]
+      ],
+      "boosts": {
+        "archetype:fractured_heart": 2.0
+      },
+      "fits": [
+        "fractured_heart"
+      ],
+      "claims": [
+        "hold",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "gap",
+          "title": "The gap",
+          "prompt": "I promised you something. Which of us said it?",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "face_identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "first",
+              "text": "Hold {hero} to the first face's promise.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "keep"
+            },
+            {
+              "id": "second",
+              "text": "Hold {hero} to the second face's.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.0
+              },
+              "effect": "keep"
+            }
+          ]
+        },
+        {
+          "id": "other",
+          "title": "The other",
+          "prompt": "She told you things. Tell me what.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "fact_passed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "tell",
+              "text": "Pass the fact between the faces.",
+              "delta": {
+                "law": 0.0,
+                "good": 0.1
+              },
+              "effect": "reveal"
+            },
+            {
+              "id": "withhold",
+              "text": "Keep each face ignorant of the other.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.1
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "conflict",
+          "title": "The conflict",
+          "prompt": "Both claims cannot hold. Pick one and hold me to it.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "pick_first",
+              "text": "Choose the first face's claim.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "resolve"
+            },
+            {
+              "id": "pick_second",
+              "text": "Choose the second face's claim.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.1
+              },
+              "effect": "resolve"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A hero whose two civilizations go to war.",
+        "A mage of two schools whose second face strengthens the node the first suppresses."
+      ]
+    },
+    {
+      "id": "the_answer",
+      "name": "The Answer",
+      "pull": {
+        "law": 0.0,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "role:magister",
+          "college:destroyed"
+        ]
+      ],
+      "boosts": {
+        "archetype:hermit_sage": 2.0,
+        "world:node_intense": 1.2
+      },
+      "fits": [
+        "hermit_sage"
+      ],
+      "claims": [
+        "hold",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "question",
+          "title": "The question",
+          "prompt": "You want the dangerous half. Prove you can carry the safe half.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "left_alone"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "carry",
+              "text": "Do the safe task at the node without changing its school.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "study"
+            },
+            {
+              "id": "push",
+              "text": "Push for the dangerous half now.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "demand"
+            }
+          ]
+        },
+        {
+          "id": "use",
+          "title": "The use",
+          "prompt": "Someone used what I taught. Find out who.",
+          "completion": {
+            "kind": "target",
+            "target": "student",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the student.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "protect",
+              "text": "Protect the student from {hero}.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.1
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "half",
+          "title": "The half",
+          "prompt": "Here is the rest. Remember I said no.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "changed_hands"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "accept",
+              "text": "Accept the dangerous half.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.1
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "decline",
+              "text": "Decline it.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "refuse"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A sage whose answer builds a Well.",
+        "One whose answer ends a Blight."
+      ]
+    },
+    {
+      "id": "the_absolute",
+      "name": "The Absolute",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "archetype:incarnate",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "fame:legendary": 1.3,
+        "archetype:incarnate": 1.2
+      },
+      "fits": [
+        "incarnate"
+      ],
+      "claims": [],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "statute",
+          "title": "The statute",
+          "prompt": "Here is the law of this place. Carry it to the next.",
+          "completion": {
+            "kind": "target",
+            "target": "city",
+            "state": "rule_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "carry",
+              "text": "Carry the rule as given.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "soften",
+              "text": "Soften it on the road.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "deliver"
+            }
+          ]
+        },
+        {
+          "id": "exception",
+          "title": "The exception",
+          "prompt": "They ask me to bend. I cannot. Tell them.",
+          "completion": {
+            "kind": "target",
+            "target": "pleader",
+            "state": "refused"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "tell",
+              "text": "Deliver the refusal.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.05
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "plead",
+              "text": "Plead the exception yourself.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.15
+              },
+              "effect": "plead"
+            }
+          ]
+        },
+        {
+          "id": "test",
+          "title": "The test",
+          "prompt": "Now the corner costs me everything. Watch.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "corner_kept"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "watch",
+              "text": "Watch and let the cost fall.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "witness"
+            },
+            {
+              "id": "save",
+              "text": "Save the stake behind {hero}'s back.",
+              "delta": {
+                "law": -0.2,
+                "good": 0.1
+              },
+              "effect": "prevent"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A lawful-good absolute lets a city fall rather than lie.",
+        "A chaotic-evil one burns their own hall for the joke of it."
+      ]
+    },
+    {
+      "id": "the_ascension",
+      "name": "The Ascension",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "archetype:malevolent_benevolent",
+          "status:living"
+        ],
+        [
+          "fame:legendary",
+          "status:living",
+          "claim:convert"
+        ]
+      ],
+      "boosts": {
+        "archetype:malevolent_benevolent": 1.2
+      },
+      "fits": [
+        "malevolent_benevolent"
+      ],
+      "claims": [],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "following",
+          "title": "The following",
+          "prompt": "They are beginning to watch. Show them something.",
+          "completion": {
+            "kind": "target",
+            "target": "city",
+            "state": "fame_raised"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "kindness",
+              "text": "A public kindness.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.2
+              },
+              "effect": "deed"
+            },
+            {
+              "id": "terror",
+              "text": "A public terror.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.25
+              },
+              "effect": "deed"
+            }
+          ]
+        },
+        {
+          "id": "mismatch",
+          "title": "The mismatch",
+          "prompt": "This realm is the wrong shape for me. Change it.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "order_shifted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "courts",
+              "text": "Build courts or churches.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.0
+              },
+              "effect": "build"
+            },
+            {
+              "id": "crowds",
+              "text": "Raise crowds or mobs.",
+              "delta": {
+                "law": -0.2,
+                "good": 0.0
+              },
+              "effect": "recruit"
+            }
+          ]
+        },
+        {
+          "id": "remaking",
+          "title": "The remaking",
+          "prompt": "Convert them, or replace them.",
+          "completion": {
+            "kind": "target",
+            "target": "capital",
+            "state": "converted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "convert",
+              "text": "Convert the capital.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "convert"
+            },
+            {
+              "id": "replace",
+              "text": "Replace its rulers.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.25
+              },
+              "effect": "coup"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A benevolent legend founds a faith.",
+        "A malevolent one the realm misidentifies until too late."
+      ]
+    },
+    {
+      "id": "the_jest",
+      "name": "The Jest",
+      "pull": {
+        "law": -0.6,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "role:camp_leader"
+        ],
+        [
+          "role:schemer",
+          "stake:none"
+        ],
+        [
+          "archetype:trickster",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:trickster": 2.0
+      },
+      "fits": [
+        "trickster"
+      ],
+      "claims": [
+        "expose"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "target",
+          "title": "The target",
+          "prompt": "Who is the biggest name within a day's walk?",
+          "completion": {
+            "kind": "target",
+            "target": "notable",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "name",
+              "text": "Name the highest-fame notable in reach.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "decline",
+              "text": "Decline to help humble anyone.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "refuse"
+            }
+          ]
+        },
+        {
+          "id": "setup",
+          "title": "The setup",
+          "prompt": "Get me into their hall.",
+          "completion": {
+            "kind": "target",
+            "target": "notable",
+            "state": "presence_gained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "guest",
+              "text": "Get {hero} in as a guest.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "infiltrate"
+            },
+            {
+              "id": "thief",
+              "text": "Get {hero} in as a thief.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.05
+              },
+              "effect": "infiltrate"
+            }
+          ]
+        },
+        {
+          "id": "punchline",
+          "title": "The punchline",
+          "prompt": "Tomorrow at dawn. Bring everyone.",
+          "completion": {
+            "kind": "target",
+            "target": "notable",
+            "state": "exposed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 10
+          },
+          "options": [
+            {
+              "id": "laugh",
+              "text": "Make it a jest everyone survives.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.2
+              },
+              "effect": "expose"
+            },
+            {
+              "id": "hang",
+              "text": "Let the punchline end at the gallows.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.3
+              },
+              "effect": "expose"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A jest unseats a Kingmaker.",
+        "One ends with someone hanged."
+      ]
+    },
+    {
+      "id": "the_schism",
+      "name": "The Schism",
+      "pull": {
+        "law": -0.4,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:heresiarch"
+        ],
+        [
+          "role:prophet",
+          "bond:rival"
+        ]
+      ],
+      "boosts": {
+        "archetype:zealot": 1.8
+      },
+      "fits": [
+        "zealot"
+      ],
+      "claims": [
+        "convert"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "text",
+          "title": "The text",
+          "prompt": "The mother faith has it wrong. Find the proof at the old shrine.",
+          "completion": {
+            "kind": "target",
+            "target": "site",
+            "state": "fact_recovered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "shrine",
+              "text": "Visit the old shrine and bring back the proof.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.05
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "forge",
+              "text": "Forge the proof.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.2
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "congregation",
+          "title": "The congregation",
+          "prompt": "Bring me ten who will listen.",
+          "completion": {
+            "kind": "target",
+            "target": "city",
+            "state": "sect_gained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "gather",
+              "text": "Gather listeners honestly.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.1
+              },
+              "effect": "recruit"
+            },
+            {
+              "id": "buy",
+              "text": "Buy them.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.15
+              },
+              "effect": "bribe"
+            }
+          ]
+        },
+        {
+          "id": "break",
+          "title": "The break",
+          "prompt": "They will name me heretic. Let them.",
+          "completion": {
+            "kind": "target",
+            "target": "sect",
+            "state": "founded"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "stand",
+              "text": "Stand with {hero} at the naming.",
+              "delta": {
+                "law": -0.1,
+                "good": 0.1
+              },
+              "effect": "support"
+            },
+            {
+              "id": "recant",
+              "text": "Urge {hero} to recant.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.0
+              },
+              "effect": "counsel"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A schism becomes a Crusade.",
+        "One dies as a cult in a ruin."
+      ]
+    },
+    {
+      "id": "the_founding",
+      "name": "The Founding",
+      "pull": {
+        "law": 0.5,
+        "good": 0.2
+      },
+      "requires": [
+        [
+          "role:founder"
+        ],
+        [
+          "role:camp_leader",
+          "status:living"
+        ],
+        [
+          "presence:leader"
+        ],
+        [
+          "role:reeve",
+          "!hamlet:starving",
+          "!hamlet:threatened"
+        ]
+      ],
+      "boosts": {
+        "archetype:exiled_hero": 1.4,
+        "archetype:oathbound": 1.2
+      },
+      "fits": [
+        "exiled_hero",
+        "reluctant_hero",
+        "oathbound"
+      ],
+      "claims": [
+        "protect",
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "site",
+          "title": "The site",
+          "prompt": "There is good ground two days out. Walk it with me.",
+          "completion": {
+            "kind": "target",
+            "target": "site",
+            "state": "chosen"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "walk",
+              "text": "Walk the ground and choose.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "survey"
+            },
+            {
+              "id": "seize",
+              "text": "Take ground someone else already holds.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "winter",
+          "title": "The first winter",
+          "prompt": "We will not last the season without help.",
+          "completion": {
+            "kind": "target",
+            "target": "camp",
+            "state": "fed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "supply",
+              "text": "Bring supplies from the nearest core.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "supply"
+            },
+            {
+              "id": "raid",
+              "text": "Take supplies from a hamlet.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.25
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "charter",
+          "title": "The charter",
+          "prompt": "Name it. Then defend it.",
+          "completion": {
+            "kind": "target",
+            "target": "camp",
+            "state": "founded"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "name",
+              "text": "Write the charter and defend the site.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.05
+              },
+              "effect": "found"
+            },
+            {
+              "id": "leave",
+              "text": "Leave before the first attack.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.05
+              },
+              "effect": "leave"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A camp becomes a hamlet.",
+        "A founding fails and leaves a new ruin, and a new hook."
+      ]
+    },
+    {
+      "id": "the_siege",
+      "name": "The Siege",
+      "pull": {
+        "law": 0.5,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "world:war_risk",
+          "home:set",
+          "status:living"
+        ],
+        [
+          "world:enemy_living",
+          "home:set",
+          "status:living"
+        ],
+        [
+          "fortress:pressed"
+        ]
+      ],
+      "boosts": {
+        "seat:commander": 1.5,
+        "role:castellan": 1.6,
+        "role:champion": 1.3,
+        "archetype:warden": 1.2,
+        "fortress:pressed": 1.8,
+        "world:war_risk": 1.4
+      },
+      "fits": [
+        "warden",
+        "knight_errant",
+        "oathbound"
+      ],
+      "claims": [
+        "hold",
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "walls",
+          "title": "The walls",
+          "prompt": "They are coming. Help me count what we have.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "surveyed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "count",
+              "text": "Survey the defences and stock.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "survey"
+            },
+            {
+              "id": "hoard",
+              "text": "Hoard for yourself while counting.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "steal"
+            }
+          ]
+        },
+        {
+          "id": "sally",
+          "title": "The sally",
+          "prompt": "One strike before they close the ring.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "asset_destroyed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "strike",
+              "text": "Lead the sally.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "fight"
+            },
+            {
+              "id": "parley",
+              "text": "Ride out to parley instead.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.15
+              },
+              "effect": "bargain"
+            }
+          ]
+        },
+        {
+          "id": "gate",
+          "title": "The gate",
+          "prompt": "Hold it.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "defended"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "hold",
+              "text": "Hold the gate.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "open",
+              "text": "Open the gate to the enemy.",
+              "delta": {
+                "law": -0.25,
+                "good": -0.25
+              },
+              "effect": "betray"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A siege held makes a Warlord.",
+        "One lost makes a Pretender."
+      ]
+    },
+    {
+      "id": "the_famine",
+      "name": "The Famine",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "world:famine",
+          "home:set",
+          "status:living"
+        ],
+        [
+          "hamlet:starving"
+        ]
+      ],
+      "boosts": {
+        "role:sovereign": 1.4,
+        "role:council": 1.3,
+        "seat:trade": 1.5,
+        "seat:magistrate": 1.3,
+        "hamlet:starving": 1.8
+      },
+      "fits": [
+        "magnate",
+        "corrupt",
+        "tyrant",
+        "puppet_sovereign",
+        "kingmaker"
+      ],
+      "claims": [
+        "hold",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "count",
+          "title": "The count",
+          "prompt": "The granary is short. Tell me by how much.",
+          "completion": {
+            "kind": "target",
+            "target": "core",
+            "state": "measured"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "count",
+              "text": "Measure the shortfall.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "measure"
+            },
+            {
+              "id": "hide",
+              "text": "Understate it to keep order.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.15
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "road",
+          "title": "The road",
+          "prompt": "The next core has surplus. Open the road.",
+          "completion": {
+            "kind": "target",
+            "target": "route",
+            "state": "opened"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "open",
+              "text": "Clear and open the road.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "clear"
+            },
+            {
+              "id": "seize",
+              "text": "Seize the surplus by force.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.25
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "choice",
+          "title": "The choice",
+          "prompt": "Feed the city or the hamlets. Not both.",
+          "completion": {
+            "kind": "target",
+            "target": "core",
+            "state": "allocated"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "city",
+              "text": "Feed the city.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.05
+              },
+              "effect": "allocate"
+            },
+            {
+              "id": "hamlets",
+              "text": "Feed the hamlets.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "allocate"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A famine makes a Magnate rich.",
+        "One makes a Tyrant of a good sovereign."
+      ]
+    },
+    {
+      "id": "the_blight",
+      "name": "The Blight",
+      "pull": {
+        "law": 0.1,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "world:surge",
+          "role:magister"
+        ],
+        [
+          "world:surge",
+          "role:domain_holder"
+        ],
+        [
+          "world:surge",
+          "seat:mage"
+        ],
+        [
+          "world:surge",
+          "seat:chaplain"
+        ],
+        [
+          "world:surge",
+          "presence:warding"
+        ],
+        [
+          "world:surge",
+          "role:keeper"
+        ],
+        [
+          "world:node_intense",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "role:magister": 1.5,
+        "role:domain_holder": 1.5,
+        "seat:mage": 1.4,
+        "archetype:hermit_sage": 1.3
+      },
+      "fits": [
+        "hermit_sage",
+        "warden",
+        "oathbound",
+        "zealot"
+      ],
+      "claims": [
+        "hold",
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "sign",
+          "title": "The sign",
+          "prompt": "The crops turn and the moon is wrong. Find the source.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Trace the sickness to its node.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.1
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "blame",
+              "text": "Blame the nearest outsider instead.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.2
+              },
+              "effect": "accuse"
+            }
+          ]
+        },
+        {
+          "id": "suppression",
+          "title": "The suppression",
+          "prompt": "Weaken it, if you can.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "suppressed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "weaken",
+              "text": "Weaken the node.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "suppress"
+            },
+            {
+              "id": "overshoot",
+              "text": "Flood it with the opposing school.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.0
+              },
+              "effect": "overshoot"
+            }
+          ]
+        },
+        {
+          "id": "recovery",
+          "title": "The recovery",
+          "prompt": "It is fading. Make sure nothing else grows in its place.",
+          "completion": {
+            "kind": "target",
+            "target": "region",
+            "state": "recovered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "watch",
+              "text": "Watch the region through the season.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "warden"
+            },
+            {
+              "id": "claim",
+              "text": "Claim the weakened node for {hero}.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.2
+              },
+              "effect": "claim"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A blight cured makes a Benevolent.",
+        "One cured with the wrong school overshoots."
+      ]
+    },
+    {
+      "id": "the_binding",
+      "name": "The Binding",
+      "pull": {
+        "law": 0.4,
+        "good": -0.5
+      },
+      "requires": [
+        [
+          "school:dark",
+          "world:dread_living",
+          "status:living"
+        ],
+        [
+          "role:domain_holder",
+          "school:dark"
+        ]
+      ],
+      "boosts": {
+        "archetype:deceiver": 1.5,
+        "archetype:tainted_one": 1.3,
+        "world:node_intense": 1.2
+      },
+      "fits": [
+        "deceiver",
+        "tainted_one",
+        "hermit_sage"
+      ],
+      "claims": [
+        "exploit",
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "approach",
+          "title": "The approach",
+          "prompt": "It is hostile to me now. Get me close enough to speak.",
+          "completion": {
+            "kind": "target",
+            "target": "nest",
+            "state": "reached"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "escort",
+              "text": "Escort {hero} to the nest.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.1
+              },
+              "effect": "escort"
+            },
+            {
+              "id": "refuse",
+              "text": "Refuse to bring a necromancer near it.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "refuse"
+            }
+          ]
+        },
+        {
+          "id": "bind",
+          "title": "The bind",
+          "prompt": "Hold the ward while I work.",
+          "completion": {
+            "kind": "target",
+            "target": "nest",
+            "state": "bound"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 15
+          },
+          "options": [
+            {
+              "id": "hold",
+              "text": "Hold the ward.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "bind"
+            },
+            {
+              "id": "drop",
+              "text": "Drop the ward at the crucial moment.",
+              "delta": {
+                "law": -0.15,
+                "good": 0.1
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "use",
+          "title": "The use",
+          "prompt": "Now it works for us. Give it a task.",
+          "completion": {
+            "kind": "target",
+            "target": "hook",
+            "state": "done"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "labour",
+              "text": "Set it to useful labour.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.05
+              },
+              "effect": "labour"
+            },
+            {
+              "id": "war",
+              "text": "Set it on {hero}'s enemies.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.3
+              },
+              "effect": "raid"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A necromancer staffs a fortress.",
+        "One whose binding breaks during a Siege."
+      ]
+    },
+    {
+      "id": "the_domain",
+      "name": "The Domain",
+      "pull": {
+        "law": 0.5,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:domain_holder",
+          "world:node_intense"
+        ],
+        [
+          "role:domain_holder",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "world:node_intense": 1.5,
+        "archetype:mastermind": 1.3
+      },
+      "fits": [
+        "warden",
+        "oathbound",
+        "mastermind"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "anchor",
+          "title": "The anchor",
+          "prompt": "The key point can be built on. Bring the recipe.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "plan_accepted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "recipe",
+              "text": "Bring the construction recipe.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the neighbours what is being built.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.15
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "attunement",
+          "title": "The attunement",
+          "prompt": "It needs a school. Choose with me.",
+          "completion": {
+            "kind": "target",
+            "target": "node",
+            "state": "attuned"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "own",
+              "text": "Attune it to {hero}'s school.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.05
+              },
+              "effect": "attune"
+            },
+            {
+              "id": "balance",
+              "text": "Attune it to balance the region.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.15
+              },
+              "effect": "attune"
+            }
+          ]
+        },
+        {
+          "id": "border",
+          "title": "The border",
+          "prompt": "The neighbours have noticed. Meet them at the line.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "border_resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "treaty",
+              "text": "Settle the border by treaty.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.1
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "push",
+              "text": "Push the border outward.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.25
+              },
+              "effect": "raid"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A Well ends a Blight.",
+        "A domain starts a war."
+      ]
+    },
+    {
+      "id": "the_delve",
+      "name": "The Delve",
+      "pull": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "world:relic_resting",
+          "status:living"
+        ],
+        [
+          "claim:retake",
+          "world:relic_resting"
+        ]
+      ],
+      "boosts": {
+        "archetype:inherited_hero": 1.4,
+        "archetype:trickster": 1.3,
+        "world:camp_at_lost": 1.3
+      },
+      "fits": [
+        "inherited_hero",
+        "reluctant_hero",
+        "hermit_sage",
+        "trickster"
+      ],
+      "claims": [
+        "retake",
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "map",
+          "title": "The map",
+          "prompt": "{relic} rests where {lost} fell. Learn the way in.",
+          "completion": {
+            "kind": "target",
+            "target": "lost",
+            "state": "scouted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "scout",
+              "text": "Scout the ruin.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.05
+              },
+              "effect": "scout"
+            },
+            {
+              "id": "buy",
+              "text": "Buy a map from the camp that squats there.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.05
+              },
+              "effect": "bribe"
+            }
+          ]
+        },
+        {
+          "id": "descent",
+          "title": "The descent",
+          "prompt": "Go. I will wait at the gate.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "obtained"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "descend",
+              "text": "Go down and bring it back.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "recover"
+            },
+            {
+              "id": "keep",
+              "text": "Bring it back and keep it.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.15
+              },
+              "effect": "steal"
+            }
+          ]
+        },
+        {
+          "id": "return",
+          "title": "The return",
+          "prompt": "Now decide who keeps it.",
+          "completion": {
+            "kind": "target",
+            "target": "relic",
+            "state": "placed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "hero",
+              "text": "Give it to {hero}.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "give"
+            },
+            {
+              "id": "site",
+              "text": "Place it with a site or a sovereign.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "give"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A delve arms an Inherited Hero.",
+        "One hands a focus to a Deceiver."
+      ]
+    },
+    {
+      "id": "the_alliance",
+      "name": "The Alliance",
+      "pull": {
+        "law": 0.5,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "realm:contested",
+          "role:sovereign",
+          "world:other_realm"
+        ],
+        [
+          "role:sovereign",
+          "world:other_realm"
+        ]
+      ],
+      "boosts": {
+        "dynasty:founding": 1.2,
+        "archetype:kingmaker": 1.3,
+        "realm:contested": 1.3
+      },
+      "fits": [
+        "conqueror",
+        "kingmaker",
+        "puppet_sovereign",
+        "forgiving"
+      ],
+      "claims": [
+        "hold",
+        "unify",
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "envoy",
+          "title": "The envoy",
+          "prompt": "Carry my terms to {realm_other}. Come back with theirs.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "envoy_exchanged"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "carry",
+              "text": "Carry the terms faithfully.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.05
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "alter",
+              "text": "Alter them on the road.",
+              "delta": {
+                "law": -0.15,
+                "good": -0.1
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "price",
+          "title": "The price",
+          "prompt": "They want a marriage, a road, or a hostage. Advise me.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "term_chosen"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "road",
+              "text": "Offer the road.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "hostage",
+              "text": "Offer the hostage.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "bargain"
+            }
+          ]
+        },
+        {
+          "id": "seal",
+          "title": "The seal",
+          "prompt": "Witness it.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "treaty"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "witness",
+              "text": "Witness the treaty.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "witness"
+            },
+            {
+              "id": "sell",
+              "text": "Sell the terms to a third realm.",
+              "delta": {
+                "law": -0.25,
+                "good": -0.2
+              },
+              "effect": "betray"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "An alliance prevents a Siege.",
+        "One that a Turncoat sells."
+      ]
+    },
+    {
+      "id": "the_lair",
+      "name": "The Lair",
+      "pull": {
+        "law": -0.5,
+        "good": -0.6
+      },
+      "requires": [
+        [
+          "role:dread",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:ancient": 1.5,
+        "dread:ages_2": 1.3
+      },
+      "fits": [
+        "ancient",
+        "beast"
+      ],
+      "claims": [
+        "none",
+        "hold"
+      ],
+      "cast": [
+        "dread"
+      ],
+      "acts": [
+        {
+          "id": "range",
+          "title": "The range",
+          "prompt": "",
+          "completion": {
+            "kind": "target",
+            "target": "range",
+            "state": "hamlet_taken"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 90
+          },
+          "options": [
+            {
+              "id": "hunt",
+              "text": "Hunt at the edge of the range.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.1
+              },
+              "effect": "raid"
+            },
+            {
+              "id": "sleep",
+              "text": "Sleep and let the range be.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "wait"
+            }
+          ]
+        },
+        {
+          "id": "hunters",
+          "title": "The hunters",
+          "prompt": "",
+          "completion": {
+            "kind": "target",
+            "target": "hunt",
+            "state": "failed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "kill",
+              "text": "Kill the hunters.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.2
+              },
+              "effect": "fight"
+            },
+            {
+              "id": "bargain",
+              "text": "Speak to the hunters.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.1
+              },
+              "effect": "bargain"
+            }
+          ]
+        },
+        {
+          "id": "second_city",
+          "title": "The second city",
+          "prompt": "",
+          "completion": {
+            "kind": "target",
+            "target": "city",
+            "state": "ruined"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 180
+          },
+          "options": [
+            {
+              "id": "burn",
+              "text": "Take the second city.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.3
+              },
+              "effect": "raid"
+            },
+            {
+              "id": "withdraw",
+              "text": "Withdraw deeper into the lair.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "wait"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A Dread becomes an Ancient.",
+        "One whose second city makes an Obsessed Hunter."
+      ]
+    },
+    {
+      "id": "the_trial",
+      "name": "The Trial",
+      "pull": {
+        "law": 0.5,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "bond:betrayed",
+          "status:living"
+        ],
+        [
+          "role:warlord",
+          "world:realm_has_sovereign"
+        ],
+        [
+          "deed:credited_not_actual",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:oathbound": 1.3,
+        "archetype:turncoat": 1.3,
+        "archetype:false_hero": 1.3
+      },
+      "fits": [
+        "oathbound",
+        "false_hero",
+        "rebel",
+        "turncoat"
+      ],
+      "claims": [
+        "hold",
+        "protect"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "charge",
+          "title": "The charge",
+          "prompt": "They say I did it. Find who says so.",
+          "completion": {
+            "kind": "target",
+            "target": "accuser",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the accuser.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "flee",
+              "text": "Help {hero} flee the charge.",
+              "delta": {
+                "law": -0.2,
+                "good": 0.0
+              },
+              "effect": "flee"
+            }
+          ]
+        },
+        {
+          "id": "evidence",
+          "title": "The evidence",
+          "prompt": "Bring what proves it, or what disproves it.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "evidence_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "honest",
+              "text": "Bring the evidence as it is.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "forge",
+              "text": "Forge what is missing.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "verdict",
+          "title": "The verdict",
+          "prompt": "Stand with me when they read it.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "verdict"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "stand",
+              "text": "Stand with {hero}.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "support"
+            },
+            {
+              "id": "abandon",
+              "text": "Leave before the reading.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.1
+              },
+              "effect": "leave"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A wrongful verdict makes a Rebel.",
+        "A rightful one begins Redemption."
+      ]
+    },
+    {
+      "id": "the_court",
+      "name": "The Court",
+      "pull": {
+        "law": 0.3,
+        "good": -0.1
+      },
+      "requires": [
+        [
+          "role:council",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "archetype:kingmaker": 1.5,
+        "archetype:mastermind": 1.4,
+        "archetype:corrupt": 1.3,
+        "seat:magistrate": 1.2
+      },
+      "fits": [
+        "kingmaker",
+        "mastermind",
+        "corrupt",
+        "oathbound"
+      ],
+      "claims": [
+        "hold",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "seat",
+          "title": "The seat",
+          "prompt": "My seat is watched. Find out by whom.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "watch",
+              "text": "Watch the watchers.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "bribe",
+              "text": "Buy the watchers.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.15
+              },
+              "effect": "bribe"
+            }
+          ]
+        },
+        {
+          "id": "favour",
+          "title": "The favour",
+          "prompt": "The sovereign asks something of my office. Help me answer.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "favour_answered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "serve",
+              "text": "Serve the office honestly.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "skim",
+              "text": "Serve it and keep a share.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.2
+              },
+              "effect": "steal"
+            }
+          ]
+        },
+        {
+          "id": "succession",
+          "title": "The succession",
+          "prompt": "The seat above mine may empty. Tell me who is ready.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "successor_named"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "worthy",
+              "text": "Name the one who would rule well.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.15
+              },
+              "effect": "persuade"
+            },
+            {
+              "id": "self",
+              "text": "Put {hero}'s own name forward.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.15
+              },
+              "effect": "usurp"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A magistrate who becomes a Kingmaker.",
+        "A market steward whose share becomes The Skim."
+      ]
+    },
+    {
+      "id": "the_reign",
+      "name": "The Reign",
+      "pull": {
+        "law": 0.4,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "role:sovereign",
+          "status:living"
+        ]
+      ],
+      "boosts": {
+        "dynasty:founding": 1.3,
+        "fame:renowned": 1.2,
+        "archetype:puppet_sovereign": 1.2
+      },
+      "fits": [
+        "puppet_sovereign",
+        "conqueror",
+        "tyrant",
+        "kingmaker",
+        "forgiving"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "petition",
+          "title": "The petition",
+          "prompt": "The hall is full of petitions. Hear one for me and tell me the truth of it.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "petition_heard"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "hear",
+              "text": "Hear it and report honestly.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "sell",
+              "text": "Sell the sovereign's ear to the petitioner.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "bribe"
+            }
+          ]
+        },
+        {
+          "id": "council",
+          "title": "The council",
+          "prompt": "One of my council lies to me. Which?",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "identified"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the liar.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "uncover"
+            },
+            {
+              "id": "frame",
+              "text": "Name whoever is convenient.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.25
+              },
+              "effect": "accuse"
+            }
+          ]
+        },
+        {
+          "id": "succession",
+          "title": "The succession",
+          "prompt": "I will not reign forever. Help me choose what comes after.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "successor_named"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "heir",
+              "text": "Name a worthy heir.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "seat"
+            },
+            {
+              "id": "council",
+              "text": "Leave it to the council.",
+              "delta": {
+                "law": 0.05,
+                "good": 0.0
+              },
+              "effect": "leave"
+            },
+            {
+              "id": "self",
+              "text": "Suggest the sovereign need not step down.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.2
+              },
+              "effect": "counsel"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "A reign that ends in a treaty is recast into The Alliance.",
+        "A reign that names no heir opens a Usurpation for someone else."
+      ]
+    },
+    {
+      "id": "the_spoils",
+      "name": "The Spoils",
+      "pull": {
+        "law": 0.3,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "war:victor_recent",
+          "role:warlord"
+        ],
+        [
+          "war:victor_recent",
+          "role:sovereign"
+        ]
+      ],
+      "boosts": {
+        "war:victor_recent": 1.6,
+        "world:rival_living": 1.3,
+        "archetype:conqueror": 1.3
+      },
+      "fits": [
+        "conqueror",
+        "tyrant",
+        "magnate"
+      ],
+      "claims": [
+        "hold",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "ground",
+          "title": "The taken ground",
+          "prompt": "The war is won and {lost_other} is ours by right. Walk the ground and tell me what it is worth.",
+          "completion": {
+            "kind": "target",
+            "target": "ruin",
+            "state": "surveyed"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "survey",
+              "text": "Survey the taken ground honestly.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "survey"
+            },
+            {
+              "id": "strip",
+              "text": "Strip it of anything that can be carried.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.25
+              },
+              "effect": "raid"
+            }
+          ]
+        },
+        {
+          "id": "heir",
+          "title": "The heir",
+          "prompt": "Someone of theirs survived and calls the ground stolen. Find out who.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "located"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 40
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find the heir and hear the claim.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.1
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "hunt",
+              "text": "Find the heir and end the claim.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.3
+              },
+              "effect": "kill"
+            }
+          ]
+        },
+        {
+          "id": "settlement",
+          "title": "The settlement",
+          "prompt": "Hold it, share it, or give it back. Advise me.",
+          "completion": {
+            "kind": "target",
+            "target": "claim",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 60
+          },
+          "options": [
+            {
+              "id": "hold",
+              "text": "Hold the ground and garrison it.",
+              "delta": {
+                "law": 0.15,
+                "good": -0.1
+              },
+              "effect": "defend"
+            },
+            {
+              "id": "share",
+              "text": "Share it with the heir under terms.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.2
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "return",
+              "text": "Give it back.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.25
+              },
+              "effect": "resettle"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The heir is spared and given terms; the victor gains rival:spared and rests with a Pardon hook.",
+        "The ground is stripped and held; the heir's Revenge opens against the victor."
+      ]
+    },
+    {
+      "id": "the_veteran",
+      "name": "The Veteran",
+      "pull": {
+        "law": -0.2,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:warlord",
+          "war:veteran",
+          "!world:war_risk"
+        ]
+      ],
+      "boosts": {
+        "war:victor_recent": 1.3,
+        "archetype:fallen_hero": 1.5,
+        "archetype:turncoat": 1.3,
+        "archetype:conqueror": 1.3
+      },
+      "fits": [
+        "fallen_hero",
+        "turncoat",
+        "conqueror",
+        "mentor"
+      ],
+      "claims": [
+        "hold"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "pay",
+          "title": "The pay",
+          "prompt": "The war is over and the army still wants feeding. Find me the coin, or find me a reason to keep them.",
+          "completion": {
+            "kind": "target",
+            "target": "home",
+            "state": "army_paid_or_kept"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "coin",
+              "text": "Raise the coin from the city.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.0
+              },
+              "effect": "levy"
+            },
+            {
+              "id": "keep",
+              "text": "Keep the army under arms and find it work.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.15
+              },
+              "effect": "recruit"
+            }
+          ]
+        },
+        {
+          "id": "grievance",
+          "title": "The grievance",
+          "prompt": "The council thinks the war is done with me. Show them it is not.",
+          "completion": {
+            "kind": "target",
+            "target": "seat",
+            "state": "confronted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "petition",
+              "text": "Petition the seat on the veterans' behalf.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "petition"
+            },
+            {
+              "id": "march",
+              "text": "March the veterans to the hall.",
+              "delta": {
+                "law": -0.2,
+                "good": -0.1
+              },
+              "effect": "coup"
+            }
+          ]
+        },
+        {
+          "id": "disband",
+          "title": "The disbanding",
+          "prompt": "Disband them, or crown me. There is no third road.",
+          "completion": {
+            "kind": "target",
+            "target": "hero",
+            "state": "army_resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 45
+          },
+          "options": [
+            {
+              "id": "disband",
+              "text": "Disband the army and go home.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.2
+              },
+              "effect": "leave"
+            },
+            {
+              "id": "crown",
+              "text": "Take the seat with the army behind you.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.25
+              },
+              "effect": "coup"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The army is disbanded and the warlord rests with a Succession hook as a mentor.",
+        "The army marches on the hall; the warlord is recast into Usurpation, then Tyranny."
+      ]
+    },
+    {
+      "id": "the_peace",
+      "name": "The Peace",
+      "pull": {
+        "law": 0.5,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "role:sovereign",
+          "war:victor_recent"
+        ],
+        [
+          "role:sovereign",
+          "world:war_risk"
+        ],
+        [
+          "role:sovereign",
+          "world:enemy_living"
+        ]
+      ],
+      "boosts": {
+        "world:war_risk": 1.5,
+        "world:enemy_living": 1.4,
+        "archetype:forgiving": 1.5,
+        "archetype:kingmaker": 1.2
+      },
+      "fits": [
+        "forgiving",
+        "kingmaker",
+        "conqueror",
+        "puppet_sovereign"
+      ],
+      "claims": [
+        "hold",
+        "protect",
+        "unify"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "terms",
+          "title": "The terms",
+          "prompt": "Another war would cost more than the last. Carry my terms to {realm_other} before the harvest.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "terms_delivered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "carry",
+              "text": "Carry the terms faithfully.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.1
+              },
+              "effect": "deliver"
+            },
+            {
+              "id": "harden",
+              "text": "Harden them on the road.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.15
+              },
+              "effect": "deliver"
+            }
+          ]
+        },
+        {
+          "id": "hostage",
+          "title": "The hostage",
+          "prompt": "They want surety. Someone of mine must go to them.",
+          "completion": {
+            "kind": "target",
+            "target": "kin",
+            "state": "surety_given"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "send",
+              "text": "Escort the hostage across.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.0
+              },
+              "effect": "escort"
+            },
+            {
+              "id": "refuse",
+              "text": "Refuse the surety and prepare the walls.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.1
+              },
+              "effect": "fortify"
+            }
+          ]
+        },
+        {
+          "id": "seal",
+          "title": "The seal",
+          "prompt": "Witness the peace, and remember who broke it if it breaks.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "treaty"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "witness",
+              "text": "Witness the treaty.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.15
+              },
+              "effect": "witness"
+            },
+            {
+              "id": "break",
+              "text": "Break it first.",
+              "delta": {
+                "law": -0.25,
+                "good": -0.25
+              },
+              "effect": "betray"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The peace holds and the sovereign rests with an Alliance hook.",
+        "The surety is refused and the sovereign is recast into The Siege when the risk fires."
+      ]
+    },
+    {
+      "id": "the_pursuit",
+      "name": "The Pursuit",
+      "pull": {
+        "law": -0.3,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "role:warlord",
+          "bond:rival",
+          "world:rival_living"
+        ]
+      ],
+      "boosts": {
+        "archetype:obsessed_hunter": 1.5,
+        "archetype:tyrant": 1.3,
+        "archetype:mastermind": 1.2,
+        "war:victor_recent": 1.2
+      },
+      "fits": [
+        "obsessed_hunter",
+        "tyrant",
+        "mastermind"
+      ],
+      "claims": [
+        "hold",
+        "kill"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "rumour",
+          "title": "The rumour",
+          "prompt": "{rival} lives and calls what I took stolen. Find where they shelter.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "located"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "find",
+              "text": "Find where the heir shelters.",
+              "delta": {
+                "law": 0.05,
+                "good": -0.05
+              },
+              "effect": "locate"
+            },
+            {
+              "id": "warn",
+              "text": "Warn the heir instead.",
+              "delta": {
+                "law": -0.05,
+                "good": 0.2
+              },
+              "effect": "betray"
+            }
+          ]
+        },
+        {
+          "id": "corner",
+          "title": "The corner",
+          "prompt": "Bring them to me, or bring me to them.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "confronted"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "capture",
+              "text": "Bring the heir in.",
+              "delta": {
+                "law": 0.1,
+                "good": -0.15
+              },
+              "effect": "capture"
+            },
+            {
+              "id": "parley",
+              "text": "Arrange a parley instead.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.15
+              },
+              "effect": "bargain"
+            }
+          ]
+        },
+        {
+          "id": "end",
+          "title": "The end of it",
+          "prompt": "The claim dies with them, or it dies with terms. Choose.",
+          "completion": {
+            "kind": "target",
+            "target": "rival",
+            "state": "resolved"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "kill",
+              "text": "End the claim.",
+              "delta": {
+                "law": -0.05,
+                "good": -0.3
+              },
+              "effect": "kill"
+            },
+            {
+              "id": "spare",
+              "text": "Spare the heir under terms.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.25
+              },
+              "effect": "spare"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "The heir is spared; the warlord gains rival:spared and rests with a Pardon hook.",
+        "The heir dies; the warlord rests with a Tyranny hook and the mantle opens for the player."
+      ]
+    },
+    {
+      "id": "the_march",
+      "name": "The March",
+      "pull": {
+        "law": 0.2,
+        "good": -0.4
+      },
+      "requires": [
+        [
+          "world:war_hunger",
+          "role:sovereign"
+        ],
+        [
+          "world:war_hunger",
+          "role:warlord"
+        ],
+        [
+          "world:war_hunger",
+          "seat:commander"
+        ],
+        [
+          "world:war_hunger",
+          "seat:magistrate"
+        ]
+      ],
+      "boosts": {
+        "world:war_hunger": 1.5,
+        "world:famine": 1.3,
+        "archetype:conqueror": 1.4,
+        "archetype:tyrant": 1.3,
+        "archetype:magnate": 1.2
+      },
+      "fits": [
+        "conqueror",
+        "tyrant",
+        "magnate",
+        "mastermind"
+      ],
+      "claims": [
+        "hold",
+        "unify",
+        "exploit"
+      ],
+      "cast": [
+        "person"
+      ],
+      "acts": [
+        {
+          "id": "granary",
+          "title": "The empty granary",
+          "prompt": "We cannot feed the winter and {realm_other} can. Count what we have and what the road can carry.",
+          "completion": {
+            "kind": "target",
+            "target": "core",
+            "state": "measured"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 20
+          },
+          "options": [
+            {
+              "id": "count",
+              "text": "Count honestly and say how short it is.",
+              "delta": {
+                "law": 0.1,
+                "good": 0.05
+              },
+              "effect": "measure"
+            },
+            {
+              "id": "inflate",
+              "text": "Say it is worse than it is, to justify what comes.",
+              "delta": {
+                "law": -0.1,
+                "good": -0.2
+              },
+              "effect": "conceal"
+            }
+          ]
+        },
+        {
+          "id": "envoy",
+          "title": "The envoy or the scout",
+          "prompt": "Ride the road to them. Come back with grain, or come back with their walls drawn.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "answered"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "buy",
+              "text": "Bargain for the grain.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.15
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "scout",
+              "text": "Scout their defences.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.2
+              },
+              "effect": "scout"
+            }
+          ]
+        },
+        {
+          "id": "march",
+          "title": "The march",
+          "prompt": "Terms or the sword. Decide before the frost.",
+          "completion": {
+            "kind": "target",
+            "target": "realm",
+            "state": "treaty_or_war"
+          },
+          "abandonment": {
+            "kind": "deadline",
+            "days": 30
+          },
+          "options": [
+            {
+              "id": "terms",
+              "text": "Take the terms and feed the city.",
+              "delta": {
+                "law": 0.15,
+                "good": 0.2
+              },
+              "effect": "bargain"
+            },
+            {
+              "id": "march",
+              "text": "March on their granary.",
+              "delta": {
+                "law": 0.0,
+                "good": -0.3
+              },
+              "effect": "raid"
+            },
+            {
+              "id": "ration",
+              "text": "Ration the city and take nothing.",
+              "delta": {
+                "law": 0.2,
+                "good": 0.1
+              },
+              "effect": "allocate"
+            }
+          ]
+        }
+      ],
+      "examples": [
+        "Terms are taken; the sovereign rests with a Peace hook and the neighbour with an Alliance hook.",
+        "The march goes out; next age the lottery draws the war the outlook forecast, and the neighbour was on The Siege."
+      ]
+    }
+  ]
+}

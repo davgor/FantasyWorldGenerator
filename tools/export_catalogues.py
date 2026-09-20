@@ -25,6 +25,7 @@ from icarus_sim.terrain_profiles import civilization_ids, get_profile, profiles 
 from icarus_sim.terrain_nests import profiles as nest_profiles, roles as nest_roles  # noqa: E402
 from icarus_sim.terrain_settlements import (  # noqa: E402
     _city_building_packs, _load_city_layout_profiles)
+from heritage import resolve as heritage_resolve  # noqa: E402
 
 SCHEMA = "fantasy-world-generator.native-catalogues"
 VERSION = 1
@@ -79,6 +80,14 @@ def build_catalogues() -> dict:
                      for key in sorted(civilization_ids())},
         # Parent races keep registry order: founding rotates initiative through them.
         "parent_races": [{"id": key, **value} for key, value in section("parent_races").items()],
+        # Resolved heritage: key traits, the culture derived from them and the language
+        # genome derived from that, one entry per civilization. The derivation itself never
+        # ships - the native side reads settled values exactly as it reads settled profiles.
+        # This is also the bridge the heritage package cannot build for itself: it is a leaf
+        # that never imports the registry, so something that imports both has to pair each
+        # civilization with its parent race, and this is the one place that already does.
+        "heritage": {key: heritage_resolve(key, entity_rules(key)["parent_race_id"])
+                     for key in sorted(civilization_ids())},
         "founding_rules": section("founding_rules"),
         "city_classification": {"medium_suitability_min": section("city_classification")["medium_suitability_min"]},
         # Validated by the reference loader on the way out: duplicate ids, unknown

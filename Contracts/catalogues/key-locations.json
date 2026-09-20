@@ -1,0 +1,7 @@
+{
+  "schema": "fantasy-world-generator.registry-reference",
+  "schema_version": 1,
+  "master": "../../Sim/key_locations/catalogue.json",
+  "section": "archetypes",
+  "note": "Key-location archetypes live with the package that reads them; this reference keeps them discoverable from Contracts. Adding a kind of place is a catalogue edit, not a code change."
+}

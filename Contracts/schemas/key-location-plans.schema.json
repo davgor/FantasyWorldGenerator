@@ -1,0 +1,441 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/key-location-plans.schema.json",
+  "title": "Key location exterior plans",
+  "description": "One exterior plan per key location, in the same plot shape as city_plans, hamlet_plans and castle_plans, so an importer that reads those reads these. Produced by the standalone key_locations package from the key_locations block; FANTASY_WORLD_KEY_LOCATIONS=0 leaves both keys absent. Plots are in a LOCAL metre frame: place the frame at the location direction and height from the key_locations record, then lay plots out in it.",
+  "type": "object",
+  "required": [
+    "version",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "failed"
+      ]
+    },
+    "error": {
+      "type": "string"
+    },
+    "catalogue_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "part_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "kit_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "unit": {
+      "const": "metres"
+    },
+    "coordinates": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "plans",
+        "plots",
+        "plots_per_plan"
+      ],
+      "properties": {
+        "plans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plots": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plots_per_plan": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "location_id",
+          "kind",
+          "family",
+          "tier",
+          "kit_id",
+          "version",
+          "status",
+          "arrangement",
+          "origin",
+          "bounds_m",
+          "plots",
+          "stats",
+          "terrain"
+        ],
+        "properties": {
+          "location_id": {
+            "type": "string",
+            "pattern": "^keyloc-[a-z0-9_.-]+$",
+            "description": "The key_locations site this plans. Join on it."
+          },
+          "kind": {
+            "type": "string"
+          },
+          "family": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "kit_id": {
+            "type": "string"
+          },
+          "version": {
+            "const": 1
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "empty"
+            ]
+          },
+          "arrangement": {
+            "enum": [
+              "single",
+              "ring",
+              "scatter",
+              "row",
+              "courtyard",
+              "terrace",
+              "mouth"
+            ],
+            "description": "How the parts are laid out, which is what makes a stone circle read as a circle and a mine head as a terrace."
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "direction",
+              "height_m",
+              "node"
+            ],
+            "properties": {
+              "direction": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "height_m": {
+                "type": "number"
+              },
+              "node": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "description": "Where to put the local frame. Same values as the site record."
+          },
+          "bounds_m": {
+            "type": "object",
+            "required": [
+              "width",
+              "depth"
+            ],
+            "properties": {
+              "width": {
+                "type": "number"
+              },
+              "depth": {
+                "type": "number"
+              }
+            }
+          },
+          "slope_bearing_degrees": {
+            "type": "number",
+            "description": "Downhill bearing in the local frame; terraced and mouth arrangements orient against it."
+          },
+          "plots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "building_id",
+                "name",
+                "kind",
+                "x_m",
+                "z_m",
+                "rotation_degrees",
+                "ground_elevation_m",
+                "foundation_bottom_m",
+                "plot_m",
+                "dimensions_m"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "building_id": {
+                  "type": "string",
+                  "pattern": "^keyloc\\.part\\.[a-z_]+$",
+                  "description": "Part identity. Named building_id, not part_id, so the importer that already reads city and castle plots needs no second code path."
+                },
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "structure",
+                    "terrain",
+                    "opening",
+                    "path"
+                  ]
+                },
+                "phase": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "x_m": {
+                  "type": "number",
+                  "description": "Local metres east of the location origin."
+                },
+                "z_m": {
+                  "type": "number",
+                  "description": "Local metres north of the location origin."
+                },
+                "rotation_degrees": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 360,
+                  "description": "Degrees clockwise in the local frame, normalised to [0, 360)."
+                },
+                "ground_elevation_m": {
+                  "type": "number",
+                  "description": "Highest of the four plot corners."
+                },
+                "foundation_bottom_m": {
+                  "type": "number",
+                  "description": "Lowest of the four plot corners."
+                },
+                "plot_m": {
+                  "type": "object",
+                  "required": [
+                    "width",
+                    "depth"
+                  ],
+                  "properties": {
+                    "width": {
+                      "type": "number"
+                    },
+                    "depth": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "dimensions_m": {
+                  "type": "object",
+                  "required": [
+                    "width",
+                    "depth",
+                    "height"
+                  ],
+                  "properties": {
+                    "width": {
+                      "type": "number"
+                    },
+                    "depth": {
+                      "type": "number"
+                    },
+                    "height": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "road_access": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "workers": {
+                  "type": "integer"
+                },
+                "beds": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "stats": {
+            "type": "object",
+            "required": [
+              "plots",
+              "parts"
+            ],
+            "properties": {
+              "plots": {
+                "type": "integer"
+              },
+              "parts": {
+                "type": "integer"
+              },
+              "shaping": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "terrain": {
+            "type": "object",
+            "required": [
+              "cell_m",
+              "size",
+              "bounds_m",
+              "shaping",
+              "relief_m",
+              "surface"
+            ],
+            "description": "How this location deforms the ground it stands on. Emitted twice over: `shaping` holds parametric primitives, which are exact and are what an engine with its own landscape should apply, and `surface` is a sampled grid in the same shape castle_plans emits, for a consumer that only reads grids. Where they disagree the primitives are right and the grid is merely coarse. Plot elevations are already seated on the shaped ground.",
+            "properties": {
+              "cell_m": {
+                "type": "number"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "bounds_m": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 4,
+                "maxItems": 4,
+                "description": "Local frame extent: minimum x, minimum z, maximum x, maximum z."
+              },
+              "relief_m": {
+                "type": "object",
+                "required": [
+                  "raised_m",
+                  "lowered_m"
+                ],
+                "description": "How far the shaping actually moves the ground, so a consumer can decide whether to care. Both zero means this location leaves the terrain alone.",
+                "properties": {
+                  "raised_m": {
+                    "type": "number"
+                  },
+                  "lowered_m": {
+                    "type": "number"
+                  }
+                }
+              },
+              "shaping": {
+                "type": "array",
+                "description": "Deformation primitives in the local frame, applied in order. `level` pulls ground toward the height at the feature centre and is applied first; everything else is additive.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "shape",
+                    "x_m",
+                    "z_m",
+                    "part"
+                  ],
+                  "properties": {
+                    "shape": {
+                      "enum": [
+                        "mound",
+                        "cut",
+                        "rim",
+                        "platform",
+                        "bank",
+                        "trench",
+                        "level"
+                      ]
+                    },
+                    "part": {
+                      "type": "string",
+                      "description": "The part that makes this deformation."
+                    },
+                    "x_m": {
+                      "type": "number"
+                    },
+                    "z_m": {
+                      "type": "number"
+                    },
+                    "rotation_degrees": {
+                      "type": "number"
+                    },
+                    "radius_m": {
+                      "type": "number"
+                    },
+                    "height_m": {
+                      "type": "number",
+                      "description": "Rise, or for `level` the offset from centre height."
+                    },
+                    "depth_m": {
+                      "type": "number",
+                      "description": "Fall. On `rim` it is the bowl inside the ring."
+                    },
+                    "length_m": {
+                      "type": "number"
+                    },
+                    "width_m": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "surface": {
+                "type": "object",
+                "required": [
+                  "size",
+                  "step_m",
+                  "heights_m"
+                ],
+                "description": "Sampled shaped heights over bounds_m, same shape as a castle plan surface.",
+                "properties": {
+                  "size": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "step_m": {
+                    "type": "number"
+                  },
+                  "heights_m": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    }
+  }
+}

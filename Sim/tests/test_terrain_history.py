@@ -89,7 +89,7 @@ class LeylineTests(unittest.TestCase):
             with self.assertRaises(ValueError):edit_network(network,node_id='n',intensity=intensity)
         with self.assertRaises(ValueError):edit_network(network,new_node={'id':'n','direction':[1,0,0],'intensity':1.})
 
-    def test_independent_eight_networks_and_partial_stages(self):
+    def test_independent_twelve_networks_and_partial_stages(self):
         from icarus_sim.terrain_history import materialize_stage
         from icarus_sim.terrain_leyline_history import SCHOOLS, evaluate_networks, edit_network
         from icarus_sim.terrain_lab import Config
@@ -98,7 +98,8 @@ class LeylineTests(unittest.TestCase):
         b=generate_request({**body,'overrides':{**body['overrides'],'fire_strength':0.}})
         self.assertEqual(set(a['magic']['networks']),set(SCHOOLS))
         self.assertEqual(a['magic']['school_order'],list(SCHOOLS))
-        self.assertEqual(len(a['magic']['groups']),3)
+        # Three known groups plus Outside, which only the hidden schools belong to.
+        self.assertEqual(len(a['magic']['groups']),4)
         for school in SCHOOLS:
             if school!='fire':self.assertEqual(a['layers']['ley_'+school],b['layers']['ley_'+school])
         for key in ('height','rainfall','natural_biome'):self.assertEqual(a['layers'][key],b['layers'][key])

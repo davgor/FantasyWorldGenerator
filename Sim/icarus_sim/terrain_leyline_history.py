@@ -9,7 +9,13 @@ from .terrain_globe import direction
 from .terrain_climate import node_grid
 from .terrain_magic import add_magic, arc_frame, distance_to_frame
 
-SCHOOLS = {
+# Physical radius of the reference world: design radius 10000 at the recipe world_scale.
+REFERENCE_RADIUS_M = 1774.4123532462844
+
+# The world's own taxonomy. Everything this world can name, measure, chart against its
+# moon or raise a god for is one of these eight, and the places that must stay eight
+# forever say KNOWN_SCHOOLS rather than SCHOOLS.
+KNOWN_SCHOOLS = {
     'weave': ('Raw magic', 'chaos, creation, creativity', [166, 104, 214]),
     'umbral': ('Raw magic', 'necrotic, entropy, death, order', [72, 49, 35]),
     'infernal': ('Holy / unholy', 'demons, hellscapes, corruption, evil', [154, 43, 49]),
@@ -19,6 +25,22 @@ SCHOOLS = {
     'earth': ('Primordial', 'nature, ground, stone, roots, order', [67, 120, 51]),
     'air': ('Primordial', 'wind, storms, chaos, force', [176, 210, 213]),
 }
+# Schools outside that taxonomy. Appended, never inserted: dominant_magic exports an
+# index into SCHOOLS and biome_variant an index into a catalogue built in this order, so
+# the known eight keep positions 0-7 and every world ever generated keeps its meaning.
+#
+# Generation can never raise one. Their occurrence is locked to zero in the option
+# registry, so generate_networks always leaves them empty, and only the corruption API
+# puts a node in one. They are declared here, and nowhere else, because a school that
+# does not exist in the taxonomy cannot be edited into a world by a caller who guesses
+# its name.
+HIDDEN_SCHOOLS = {
+    'blood': ('Outside', 'sacrifice, lineage, vitality, hunger', [140, 26, 38]),
+    'void': ('Outside', 'absence, entropy, unmaking, silence', [26, 22, 40]),
+    'rot': ('Outside', 'disease, undeath, decay, rebirth', [124, 130, 62]),
+    'eldritch': ('Outside', 'madness, wrong geometry, dominion of minds', [62, 96, 92]),
+}
+SCHOOLS = {**KNOWN_SCHOOLS, **HIDDEN_SCHOOLS}
 
 
 def network_geometry(seed, count):
@@ -70,6 +92,12 @@ def network_geometry(seed, count):
 def generate_networks(result, cfg):
     from .terrain_world import options
     o = options(cfg)
+    # Authored school widths are a reach on the reference world (design radius 10000 at
+    # the recipe scale, 1774.4 m physical). Magic has to cover the same share of the
+    # world at every circumference: left as absolute metres, a 110 m Gaussian on a
+    # 200 km world falls entirely between raster cells, and every ley field, magic
+    # density, biome variant, college and magic-gated habitat collapses to zero.
+    width_scale = result['effective_config']['globe_radius']/REFERENCE_RADIUS_M
     networks = {}
     for name, (group, descriptors, color) in SCHOOLS.items():
         seed = child_seed(cfg.seed, 'history-ley-' + name, o[name + '_variation'])
@@ -85,13 +113,13 @@ def generate_networks(result, cfg):
             edges = [{**e, 'id': f'{name}-line-{i}', 'intensity': rng.uniform(.35, 1.65)}
                      for i, e in enumerate(links)]
         networks[name] = {'name': name, 'group': group, 'descriptors': descriptors, 'color': color,
-                          'seed': seed, 'strength': o[name + '_strength'], 'width_m': o[name + '_width'],
+                          'seed': seed, 'strength': o[name + '_strength'], 'width_m': o[name + '_width']*width_scale,
                           'instability': o[name + '_instability'], 'nodes': nodes, 'edges': edges,
                           'distribution':distribution if enabled else None}
     result['magic'] = {'version': 4, 'school_order': list(SCHOOLS), 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
                        'networks': networks, 'colleges': [], 'enabled': bool(cfg.magic_enabled),
                        'mutation_threshold': .35, 'dominance_margin': .08,
-                       'method': 'Eight independently seeded sacred alignments with uneven clusters, scattered outliers and variable connectivity. Node and line intensities are editable; '
+                       'method': 'Eight known schools as independently seeded sacred alignments with uneven clusters, scattered outliers and variable connectivity, plus four hidden schools that generation never raises: their occurrence is locked at zero and only the corruption API places a node in one. Node and line intensities are editable; '
                                  'overlapping raw potency is preserved. Mutation requires potency >= 0.35 '
                                  'and an absolute lead >= 0.08 over the next strongest school.'}
     evaluate_networks(result, cfg)
@@ -138,22 +166,128 @@ def dominant_school(potencies, threshold=.35, margin=.08):
     return winner if potencies[winner] >= threshold and potencies[winner] - runner >= margin else None
 
 
+# Each hidden school draws on something the known eight do not. These only ever run for a
+# network that already has a node, so a generated world, whose hidden networks are always
+# empty, takes none of these paths and its fields are untouched.
+BLOOD_FEED_GAIN = 2.5     # dense living multiplies what blood can draw
+ELDRITCH_FEED_GAIN = 2.5  # aberrant nests and ruins are what eldritch reads
+ROT_REACH_WIDTHS = 6.     # how far rot creeps, measured in its own network widths
+ROT_DECAY_WIDTHS = 2.     # e-folding length of that creep, likewise
+ROT_MAX_STEPS = 64
+VOID_BITE = .8            # share of void potency taken out of every other school
+
+
+def _saturating_field(sources, vectors, radius, width_m):
+    """A 0..1 field of how close each point is to a weighted set of sources."""
+    field = []
+    for p in vectors:
+        total = 0.
+        for point, weight in sources:
+            angle = math.acos(max(-1., min(1., sum(a*b for a,b in zip(p, point)))))
+            total += weight * math.exp(-(radius * angle / width_m)**2)
+        field.append(-math.expm1(-total))
+    return field
+
+
+def hidden_feeds(result, magic, vectors, radius):
+    """What blood and eldritch find to feed on, as a multiplier per point.
+
+    Blood reads the living: many people, close together. Eldritch reads what the world
+    already fears, its aberrant and undead nests and its ruins. Both read the world as it
+    stood before this rebuild, because evaluate_networks runs ahead of civilization() and
+    add_nests, so a corruption is always one rebuild behind the cities it is eating. Both
+    read defensively: at stage nine there are no settlements, nests or ruins at all.
+    """
+    feeds = {}
+    networks = magic.get('networks', {})
+    blood = networks.get('blood')
+    if blood and blood['nodes']:
+        cities = [c for c in result.get('settlements', {}).get('sites', []) if c.get('direction')]
+        largest = max((c.get('population_estimate') or 0.) for c in cities) if cities else 0.
+        sources = [(c['direction'], (c.get('population_estimate') or 0.) / largest) for c in cities] if largest else []
+        field = _saturating_field(sources, vectors, radius, blood['width_m'])
+        feeds['blood'] = [1. + BLOOD_FEED_GAIN * v for v in field]
+    eldritch = networks.get('eldritch')
+    if eldritch and eldritch['nodes']:
+        sources = [(nest['direction'], 1.) for nest in result.get('beast_nests', {}).get('sites', [])
+                   if nest.get('direction') and nest.get('family') in ('aberrant', 'undead')]
+        sources += [(ruin['direction'], 1.) for ruin in result.get('ruins', []) if ruin.get('direction')]
+        field = _saturating_field(sources, vectors, radius, eldritch['width_m'])
+        feeds['eldritch'] = [1. + ELDRITCH_FEED_GAIN * v for v in field]
+    return feeds
+
+
+def rot_spread(power, net, graph, radius):
+    """Rot creeps cell to cell instead of falling off from a node.
+
+    The creep is measured in metres, never in cells: each step carries a neighbour's
+    value across that edge's own arc length, decaying over a length derived from the
+    network's width. A 33-grid world and a 257-grid world therefore rot at the same
+    physical rate, which a fixed iteration count over cells would not give.
+    """
+    decay_m = ROT_DECAY_WIDTHS * net['width_m']
+    arcs = [d for edges in graph for _, d in edges]
+    mean_arc = sum(arcs) / len(arcs) if arcs else 0.
+    if not mean_arc or not decay_m:
+        return power
+    steps = min(ROT_MAX_STEPS, max(1, round(ROT_REACH_WIDTHS * net['width_m'] / mean_arc)))
+    for _ in range(steps):
+        carried = [max([value] + [power[j] * math.exp(-distance / decay_m) for j, distance in graph[i]])
+                   for i, value in enumerate(power)]
+        if carried == power:
+            break
+        power = carried
+    return power
+
+
+def void_bite(powers, names):
+    """Void does not add potency, it takes it: every other school loses ground to it.
+
+    The subtraction is skipped where void is absent rather than applied as a zero, because
+    `max(0., x - 0.)` would turn the negative zero an unmanifested network writes into a
+    positive one and move every magic-disabled world's bytes.
+    """
+    void = powers.get('void')
+    if void is None:
+        return
+    for i, bite in enumerate(v * VOID_BITE for v in void):
+        if not bite:
+            continue
+        for name in names:
+            if name != 'void':
+                powers[name][i] = max(0., powers[name][i] - bite)
+
+
 def evaluate_networks(result, cfg):
     """Rebuild only magic-derived fields, preserving the independent network inputs."""
     l = result['layers']; magic = result['magic']; n = cfg.size
     radius = result['effective_config']['globe_radius']
-    points, _, _ = sphere_grid(n, radius)
+    points, _, graph = sphere_grid(n, radius)
     vectors = [direction(x, z, n) for x, z in points]
+    feeds = hidden_feeds(result, magic, vectors, radius)
+    powers = {}
     for name, net in magic['networks'].items():
         frames = [arc_frame(net['nodes'][e['from']]['direction'], net['nodes'][e['to']]['direction']) for e in net['edges']]
+        feed = feeds.get(name)
         power = []
-        for p in vectors:
+        for i, p in enumerate(vectors):
             total = sum(node['intensity'] * math.exp(-(radius * math.acos(max(-1., min(1., sum(a*b for a,b in zip(p,node['direction']))))) / net['width_m'])**2)
                         for node in net['nodes'])
             total += sum(e['intensity'] * (net['nodes'][e['from']]['intensity'] + net['nodes'][e['to']]['intensity']) / 2 *
                          math.exp(-(radius * distance_to_frame(p, frame) / net['width_m'])**2)
                          for e, frame in zip(net['edges'], frames))
+            # Applied before saturation, so a well-fed field still tops out at strength.
+            if feed is not None:
+                total *= feed[i]
             power.append(net['strength'] * -math.expm1(-total))
+        powers[name] = power
+    rot = magic['networks'].get('rot')
+    if rot is not None and rot['nodes']:
+        powers['rot'] = rot_spread(powers['rot'], rot, graph, radius)
+    if magic['networks'].get('void', {}).get('nodes'):
+        void_bite(powers, list(magic['networks']))
+    for name, net in magic['networks'].items():
+        power = powers[name]
         l['ley_' + name] = node_grid(power, points, n)
         l['instability_' + name] = node_grid([min(1., v*net['instability']) for v in power], points, n)
     density, hazard, growth, opposition, winners = [], [], [], [], []

@@ -1,0 +1,17 @@
+{
+  "schema": "fantasy-world-generator.story-constraints",
+  "revision": 1,
+  "notes": "Typed arc constraints per archetype, read from the archetype catalogue's prose `mechanic` lines. `claim_locked` means the claim verb can never change, so any thread that needs a different verb is cut. `allowed_verbs` restricts which verbs a recast may propose; null means any. `drift_locked` means alignment never moves, so threads that need an alignment crossing are cut. Archetypes absent here are unconstrained.",
+  "default": {"claim_locked": false, "drift_locked": false, "allowed_verbs": null},
+  "archetypes": {
+    "oathbound": {"claim_locked": true, "drift_locked": false, "allowed_verbs": null},
+    "inherited_hero": {"claim_locked": true, "drift_locked": false, "allowed_verbs": null},
+    "incarnate": {"claim_locked": false, "drift_locked": true, "allowed_verbs": null},
+    "obsessed_hunter": {"claim_locked": false, "drift_locked": false, "allowed_verbs": ["kill"]},
+    "puppet_sovereign": {"claim_locked": true, "drift_locked": false, "allowed_verbs": null},
+    "warden": {"claim_locked": false, "drift_locked": false, "allowed_verbs": ["hold", "protect"]},
+    "ancient": {"claim_locked": false, "drift_locked": false, "allowed_verbs": ["hold", "none"]},
+    "forgiving": {"claim_locked": false, "drift_locked": false, "allowed_verbs": ["protect", "hold", "retake", "expose", "convert", "unify"]},
+    "malevolent_benevolent": {"claim_locked": false, "drift_locked": true, "allowed_verbs": null}
+  }
+}

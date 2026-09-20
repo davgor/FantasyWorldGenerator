@@ -11,6 +11,10 @@ namespace fantasy_world_generator {
 struct Ruin {
     std::string id,uid,name,population_profile,civilization_id,source_culture;
     std::string cause,reason,new_node_school;
+    // The key point this ruin seeds: school (new_node_school), its intensity and whether
+    // the source of destruction, the region or the ruined culture chose it.
+    double legacy_intensity=0.;
+    std::string legacy_basis;
     std::size_t node=0;
     std::int64_t x=0,z=0,destroyed_age=0,founded_age=0;
     Vec3 direction{};

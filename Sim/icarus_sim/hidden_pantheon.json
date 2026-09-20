@@ -1,0 +1,88 @@
+{
+  "schema": "fantasy-world-generator.hidden-pantheon",
+  "schema_version": 1,
+  "revision": 1,
+  "description": "The four the known pantheon does not speak of. They are not in pantheon.json on purpose: catalogue_identity() hashes that file, and a world would be retired every time one of these was touched. They are still exported, as absent, because hiding them is the game's job and not the generator's.",
+  "notes": {
+    "noticing": "Encounters the game has reported before this god will act at all. Below it the chance is exactly zero, not merely small: early playthroughs are guaranteed clean, which is what makes a first corruption read as an escalation the player caused rather than a bad roll.",
+    "interest": "Which god takes an interest is read from the world, never rolled. The counter says whether; the world says which.",
+    "climb": "Encounters above the noticing point, at which this god is certain to act if it is the most interested."
+  },
+  "gods": [
+    {
+      "id": "god_long_thirst",
+      "family": "outside",
+      "name": "The Long Thirst",
+      "school": "blood",
+      "aspects": {
+        "sovereign": "The Patient Vein",
+        "wild": "The Red Harvest"
+      },
+      "domains": ["sacrifice", "lineage", "vitality taken and spent", "hunger that does not end"],
+      "exists": {"kind": "magic_enabled"},
+      "interest": "living",
+      "noticing": 3,
+      "climb": 12,
+      "rivals": ["god_radiant", "god_hearth_harvest", "god_first_hearth"],
+      "purge_families": ["holy", "fey"],
+      "smite": "the city stood and its people did not; what walked the walls afterward wore their faces"
+    },
+    {
+      "id": "god_glad_mother",
+      "family": "outside",
+      "name": "The Glad Mother",
+      "school": "rot",
+      "aspects": {
+        "sovereign": "The Kind Decay",
+        "wild": "The Teeming Bloom"
+      },
+      "domains": ["disease", "undeath", "decay that is fertile", "rebirth nobody asked for"],
+      "exists": {"kind": "magic_enabled"},
+      "interest": "decay",
+      "noticing": 6,
+      "climb": 16,
+      "rivals": ["god_radiant", "god_grave_memory"],
+      "purge_families": ["holy"],
+      "smite": "the dead did not stay where they were put, and there were more of them each morning"
+    },
+    {
+      "id": "god_shape_beneath",
+      "family": "outside",
+      "name": "The Shape Beneath",
+      "school": "eldritch",
+      "aspects": {
+        "sovereign": "The Quiet Geometry",
+        "wild": "The Waking Angle"
+      },
+      "domains": ["madness", "wrong geometry", "dominion of minds", "knowledge that costs"],
+      "exists": {"kind": "any", "rules": [
+        {"kind": "nest_family", "families": ["aberrant"]},
+        {"kind": "ruins", "min": 1}
+      ]},
+      "interest": "aberrant",
+      "noticing": 10,
+      "climb": 22,
+      "rivals": ["god_radiant", "god_earth", "god_crown_law"],
+      "purge_families": ["holy", "fey", "primordial"],
+      "smite": "nothing was destroyed; the gates opened on time and the wrong people gave the orders"
+    },
+    {
+      "id": "god_unwriting",
+      "family": "outside",
+      "name": "The Unwriting",
+      "school": "void",
+      "aspects": {
+        "sovereign": "The Long Silence",
+        "wild": "The Open Absence"
+      },
+      "domains": ["absence", "entropy", "unmaking", "the silence after"],
+      "exists": {"kind": "always"},
+      "interest": "dead_magic",
+      "noticing": 15,
+      "climb": 30,
+      "rivals": ["god_weave", "god_fire", "god_great_wyrm"],
+      "purge_families": ["holy", "fey", "primordial", "draconic"],
+      "smite": "the ground where it stood is on no map now, and the ley runs around the place it was"
+    }
+  ]
+}

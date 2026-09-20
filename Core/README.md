@@ -26,6 +26,13 @@ surface. It is the Unreal generate API: no engine type, no interpreter, no file.
 - `climate` — steady-wind moisture transport, rainfall, runoff, rivers.
 - `biomes` — temperature, moisture, natural biome and landform labels, cold
   habitats, salinity, freshwater distance and the flood-risk proxy.
+- `astrology` — the reference moon: seeded phase, spin and nod cycles, the per-school
+  tide and the `lunar_sensitivity` layer (docs/astrology.md). Bit-exact against the
+  Python moon for six seeds and 19,200 tide samples.
+- `legacy` — ruin legacies: the key point every fallen city seeds (source of
+  destruction, else region, else culture) and the city classes that size it. The age
+  transition reads the moon's tide on the age day and scales every potency the fate
+  lottery sees; the fields themselves are not rewritten.
 - `frame` — the coordinate-contract oracle: tangent frames, globe and local
   positions, and the source-to-Unreal centimetre permutation.
 - `registry` — the asset-ID to Unreal object-path table loader; every catalogue

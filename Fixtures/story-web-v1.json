@@ -1,0 +1,6262 @@
+{
+ "schema": "fantasy-world-generator.story-web-fixture",
+ "fixture_version": 10,
+ "notes": "The hand-built two-age world from Sim/tests/test_hero_generator.world() with its cast embedded (generated under certain precipitation so every candidate is present), and the web it must yield under the recorded story-web policy revisions. Alder carries a threat assessment, a food deficit, two almanac events and an open mantle so the world facts move pinned bytes. The cast is embedded on purpose: a hero-generator policy edit cannot move this pin. Regenerate with the script in Sim/tests/test_story_web.py when a story-web policy revision changes, and bump fixture_version.",
+ "policy_revision": {
+  "tropes": 7,
+  "constraints": 1,
+  "weights": 3
+ },
+ "world": {
+  "config": {
+   "seed": 42,
+   "size": 17
+  },
+  "effective_config": {
+   "globe_radius": 31831.0
+  },
+  "history": {
+   "version": 2,
+   "ages": [
+    {
+     "age": 1,
+     "events": [
+      {
+       "uid": "surface-city-0-40-human_heartland",
+       "name": "Bracken City",
+       "node": 40,
+       "x": 6,
+       "z": 2,
+       "direction": [
+        0.9567727288213006,
+        0.20791169081775934,
+        0.20336832153790013
+       ],
+       "population_profile": "human_heartland",
+       "civilization_id": "human_heartland",
+       "city_class": "small",
+       "source_culture": "human_heartland-seed",
+       "founded_age": 0,
+       "war_history": [
+        {
+         "war_id": "war-1-0",
+         "age": 1,
+         "kind": "civil",
+         "outcome": "defeated",
+         "opponent_uid": "surface-city-0-10-human_heartland",
+         "opponent_civilization_id": "human_heartland",
+         "opponent_parent_race_id": "human"
+        }
+       ],
+       "id": "ruin-surface-city-0-40-human_heartland",
+       "kind": "ruins",
+       "destroyed_age": 1,
+       "asset_id": "marker.city_ruins",
+       "cause": "war_civil",
+       "reason": "test",
+       "evidence": {
+        "war_id": "war-1-0"
+       },
+       "new_node_school": "radiant"
+      },
+      {
+       "uid": "surface-city-0-90-elf",
+       "name": "Cedar City",
+       "node": 90,
+       "x": 5,
+       "z": 5,
+       "direction": [
+        0.8137976813493738,
+        -0.3420201433256687,
+        -0.46984631039295416
+       ],
+       "population_profile": "elf",
+       "civilization_id": "elf",
+       "city_class": "capital",
+       "source_culture": "elf-seed",
+       "founded_age": 0,
+       "war_history": [
+        {
+         "war_id": "war-1-1",
+         "age": 1,
+         "kind": "international",
+         "outcome": "defeated",
+         "opponent_uid": "surface-city-0-120-dwarf",
+         "opponent_civilization_id": "dwarf",
+         "opponent_parent_race_id": "dwarf"
+        }
+       ],
+       "id": "ruin-surface-city-0-90-elf",
+       "kind": "ruins",
+       "destroyed_age": 1,
+       "asset_id": "marker.city_ruins",
+       "cause": "war_international",
+       "reason": "test",
+       "evidence": {
+        "war_id": "war-1-1"
+       },
+       "new_node_school": "water"
+      },
+      {
+       "uid": "surface-city-0-60-human_heartland",
+       "name": "Glen City",
+       "node": 60,
+       "x": 9,
+       "z": 3,
+       "direction": [
+        0.9666034580972273,
+        0.24192189559966773,
+        0.08456684470846289
+       ],
+       "population_profile": "human_heartland",
+       "civilization_id": "human_heartland",
+       "city_class": "medium",
+       "source_culture": "human_heartland-seed",
+       "founded_age": 0,
+       "war_history": [],
+       "id": "ruin-surface-city-0-60-human_heartland",
+       "kind": "ruins",
+       "destroyed_age": 1,
+       "asset_id": "marker.city_ruins",
+       "cause": "self_magic",
+       "reason": "test",
+       "evidence": {},
+       "new_node_school": "weave"
+      },
+      {
+       "uid": "surface-city-0-150-dwarf",
+       "name": "Ember City",
+       "node": 150,
+       "x": 14,
+       "z": 8,
+       "direction": [
+        0.3544374975981803,
+        0.5446390350150271,
+        0.7600936664873876
+       ],
+       "population_profile": "dwarf",
+       "civilization_id": "dwarf",
+       "city_class": "small",
+       "source_culture": "dwarf-seed",
+       "founded_age": 0,
+       "war_history": [],
+       "id": "ruin-surface-city-0-150-dwarf",
+       "kind": "ruins",
+       "destroyed_age": 1,
+       "asset_id": "marker.city_ruins",
+       "cause": "dragon",
+       "reason": "test",
+       "evidence": {
+        "nest_id": "nest-ashen-wyrm-151",
+        "distance_m": 900.0,
+        "reach_m": 2500.0
+       },
+       "new_node_school": "fire"
+      }
+     ],
+     "wars": [
+      {
+       "id": "war-1-0",
+       "age": 1,
+       "kind": "civil",
+       "participants": [
+        "surface-city-0-10-human_heartland",
+        "surface-city-0-40-human_heartland"
+       ],
+       "victor_uid": "surface-city-0-10-human_heartland",
+       "defeated_uid": "surface-city-0-40-human_heartland",
+       "victor_civilization_id": "human_heartland",
+       "defeated_civilization_id": "human_heartland",
+       "victor_parent_race_id": "human",
+       "defeated_parent_race_id": "human",
+       "pressure": 1.0,
+       "chance": 0.9,
+       "roll": 0.3,
+       "reason": "contested ground"
+      },
+      {
+       "id": "war-1-1",
+       "age": 1,
+       "kind": "international",
+       "participants": [
+        "surface-city-0-120-dwarf",
+        "surface-city-0-90-elf"
+       ],
+       "victor_uid": "surface-city-0-120-dwarf",
+       "defeated_uid": "surface-city-0-90-elf",
+       "victor_civilization_id": "dwarf",
+       "defeated_civilization_id": "elf",
+       "victor_parent_race_id": "dwarf",
+       "defeated_parent_race_id": "elf",
+       "pressure": 1.0,
+       "chance": 0.9,
+       "roll": 0.3,
+       "reason": "contested ground"
+      }
+     ],
+     "surviving_city_ids": [
+      "surface-city-0-10-human_heartland",
+      "surface-city-0-120-dwarf"
+     ],
+     "new_city_ids": []
+    },
+    {
+     "age": 2,
+     "events": [],
+     "wars": [],
+     "surviving_city_ids": [
+      "surface-city-0-10-human_heartland",
+      "surface-city-0-120-dwarf"
+     ],
+     "new_city_ids": []
+    }
+   ]
+  },
+  "ruins": [
+   {
+    "uid": "surface-city-0-40-human_heartland",
+    "name": "Bracken City",
+    "node": 40,
+    "x": 6,
+    "z": 2,
+    "direction": [
+     0.9567727288213006,
+     0.20791169081775934,
+     0.20336832153790013
+    ],
+    "population_profile": "human_heartland",
+    "civilization_id": "human_heartland",
+    "city_class": "small",
+    "source_culture": "human_heartland-seed",
+    "founded_age": 0,
+    "war_history": [
+     {
+      "war_id": "war-1-0",
+      "age": 1,
+      "kind": "civil",
+      "outcome": "defeated",
+      "opponent_uid": "surface-city-0-10-human_heartland",
+      "opponent_civilization_id": "human_heartland",
+      "opponent_parent_race_id": "human"
+     }
+    ],
+    "id": "ruin-surface-city-0-40-human_heartland",
+    "kind": "ruins",
+    "destroyed_age": 1,
+    "asset_id": "marker.city_ruins",
+    "cause": "war_civil",
+    "reason": "test",
+    "evidence": {
+     "war_id": "war-1-0"
+    },
+    "new_node_school": "radiant"
+   },
+   {
+    "uid": "surface-city-0-90-elf",
+    "name": "Cedar City",
+    "node": 90,
+    "x": 5,
+    "z": 5,
+    "direction": [
+     0.8137976813493738,
+     -0.3420201433256687,
+     -0.46984631039295416
+    ],
+    "population_profile": "elf",
+    "civilization_id": "elf",
+    "city_class": "capital",
+    "source_culture": "elf-seed",
+    "founded_age": 0,
+    "war_history": [
+     {
+      "war_id": "war-1-1",
+      "age": 1,
+      "kind": "international",
+      "outcome": "defeated",
+      "opponent_uid": "surface-city-0-120-dwarf",
+      "opponent_civilization_id": "dwarf",
+      "opponent_parent_race_id": "dwarf"
+     }
+    ],
+    "id": "ruin-surface-city-0-90-elf",
+    "kind": "ruins",
+    "destroyed_age": 1,
+    "asset_id": "marker.city_ruins",
+    "cause": "war_international",
+    "reason": "test",
+    "evidence": {
+     "war_id": "war-1-1"
+    },
+    "new_node_school": "water"
+   },
+   {
+    "uid": "surface-city-0-60-human_heartland",
+    "name": "Glen City",
+    "node": 60,
+    "x": 9,
+    "z": 3,
+    "direction": [
+     0.9666034580972273,
+     0.24192189559966773,
+     0.08456684470846289
+    ],
+    "population_profile": "human_heartland",
+    "civilization_id": "human_heartland",
+    "city_class": "medium",
+    "source_culture": "human_heartland-seed",
+    "founded_age": 0,
+    "war_history": [],
+    "id": "ruin-surface-city-0-60-human_heartland",
+    "kind": "ruins",
+    "destroyed_age": 1,
+    "asset_id": "marker.city_ruins",
+    "cause": "self_magic",
+    "reason": "test",
+    "evidence": {},
+    "new_node_school": "weave"
+   },
+   {
+    "uid": "surface-city-0-150-dwarf",
+    "name": "Ember City",
+    "node": 150,
+    "x": 14,
+    "z": 8,
+    "direction": [
+     0.3544374975981803,
+     0.5446390350150271,
+     0.7600936664873876
+    ],
+    "population_profile": "dwarf",
+    "civilization_id": "dwarf",
+    "city_class": "small",
+    "source_culture": "dwarf-seed",
+    "founded_age": 0,
+    "war_history": [],
+    "id": "ruin-surface-city-0-150-dwarf",
+    "kind": "ruins",
+    "destroyed_age": 1,
+    "asset_id": "marker.city_ruins",
+    "cause": "dragon",
+    "reason": "test",
+    "evidence": {
+     "nest_id": "nest-ashen-wyrm-151",
+     "distance_m": 900.0,
+     "reach_m": 2500.0
+    },
+    "new_node_school": "fire"
+   }
+  ],
+  "settlements": {
+   "version": 14,
+   "sites": [
+    {
+     "uid": "surface-city-0-10-human_heartland",
+     "id": 0,
+     "name": "Alder City",
+     "population_profile": "human_heartland",
+     "civilization_id": "human_heartland",
+     "parent_race_id": "human",
+     "city_class": "capital",
+     "direction": [
+      0.984807753012208,
+      0.17364817766693033,
+      0.0
+     ],
+     "node": 10,
+     "x": 10,
+     "z": 0,
+     "suitability": 0.7,
+     "population_estimate": 3000,
+     "founded_age": 0,
+     "source_culture": "human_heartland-seed",
+     "war_history": [
+      {
+       "war_id": "war-1-0",
+       "age": 1,
+       "kind": "civil",
+       "outcome": "victor",
+       "opponent_uid": "surface-city-0-40-human_heartland",
+       "opponent_civilization_id": "human_heartland",
+       "opponent_parent_race_id": "human"
+      }
+     ],
+     "founding_capital": true
+    },
+    {
+     "uid": "surface-city-0-120-dwarf",
+     "id": 3,
+     "name": "Dunlin City",
+     "population_profile": "dwarf",
+     "civilization_id": "dwarf",
+     "parent_race_id": "dwarf",
+     "city_class": "medium",
+     "direction": [
+      0.43301270189221946,
+      0.49999999999999994,
+      0.75
+     ],
+     "node": 120,
+     "x": 1,
+     "z": 7,
+     "suitability": 0.7,
+     "population_estimate": 3000,
+     "founded_age": 0,
+     "source_culture": "dwarf-seed",
+     "war_history": [
+      {
+       "war_id": "war-1-1",
+       "age": 1,
+       "kind": "international",
+       "outcome": "victor",
+       "opponent_uid": "surface-city-0-90-elf",
+       "opponent_civilization_id": "elf",
+       "opponent_parent_race_id": "elf"
+      }
+     ]
+    }
+   ]
+  },
+  "civilizations": {
+   "entities": [
+    {
+     "id": "human_heartland",
+     "name": "Heartland humans",
+     "parent_race_id": "human",
+     "region_index": 0
+    },
+    {
+     "id": "elf",
+     "name": "High Elves",
+     "parent_race_id": "elf",
+     "region_index": 1
+    },
+    {
+     "id": "dwarf",
+     "name": "Dwarves",
+     "parent_race_id": "dwarf",
+     "region_index": 2
+    }
+   ]
+  },
+  "humans": {
+   "version": 8,
+   "cultures": [
+    {
+     "index": 0,
+     "id": "human_heartland-aaaa",
+     "city_ids": [
+      0
+     ],
+     "population_profile": "human_heartland",
+     "civilization_id": "human_heartland"
+    },
+    {
+     "index": 1,
+     "id": "dwarf-bbbb",
+     "city_ids": [
+      3
+     ],
+     "population_profile": "dwarf",
+     "civilization_id": "dwarf"
+    }
+   ],
+   "cores": [
+    {
+     "site_id": 0,
+     "food_supply": 40.0,
+     "food_demand": 55.0,
+     "food_deficit": 15.0
+    }
+   ]
+  },
+  "beast_nests": {
+   "version": 1,
+   "sites": [
+    {
+     "id": "nest-ashen-wyrm-151",
+     "species_id": "ashen-wyrm",
+     "name": "Ashen wyrm",
+     "node": 151,
+     "x": 15,
+     "z": 8,
+     "direction": [
+      0.3371999592447478,
+      0.5591929034707469,
+      0.7573635086227065
+     ],
+     "biome": 3,
+     "tier": 5,
+     "family": "draconic",
+     "kind": "greater lair",
+     "size": "huge",
+     "role": null,
+     "range_m": 2500.0,
+     "layer": "surface",
+     "real": false
+    }
+   ]
+  },
+  "magic": {
+   "enabled": true,
+   "networks": {
+    "weave": {
+     "name": "weave",
+     "nodes": [
+      {
+       "id": "weave-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      },
+      {
+       "id": "ruin-surface-city-0-60-human_heartland-key",
+       "direction": [
+        0.9666034580972273,
+        0.24192189559966773,
+        0.08456684470846289
+       ],
+       "intensity": 2.5
+      }
+     ],
+     "edges": []
+    },
+    "umbral": {
+     "name": "umbral",
+     "nodes": [
+      {
+       "id": "umbral-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      }
+     ],
+     "edges": []
+    },
+    "infernal": {
+     "name": "infernal",
+     "nodes": [
+      {
+       "id": "infernal-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      }
+     ],
+     "edges": []
+    },
+    "radiant": {
+     "name": "radiant",
+     "nodes": [
+      {
+       "id": "radiant-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      },
+      {
+       "id": "ruin-surface-city-0-40-human_heartland-key",
+       "direction": [
+        0.9567727288213006,
+        0.20791169081775934,
+        0.20336832153790013
+       ],
+       "intensity": 2.5
+      }
+     ],
+     "edges": []
+    },
+    "fire": {
+     "name": "fire",
+     "nodes": [
+      {
+       "id": "fire-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      },
+      {
+       "id": "ruin-surface-city-0-150-dwarf-key",
+       "direction": [
+        0.3544374975981803,
+        0.5446390350150271,
+        0.7600936664873876
+       ],
+       "intensity": 2.5
+      }
+     ],
+     "edges": []
+    },
+    "water": {
+     "name": "water",
+     "nodes": [
+      {
+       "id": "water-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      },
+      {
+       "id": "ruin-surface-city-0-90-elf-key",
+       "direction": [
+        0.8137976813493738,
+        -0.3420201433256687,
+        -0.46984631039295416
+       ],
+       "intensity": 2.5
+      }
+     ],
+     "edges": []
+    },
+    "earth": {
+     "name": "earth",
+     "nodes": [
+      {
+       "id": "earth-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      }
+     ],
+     "edges": []
+    },
+    "air": {
+     "name": "air",
+     "nodes": [
+      {
+       "id": "air-node-0",
+       "direction": [
+        0.8830222215594891,
+        0.3420201433256687,
+        0.3213938048432697
+       ],
+       "intensity": 1.0
+      }
+     ],
+     "edges": []
+    }
+   },
+   "colleges": []
+  },
+  "heroes": {
+   "version": 1,
+   "status": "ok",
+   "policy_revision": {
+    "archetypes": 4,
+    "axis_overlays": 1,
+    "alignment": 1,
+    "names": 4,
+    "wells": 5
+   },
+   "final_age": 2,
+   "summary": {
+    "living": 23,
+    "legends": 0,
+    "dreads": 1,
+    "realms": 2,
+    "orgs": 5,
+    "camps": 4,
+    "hooks": 28,
+    "candidates": 28,
+    "precipitated": 28
+   },
+   "people": [
+    {
+     "uid": "hero-champion-surface-city-0-150-dwarf",
+     "role": "champion",
+     "well": "guilds",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "camp",
+      "uid": "camp-surface-city-0-150-dwarf",
+      "situation": "hidden"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-150-dwarf",
+      "ruin_id": "ruin-surface-city-0-150-dwarf",
+      "name": "Ember City",
+      "city_class": "small",
+      "cause": "dragon",
+      "destroyed_age": 1
+     },
+     "nest_id": "nest-ashen-wyrm-151",
+     "nest_name": "Ashen wyrm",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "age": 1,
+       "role": "credited",
+       "tier": 5
+      }
+     ],
+     "claim": {
+      "verb": "kill",
+      "target_uid": "nest-ashen-wyrm-151",
+      "target_name": "ashen wyrm, the doom of Ember"
+     },
+     "fame": 0.75,
+     "tier": "notable",
+     "name": "Borigar",
+     "epithet": "the Line-Holder",
+     "display_name": "Borigar the Line-Holder",
+     "archetype": "knight_errant",
+     "archetype_name": "The Knight Errant",
+     "alignment": {
+      "law": 0.405,
+      "good": -0.272,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "knight_errant",
+      "belief": "The oath doesn't need a hall.",
+      "wants": "A cause worthy of the order's name.",
+      "fears": "The order dying with them.",
+      "tells": "Polishes a badge for an order no one else remembers.",
+      "mechanic": "No home; presence is the road.",
+      "manner": "Follows the old code to the letter.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "fight for pay alone",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "The Wardens of the Pale number one, today. Tell me where you're going."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Borigar",
+       "apparent_role": "champion",
+       "alignment": {
+        "law": 0.405,
+        "good": -0.272,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "kill",
+        "target_uid": "nest-ashen-wyrm-151",
+        "target_name": "ashen wyrm, the doom of Ember"
+       },
+       "persona": {
+        "archetype": "knight_errant",
+        "belief": "The oath doesn't need a hall.",
+        "wants": "A cause worthy of the order's name.",
+        "fears": "The order dying with them.",
+        "tells": "Polishes a badge for an order no one else remembers.",
+        "mechanic": "No home; presence is the road.",
+        "manner": "Follows the old code to the letter.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "fight for pay alone",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "The Wardens of the Pale number one, today. Tell me where you're going."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "role": "credited",
+       "text": "Stood for Ember City against the ashen wyrm, and the city fell anyway."
+      }
+     ],
+     "situation": "Hiding at the camp in the ruins of Ember; the Order is a remnant.",
+     "companion": {
+      "eligible": true,
+      "join_condition": "found",
+      "offered_from_face": "public"
+     },
+     "org_uid": null,
+     "seed": 1275210426,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "site_name": null,
+     "selectable": [
+      "defence:failed",
+      "dread:failed_against",
+      "order:member",
+      "order:remnant",
+      "role:champion",
+      "seat:none",
+      "stake:lost"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-domain-surface-city-0-150-dwarf",
+     "role": "domain_holder",
+     "well": "magic",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "ruin",
+      "uid": "surface-city-0-150-dwarf",
+      "situation": "warding"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-150-dwarf",
+      "ruin_id": "ruin-surface-city-0-150-dwarf",
+      "name": "Ember City",
+      "city_class": "small",
+      "cause": "dragon",
+      "destroyed_age": 1
+     },
+     "school": "fire",
+     "node_id": "ruin-surface-city-0-150-dwarf-key",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "age": 1,
+       "role": "keeper"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "ruin-surface-city-0-150-dwarf-key",
+      "target_name": "the fire key point at Ember"
+     },
+     "fame": 0.75,
+     "tier": "notable",
+     "name": "Vorurim",
+     "epithet": "Warden of Ember",
+     "display_name": "Vorurim Warden of Ember",
+     "archetype": "oathbound",
+     "archetype_name": "The Oathbound",
+     "alignment": {
+      "law": 0.076,
+      "good": 0.24,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "oathbound",
+      "belief": "A promise outlives the one who made it.",
+      "wants": "To discharge the oath.",
+      "fears": "The day the oath and their conscience finally part ways.",
+      "tells": "Hesitates before the hard act, then does it anyway.",
+      "mechanic": "The claim is inherited from the charter and cannot change.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "reinterpret the oath to escape it",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "I would spare you if the vow allowed one word of mercy. It does not."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Vorurim",
+       "apparent_role": "domain_holder",
+       "alignment": {
+        "law": 0.076,
+        "good": 0.24,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "ruin-surface-city-0-150-dwarf-key",
+        "target_name": "the fire key point at Ember"
+       },
+       "persona": {
+        "archetype": "oathbound",
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "reinterpret the oath to escape it",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "I would spare you if the vow allowed one word of mercy. It does not."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "role": "keeper",
+       "text": "Took up the fire key point left where Ember City fell to a dragon."
+      }
+     ],
+     "situation": "Wards the fire key point in the ruins of Ember.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 3798985427,
+     "predecessor_uid": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "keypoint:ruin_born",
+      "role:domain_holder",
+      "seat:none"
+     ],
+     "rivals": [
+      "hero-pretender-surface-city-0-150-dwarf"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-domain-surface-city-0-40-human_heartland",
+     "role": "domain_holder",
+     "well": "magic",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "ruin",
+      "uid": "surface-city-0-40-human_heartland",
+      "situation": "warding"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-40-human_heartland",
+      "ruin_id": "ruin-surface-city-0-40-human_heartland",
+      "name": "Bracken City",
+      "city_class": "small",
+      "cause": "war_civil",
+      "destroyed_age": 1
+     },
+     "school": "radiant",
+     "node_id": "ruin-surface-city-0-40-human_heartland-key",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-40-human_heartland",
+       "age": 1,
+       "role": "keeper"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "ruin-surface-city-0-40-human_heartland-key",
+      "target_name": "the radiant key point at Bracken"
+     },
+     "fame": 0.75,
+     "tier": "notable",
+     "name": "Neriak",
+     "epithet": "Keeper of the radiant Stone",
+     "display_name": "Neriak Keeper of the radiant Stone",
+     "archetype": "warden",
+     "archetype_name": "The Warden",
+     "alignment": {
+      "law": 0.333,
+      "good": 0.227,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "warden",
+      "belief": "It stays behind the line. That's all.",
+      "wants": "Nothing to change.",
+      "fears": "Relief that never comes.",
+      "tells": "Knows the thing they guard by name.",
+      "mechanic": "Presence fixed; claim `hold` on the line.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "leave the post",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Neriak",
+       "apparent_role": "domain_holder",
+       "alignment": {
+        "law": 0.333,
+        "good": 0.227,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "ruin-surface-city-0-40-human_heartland-key",
+        "target_name": "the radiant key point at Bracken"
+       },
+       "persona": {
+        "archetype": "warden",
+        "belief": "It stays behind the line. That's all.",
+        "wants": "Nothing to change.",
+        "fears": "Relief that never comes.",
+        "tells": "Knows the thing they guard by name.",
+        "mechanic": "Presence fixed; claim `hold` on the line.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "leave the post",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-40-human_heartland",
+       "role": "keeper",
+       "text": "Took up the radiant key point left where Bracken City fell to the civil war."
+      }
+     ],
+     "situation": "Wards the radiant key point in the ruins of Bracken.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 4008643700,
+     "predecessor_uid": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "keypoint:ruin_born",
+      "realm:tyrant",
+      "role:domain_holder",
+      "seat:none"
+     ],
+     "rivals": [
+      "hero-pretender-surface-city-0-40-human_heartland"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-domain-surface-city-0-60-human_heartland",
+     "role": "domain_holder",
+     "well": "magic",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "ruin",
+      "uid": "surface-city-0-60-human_heartland",
+      "situation": "warding"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-60-human_heartland",
+      "ruin_id": "ruin-surface-city-0-60-human_heartland",
+      "name": "Glen City",
+      "city_class": "medium",
+      "cause": "self_magic",
+      "destroyed_age": 1
+     },
+     "school": "weave",
+     "node_id": "ruin-surface-city-0-60-human_heartland-key",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "age": 1,
+       "role": "keeper"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "ruin-surface-city-0-60-human_heartland-key",
+      "target_name": "the weave key point at Glen"
+     },
+     "fame": 1.5,
+     "tier": "notable",
+     "name": "Fenaeim",
+     "epithet": "of the weave Line",
+     "display_name": "Fenaeim of the weave Line",
+     "archetype": "oathbound",
+     "archetype_name": "The Oathbound",
+     "alignment": {
+      "law": 0.029,
+      "good": -0.132,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "oathbound",
+      "belief": "A promise outlives the one who made it.",
+      "wants": "To discharge the oath.",
+      "fears": "The day the oath and their conscience finally part ways.",
+      "tells": "Hesitates before the hard act, then does it anyway.",
+      "mechanic": "The claim is inherited from the charter and cannot change.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "reinterpret the oath to escape it",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "I would spare you if the vow allowed one word of mercy. It does not."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Fenaeim",
+       "apparent_role": "domain_holder",
+       "alignment": {
+        "law": 0.029,
+        "good": -0.132,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "ruin-surface-city-0-60-human_heartland-key",
+        "target_name": "the weave key point at Glen"
+       },
+       "persona": {
+        "archetype": "oathbound",
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "reinterpret the oath to escape it",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "I would spare you if the vow allowed one word of mercy. It does not."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "role": "keeper",
+       "text": "Took up the weave key point left where Glen City fell to its own magic."
+      }
+     ],
+     "situation": "Wards the weave key point in the ruins of Glen.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 2030612108,
+     "predecessor_uid": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "keypoint:ruin_born",
+      "realm:tyrant",
+      "role:domain_holder",
+      "school:dark",
+      "seat:none"
+     ],
+     "rivals": [
+      "hero-pretender-surface-city-0-60-human_heartland"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-domain-surface-city-0-90-elf",
+     "role": "domain_holder",
+     "well": "magic",
+     "civilization_id": "elf",
+     "race_id": "elf",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "ruin",
+      "uid": "surface-city-0-90-elf",
+      "situation": "warding"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-90-elf",
+      "ruin_id": "ruin-surface-city-0-90-elf",
+      "name": "Cedar City",
+      "city_class": "capital",
+      "cause": "war_international",
+      "destroyed_age": 1
+     },
+     "school": "water",
+     "node_id": "ruin-surface-city-0-90-elf-key",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-90-elf",
+       "age": 1,
+       "role": "keeper"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "ruin-surface-city-0-90-elf-key",
+      "target_name": "the water key point at Cedar"
+     },
+     "fame": 2.25,
+     "tier": "notable",
+     "name": "Liral",
+     "epithet": "Warden of Cedar",
+     "display_name": "Liral Warden of Cedar",
+     "archetype": "warden",
+     "archetype_name": "The Warden",
+     "alignment": {
+      "law": 0.509,
+      "good": 0.317,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "warden",
+      "belief": "It stays behind the line. That's all.",
+      "wants": "Nothing to change.",
+      "fears": "Relief that never comes.",
+      "tells": "Knows the thing they guard by name.",
+      "mechanic": "Presence fixed; claim `hold` on the line.",
+      "manner": "The watch rota is sacred.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "leave the post",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Liral",
+       "apparent_role": "domain_holder",
+       "alignment": {
+        "law": 0.509,
+        "good": 0.317,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "ruin-surface-city-0-90-elf-key",
+        "target_name": "the water key point at Cedar"
+       },
+       "persona": {
+        "archetype": "warden",
+        "belief": "It stays behind the line. That's all.",
+        "wants": "Nothing to change.",
+        "fears": "Relief that never comes.",
+        "tells": "Knows the thing they guard by name.",
+        "mechanic": "Presence fixed; claim `hold` on the line.",
+        "manner": "The watch rota is sacred.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "leave the post",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-90-elf",
+       "role": "keeper",
+       "text": "Took up the water key point left where Cedar City fell to the international war."
+      }
+     ],
+     "situation": "Wards the water key point in the ruins of Cedar.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1903448491,
+     "predecessor_uid": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "keypoint:ruin_born",
+      "role:domain_holder",
+      "seat:none"
+     ],
+     "rivals": [
+      "hero-pretender-surface-city-0-90-elf"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-magister-surface-city-0-60-human_heartland",
+     "role": "magister",
+     "well": "magic",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "camp",
+      "uid": "camp-surface-city-0-60-human_heartland",
+      "situation": "hidden"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-60-human_heartland",
+      "ruin_id": "ruin-surface-city-0-60-human_heartland",
+      "name": "Glen City",
+      "city_class": "medium",
+      "cause": "self_magic",
+      "destroyed_age": 1
+     },
+     "school": "weave",
+     "node_id": "ruin-surface-city-0-60-human_heartland-key",
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "age": 1,
+       "role": "actual"
+      }
+     ],
+     "claim": {
+      "verb": "exploit",
+      "target_uid": "ruin-surface-city-0-60-human_heartland-key",
+      "target_name": "the weave key point at Glen"
+     },
+     "fame": 3.0,
+     "tier": "notable",
+     "name": "Loruath",
+     "epithet": "Last Master of Glen",
+     "display_name": "Loruath Last Master of Glen",
+     "archetype": "hermit_sage",
+     "archetype_name": "The Hermit Sage",
+     "alignment": {
+      "law": -0.064,
+      "good": -0.023,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "hermit_sage",
+      "belief": "Knowledge outlives cities; it does not need me to shout.",
+      "wants": "To be left alone, and to be right.",
+      "fears": "Their work used.",
+      "tells": "The hut sits on a ley node.",
+      "mechanic": "Presence at a ley node; claims are `hold` on knowledge, a relic.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "give the dangerous half of the answer",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "I know exactly what you're asking. That's why I'm saying no."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Loruath",
+       "apparent_role": "magister",
+       "alignment": {
+        "law": -0.064,
+        "good": -0.023,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "exploit",
+        "target_uid": "ruin-surface-city-0-60-human_heartland-key",
+        "target_name": "the weave key point at Glen"
+       },
+       "persona": {
+        "archetype": "hermit_sage",
+        "belief": "Knowledge outlives cities; it does not need me to shout.",
+        "wants": "To be left alone, and to be right.",
+        "fears": "Their work used.",
+        "tells": "The hut sits on a ley node.",
+        "mechanic": "Presence at a ley node; claims are `hold` on knowledge, a relic.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "give the dangerous half of the answer",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "I know exactly what you're asking. That's why I'm saying no."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "role": "actual",
+       "text": "Glen City destroyed itself in a magical experiment; the master of its college walked out of the ash, and a weave key point burns where the city stood."
+      }
+     ],
+     "situation": "Hiding at the camp in the ruins of Glen, unrecognised.",
+     "companion": {
+      "eligible": true,
+      "join_condition": "found",
+      "offered_from_face": "public"
+     },
+     "org_uid": null,
+     "seed": 2348827489,
+     "predecessor_uid": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "college:destroyed",
+      "realm:tyrant",
+      "role:magister",
+      "school:dark",
+      "seat:none",
+      "stake:lost"
+     ],
+     "rivals": [],
+     "kin": [
+      "hero-pretender-surface-city-0-60-human_heartland"
+     ],
+     "allies": []
+    },
+    {
+     "uid": "hero-pretender-surface-city-0-150-dwarf",
+     "role": "pretender",
+     "well": "ruins",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 1,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "court"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "lost": {
+      "uid": "surface-city-0-150-dwarf",
+      "ruin_id": "ruin-surface-city-0-150-dwarf",
+      "name": "Ember City",
+      "city_class": "small",
+      "cause": "dragon",
+      "destroyed_age": 1
+     },
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "age": 1,
+       "role": "heir"
+      }
+     ],
+     "claim": {
+      "verb": "retake",
+      "target_uid": "surface-city-0-150-dwarf",
+      "target_name": "Ember City"
+     },
+     "fame": 3.25,
+     "tier": "notable",
+     "name": "Haruulf",
+     "epithet": "of Ember",
+     "display_name": "Haruulf of Ember",
+     "archetype": "obsessed_hunter",
+     "archetype_name": "The Obsessed Hunter",
+     "alignment": {
+      "law": 0.059,
+      "good": 0.266,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "obsessed_hunter",
+      "belief": "It has to die, and it has to be by me.",
+      "wants": "The Dread's head.",
+      "fears": "Someone else killing it.",
+      "tells": "Scars matching the Dread's species; every topic returns to it.",
+      "mechanic": "A single claim `kill` on the Dread; no other claims accepted.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "let the Dread go",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "You've seen its tracks? Show me. Then get your people out of its path."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Haruulf",
+       "apparent_role": "pretender",
+       "alignment": {
+        "law": 0.059,
+        "good": 0.266,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "retake",
+        "target_uid": "surface-city-0-150-dwarf",
+        "target_name": "Ember City"
+       },
+       "persona": {
+        "archetype": "obsessed_hunter",
+        "belief": "It has to die, and it has to be by me.",
+        "wants": "The Dread's head.",
+        "fears": "Someone else killing it.",
+        "tells": "Scars matching the Dread's species; every topic returns to it.",
+        "mechanic": "A single claim `kill` on the Dread; no other claims accepted.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "let the Dread go",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "You've seen its tracks? Show me. Then get your people out of its path."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "role": "heir",
+       "text": "Ember City, small city of the Dwarves, was destroyed by a dragon; its heir survived."
+      }
+     ],
+     "situation": "Sheltered at Dunlin City; still claims Ember City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1670149048,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "dread:living",
+      "heir:small",
+      "home:fell",
+      "role:pretender",
+      "seat:none",
+      "stake:lost"
+     ],
+     "rivals": [
+      "dread-nest-ashen-wyrm-151",
+      "hero-domain-surface-city-0-150-dwarf"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-pretender-surface-city-0-40-human_heartland",
+     "role": "pretender",
+     "well": "ruins",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "court"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "lost": {
+      "uid": "surface-city-0-40-human_heartland",
+      "ruin_id": "ruin-surface-city-0-40-human_heartland",
+      "name": "Bracken City",
+      "city_class": "small",
+      "cause": "war_civil",
+      "destroyed_age": 1
+     },
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-40-human_heartland",
+       "age": 1,
+       "role": "heir"
+      },
+      {
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "age": 1,
+       "role": "victim",
+       "kind": "civil",
+       "opponent_uid": "surface-city-0-10-human_heartland"
+      }
+     ],
+     "claim": {
+      "verb": "retake",
+      "target_uid": "surface-city-0-40-human_heartland",
+      "target_name": "Bracken City"
+     },
+     "fame": 6.375,
+     "tier": "notable",
+     "name": "Kelud",
+     "epithet": "of the Broken Gate",
+     "display_name": "Kelud of the Broken Gate",
+     "archetype": "reluctant_hero",
+     "archetype_name": "The Reluctant Hero",
+     "alignment": {
+      "law": -0.01,
+      "good": 0.258,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "reluctant_hero",
+      "belief": "Someone has to; I wish it weren't me.",
+      "wants": "To go home.",
+      "fears": "Being good at this.",
+      "tells": "Competence they refuse to own.",
+      "mechanic": "The mantle is held but not accepted until a deed of their own.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "abandon people who depend on them",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "Fine. But when this is done, someone else has the sword."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Kelud",
+       "apparent_role": "pretender",
+       "alignment": {
+        "law": -0.01,
+        "good": 0.258,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "retake",
+        "target_uid": "surface-city-0-40-human_heartland",
+        "target_name": "Bracken City"
+       },
+       "persona": {
+        "archetype": "reluctant_hero",
+        "belief": "Someone has to; I wish it weren't me.",
+        "wants": "To go home.",
+        "fears": "Being good at this.",
+        "tells": "Competence they refuse to own.",
+        "mechanic": "The mantle is held but not accepted until a deed of their own.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "abandon people who depend on them",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "Fine. But when this is done, someone else has the sword."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-40-human_heartland",
+       "role": "heir",
+       "text": "Bracken City, small city of the Heartland humans, was destroyed by the civil war; its heir survived."
+      },
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "role": "victim",
+       "text": "Lost the civil war that ended Bracken City."
+      }
+     ],
+     "situation": "Sheltered at Alder City; still claims Bracken City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 2943469710,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "civ:lost_many",
+      "heir:small",
+      "home:fell",
+      "realm:tyrant",
+      "role:pretender",
+      "seat:none",
+      "stake:lost"
+     ],
+     "rivals": [
+      "hero-domain-surface-city-0-40-human_heartland",
+      "hero-warlord-1-surface-city-0-10-human_heartland"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-pretender-surface-city-0-60-human_heartland",
+     "role": "pretender",
+     "well": "ruins",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "court"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "lost": {
+      "uid": "surface-city-0-60-human_heartland",
+      "ruin_id": "ruin-surface-city-0-60-human_heartland",
+      "name": "Glen City",
+      "city_class": "medium",
+      "cause": "self_magic",
+      "destroyed_age": 1
+     },
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "age": 1,
+       "role": "heir"
+      }
+     ],
+     "claim": {
+      "verb": "retake",
+      "target_uid": "surface-city-0-60-human_heartland",
+      "target_name": "Glen City"
+     },
+     "fame": 8.5,
+     "tier": "renowned",
+     "name": "Haleith",
+     "epithet": "Heir of Glen",
+     "display_name": "Haleith Heir of Glen",
+     "archetype": "exiled_hero",
+     "archetype_name": "The Exiled Hero",
+     "alignment": {
+      "law": -0.097,
+      "good": 0.23,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "exiled_hero",
+      "belief": "Home is the people, not the ground.",
+      "wants": "Their people safe wherever they now stand.",
+      "fears": "Being invited back and finding they no longer belong.",
+      "tells": "Flinches at their old banners; sends coin home anonymously.",
+      "mechanic": "Claim `protect` the new home rather than `retake` the old one.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "sell out the new home to buy back the old",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "Everything I have left is behind me now, and it needs a wall."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Haleith",
+       "apparent_role": "pretender",
+       "alignment": {
+        "law": -0.097,
+        "good": 0.23,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "retake",
+        "target_uid": "surface-city-0-60-human_heartland",
+        "target_name": "Glen City"
+       },
+       "persona": {
+        "archetype": "exiled_hero",
+        "belief": "Home is the people, not the ground.",
+        "wants": "Their people safe wherever they now stand.",
+        "fears": "Being invited back and finding they no longer belong.",
+        "tells": "Flinches at their old banners; sends coin home anonymously.",
+        "mechanic": "Claim `protect` the new home rather than `retake` the old one.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "sell out the new home to buy back the old",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "Everything I have left is behind me now, and it needs a wall."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-60-human_heartland",
+       "role": "heir",
+       "text": "Glen City, city of the Heartland humans, was destroyed by its own magic; its heir survived."
+      }
+     ],
+     "situation": "Sheltered at Alder City; still claims Glen City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1515204715,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "civ:lost_many",
+      "fame:renowned",
+      "heir:medium",
+      "home:fell",
+      "mentor:successor",
+      "realm:tyrant",
+      "role:pretender",
+      "seat:none",
+      "stake:lost"
+     ],
+     "rivals": [
+      "hero-domain-surface-city-0-60-human_heartland"
+     ],
+     "kin": [
+      "hero-magister-surface-city-0-60-human_heartland"
+     ],
+     "allies": [
+      "hero-council-surface-city-0-10-human_heartland-chaplain"
+     ]
+    },
+    {
+     "uid": "hero-pretender-surface-city-0-90-elf",
+     "role": "pretender",
+     "well": "ruins",
+     "civilization_id": "elf",
+     "race_id": "elf",
+     "born_age": 1,
+     "status": "living",
+     "home": null,
+     "presence": {
+      "site_kind": "camp",
+      "uid": "camp-surface-city-0-90-elf",
+      "situation": "leader"
+     },
+     "realm_uid": null,
+     "lost": {
+      "uid": "surface-city-0-90-elf",
+      "ruin_id": "ruin-surface-city-0-90-elf",
+      "name": "Cedar City",
+      "city_class": "capital",
+      "cause": "war_international",
+      "destroyed_age": 1
+     },
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-90-elf",
+       "age": 1,
+       "role": "heir"
+      },
+      {
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "age": 1,
+       "role": "victim",
+       "kind": "international",
+       "opponent_uid": "surface-city-0-120-dwarf"
+      }
+     ],
+     "claim": {
+      "verb": "retake",
+      "target_uid": "surface-city-0-90-elf",
+      "target_name": "Cedar City"
+     },
+     "fame": 6.75,
+     "tier": "notable",
+     "name": "Vaelaeilas",
+     "epithet": "the Dispossessed",
+     "display_name": "Vaelaeilas the Dispossessed",
+     "archetype": "trickster",
+     "archetype_name": "The Trickster",
+     "alignment": {
+      "law": 0.55,
+      "good": 0.581,
+      "label": "Lawful Good",
+      "code": "LG",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "trickster",
+      "belief": "Every throne is a joke; I just say it out loud.",
+      "wants": "The powerful humbled, the pattern broken.",
+      "fears": "Becoming what they mock.",
+      "tells": "Their pranks always land on the guilty.",
+      "mechanic": "Targets the highest-fame notable in reach; claims are `expose`.",
+      "manner": "Satire, petitions and legal traps. Returns what they steal, with interest.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Asks after others, uses names, apologises when they mean it.",
+      "lies": "Only to shield someone else, and it costs them. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Helps first and asks later. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Takes the cost on themselves rather than passing it on.",
+      "never": [
+       "side with the strongest",
+       "break a sworn word",
+       "act outside the office they hold",
+       "harm an innocent to advance the claim",
+       "leave the helpless behind"
+      ],
+      "line": "Of course I lied. You'd have been so bored."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Vaelaeilas",
+       "apparent_role": "pretender",
+       "alignment": {
+        "law": 0.55,
+        "good": 0.581,
+        "label": "Lawful Good",
+        "code": "LG",
+        "drift": null
+       },
+       "claim": {
+        "verb": "retake",
+        "target_uid": "surface-city-0-90-elf",
+        "target_name": "Cedar City"
+       },
+       "persona": {
+        "archetype": "trickster",
+        "belief": "Every throne is a joke; I just say it out loud.",
+        "wants": "The powerful humbled, the pattern broken.",
+        "fears": "Becoming what they mock.",
+        "tells": "Their pranks always land on the guilty.",
+        "mechanic": "Targets the highest-fame notable in reach; claims are `expose`.",
+        "manner": "Satire, petitions and legal traps. Returns what they steal, with interest.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Asks after others, uses names, apologises when they mean it.",
+        "lies": "Only to shield someone else, and it costs them. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Helps first and asks later. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Takes the cost on themselves rather than passing it on.",
+        "never": [
+         "side with the strongest",
+         "break a sworn word",
+         "act outside the office they hold",
+         "harm an innocent to advance the claim",
+         "leave the helpless behind"
+        ],
+        "line": "Of course I lied. You'd have been so bored."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-90-elf",
+       "role": "heir",
+       "text": "Cedar City, capital of the High Elves, was destroyed by the international war; its heir survived."
+      },
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "role": "victim",
+       "text": "Lost the international war that ended Cedar City."
+      }
+     ],
+     "situation": "Leads the camp in the ruins of Cedar; still claims Cedar City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 2858748719,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "heir:capital",
+      "home:fell",
+      "role:camp_leader",
+      "role:pretender",
+      "seat:none",
+      "stake:lost",
+      "stake:none"
+     ],
+     "rivals": [
+      "hero-domain-surface-city-0-90-elf",
+      "hero-warlord-1-surface-city-0-120-dwarf"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-warlord-1-surface-city-0-10-human_heartland",
+     "role": "warlord",
+     "well": "ruins",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 1,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "command"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "victor_uid": "surface-city-0-10-human_heartland",
+     "victor_name": "Alder City",
+     "victor_fell": false,
+     "deeds": [
+      {
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "age": 1,
+       "role": "credited",
+       "kind": "civil",
+       "defeated_uid": "surface-city-0-40-human_heartland",
+       "defeated_name": "Bracken City",
+       "defeated_class": "small"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "defeated": [
+      {
+       "uid": "surface-city-0-40-human_heartland",
+       "name": "Bracken City",
+       "war_id": "war-1-0",
+       "kind": "civil"
+      }
+     ],
+     "fame": 4.25,
+     "tier": "notable",
+     "name": "Uluom",
+     "epithet": "the Victor of Bracken",
+     "display_name": "Uluom the Victor of Bracken",
+     "archetype": "tyrant",
+     "archetype_name": "The Tyrant",
+     "alignment": {
+      "law": 0.653,
+      "good": -0.01,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "tyrant",
+      "belief": "Control is the only order that lasts.",
+      "wants": "No challenge to exist.",
+      "fears": "The crowd, the heir, the mirror.",
+      "tells": "Removes competent subordinates; cannot bear laughter.",
+      "mechanic": "Claim `hold` on every city in the realm; council members become rivals on schedule.",
+      "manner": "Control through law, census and permits.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "apologise in public",
+       "share credit",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "I hanged three grain-hoarders and nobody starved this winter. Argue with the full bellies."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Uluom",
+       "apparent_role": "warlord",
+       "alignment": {
+        "law": 0.653,
+        "good": -0.01,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "tyrant",
+        "belief": "Control is the only order that lasts.",
+        "wants": "No challenge to exist.",
+        "fears": "The crowd, the heir, the mirror.",
+        "tells": "Removes competent subordinates; cannot bear laughter.",
+        "mechanic": "Claim `hold` on every city in the realm; council members become rivals on schedule.",
+        "manner": "Control through law, census and permits.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "apologise in public",
+         "share credit",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "I hanged three grain-hoarders and nobody starved this winter. Argue with the full bellies."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "role": "credited",
+       "text": "Led Alder City to victory over Bracken City in a civil war; Bracken City is a ruin."
+      }
+     ],
+     "situation": "Holds Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1262189751,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "civ:lost_many",
+      "role:warlord",
+      "war:civil_victor"
+     ],
+     "rivals": [
+      "hero-pretender-surface-city-0-40-human_heartland"
+     ],
+     "kin": [],
+     "allies": []
+    },
+    {
+     "uid": "hero-warlord-1-surface-city-0-120-dwarf",
+     "role": "warlord",
+     "well": "ruins",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 1,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "command"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "victor_uid": "surface-city-0-120-dwarf",
+     "victor_name": "Dunlin City",
+     "victor_fell": false,
+     "deeds": [
+      {
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "age": 1,
+       "role": "credited",
+       "kind": "international",
+       "defeated_uid": "surface-city-0-90-elf",
+       "defeated_name": "Cedar City",
+       "defeated_class": "capital"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-120-dwarf",
+      "target_name": "Dunlin City"
+     },
+     "defeated": [
+      {
+       "uid": "surface-city-0-90-elf",
+       "name": "Cedar City",
+       "war_id": "war-1-1",
+       "kind": "international"
+      }
+     ],
+     "fame": 29.25,
+     "tier": "legendary",
+     "name": "Vorein",
+     "epithet": "Ironhand",
+     "display_name": "Vorein Ironhand",
+     "archetype": "malevolent_benevolent",
+     "archetype_name": "The Malevolent / Benevolent",
+     "alignment": {
+      "law": 0.375,
+      "good": -1.0,
+      "label": "Lawful Evil",
+      "code": "LE",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "malevolent_benevolent",
+      "belief": "Good or evil is not a choice; it is what I am for.",
+      "wants": "The world remade in their moral image.",
+      "fears": "Indifference.",
+      "tells": "Thrives visibly when the realm matches their order-or-chaos preference; withers when it does not.",
+      "mechanic": "The moral axis is pushed to its pole; law is a preference, not an axis; when the realm does not match, the claim becomes `convert`.",
+      "manner": "Builds churches, or courts. Does not need to be served; will be anyway.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+      "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+      "never": [
+       "compromise the moral pole",
+       "break a sworn word",
+       "act outside the office they hold",
+       "sacrifice self for another",
+       "let a slight go unanswered"
+      ],
+      "line": "I don't need you to serve me. You will, but I don't need it."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Vorein",
+       "apparent_role": "warlord",
+       "alignment": {
+        "law": 0.375,
+        "good": -1.0,
+        "label": "Lawful Evil",
+        "code": "LE",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-120-dwarf",
+        "target_name": "Dunlin City"
+       },
+       "persona": {
+        "archetype": "malevolent_benevolent",
+        "belief": "Good or evil is not a choice; it is what I am for.",
+        "wants": "The world remade in their moral image.",
+        "fears": "Indifference.",
+        "tells": "Thrives visibly when the realm matches their order-or-chaos preference; withers when it does not.",
+        "mechanic": "The moral axis is pushed to its pole; law is a preference, not an axis; when the realm does not match, the claim becomes `convert`.",
+        "manner": "Builds churches, or courts. Does not need to be served; will be anyway.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+        "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+        "never": [
+         "compromise the moral pole",
+         "break a sworn word",
+         "act outside the office they hold",
+         "sacrifice self for another",
+         "let a slight go unanswered"
+        ],
+        "line": "I don't need you to serve me. You will, but I don't need it."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "role": "credited",
+       "text": "Led Dunlin City to victory over Cedar City in a international war; Cedar City is a ruin."
+      }
+     ],
+     "situation": "Holds Dunlin City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 3011155749,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "fame:legendary",
+      "fame:renowned",
+      "mentor:successor",
+      "role:warlord",
+      "war:international_victor"
+     ],
+     "rivals": [
+      "hero-champion-surface-city-0-120-dwarf",
+      "hero-pretender-surface-city-0-90-elf"
+     ],
+     "kin": [],
+     "allies": [
+      "hero-champion-surface-city-0-120-dwarf"
+     ]
+    },
+    {
+     "uid": "hero-champion-surface-city-0-120-dwarf",
+     "role": "champion",
+     "well": "guilds",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "guildhall"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "nest_id": "nest-ashen-wyrm-151",
+     "nest_name": "Ashen wyrm",
+     "deeds": [
+      {
+       "event_kind": "nest",
+       "event_id": "nest-ashen-wyrm-151",
+       "age": 2,
+       "role": "credited",
+       "tier": 5
+      }
+     ],
+     "claim": {
+      "verb": "kill",
+      "target_uid": "nest-ashen-wyrm-151",
+      "target_name": "the ashen wyrm near Dunlin"
+     },
+     "fame": 9.75,
+     "tier": "renowned",
+     "name": "Dureund",
+     "epithet": "Who Held Dunlin",
+     "display_name": "Dureund Who Held Dunlin",
+     "archetype": "warden",
+     "archetype_name": "The Warden",
+     "alignment": {
+      "law": 0.165,
+      "good": -0.149,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "warden",
+      "belief": "It stays behind the line. That's all.",
+      "wants": "Nothing to change.",
+      "fears": "Relief that never comes.",
+      "tells": "Knows the thing they guard by name.",
+      "mechanic": "Presence fixed; claim `hold` on the line.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "leave the post",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Dureund",
+       "apparent_role": "champion",
+       "alignment": {
+        "law": 0.165,
+        "good": -0.149,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "kill",
+        "target_uid": "nest-ashen-wyrm-151",
+        "target_name": "the ashen wyrm near Dunlin"
+       },
+       "persona": {
+        "archetype": "warden",
+        "belief": "It stays behind the line. That's all.",
+        "wants": "Nothing to change.",
+        "fears": "Relief that never comes.",
+        "tells": "Knows the thing they guard by name.",
+        "mechanic": "Presence fixed; claim `hold` on the line.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "leave the post",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "Third night this month it's tested the ward. You want through? You're coming back with a message."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 2,
+       "event_kind": "nest",
+       "event_id": "nest-ashen-wyrm-151",
+       "role": "credited",
+       "text": "Holds the line for Dunlin City against the ashen wyrm."
+      }
+     ],
+     "situation": "Champion of the Order at Dunlin City; the ashen wyrm is still out there.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 2890109378,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "site_name": null,
+     "selectable": [
+      "deed:credited_not_actual",
+      "fame:renowned",
+      "order:member",
+      "role:champion",
+      "seat:none",
+      "warden:post"
+     ],
+     "rivals": [
+      "hero-warlord-1-surface-city-0-120-dwarf"
+     ],
+     "kin": [],
+     "allies": [
+      "hero-warlord-1-surface-city-0-120-dwarf"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-10-human_heartland-chaplain",
+     "role": "council",
+     "seat": "chaplain",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "council"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "fame": 4.25,
+     "tier": "notable",
+     "name": "Neriak",
+     "epithet": "Who Keeps the Ledger of Alder",
+     "display_name": "Neriak Who Keeps the Ledger of Alder",
+     "archetype": "zealot",
+     "archetype_name": "The Zealot",
+     "alignment": {
+      "law": 0.438,
+      "good": -0.076,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "zealot",
+      "belief": "Doubt is the only sin.",
+      "wants": "The faith spread.",
+      "fears": "Silence from above.",
+      "tells": "Cannot laugh at their own creed.",
+      "mechanic": "Claim `convert` on the cities of the mother faith, or of the schism.",
+      "manner": "Orthodoxy, councils and inquisition.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "tolerate blasphemy",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "I've doubted. That's how I know doubt's the enemy. Sit, eat, I'll show you."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Neriak",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.438,
+        "good": -0.076,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "zealot",
+        "belief": "Doubt is the only sin.",
+        "wants": "The faith spread.",
+        "fears": "Silence from above.",
+        "tells": "Cannot laugh at their own creed.",
+        "mechanic": "Claim `convert` on the cities of the mother faith, or of the schism.",
+        "manner": "Orthodoxy, councils and inquisition.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "tolerate blasphemy",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "I've doubted. That's how I know doubt's the enemy. Sit, eat, I'll show you."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the chaplain seat at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1711635361,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:chaplain"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-pretender-surface-city-0-60-human_heartland",
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-10-human_heartland-commander",
+     "role": "council",
+     "seat": "commander",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "council"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "fame": 6.375,
+     "tier": "notable",
+     "name": "Sevein",
+     "epithet": "of the Alder Bench",
+     "display_name": "Sevein of the Alder Bench",
+     "archetype": "kingmaker",
+     "archetype_name": "The Kingmaker",
+     "alignment": {
+      "law": 0.466,
+      "good": 0.308,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "kingmaker",
+      "belief": "Crowns are worn; power is held.",
+      "wants": "To choose the next ruler.",
+      "fears": "A sovereign who does not need them.",
+      "tells": "Everyone important owes them.",
+      "mechanic": "Claim `hold` on the sovereign, not the city.",
+      "manner": "Through offices and law.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "take the throne themselves",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "His Majesty will decide. I've helped him understand what he decides. It's usually the kind thing."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Sevein",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.466,
+        "good": 0.308,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "kingmaker",
+        "belief": "Crowns are worn; power is held.",
+        "wants": "To choose the next ruler.",
+        "fears": "A sovereign who does not need them.",
+        "tells": "Everyone important owes them.",
+        "mechanic": "Claim `hold` on the sovereign, not the city.",
+        "manner": "Through offices and law.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "take the throne themselves",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "His Majesty will decide. I've helped him understand what he decides. It's usually the kind thing."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the commander seat at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 56846872,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:commander"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-10-human_heartland-mage",
+     "role": "council",
+     "seat": "mage",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "council"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "fame": 4.25,
+     "tier": "notable",
+     "name": "Kelem",
+     "epithet": "the Court Mage",
+     "display_name": "Kelem the Court Mage",
+     "archetype": "mastermind",
+     "archetype_name": "The Mastermind",
+     "alignment": {
+      "law": 0.166,
+      "good": 0.416,
+      "label": "Neutral Good",
+      "code": "NG",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "mastermind",
+      "belief": "Failure is a branch I have already priced.",
+      "wants": "The end state, indifferent to the path.",
+      "fears": "The variable they did not model.",
+      "tells": "Never surprised; asks questions they already know the answers to.",
+      "mechanic": "The claim carries a fallback chain; failure of one target promotes the next.",
+      "manner": "The end state is other people's safety; still manipulates to get there.",
+      "voice": "Plain and situational; register follows the room. Asks after others, uses names, apologises when they mean it.",
+      "lies": "Only to shield someone else, and it costs them. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Helps first and asks later. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Takes the cost on themselves rather than passing it on.",
+      "never": [
+       "act without a fallback",
+       "spend more than the goal is worth",
+       "harm an innocent to advance the claim",
+       "leave the helpless behind"
+      ],
+      "line": "You did exactly what I hoped. I keep hope and plan separate."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Kelem",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.166,
+        "good": 0.416,
+        "label": "Neutral Good",
+        "code": "NG",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "mastermind",
+        "belief": "Failure is a branch I have already priced.",
+        "wants": "The end state, indifferent to the path.",
+        "fears": "The variable they did not model.",
+        "tells": "Never surprised; asks questions they already know the answers to.",
+        "mechanic": "The claim carries a fallback chain; failure of one target promotes the next.",
+        "manner": "The end state is other people's safety; still manipulates to get there.",
+        "voice": "Plain and situational; register follows the room. Asks after others, uses names, apologises when they mean it.",
+        "lies": "Only to shield someone else, and it costs them. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Helps first and asks later. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Takes the cost on themselves rather than passing it on.",
+        "never": [
+         "act without a fallback",
+         "spend more than the goal is worth",
+         "harm an innocent to advance the claim",
+         "leave the helpless behind"
+        ],
+        "line": "You did exactly what I hoped. I keep hope and plan separate."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the mage seat at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 460091541,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:mage"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-10-human_heartland-magistrate",
+     "role": "council",
+     "seat": "magistrate",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "council"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "fame": 6.375,
+     "tier": "notable",
+     "name": "Fenen",
+     "epithet": "of the Alder Bench",
+     "display_name": "Fenen of the Alder Bench",
+     "archetype": "oathbound",
+     "archetype_name": "The Oathbound",
+     "alignment": {
+      "law": 0.525,
+      "good": -0.094,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "oathbound",
+      "belief": "A promise outlives the one who made it.",
+      "wants": "To discharge the oath.",
+      "fears": "The day the oath and their conscience finally part ways.",
+      "tells": "Hesitates before the hard act, then does it anyway.",
+      "mechanic": "The claim is inherited from the charter and cannot change.",
+      "manner": "Keeps the oath's letter.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "reinterpret the oath to escape it",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "I would spare you if the vow allowed one word of mercy. It does not."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Fenen",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.525,
+        "good": -0.094,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "oathbound",
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "manner": "Keeps the oath's letter.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "reinterpret the oath to escape it",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "I would spare you if the vow allowed one word of mercy. It does not."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the magistrate seat at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 4003529908,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:magistrate"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-10-human_heartland-market_steward",
+     "role": "council",
+     "seat": "market_steward",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "council"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [],
+     "claim": {
+      "verb": "exploit",
+      "target_uid": "surface-city-0-10-human_heartland",
+      "target_name": "Alder City"
+     },
+     "fame": 5.1,
+     "tier": "notable",
+     "name": "Tamuuth",
+     "epithet": "Steward of Alder",
+     "display_name": "Tamuuth Steward of Alder",
+     "archetype": "corrupt",
+     "archetype_name": "The Corrupt",
+     "alignment": {
+      "law": 0.145,
+      "good": 0.182,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "corrupt",
+      "belief": "Everything has a price; virtue just hides its invoice.",
+      "wants": "Wealth and the safety it buys.",
+      "fears": "An audit, a fire, a sudden equal.",
+      "tells": "Knows the price of every shipment; generous to those who can hurt them.",
+      "mechanic": "Claim `exploit` on the city's shipments and trade routes.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "die for anything",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "This one's at cost. The orphanage doesn't run on prayers."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Tamuuth",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.145,
+        "good": 0.182,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "exploit",
+        "target_uid": "surface-city-0-10-human_heartland",
+        "target_name": "Alder City"
+       },
+       "persona": {
+        "archetype": "corrupt",
+        "belief": "Everything has a price; virtue just hides its invoice.",
+        "wants": "Wealth and the safety it buys.",
+        "fears": "An audit, a fire, a sudden equal.",
+        "tells": "Knows the price of every shipment; generous to those who can hurt them.",
+        "mechanic": "Claim `exploit` on the city's shipments and trade routes.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "die for anything",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "This one's at cost. The orphanage doesn't run on prayers."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the market steward seat at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 3858980373,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:market_steward",
+      "seat:trade"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-120-dwarf-commander",
+     "role": "council",
+     "seat": "commander",
+     "well": "cities",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "council"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-120-dwarf",
+      "target_name": "Dunlin City"
+     },
+     "fame": 4.875,
+     "tier": "notable",
+     "name": "Moruuin",
+     "epithet": "of the Dunlin Bench",
+     "display_name": "Moruuin of the Dunlin Bench",
+     "archetype": "oathbound",
+     "archetype_name": "The Oathbound",
+     "alignment": {
+      "law": 0.62,
+      "good": -0.292,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "oathbound",
+      "belief": "A promise outlives the one who made it.",
+      "wants": "To discharge the oath.",
+      "fears": "The day the oath and their conscience finally part ways.",
+      "tells": "Hesitates before the hard act, then does it anyway.",
+      "mechanic": "The claim is inherited from the charter and cannot change.",
+      "manner": "Keeps the oath's letter.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "reinterpret the oath to escape it",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "I would spare you if the vow allowed one word of mercy. It does not."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Moruuin",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.62,
+        "good": -0.292,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-120-dwarf",
+        "target_name": "Dunlin City"
+       },
+       "persona": {
+        "archetype": "oathbound",
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "manner": "Keeps the oath's letter.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "reinterpret the oath to escape it",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "I would spare you if the vow allowed one word of mercy. It does not."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the commander seat at Dunlin City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 4109008360,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:commander"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-120-dwarf"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-120-dwarf-magistrate",
+     "role": "council",
+     "seat": "magistrate",
+     "well": "cities",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "council"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "deeds": [],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "surface-city-0-120-dwarf",
+      "target_name": "Dunlin City"
+     },
+     "fame": 4.875,
+     "tier": "notable",
+     "name": "Noreeak",
+     "epithet": "the Magistrate",
+     "display_name": "Noreeak the Magistrate",
+     "archetype": "corrupt",
+     "archetype_name": "The Corrupt",
+     "alignment": {
+      "law": 0.223,
+      "good": -0.057,
+      "label": "True Neutral",
+      "code": "NN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "corrupt",
+      "belief": "Everything has a price; virtue just hides its invoice.",
+      "wants": "Wealth and the safety it buys.",
+      "fears": "An audit, a fire, a sudden equal.",
+      "tells": "Knows the price of every shipment; generous to those who can hurt them.",
+      "mechanic": "Claim `exploit` on the city's shipments and trade routes.",
+      "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+      "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+      "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "die for anything",
+       "spend more than the goal is worth",
+       "cruelty for its own sake"
+      ],
+      "line": "This one's at cost. The orphanage doesn't run on prayers."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Noreeak",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.223,
+        "good": -0.057,
+        "label": "True Neutral",
+        "code": "NN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "surface-city-0-120-dwarf",
+        "target_name": "Dunlin City"
+       },
+       "persona": {
+        "archetype": "corrupt",
+        "belief": "Everything has a price; virtue just hides its invoice.",
+        "wants": "Wealth and the safety it buys.",
+        "fears": "An audit, a fire, a sudden equal.",
+        "tells": "Knows the price of every shipment; generous to those who can hurt them.",
+        "mechanic": "Claim `exploit` on the city's shipments and trade routes.",
+        "manner": "Neither law nor morality pulls harder than the other; the archetype shows almost unmodified.",
+        "voice": "Plain and situational; register follows the room. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+        "toward_player": "Offers a fair trade and expects the same. Judges the player by usefulness and keeps the ledger current.",
+        "cornered": "Takes whichever exit costs least. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "die for anything",
+         "spend more than the goal is worth",
+         "cruelty for its own sake"
+        ],
+        "line": "This one's at cost. The orphanage doesn't run on prayers."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the magistrate seat at Dunlin City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 80042020,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:magistrate"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-120-dwarf"
+     ]
+    },
+    {
+     "uid": "hero-council-surface-city-0-120-dwarf-market_steward",
+     "role": "council",
+     "seat": "market_steward",
+     "well": "cities",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "council"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "deeds": [],
+     "claim": {
+      "verb": "exploit",
+      "target_uid": "surface-city-0-120-dwarf",
+      "target_name": "Dunlin City"
+     },
+     "fame": 3.9,
+     "tier": "notable",
+     "name": "Noraak",
+     "epithet": "Steward of Dunlin",
+     "display_name": "Noraak Steward of Dunlin",
+     "archetype": "oathbound",
+     "archetype_name": "The Oathbound",
+     "alignment": {
+      "law": 0.694,
+      "good": -0.028,
+      "label": "Lawful Neutral",
+      "code": "LN",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "oathbound",
+      "belief": "A promise outlives the one who made it.",
+      "wants": "To discharge the oath.",
+      "fears": "The day the oath and their conscience finally part ways.",
+      "tells": "Hesitates before the hard act, then does it anyway.",
+      "mechanic": "The claim is inherited from the charter and cannot change.",
+      "manner": "Keeps the oath's letter.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+      "never": [
+       "reinterpret the oath to escape it",
+       "break a sworn word",
+       "act outside the office they hold",
+       "cruelty for its own sake"
+      ],
+      "line": "I would spare you if the vow allowed one word of mercy. It does not."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Noraak",
+       "apparent_role": "council",
+       "alignment": {
+        "law": 0.694,
+        "good": -0.028,
+        "label": "Lawful Neutral",
+        "code": "LN",
+        "drift": null
+       },
+       "claim": {
+        "verb": "exploit",
+        "target_uid": "surface-city-0-120-dwarf",
+        "target_name": "Dunlin City"
+       },
+       "persona": {
+        "archetype": "oathbound",
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "manner": "Keeps the oath's letter.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Direct and self-interested without malice.",
+        "lies": "When threatened, and only as far as the threat reaches. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Offers a fair trade and expects the same. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Protects self and kin and lets the rest fend for themselves.",
+        "never": [
+         "reinterpret the oath to escape it",
+         "break a sworn word",
+         "act outside the office they hold",
+         "cruelty for its own sake"
+        ],
+        "line": "I would spare you if the vow allowed one word of mercy. It does not."
+       }
+      }
+     ],
+     "log": [],
+     "situation": "Holds the market steward seat at Dunlin City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 3411868533,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "role:council",
+      "seat:market_steward",
+      "seat:trade"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-sovereign-surface-city-0-120-dwarf"
+     ]
+    },
+    {
+     "uid": "hero-sovereign-surface-city-0-10-human_heartland",
+     "role": "sovereign",
+     "well": "cities",
+     "civilization_id": "human_heartland",
+     "race_id": "human",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "situation": "throne"
+     },
+     "realm_uid": "realm-human_heartland-aaaa",
+     "deeds": [
+      {
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "age": 1,
+       "kind": "civil",
+       "role": "credited",
+       "opponent_uid": "surface-city-0-40-human_heartland"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "realm-human_heartland-aaaa",
+      "target_name": "Realm of Alder"
+     },
+     "fame": 17.0,
+     "tier": "renowned",
+     "name": "Coriaam",
+     "epithet": "of Alder",
+     "display_name": "Coriaam of Alder",
+     "archetype": "incarnate",
+     "archetype_name": "The Incarnate",
+     "alignment": {
+      "law": 1.0,
+      "good": -1.0,
+      "label": "Lawful Evil",
+      "code": "LE",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "incarnate",
+      "belief": "Their corner of the grid, stated as a law of nature.",
+      "wants": "The world to match the corner.",
+      "fears": "Nothing personal; only the corner failing.",
+      "tells": "Perfectly predictable; enemies plan around them.",
+      "mechanic": "Pushed to the corner and never drifts; refuses claims outside it.",
+      "manner": "Every word is a statute. Every act is a taking.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+      "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+      "never": [
+       "act outside the corner, even to win",
+       "break a sworn word",
+       "act outside the office they hold",
+       "sacrifice self for another",
+       "let a slight go unanswered"
+      ],
+      "line": "There's no version of me that wouldn't."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Coriaam",
+       "apparent_role": "sovereign",
+       "alignment": {
+        "law": 1.0,
+        "good": -1.0,
+        "label": "Lawful Evil",
+        "code": "LE",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "realm-human_heartland-aaaa",
+        "target_name": "Realm of Alder"
+       },
+       "persona": {
+        "archetype": "incarnate",
+        "belief": "Their corner of the grid, stated as a law of nature.",
+        "wants": "The world to match the corner.",
+        "fears": "Nothing personal; only the corner failing.",
+        "tells": "Perfectly predictable; enemies plan around them.",
+        "mechanic": "Pushed to the corner and never drifts; refuses claims outside it.",
+        "manner": "Every word is a statute. Every act is a taking.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+        "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+        "never": [
+         "act outside the corner, even to win",
+         "break a sworn word",
+         "act outside the office they hold",
+         "sacrifice self for another",
+         "let a slight go unanswered"
+        ],
+        "line": "There's no version of me that wouldn't."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-0",
+       "role": "credited",
+       "text": "Alder City won a civil war."
+      }
+     ],
+     "situation": "Sits the throne of Realm of Alder at Alder City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1656294649,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "dynasty:founding",
+      "fame:renowned",
+      "role:sovereign"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-council-surface-city-0-10-human_heartland-chaplain",
+      "hero-council-surface-city-0-10-human_heartland-commander",
+      "hero-council-surface-city-0-10-human_heartland-mage",
+      "hero-council-surface-city-0-10-human_heartland-magistrate",
+      "hero-council-surface-city-0-10-human_heartland-market_steward"
+     ]
+    },
+    {
+     "uid": "hero-sovereign-surface-city-0-120-dwarf",
+     "role": "sovereign",
+     "well": "cities",
+     "civilization_id": "dwarf",
+     "race_id": "dwarf",
+     "born_age": 2,
+     "status": "living",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "presence": {
+      "site_kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "situation": "throne"
+     },
+     "realm_uid": "realm-dwarf-bbbb",
+     "deeds": [
+      {
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "age": 1,
+       "kind": "international",
+       "role": "credited",
+       "opponent_uid": "surface-city-0-90-elf"
+      }
+     ],
+     "claim": {
+      "verb": "hold",
+      "target_uid": "realm-dwarf-bbbb",
+      "target_name": "Realm of Dunlin"
+     },
+     "fame": 19.5,
+     "tier": "renowned",
+     "name": "Boroak",
+     "epithet": "Who Holds Dunlin",
+     "display_name": "Boroak Who Holds Dunlin",
+     "archetype": "incarnate",
+     "archetype_name": "The Incarnate",
+     "alignment": {
+      "law": 1.0,
+      "good": -1.0,
+      "label": "Lawful Evil",
+      "code": "LE",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "incarnate",
+      "belief": "Their corner of the grid, stated as a law of nature.",
+      "wants": "The world to match the corner.",
+      "fears": "Nothing personal; only the corner failing.",
+      "tells": "Perfectly predictable; enemies plan around them.",
+      "mechanic": "Pushed to the corner and never drifts; refuses claims outside it.",
+      "manner": "Every word is a statute. Every act is a taking.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+      "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+      "never": [
+       "act outside the corner, even to win",
+       "break a sworn word",
+       "act outside the office they hold",
+       "sacrifice self for another",
+       "let a slight go unanswered"
+      ],
+      "line": "There's no version of me that wouldn't."
+     },
+     "faces": [
+      {
+       "label": "public",
+       "name": "Boroak",
+       "apparent_role": "sovereign",
+       "alignment": {
+        "law": 1.0,
+        "good": -1.0,
+        "label": "Lawful Evil",
+        "code": "LE",
+        "drift": null
+       },
+       "claim": {
+        "verb": "hold",
+        "target_uid": "realm-dwarf-bbbb",
+        "target_name": "Realm of Dunlin"
+       },
+       "persona": {
+        "archetype": "incarnate",
+        "belief": "Their corner of the grid, stated as a law of nature.",
+        "wants": "The world to match the corner.",
+        "fears": "Nothing personal; only the corner failing.",
+        "tells": "Perfectly predictable; enemies plan around them.",
+        "mechanic": "Pushed to the corner and never drifts; refuses claims outside it.",
+        "manner": "Every word is a statute. Every act is a taking.",
+        "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+        "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+        "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+        "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+        "never": [
+         "act outside the corner, even to win",
+         "break a sworn word",
+         "act outside the office they hold",
+         "sacrifice self for another",
+         "let a slight go unanswered"
+        ],
+        "line": "There's no version of me that wouldn't."
+       }
+      }
+     ],
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "war",
+       "event_id": "war-1-1",
+       "role": "credited",
+       "text": "Dunlin City won a international war."
+      }
+     ],
+     "situation": "Sits the throne of Realm of Dunlin at Dunlin City.",
+     "companion": {
+      "eligible": false,
+      "join_condition": null,
+      "offered_from_face": null
+     },
+     "org_uid": null,
+     "seed": 1372968789,
+     "predecessor_uid": null,
+     "school": null,
+     "node_id": null,
+     "seat": null,
+     "nest_id": null,
+     "site_name": null,
+     "selectable": [
+      "fame:renowned",
+      "role:sovereign"
+     ],
+     "rivals": [],
+     "kin": [],
+     "allies": [
+      "hero-council-surface-city-0-120-dwarf-commander",
+      "hero-council-surface-city-0-120-dwarf-magistrate",
+      "hero-council-surface-city-0-120-dwarf-market_steward"
+     ]
+    }
+   ],
+   "orgs": [
+    {
+     "uid": "dynasty-surface-city-0-10-human_heartland",
+     "kind": "dynasty",
+     "name": "the line of Alder",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "members": [
+      "hero-sovereign-surface-city-0-10-human_heartland"
+     ],
+     "charter": {
+      "holds": "realm-human_heartland-aaaa"
+     }
+    },
+    {
+     "uid": "council-surface-city-0-10-human_heartland",
+     "kind": "council",
+     "name": "the council of Alder",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "name": "Alder City"
+     },
+     "members": [
+      "hero-council-surface-city-0-10-human_heartland-magistrate",
+      "hero-council-surface-city-0-10-human_heartland-commander",
+      "hero-council-surface-city-0-10-human_heartland-chaplain",
+      "hero-council-surface-city-0-10-human_heartland-market_steward",
+      "hero-council-surface-city-0-10-human_heartland-mage"
+     ],
+     "charter": {
+      "holds": "surface-city-0-10-human_heartland"
+     }
+    },
+    {
+     "uid": "council-surface-city-0-120-dwarf",
+     "kind": "council",
+     "name": "the council of Dunlin",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "members": [
+      "hero-council-surface-city-0-120-dwarf-magistrate",
+      "hero-council-surface-city-0-120-dwarf-commander",
+      "hero-council-surface-city-0-120-dwarf-market_steward"
+     ],
+     "charter": {
+      "holds": "surface-city-0-120-dwarf"
+     }
+    },
+    {
+     "uid": "order-surface-city-0-120-dwarf",
+     "kind": "order",
+     "name": "the Order of Dunlin",
+     "home": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "name": "Dunlin City"
+     },
+     "members": [
+      "hero-champion-surface-city-0-120-dwarf"
+     ],
+     "charter": {
+      "against": "draconic",
+      "nest_id": "nest-ashen-wyrm-151"
+     }
+    },
+    {
+     "uid": "remnant-surface-city-0-150-dwarf",
+     "kind": "remnant",
+     "name": "the Order of Ember",
+     "home": {
+      "kind": "ruin",
+      "uid": "surface-city-0-150-dwarf",
+      "name": "Ember City"
+     },
+     "members": [
+      "hero-champion-surface-city-0-150-dwarf"
+     ],
+     "charter": {
+      "against": "draconic",
+      "nest_id": "nest-ashen-wyrm-151"
+     }
+    }
+   ],
+   "realms": [
+    {
+     "uid": "realm-human_heartland-aaaa",
+     "name": "Realm of Alder",
+     "civilization_id": "human_heartland",
+     "civilization_name": "Heartland humans",
+     "parent_race_id": "human",
+     "capital_uid": "surface-city-0-10-human_heartland",
+     "city_uids": [
+      "surface-city-0-10-human_heartland"
+     ],
+     "culture_id": "human_heartland-aaaa",
+     "sovereign_uid": "hero-sovereign-surface-city-0-10-human_heartland"
+    },
+    {
+     "uid": "realm-dwarf-bbbb",
+     "name": "Realm of Dunlin",
+     "civilization_id": "dwarf",
+     "civilization_name": "Dwarves",
+     "parent_race_id": "dwarf",
+     "capital_uid": "surface-city-0-120-dwarf",
+     "city_uids": [
+      "surface-city-0-120-dwarf"
+     ],
+     "culture_id": "dwarf-bbbb",
+     "sovereign_uid": "hero-sovereign-surface-city-0-120-dwarf"
+    }
+   ],
+   "dreads": [
+    {
+     "uid": "dread-nest-ashen-wyrm-151",
+     "role": "dread",
+     "well": "ruins",
+     "nest_id": "nest-ashen-wyrm-151",
+     "species": "Ashen wyrm",
+     "family": "draconic",
+     "nest_tier": 5,
+     "status": "living",
+     "presence": {
+      "site_kind": "nest",
+      "uid": "nest-ashen-wyrm-151",
+      "situation": "lair"
+     },
+     "deeds": [
+      {
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "age": 1,
+       "role": "actual",
+       "cause": "dragon",
+       "city_name": "Ember City",
+       "city_class": "small"
+      }
+     ],
+     "destroyed": [
+      {
+       "uid": "surface-city-0-150-dwarf",
+       "name": "Ember City",
+       "age": 1
+      }
+     ],
+     "fame": 10.5,
+     "tier": "renowned",
+     "name": "Who Ate Ember",
+     "display_name": "Ashen wyrm, Who Ate Ember",
+     "archetype": "ancient",
+     "archetype_name": "The Ancient",
+     "alignment": {
+      "law": 0.535,
+      "good": -0.585,
+      "label": "Lawful Evil",
+      "code": "LE",
+      "drift": null
+     },
+     "persona": {
+      "archetype": "ancient",
+      "belief": "Cities are weather.",
+      "wants": "Its long thought, undisturbed.",
+      "fears": "Nothing mortal; only the ley collapsing.",
+      "tells": "Remembers the ruin as a living city.",
+      "mechanic": "Claims are `hold` on its own lair; it bargains, it does not give quests.",
+      "manner": "Honours every bargain across centuries. Eats the impatient.",
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed. Contempt under courtesy, or open contempt when courtesy stops paying.",
+      "lies": "As a tool, without guilt, and with pleasure when the mark is proud. Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "toward_player": "Uses first and discards when spent. Proves the player's standing before trusting them with anything that matters.",
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails. Sacrifices whoever is nearest.",
+      "never": [
+       "hurry",
+       "break a sworn word",
+       "act outside the office they hold",
+       "sacrifice self for another",
+       "let a slight go unanswered"
+      ],
+      "line": "Your grandmother's grandmother asked the same. She was delicious."
+     },
+     "log": [
+      {
+       "age": 1,
+       "event_kind": "ruin",
+       "event_id": "ruin-surface-city-0-150-dwarf",
+       "role": "actual",
+       "text": "Destroyed Ember City."
+      }
+     ],
+     "situation": "The lair still stands; the Ashen wyrm has not been driven out.",
+     "seed": 4166079637,
+     "selectable": [
+      "dread:long_lived",
+      "fame:renowned",
+      "role:dread"
+     ]
+    }
+   ],
+   "camps": [
+    {
+     "uid": "camp-surface-city-0-40-human_heartland",
+     "ruin_uid": "surface-city-0-40-human_heartland",
+     "name": "the camp in the ruins of Bracken",
+     "node": 40,
+     "x": 6,
+     "z": 2,
+     "direction": [
+      0.9567727288213006,
+      0.20791169081775934,
+      0.20336832153790013
+     ],
+     "origin": "ruin_squat",
+     "civilization_id": "human_heartland",
+     "since_age": 1
+    },
+    {
+     "uid": "camp-surface-city-0-90-elf",
+     "ruin_uid": "surface-city-0-90-elf",
+     "name": "the camp in the ruins of Cedar",
+     "node": 90,
+     "x": 5,
+     "z": 5,
+     "direction": [
+      0.8137976813493738,
+      -0.3420201433256687,
+      -0.46984631039295416
+     ],
+     "origin": "ruin_squat",
+     "civilization_id": "elf",
+     "since_age": 1,
+     "leader_uid": "hero-pretender-surface-city-0-90-elf"
+    },
+    {
+     "uid": "camp-surface-city-0-60-human_heartland",
+     "ruin_uid": "surface-city-0-60-human_heartland",
+     "name": "the camp in the ruins of Glen",
+     "node": 60,
+     "x": 9,
+     "z": 3,
+     "direction": [
+      0.9666034580972273,
+      0.24192189559966773,
+      0.08456684470846289
+     ],
+     "origin": "ruin_squat",
+     "civilization_id": "human_heartland",
+     "since_age": 1
+    },
+    {
+     "uid": "camp-surface-city-0-150-dwarf",
+     "ruin_uid": "surface-city-0-150-dwarf",
+     "name": "the camp in the ruins of Ember",
+     "node": 150,
+     "x": 14,
+     "z": 8,
+     "direction": [
+      0.3544374975981803,
+      0.5446390350150271,
+      0.7600936664873876
+     ],
+     "origin": "ruin_squat",
+     "civilization_id": "dwarf",
+     "since_age": 1
+    }
+   ],
+   "quest_hooks": [
+    {
+     "hook_id": "hook-hero-champion-surface-city-0-150-dwarf-0",
+     "giver_uid": "hero-champion-surface-city-0-150-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me end ashen wyrm, the doom of Ember.",
+     "actual_effect": {
+      "kind": "nest",
+      "nest_id": "nest-ashen-wyrm-151",
+      "action": "slay"
+     },
+     "unwitting": false,
+     "target": null
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-150-dwarf-0",
+     "giver_uid": "hero-domain-surface-city-0-150-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Strengthen the fire key point at Ember.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "ruin-surface-city-0-150-dwarf-key",
+      "school": "fire",
+      "intensity_delta": 0.5
+     },
+     "unwitting": false,
+     "target": "ruin-surface-city-0-150-dwarf-key"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-150-dwarf-1",
+     "giver_uid": "hero-domain-surface-city-0-150-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Weaken the water node water-node-0; it chokes the fire.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "water-node-0",
+      "school": "water",
+      "intensity_delta": -0.5
+     },
+     "unwitting": false,
+     "target": "water-node-0"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-40-human_heartland-0",
+     "giver_uid": "hero-domain-surface-city-0-40-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Strengthen the radiant key point at Bracken.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "ruin-surface-city-0-40-human_heartland-key",
+      "school": "radiant",
+      "intensity_delta": 0.5
+     },
+     "unwitting": false,
+     "target": "ruin-surface-city-0-40-human_heartland-key"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-40-human_heartland-1",
+     "giver_uid": "hero-domain-surface-city-0-40-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Weaken the umbral node umbral-node-0; it chokes the radiant.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "umbral-node-0",
+      "school": "umbral",
+      "intensity_delta": -0.5
+     },
+     "unwitting": false,
+     "target": "umbral-node-0"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-60-human_heartland-0",
+     "giver_uid": "hero-domain-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Strengthen the weave key point at Glen.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "ruin-surface-city-0-60-human_heartland-key",
+      "school": "weave",
+      "intensity_delta": 0.5
+     },
+     "unwitting": false,
+     "target": "ruin-surface-city-0-60-human_heartland-key"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-60-human_heartland-1",
+     "giver_uid": "hero-domain-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Weaken the infernal node infernal-node-0; it chokes the weave.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "infernal-node-0",
+      "school": "infernal",
+      "intensity_delta": -0.5
+     },
+     "unwitting": false,
+     "target": "infernal-node-0"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-90-elf-0",
+     "giver_uid": "hero-domain-surface-city-0-90-elf",
+     "offered_from_face": "public",
+     "stated_purpose": "Strengthen the water key point at Cedar.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "ruin-surface-city-0-90-elf-key",
+      "school": "water",
+      "intensity_delta": 0.5
+     },
+     "unwitting": false,
+     "target": "ruin-surface-city-0-90-elf-key"
+    },
+    {
+     "hook_id": "hook-hero-domain-surface-city-0-90-elf-1",
+     "giver_uid": "hero-domain-surface-city-0-90-elf",
+     "offered_from_face": "public",
+     "stated_purpose": "Weaken the fire node fire-node-0; it chokes the water.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "fire-node-0",
+      "school": "fire",
+      "intensity_delta": -0.5
+     },
+     "unwitting": false,
+     "target": "fire-node-0"
+    },
+    {
+     "hook_id": "hook-hero-magister-surface-city-0-60-human_heartland-0",
+     "giver_uid": "hero-magister-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Strengthen the weave key point at Glen.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "ruin-surface-city-0-60-human_heartland-key",
+      "school": "weave",
+      "intensity_delta": 0.5
+     },
+     "unwitting": false,
+     "target": "ruin-surface-city-0-60-human_heartland-key"
+    },
+    {
+     "hook_id": "hook-hero-magister-surface-city-0-60-human_heartland-1",
+     "giver_uid": "hero-magister-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Weaken the infernal node infernal-node-0; it chokes the weave.",
+     "actual_effect": {
+      "kind": "ley_node",
+      "node_id": "infernal-node-0",
+      "school": "infernal",
+      "intensity_delta": -0.5
+     },
+     "unwitting": false,
+     "target": "infernal-node-0"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-150-dwarf-0",
+     "giver_uid": "hero-pretender-surface-city-0-150-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me take back Ember City.",
+     "actual_effect": {
+      "kind": "ruin",
+      "uid": "surface-city-0-150-dwarf",
+      "action": "reclaim"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-150-dwarf"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-150-dwarf-1",
+     "giver_uid": "hero-pretender-surface-city-0-150-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Recover the reliquary of Ember from the ruins.",
+     "actual_effect": {
+      "kind": "relic",
+      "uid": "relic-surface-city-0-150-dwarf",
+      "action": "recover"
+     },
+     "unwitting": false,
+     "target": "relic-surface-city-0-150-dwarf"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-40-human_heartland-0",
+     "giver_uid": "hero-pretender-surface-city-0-40-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me take back Bracken City.",
+     "actual_effect": {
+      "kind": "ruin",
+      "uid": "surface-city-0-40-human_heartland",
+      "action": "reclaim"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-40-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-40-human_heartland-1",
+     "giver_uid": "hero-pretender-surface-city-0-40-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Recover the banner of Bracken from the ruins.",
+     "actual_effect": {
+      "kind": "relic",
+      "uid": "relic-surface-city-0-40-human_heartland",
+      "action": "recover"
+     },
+     "unwitting": false,
+     "target": "relic-surface-city-0-40-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-60-human_heartland-0",
+     "giver_uid": "hero-pretender-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me take back Glen City.",
+     "actual_effect": {
+      "kind": "ruin",
+      "uid": "surface-city-0-60-human_heartland",
+      "action": "reclaim"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-60-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-60-human_heartland-1",
+     "giver_uid": "hero-pretender-surface-city-0-60-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Recover the weave focus of Glen from the ruins.",
+     "actual_effect": {
+      "kind": "relic",
+      "uid": "relic-surface-city-0-60-human_heartland",
+      "action": "recover"
+     },
+     "unwitting": false,
+     "target": "relic-surface-city-0-60-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-90-elf-0",
+     "giver_uid": "hero-pretender-surface-city-0-90-elf",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me take back Cedar City.",
+     "actual_effect": {
+      "kind": "ruin",
+      "uid": "surface-city-0-90-elf",
+      "action": "reclaim"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-90-elf"
+    },
+    {
+     "hook_id": "hook-hero-pretender-surface-city-0-90-elf-1",
+     "giver_uid": "hero-pretender-surface-city-0-90-elf",
+     "offered_from_face": "public",
+     "stated_purpose": "Recover the crown of Cedar from the ruins.",
+     "actual_effect": {
+      "kind": "relic",
+      "uid": "relic-surface-city-0-90-elf",
+      "action": "recover"
+     },
+     "unwitting": false,
+     "target": "relic-surface-city-0-90-elf"
+    },
+    {
+     "hook_id": "hook-hero-warlord-1-surface-city-0-10-human_heartland-0",
+     "giver_uid": "hero-warlord-1-surface-city-0-10-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Stand with Alder City when they come for it.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-10-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-warlord-1-surface-city-0-120-dwarf-0",
+     "giver_uid": "hero-warlord-1-surface-city-0-120-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Stand with Dunlin City when they come for it.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-120-dwarf"
+    },
+    {
+     "hook_id": "hook-hero-champion-surface-city-0-120-dwarf-0",
+     "giver_uid": "hero-champion-surface-city-0-120-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Help me end the ashen wyrm near Dunlin.",
+     "actual_effect": {
+      "kind": "nest",
+      "nest_id": "nest-ashen-wyrm-151",
+      "action": "slay"
+     },
+     "unwitting": false,
+     "target": null
+    },
+    {
+     "hook_id": "hook-hero-council-surface-city-0-10-human_heartland-commander-0",
+     "giver_uid": "hero-council-surface-city-0-10-human_heartland-commander",
+     "offered_from_face": "public",
+     "stated_purpose": "Walk the walls of Alder City with me.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-10-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-council-surface-city-0-10-human_heartland-market_steward-0",
+     "giver_uid": "hero-council-surface-city-0-10-human_heartland-market_steward",
+     "offered_from_face": "public",
+     "stated_purpose": "Keep the roads to Alder City open; the granary is my ledger.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "action": "trade"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-10-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-council-surface-city-0-120-dwarf-commander-0",
+     "giver_uid": "hero-council-surface-city-0-120-dwarf-commander",
+     "offered_from_face": "public",
+     "stated_purpose": "Walk the walls of Dunlin City with me.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-120-dwarf"
+    },
+    {
+     "hook_id": "hook-hero-council-surface-city-0-120-dwarf-market_steward-0",
+     "giver_uid": "hero-council-surface-city-0-120-dwarf-market_steward",
+     "offered_from_face": "public",
+     "stated_purpose": "Keep the roads to Dunlin City open; the granary is my ledger.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "action": "trade"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-120-dwarf"
+    },
+    {
+     "hook_id": "hook-hero-sovereign-surface-city-0-10-human_heartland-0",
+     "giver_uid": "hero-sovereign-surface-city-0-10-human_heartland",
+     "offered_from_face": "public",
+     "stated_purpose": "Stand with Alder City when they come for it.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-10-human_heartland",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-10-human_heartland"
+    },
+    {
+     "hook_id": "hook-hero-sovereign-surface-city-0-120-dwarf-0",
+     "giver_uid": "hero-sovereign-surface-city-0-120-dwarf",
+     "offered_from_face": "public",
+     "stated_purpose": "Stand with Dunlin City when they come for it.",
+     "actual_effect": {
+      "kind": "city",
+      "uid": "surface-city-0-120-dwarf",
+      "action": "defend"
+     },
+     "unwitting": false,
+     "target": "surface-city-0-120-dwarf"
+    }
+   ],
+   "bonds": [
+    {
+     "a": "hero-pretender-surface-city-0-150-dwarf",
+     "b": "hero-domain-surface-city-0-150-dwarf",
+     "kind": "rival",
+     "from_event": "ruin-surface-city-0-150-dwarf"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-40-human_heartland",
+     "b": "hero-domain-surface-city-0-40-human_heartland",
+     "kind": "rival",
+     "from_event": "ruin-surface-city-0-40-human_heartland"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-60-human_heartland",
+     "b": "hero-domain-surface-city-0-60-human_heartland",
+     "kind": "rival",
+     "from_event": "ruin-surface-city-0-60-human_heartland"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-90-elf",
+     "b": "hero-domain-surface-city-0-90-elf",
+     "kind": "rival",
+     "from_event": "ruin-surface-city-0-90-elf"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-60-human_heartland",
+     "b": "hero-magister-surface-city-0-60-human_heartland",
+     "kind": "kin",
+     "from_event": "ruin-surface-city-0-60-human_heartland"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-40-human_heartland",
+     "b": "hero-warlord-1-surface-city-0-10-human_heartland",
+     "kind": "rival",
+     "from_event": "war-1-0"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-90-elf",
+     "b": "hero-warlord-1-surface-city-0-120-dwarf",
+     "kind": "rival",
+     "from_event": "war-1-1"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-150-dwarf",
+     "b": "dread-nest-ashen-wyrm-151",
+     "kind": "rival",
+     "from_event": "ruin-surface-city-0-150-dwarf"
+    },
+    {
+     "a": "hero-pretender-surface-city-0-60-human_heartland",
+     "b": "hero-council-surface-city-0-10-human_heartland-chaplain",
+     "kind": "mentor",
+     "from_event": "ruin-surface-city-0-60-human_heartland"
+    },
+    {
+     "a": "hero-warlord-1-surface-city-0-120-dwarf",
+     "b": "hero-champion-surface-city-0-120-dwarf",
+     "kind": "mentor",
+     "from_event": "war-1-1"
+    },
+    {
+     "a": "hero-champion-surface-city-0-120-dwarf",
+     "b": "hero-warlord-1-surface-city-0-120-dwarf",
+     "kind": "betrayed",
+     "from_event": "war-1-1"
+    },
+    {
+     "a": "hero-council-surface-city-0-10-human_heartland-chaplain",
+     "b": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "ally",
+     "from_event": "surface-city-0-10-human_heartland"
+    },
+    {
+     "a": "hero-council-surface-city-0-10-human_heartland-commander",
+     "b": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "ally",
+     "from_event": "surface-city-0-10-human_heartland"
+    },
+    {
+     "a": "hero-council-surface-city-0-10-human_heartland-mage",
+     "b": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "ally",
+     "from_event": "surface-city-0-10-human_heartland"
+    },
+    {
+     "a": "hero-council-surface-city-0-10-human_heartland-magistrate",
+     "b": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "ally",
+     "from_event": "surface-city-0-10-human_heartland"
+    },
+    {
+     "a": "hero-council-surface-city-0-10-human_heartland-market_steward",
+     "b": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "ally",
+     "from_event": "surface-city-0-10-human_heartland"
+    },
+    {
+     "a": "hero-council-surface-city-0-120-dwarf-commander",
+     "b": "hero-sovereign-surface-city-0-120-dwarf",
+     "kind": "ally",
+     "from_event": "surface-city-0-120-dwarf"
+    },
+    {
+     "a": "hero-council-surface-city-0-120-dwarf-magistrate",
+     "b": "hero-sovereign-surface-city-0-120-dwarf",
+     "kind": "ally",
+     "from_event": "surface-city-0-120-dwarf"
+    },
+    {
+     "a": "hero-council-surface-city-0-120-dwarf-market_steward",
+     "b": "hero-sovereign-surface-city-0-120-dwarf",
+     "kind": "ally",
+     "from_event": "surface-city-0-120-dwarf"
+    }
+   ],
+   "relics": [
+    {
+     "uid": "relic-surface-city-0-40-human_heartland",
+     "kind": "banner",
+     "name": "the banner of Bracken",
+     "origin_event": "ruin-surface-city-0-40-human_heartland",
+     "resting_at": "surface-city-0-40-human_heartland",
+     "holder_uid": null,
+     "school": null
+    },
+    {
+     "uid": "relic-surface-city-0-90-elf",
+     "kind": "crown",
+     "name": "the crown of Cedar",
+     "origin_event": "ruin-surface-city-0-90-elf",
+     "resting_at": "surface-city-0-90-elf",
+     "holder_uid": null,
+     "school": null
+    },
+    {
+     "uid": "relic-surface-city-0-60-human_heartland",
+     "kind": "focus",
+     "name": "the weave focus of Glen",
+     "origin_event": "ruin-surface-city-0-60-human_heartland",
+     "resting_at": "surface-city-0-60-human_heartland",
+     "holder_uid": null,
+     "school": "weave"
+    },
+    {
+     "uid": "relic-surface-city-0-150-dwarf",
+     "kind": "reliquary",
+     "name": "the reliquary of Ember",
+     "origin_event": "ruin-surface-city-0-150-dwarf",
+     "resting_at": "surface-city-0-150-dwarf",
+     "holder_uid": null,
+     "school": null
+    }
+   ],
+   "mantles": [],
+   "rolls": [
+    {
+     "candidate_uid": "hero-pretender-surface-city-0-40-human_heartland",
+     "kind": "heir",
+     "event_id": "ruin-surface-city-0-40-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.763823,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-pretender-surface-city-0-90-elf",
+     "kind": "heir",
+     "event_id": "ruin-surface-city-0-90-elf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.985804,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-pretender-surface-city-0-60-human_heartland",
+     "kind": "heir",
+     "event_id": "ruin-surface-city-0-60-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.443647,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-pretender-surface-city-0-150-dwarf",
+     "kind": "heir",
+     "event_id": "ruin-surface-city-0-150-dwarf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.389096,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-warlord-1-surface-city-0-10-human_heartland",
+     "kind": "warlord",
+     "event_id": "war-1-0",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.518508,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-warlord-1-surface-city-0-120-dwarf",
+     "kind": "warlord",
+     "event_id": "war-1-1",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.922699,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "dread-nest-ashen-wyrm-151",
+     "kind": "dread",
+     "event_id": "ruin-surface-city-0-150-dwarf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.774232,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-domain-surface-city-0-40-human_heartland",
+     "kind": "domain_holder",
+     "event_id": "ruin-surface-city-0-40-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.711458,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-domain-surface-city-0-90-elf",
+     "kind": "domain_holder",
+     "event_id": "ruin-surface-city-0-90-elf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.767528,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-domain-surface-city-0-60-human_heartland",
+     "kind": "domain_holder",
+     "event_id": "ruin-surface-city-0-60-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.124476,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-magister-surface-city-0-60-human_heartland",
+     "kind": "magister",
+     "event_id": "ruin-surface-city-0-60-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.613997,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-domain-surface-city-0-150-dwarf",
+     "kind": "domain_holder",
+     "event_id": "ruin-surface-city-0-150-dwarf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.077427,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-sovereign-surface-city-0-10-human_heartland",
+     "kind": "sovereign",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.192013,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-sovereign-surface-city-0-120-dwarf",
+     "kind": "sovereign",
+     "event_id": "surface-city-0-120-dwarf",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.610198,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-10-human_heartland-magistrate",
+     "kind": "council",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.801191,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-10-human_heartland-commander",
+     "kind": "council",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.404876,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-10-human_heartland-chaplain",
+     "kind": "council",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.79011,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-10-human_heartland-market_steward",
+     "kind": "council",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.726638,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-10-human_heartland-mage",
+     "kind": "council",
+     "event_id": "surface-city-0-10-human_heartland",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.155232,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-120-dwarf-magistrate",
+     "kind": "council",
+     "event_id": "surface-city-0-120-dwarf",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.822894,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-120-dwarf-commander",
+     "kind": "council",
+     "event_id": "surface-city-0-120-dwarf",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.019941,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-council-surface-city-0-120-dwarf-market_steward",
+     "kind": "council",
+     "event_id": "surface-city-0-120-dwarf",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.008067,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-champion-surface-city-0-120-dwarf",
+     "kind": "champion",
+     "event_id": "nest-ashen-wyrm-151",
+     "age": 2,
+     "chance": 1.0,
+     "roll": 0.437155,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "hero-champion-surface-city-0-150-dwarf",
+     "kind": "champion",
+     "event_id": "ruin-surface-city-0-150-dwarf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.609383,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "camp-surface-city-0-40-human_heartland",
+     "kind": "camp",
+     "event_id": "ruin-surface-city-0-40-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.605064,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "camp-surface-city-0-90-elf",
+     "kind": "camp",
+     "event_id": "ruin-surface-city-0-90-elf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.617592,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "camp-surface-city-0-60-human_heartland",
+     "kind": "camp",
+     "event_id": "ruin-surface-city-0-60-human_heartland",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.382643,
+     "precipitated": true
+    },
+    {
+     "candidate_uid": "camp-surface-city-0-150-dwarf",
+     "kind": "camp",
+     "event_id": "ruin-surface-city-0-150-dwarf",
+     "age": 1,
+     "chance": 1.0,
+     "roll": 0.757988,
+     "precipitated": true
+    }
+   ],
+   "method": "Walk the finished history through seven wells. Hamlets: a reeve who speaks for the farmstead that starves or loses its herds. Fortresses: a castellan who holds the road. Ports: a harbourmaster with a trade seat. Shrines: a keeper at a shrine, a heresiarch at a cult. Ruins: a ruin may leave an heir, a war a remembered victor, a beast kill a named Dread. Magic: a key point a warden, a self-destroyed college a surviving master, a living college a head. Cities: a realm a sovereign (and a founding capital a dynasty), every city a council by class, a diaspora its prophet, exile or founder. Guilds: every guild hall under threat an Order with a champion, every beast-taken city a remnant with a champion who failed. Each candidate rolls once against the wells policy and the roll is recorded. Ruins may be squatted as camps and always leave a relic; the dispossessed are placed at camps or as refugees. Cross-cutting features (tainted ground, outranked sovereigns, living successors, refounded peoples, tyrant realms) are computed once the cast is known. Fame is deed magnitude times stake reach; alignment is derived from civilization bias and deeds before an archetype is chosen from the cards whose preconditions the person's own record satisfies, seated people first so a Tyrant can make Rebels; the persona is the alignment-neutral card coloured by the two axis overlays, once per face. Claims compile into quest hooks typed against ruins, cities, nests, relics, colleges and ley nodes; a public face states a different purpose than the effect. Each person carries an event log and a present situation, not a plan.",
+   "limits": "An artistic reading of the exported history, not a demographic claim. Council seats are a policy table by city class, not the placed rosters. Claims and hooks are exported intent; nothing here acts, fights, changes a node, or scripts what a person will do next."
+  },
+  "threat_assessments": {
+   "version": 2,
+   "evaluated_after": "age",
+   "age": 2,
+   "cities": [
+    {
+     "city_uid": "surface-city-0-10-human_heartland",
+     "city_name": "Alder City",
+     "site_id": 0,
+     "regional_threat": 0.62,
+     "nest_pressure": 0.32,
+     "ley_pressure": 0.0,
+     "war_pressure": 0.3,
+     "wars_fought": 2,
+     "contributors": [],
+     "ley": {}
+    }
+   ],
+   "method": "fixture",
+   "limits": "fixture"
+  },
+  "lunar_almanac": {
+   "version": 1,
+   "events": [
+    {
+     "day": 12,
+     "kind": "surge",
+     "school": "umbral",
+     "tide": 0.8
+    },
+    {
+     "day": 40,
+     "kind": "hollow_night"
+    }
+   ]
+  }
+ },
+ "expected": {
+  "summary": {
+   "woven": 24,
+   "unwoven": 0,
+   "tropes": 51,
+   "reachable_tropes": 51,
+   "offered": {
+    "reclamation": 3,
+    "the_answer": 1,
+    "the_blight": 1,
+    "the_court": 6,
+    "the_hunt": 2,
+    "the_lair": 1,
+    "the_pursuit": 1,
+    "the_reign": 2,
+    "the_skim": 1,
+    "the_vow": 2,
+    "the_wardens_line": 3,
+    "tyranny": 1
+   },
+   "mean_spokes": 4.25
+  },
+  "offered": {
+   "dread-nest-ashen-wyrm-151": "the_lair",
+   "hero-champion-surface-city-0-120-dwarf": "the_wardens_line",
+   "hero-champion-surface-city-0-150-dwarf": "the_hunt",
+   "hero-council-surface-city-0-10-human_heartland-chaplain": "the_blight",
+   "hero-council-surface-city-0-10-human_heartland-commander": "the_court",
+   "hero-council-surface-city-0-10-human_heartland-mage": "the_court",
+   "hero-council-surface-city-0-10-human_heartland-magistrate": "the_court",
+   "hero-council-surface-city-0-10-human_heartland-market_steward": "the_skim",
+   "hero-council-surface-city-0-120-dwarf-commander": "the_court",
+   "hero-council-surface-city-0-120-dwarf-magistrate": "the_court",
+   "hero-council-surface-city-0-120-dwarf-market_steward": "the_court",
+   "hero-domain-surface-city-0-150-dwarf": "the_vow",
+   "hero-domain-surface-city-0-40-human_heartland": "the_wardens_line",
+   "hero-domain-surface-city-0-60-human_heartland": "the_vow",
+   "hero-domain-surface-city-0-90-elf": "the_wardens_line",
+   "hero-magister-surface-city-0-60-human_heartland": "the_answer",
+   "hero-pretender-surface-city-0-150-dwarf": "the_hunt",
+   "hero-pretender-surface-city-0-40-human_heartland": "reclamation",
+   "hero-pretender-surface-city-0-60-human_heartland": "reclamation",
+   "hero-pretender-surface-city-0-90-elf": "reclamation",
+   "hero-sovereign-surface-city-0-10-human_heartland": "the_reign",
+   "hero-sovereign-surface-city-0-120-dwarf": "the_reign",
+   "hero-warlord-1-surface-city-0-10-human_heartland": "tyranny",
+   "hero-warlord-1-surface-city-0-120-dwarf": "the_pursuit"
+  },
+  "spokes": {
+   "dread-nest-ashen-wyrm-151": [
+    [
+     "the_lair",
+     3.8887
+    ],
+    [
+     "the_bargain",
+     2.5809
+    ]
+   ],
+   "hero-champion-surface-city-0-120-dwarf": [
+    [
+     "the_wardens_line",
+     3.4627
+    ],
+    [
+     "the_hunt",
+     2.3465
+    ],
+    [
+     "the_vow",
+     2.3375
+    ],
+    [
+     "fall",
+     1.4453
+    ],
+    [
+     "succession",
+     1.179
+    ],
+    [
+     "the_trial",
+     1.1238
+    ],
+    [
+     "the_chronicle",
+     1.0
+    ],
+    [
+     "unmasking",
+     1.0
+    ],
+    [
+     "betrayal",
+     0.9266
+    ]
+   ],
+   "hero-champion-surface-city-0-150-dwarf": [
+    [
+     "the_hunt",
+     3.2229
+    ],
+    [
+     "fall",
+     1.5652
+    ],
+    [
+     "the_vow",
+     1.3037
+    ],
+    [
+     "the_delve",
+     1.3
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-chaplain": [
+    [
+     "the_blight",
+     2.4204
+    ],
+    [
+     "the_court",
+     1.8127
+    ],
+    [
+     "succession",
+     1.6458
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-commander": [
+    [
+     "the_court",
+     4.1886
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-mage": [
+    [
+     "the_court",
+     3.4013
+    ],
+    [
+     "the_blight",
+     2.7938
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-magistrate": [
+    [
+     "the_court",
+     3.6012
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-market_steward": [
+    [
+     "the_skim",
+     5.3882
+    ],
+    [
+     "the_court",
+     3.2382
+    ],
+    [
+     "betrayal",
+     2.6467
+    ],
+    [
+     "the_monopoly",
+     2.0588
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-commander": [
+    [
+     "the_court",
+     3.1747
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-magistrate": [
+    [
+     "the_court",
+     4.1517
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-market_steward": [
+    [
+     "the_court",
+     3.1596
+    ],
+    [
+     "the_skim",
+     1.5315
+    ],
+    [
+     "betrayal",
+     0.7867
+    ]
+   ],
+   "hero-domain-surface-city-0-150-dwarf": [
+    [
+     "the_vow",
+     5.0736
+    ],
+    [
+     "the_wardens_line",
+     4.4796
+    ],
+    [
+     "the_blight",
+     4.2757
+    ],
+    [
+     "the_domain",
+     3.8052
+    ],
+    [
+     "the_delve",
+     1.95
+    ]
+   ],
+   "hero-domain-surface-city-0-40-human_heartland": [
+    [
+     "the_wardens_line",
+     7.435
+    ],
+    [
+     "the_domain",
+     4.4993
+    ],
+    [
+     "the_blight",
+     4.3772
+    ],
+    [
+     "the_vow",
+     3.8994
+    ],
+    [
+     "the_delve",
+     1.95
+    ],
+    [
+     "rebellion",
+     0.8528
+    ]
+   ],
+   "hero-domain-surface-city-0-60-human_heartland": [
+    [
+     "the_vow",
+     4.9042
+    ],
+    [
+     "the_wardens_line",
+     3.9889
+    ],
+    [
+     "the_domain",
+     3.6781
+    ],
+    [
+     "the_blight",
+     3.2659
+    ],
+    [
+     "the_binding",
+     1.9636
+    ],
+    [
+     "the_delve",
+     1.95
+    ],
+    [
+     "temptation",
+     1.5109
+    ],
+    [
+     "rebellion",
+     0.9363
+    ]
+   ],
+   "hero-domain-surface-city-0-90-elf": [
+    [
+     "the_wardens_line",
+     8.2788
+    ],
+    [
+     "the_domain",
+     4.9745
+    ],
+    [
+     "the_blight",
+     4.7088
+    ],
+    [
+     "the_vow",
+     4.3112
+    ],
+    [
+     "the_delve",
+     1.95
+    ]
+   ],
+   "hero-magister-surface-city-0-60-human_heartland": [
+    [
+     "the_answer",
+     5.7404
+    ],
+    [
+     "temptation",
+     3.4064
+    ],
+    [
+     "the_blight",
+     3.0379
+    ],
+    [
+     "the_binding",
+     2.8325
+    ],
+    [
+     "the_delve",
+     2.08
+    ],
+    [
+     "rebellion",
+     1.0352
+    ]
+   ],
+   "hero-pretender-surface-city-0-150-dwarf": [
+    [
+     "the_hunt",
+     3.9932
+    ],
+    [
+     "revenge",
+     3.7264
+    ],
+    [
+     "reclamation",
+     2.4954
+    ],
+    [
+     "the_delve",
+     1.95
+    ],
+    [
+     "homecoming",
+     1.2017
+    ],
+    [
+     "the_bargain",
+     1.0266
+    ]
+   ],
+   "hero-pretender-surface-city-0-40-human_heartland": [
+    [
+     "reclamation",
+     3.872
+    ],
+    [
+     "the_delve",
+     3.12
+    ],
+    [
+     "revenge",
+     2.8736
+    ],
+    [
+     "homecoming",
+     1.1769
+    ],
+    [
+     "rebellion",
+     1.0932
+    ]
+   ],
+   "hero-pretender-surface-city-0-60-human_heartland": [
+    [
+     "reclamation",
+     4.4519
+    ],
+    [
+     "revenge",
+     2.9989
+    ],
+    [
+     "the_delve",
+     1.95
+    ],
+    [
+     "homecoming",
+     1.813
+    ],
+    [
+     "succession",
+     1.2893
+    ],
+    [
+     "rebellion",
+     1.1422
+    ],
+    [
+     "sacrifice",
+     1.0981
+    ]
+   ],
+   "hero-pretender-surface-city-0-90-elf": [
+    [
+     "reclamation",
+     4.3721
+    ],
+    [
+     "the_delve",
+     4.056
+    ],
+    [
+     "the_jest",
+     2.6429
+    ],
+    [
+     "exiles_road",
+     1.7466
+    ],
+    [
+     "revenge",
+     1.5487
+    ],
+    [
+     "the_founding",
+     1.5448
+    ]
+   ],
+   "hero-sovereign-surface-city-0-10-human_heartland": [
+    [
+     "the_reign",
+     3.393
+    ],
+    [
+     "the_absolute",
+     1.92
+    ],
+    [
+     "the_alliance",
+     1.8
+    ],
+    [
+     "sacrifice",
+     1.2384
+    ]
+   ],
+   "hero-sovereign-surface-city-0-120-dwarf": [
+    [
+     "the_reign",
+     2.61
+    ],
+    [
+     "the_absolute",
+     1.92
+    ],
+    [
+     "the_alliance",
+     1.5
+    ]
+   ],
+   "hero-warlord-1-surface-city-0-10-human_heartland": [
+    [
+     "tyranny",
+     7.9741
+    ],
+    [
+     "the_trial",
+     2.2346
+    ],
+    [
+     "the_pursuit",
+     2.2174
+    ],
+    [
+     "the_veteran",
+     1.2062
+    ]
+   ],
+   "hero-warlord-1-surface-city-0-120-dwarf": [
+    [
+     "the_pursuit",
+     1.9218
+    ],
+    [
+     "the_trial",
+     1.9218
+    ],
+    [
+     "the_ascension",
+     1.92
+    ],
+    [
+     "the_veteran",
+     1.3312
+    ],
+    [
+     "succession",
+     1.1925
+    ],
+    [
+     "betrayal",
+     1.0174
+    ]
+   ]
+  },
+  "threads": {
+   "dread-nest-ashen-wyrm-151": [
+    [
+     "the_bargain",
+     "open",
+     null
+    ]
+   ],
+   "hero-champion-surface-city-0-120-dwarf": [
+    [
+     "the_vow",
+     "open",
+     null
+    ],
+    [
+     "fall",
+     "open",
+     null
+    ],
+    [
+     "the_trial",
+     "open",
+     null
+    ],
+    [
+     "the_chronicle",
+     "open",
+     null
+    ],
+    [
+     "unmasking",
+     "open",
+     null
+    ],
+    [
+     "the_hunt",
+     "alignment",
+     null
+    ]
+   ],
+   "hero-champion-surface-city-0-150-dwarf": [
+    [
+     "fall",
+     "open",
+     null
+    ],
+    [
+     "the_vow",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "the_wardens_line",
+     "claim",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-chaplain": [
+    [
+     "the_court",
+     "open",
+     null
+    ],
+    [
+     "succession",
+     "open",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-commander": [
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ],
+    [
+     "the_famine",
+     "feature",
+     null
+    ],
+    [
+     "the_march",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-mage": [
+    [
+     "the_blight",
+     "open",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ],
+    [
+     "sacrifice",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-magistrate": [
+    [
+     "crusade",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "usurpation",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "revenge",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ],
+    [
+     "the_trial",
+     "feature",
+     null
+    ],
+    [
+     "sacrifice",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-10-human_heartland-market_steward": [
+    [
+     "the_court",
+     "open",
+     null
+    ],
+    [
+     "betrayal",
+     "alignment",
+     null
+    ],
+    [
+     "the_monopoly",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-commander": [
+    [
+     "crusade",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "usurpation",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "revenge",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ],
+    [
+     "the_trial",
+     "feature",
+     null
+    ],
+    [
+     "sacrifice",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-magistrate": [
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "the_famine",
+     "feature",
+     null
+    ],
+    [
+     "the_march",
+     "feature",
+     null
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ]
+   ],
+   "hero-council-surface-city-0-120-dwarf-market_steward": [
+    [
+     "the_skim",
+     "open",
+     null
+    ],
+    [
+     "betrayal",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "usurpation",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "revenge",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "the_siege",
+     "feature",
+     null
+    ]
+   ],
+   "hero-domain-surface-city-0-150-dwarf": [
+    [
+     "the_wardens_line",
+     "open",
+     null
+    ],
+    [
+     "the_blight",
+     "open",
+     null
+    ],
+    [
+     "the_domain",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     "claim locked by archetype"
+    ],
+    [
+     "crusade",
+     "claim",
+     "claim locked by archetype"
+    ]
+   ],
+   "hero-domain-surface-city-0-40-human_heartland": [
+    [
+     "the_domain",
+     "open",
+     null
+    ],
+    [
+     "the_blight",
+     "open",
+     null
+    ],
+    [
+     "the_vow",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "rebellion",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     "claim verb convert not allowed by archetype"
+    ]
+   ],
+   "hero-domain-surface-city-0-60-human_heartland": [
+    [
+     "the_domain",
+     "open",
+     null
+    ],
+    [
+     "the_binding",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "temptation",
+     "open",
+     null
+    ],
+    [
+     "the_wardens_line",
+     "alignment",
+     null
+    ],
+    [
+     "the_blight",
+     "alignment",
+     null
+    ]
+   ],
+   "hero-domain-surface-city-0-90-elf": [
+    [
+     "the_domain",
+     "open",
+     null
+    ],
+    [
+     "the_blight",
+     "open",
+     null
+    ],
+    [
+     "the_vow",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     "claim verb convert not allowed by archetype"
+    ],
+    [
+     "revenge",
+     "claim",
+     "claim verb retake not allowed by archetype"
+    ]
+   ],
+   "hero-magister-surface-city-0-60-human_heartland": [
+    [
+     "temptation",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "rebellion",
+     "open",
+     null
+    ],
+    [
+     "the_blight",
+     "alignment",
+     null
+    ],
+    [
+     "the_binding",
+     "alignment",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ]
+   ],
+   "hero-pretender-surface-city-0-150-dwarf": [
+    [
+     "reclamation",
+     "open",
+     null
+    ],
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "homecoming",
+     "open",
+     null
+    ],
+    [
+     "the_bargain",
+     "open",
+     null
+    ],
+    [
+     "revenge",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     "claim verb convert not allowed by archetype"
+    ]
+   ],
+   "hero-pretender-surface-city-0-40-human_heartland": [
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "homecoming",
+     "open",
+     null
+    ],
+    [
+     "rebellion",
+     "open",
+     null
+    ],
+    [
+     "revenge",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ]
+   ],
+   "hero-pretender-surface-city-0-60-human_heartland": [
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "homecoming",
+     "open",
+     null
+    ],
+    [
+     "succession",
+     "open",
+     null
+    ],
+    [
+     "rebellion",
+     "open",
+     null
+    ],
+    [
+     "sacrifice",
+     "open",
+     null
+    ],
+    [
+     "revenge",
+     "alignment",
+     null
+    ]
+   ],
+   "hero-pretender-surface-city-0-90-elf": [
+    [
+     "the_delve",
+     "open",
+     null
+    ],
+    [
+     "the_founding",
+     "open",
+     null
+    ],
+    [
+     "the_jest",
+     "alignment",
+     null
+    ],
+    [
+     "exiles_road",
+     "alignment",
+     null
+    ],
+    [
+     "revenge",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ]
+   ],
+   "hero-sovereign-surface-city-0-10-human_heartland": [
+    [
+     "the_absolute",
+     "open",
+     null
+    ],
+    [
+     "the_alliance",
+     "open",
+     null
+    ],
+    [
+     "sacrifice",
+     "alignment",
+     "drift locked by archetype"
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ]
+   ],
+   "hero-sovereign-surface-city-0-120-dwarf": [
+    [
+     "the_absolute",
+     "open",
+     null
+    ],
+    [
+     "the_alliance",
+     "open",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "the_march",
+     "feature",
+     null
+    ]
+   ],
+   "hero-warlord-1-surface-city-0-10-human_heartland": [
+    [
+     "the_trial",
+     "open",
+     null
+    ],
+    [
+     "the_pursuit",
+     "alignment",
+     null
+    ],
+    [
+     "the_veteran",
+     "alignment",
+     null
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ],
+    [
+     "revenge",
+     "claim",
+     null
+    ],
+    [
+     "usurpation",
+     "claim",
+     null
+    ]
+   ],
+   "hero-warlord-1-surface-city-0-120-dwarf": [
+    [
+     "the_trial",
+     "open",
+     null
+    ],
+    [
+     "the_ascension",
+     "open",
+     null
+    ],
+    [
+     "betrayal",
+     "open",
+     null
+    ],
+    [
+     "the_veteran",
+     "alignment",
+     "drift locked by archetype"
+    ],
+    [
+     "succession",
+     "alignment",
+     "drift locked by archetype"
+    ],
+    [
+     "crusade",
+     "claim",
+     null
+    ]
+   ]
+  },
+  "unwoven": []
+ }
+}

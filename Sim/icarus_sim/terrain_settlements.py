@@ -679,6 +679,41 @@ def life_capacity(areas,potentials):
     return math.floor(total),{p:math.floor(value) for p,value in totals.items()}
 
 
+
+def _settlement_names(seed,selected,points,peoples):
+    """A name per settled node, in each people's own language.
+
+    This replaces a 24-word English list indexed by founding order. That index was the
+    problem: `names[k%24]` renamed every later city when one was founded earlier, and it
+    could not survive an age advance without the explicit copy-back downstream. Keying on
+    the node and its coordinates instead gives a name that is a property of the place and
+    the people, not of the order they happened to be founded in.
+
+    Naming runs in node order rather than founding order so that collision resolution is
+    canonical: whichever city is processed second re-draws, and which one that is must not
+    depend on how the founding loop happened to be sequenced. The redraw is bounded and
+    uses child_seed's third parameter, so a duplicate yields another authentic name rather
+    than a numeric suffix.
+
+    Returns {node: (name, gloss)}. The gloss is the English reading of the roots the name
+    was built from, so a consumer can say that Bargdorn is the wood-hold.
+    """
+    import heritage
+    lexicon=heritage.lexicon();profile_by_node={node:peoples[k] for k,node in enumerate(selected)}
+    resolved={};named={};taken=set()
+    for node in sorted(profile_by_node):
+        profile=profile_by_node[node]
+        if profile not in resolved:
+            resolved[profile]=heritage.resolve(profile,entity_rules(profile)['parent_race_id'])
+        x,z=points[node];domain=f'city-name-{node}-{x}-{z}-{profile}'
+        for variation in range(8):
+            draw=random.Random(child_seed(seed,domain,variation))
+            name,gloss=heritage.settlement_name(resolved[profile],lexicon,draw)
+            if name.lower() not in taken:break
+        taken.add(name.lower());named[node]=(name,gloss)
+    return named
+
+
 def add_settlements(result,cfg):
     if not result.get('climate') or cfg.phase<7:return result
     from .terrain_profiles import get_profile
@@ -787,7 +822,15 @@ def add_settlements(result,cfg):
     habitable=set()
     for candidates in habitats.values():habitable.update(candidates)
     habitable_km2=sum(areas[i] for i in habitable)/1e6
-    per_city_km2=math.sqrt(3)/2*(cfg.settlement_spacing/1000)**2
+    # Cities cannot be packed closer than the raster can separate them. Spacing alone
+    # bounded this while the world was 11 km across and a cell was 87 m, but a coarse
+    # grid on a large world inverts that: at 200 km circumference a size-17 grid has
+    # 12.5 km cells against an 8 km spacing, so the area ceiling admitted about 63
+    # cities onto 289 nodes -- a city every four or five nodes, each then planning a
+    # full crop. The binding spacing is whichever is coarser.
+    cell_spacing_m=2*math.pi*r/(n-1)
+    resolvable_spacing_m=max(cfg.settlement_spacing,cell_spacing_m)
+    per_city_km2=math.sqrt(3)/2*(resolvable_spacing_m/1000)**2
     packing=int(math.floor(habitable_km2/per_city_km2)) if per_city_km2>0 else 0
     # A world that infers its own quotas is ceilinged by its ground, not by a count
     # the caller never set: the quota line above already reads `inferred`, and the two
@@ -795,8 +838,15 @@ def add_settlements(result,cfg):
     #
     # Asking for no cities is not the same as asking for no ceiling, and it outranks
     # the ground: a caller who wants an empty world gets one, inferred or not.
+    # A caller who lowers the ceiling is asking for fewer cities and gets them, inferred
+    # or not: `settlement_count` is published as "Maximum surface cities", so a request
+    # for two that silently returns ten is a broken parameter rather than a ground rule.
+    # Leaving it at the recipe default still means "no ceiling but the ground", which is
+    # what the inferred path is for.
+    from .terrain_world import default_config
+    asked_for_fewer=cfg.settlement_count<default_config(cfg.world_recipe or 3).settlement_count
     if not cfg.auto_parameters and cfg.settlement_count==0:limit=0
-    elif inferred:limit=packing
+    elif inferred and not asked_for_fewer:limit=packing
     else:limit=min(packing,cfg.settlement_count)
     while sum(quotas.values())>limit:
         key=max(quotas,key=lambda p:(quotas[p],p));quotas[key]-=1
@@ -824,8 +874,7 @@ def add_settlements(result,cfg):
             result['effective_config']['settlement_count']=sum(quotas.values())
             result['derivation']['settings']['settlement_count']={'value':sum(quotas.values()),'source':'quality-weighted eligible habitat and productive capacity per people; no minimum; ceiling is the densest packing of the settlement spacing over habitable land'}
     for species,field in score_sets.items():layers['suitability_'+species]=node_grid(field,points,n)
-    names=['Alder','Bracken','Cedar','Dunlin','Ember','Fern','Glen','Hazel','Ivy','Juniper','Kestrel','Larch',
-           'Mallow','Nettle','Oak','Pine','Quartz','Reed','Sage','Thistle','Umber','Vale','Willow','Yarrow']
+    named=_settlement_names(seed,selected,points,peoples)
     sites=[]
     for k,i in enumerate(selected):
         x,z=points[i];outpost=i in outposts
@@ -841,7 +890,7 @@ def add_settlements(result,cfg):
                                                          city_layout_profile['placement']['max_anchor_slope_degrees'],
                                                          city_layout_profile['placement']['river_buffer_m'])
         city_layout=_build_city_layout_plan(city_seed,i,points,city_layout_profile,peoples[k],None,city_river_distance,graph[i],river,anchor_candidates,graph,pack_entry)
-        sites.append({'id':k,'name':names[k%len(names)]+' City','population_profile':peoples[k],
+        sites.append({'id':k,'name':named[i][0],'name_gloss':named[i][1],'population_profile':peoples[k],
             **{key:founded[k].get(key) for key in ('founding_year','migration_source_node','source_civilization_id','migration_distance_m','cultural_branch','diaspora','diaspora_reason','diaspora_bonus')},
             'parent_race_id':founded[k]['parent_race_id'],'founding_turn':founded[k].get('founding_turn',1),'founding_capital':founded[k].get('founding_capital',False),
             'node':i,'x':x,'z':z,'direction':vectors[i],'height_m':height[i],'outpost':outpost,'kind':'city',

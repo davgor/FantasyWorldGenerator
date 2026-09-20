@@ -3,6 +3,8 @@
 #include "biomes.hpp"
 #include "ecology.hpp"
 #include "pyrandom.hpp"
+#include "astrology.hpp"
+#include "legacy.hpp"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -31,6 +33,7 @@ bool& fate_trace() {static bool enabled=false;return enabled;}
 struct Cause {
     std::string kind,reason,school;
     double weight=0.;
+    std::string family;   // nest family of a monster cause, for the ruin's legacy
 };
 double arc(const Vec3& a,const Vec3& b,double radius) {
     return radius*std::acos(std::max(-1.,std::min(1.,dot(a,b))));
@@ -59,7 +62,7 @@ std::vector<Cause> nest_threats(const Vec3& city,const std::vector<Nest>& nests,
         const double reach=std::min(radius*.5,std::max(350.,nest->range_m*2));
         if(distance>reach) continue;
         causes.push_back(Cause{dragon ? "dragon" : "monster",nest->name+" drove the inhabitants away.",
-                               std::string(),.11*static_cast<double>(nest->tier)*(1-distance/reach)});
+                               std::string(),.11*static_cast<double>(nest->tier)*(1-distance/reach),nest->family});
     }
     return causes;
 }
@@ -91,13 +94,32 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
         cities[index_of[war.defeated_uid]].war_history.push_back(participation(war,war.defeated_uid));
     }
     out.wars=wars;
+    // The moon on the day the age turns: a momentary surge scales every potency the
+    // lottery reads, but the fields themselves are not rewritten.
+    const std::int64_t age_day=static_cast<std::int64_t>(previous.founding.end_year)*days_per_year;
+    const std::array<double,school_count> tide=lunar_tide(world.moon,age_day);
+    // City class decides how strong a key point a ruin leaves.
+    std::vector<double> suitability(cities.size(),0.);
+    for(std::size_t index=0;index<cities.size();++index) {
+        const auto species=previous.fields.species.find(cities[index].population_profile);
+        if(species!=previous.fields.species.end()&&cities[index].node<species->second.suitability.size())
+            suitability[index]=species->second.suitability[cities[index].node];
+    }
+    const std::vector<std::string> classes=
+        legacy_city_classes(cities,suitability,catalogues.founding_rules().medium_suitability_min);
     std::vector<FoundedCity> survivors;
-    for(const FoundedCity& city:cities) {
+    for(std::size_t city_index=0;city_index<cities.size();++city_index) {
+        const FoundedCity& city=cities[city_index];
+        const std::string& city_class=classes[city_index];
         const auto x=static_cast<std::size_t>(world.grid.points[city.node].first);
         const auto z=static_cast<std::size_t>(world.grid.points[city.node].second);
         std::array<double,school_count> potency{};
-        for(std::size_t index=0;index<school_count;++index)
-            potency[index]=world.layers.ley[index].empty() ? 0. : world.layers.ley[index][z][x];
+        const double sway=world.layers.lunar_sensitivity.empty() ? 0. : world.layers.lunar_sensitivity[z][x];
+        for(std::size_t index=0;index<school_count;++index) {
+            const double base=world.layers.ley[index].empty() ? 0. : world.layers.ley[index][z][x];
+            const double factor=1+cfg.options.lunar_influence*sway*(tide[index]-1);
+            potency[index]=base*factor;
+        }
         const Vec3 seat=direction(world.grid.points[city.node].first,world.grid.points[city.node].second,cfg.size);
         const std::int64_t charged=dominant_school(potency);
         const auto lost=war_fates.find(city.uid);
@@ -122,8 +144,12 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
             ruin.probability=war.chance;
             ruin.roll=war.roll;
             // A city whose ground a school already held leaves a key point behind it.
-            if(cfg.magic_enabled && charged>=0)
-                ruin.new_node_school=school_names()[static_cast<std::size_t>(charged)];
+            // The victor's own magic scars the ground it took.
+            const RuinLegacy legacy=ruin_legacy(city_class,city.population_profile,ruin.cause,potency,
+                                                std::string(),war.victor_civilization_id,std::string());
+            ruin.new_node_school=legacy.school;
+            ruin.legacy_intensity=legacy.intensity;
+            ruin.legacy_basis=legacy.basis;
             ruin.war_history=city.war_history;
             out.ruins.push_back(ruin);
             continue;
@@ -178,7 +204,11 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
         ruin.reason=chosen->reason;
         ruin.probability=chance;
         ruin.roll=draw;
-        if(chosen->kind=="self_magic") ruin.new_node_school="weave";
+        const RuinLegacy legacy=ruin_legacy(city_class,city.population_profile,chosen->kind,potency,
+                                            chosen->family,std::string(),std::string());
+        ruin.new_node_school=legacy.school;
+        ruin.legacy_intensity=legacy.intensity;
+        ruin.legacy_basis=legacy.basis;
         // A city that fought and then died to something else still carries its wars.
         ruin.war_history=city.war_history;
         out.ruins.push_back(ruin);
@@ -198,7 +228,7 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
                 if(network.name!=ruin.new_node_school) continue;
                 LeyNode node;
                 node.direction=ruin.direction;
-                node.intensity=2.5;
+                node.intensity=ruin.legacy_intensity;
                 network.nodes.push_back(node);
             }
         }
@@ -216,6 +246,7 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
     add_cold_habitats(cfg,world.grid,world.layers);
     world.regions=add_environment(cfg,radius,world.spacing_m,world.grid,world.layers);
     add_surface_fields(cfg,world.grid,world.layers);
+    world.layers.lunar_sensitivity=lunar_sensitivity(world.layers,cfg.size);
     world.layers.natural_biome=world.layers.biome;
     // Everything a city supported is rebuilt around the cities that are left.
     PopulateContext context;

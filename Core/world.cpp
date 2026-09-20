@@ -157,6 +157,9 @@ WorldEnvelope generate_world(const GenerateRequest& request) {
     add_cold_habitats(cfg,world.grid,world.layers);
     world.regions=add_environment(cfg,radius,world.spacing_m,world.grid,world.layers);
     add_surface_fields(cfg,world.grid,world.layers);
+    // The moon is seeded once per world; how far each cell sways reads the fields above.
+    world.moon=seed_moon(static_cast<std::uint64_t>(cfg.seed));
+    world.layers.lunar_sensitivity=lunar_sensitivity(world.layers,cfg.size);
     // Continuous terrain definition and its interpolated amplitude mask.
     world.detail_seed=child_seed(static_cast<std::uint64_t>(cfg.seed),"continuous-terrain-v1");
     const double scales[3]={120.,28.,6.},amplitudes[3]={12.,2.5,.3};

@@ -1,0 +1,11 @@
+{
+  "schema": "fantasy-world-generator.npc-names",
+  "revision": 2,
+  "notes": "This file no longer holds naming data. It is kept so policy_revision can still say which naming contract a roster was built against - revision 1 is interim parent-race tables, revision 2 is the heritage genome - which a consumer reading an older export needs in order to tell them apart. Do not add tables here; extend the genome.",
+  "supersede": {
+    "package": "heritage",
+    "signature": "name_for(civilization_id, parent_race_id, draw) -> str",
+    "status": "complete",
+    "note": "Superseded on 2026-09-19. Names now come from the heritage genome keyed by civilization id. The interim parent-race tables are removed: they gave nine of the twelve cultures their parent’s names and gave tidekin, gnome, hill_dwarf and frosthold_dwarf human ones outright."
+  }
+}

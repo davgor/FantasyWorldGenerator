@@ -1,0 +1,109 @@
+{
+  "schema": "fantasy-world-generator.heritage-lexicon",
+  "revision": 1,
+  "notes": "One root set per family, plus ordered sound changes per branch. Sibling tongues are cognate because they share the roots; they are distinct because each branch rewrites them. That is one small table per family instead of twelve hand-written lexicons. Every root must be spellable in its family's derived inventory, which the linter checks - a root using a phoneme the soma forbids is an authoring error, not a quirk. Sound changes apply in order and may feed each other.",
+  "shared_slots": ["stone", "water", "high", "deep", "wood", "field", "river", "gate",
+                   "hall", "old", "north", "cold", "fire", "green", "shore", "wind",
+                   "road", "house", "realm"],
+  "families": {
+    "human": {
+      "parent_race": "human",
+      "word_order": "verb_medial",
+      "affixing": "suffixing",
+      "roots": {
+        "stone": "kor", "water": "dun", "high": "bren", "deep": "graf",
+        "wood": "hal", "field": "fen", "river": "lin", "gate": "por",
+        "hall": "sal", "old": "eld", "north": "nord", "cold": "fros",
+        "fire": "brand", "green": "ver", "shore": "strand", "wind": "wen",
+        "road": "weg", "house": "ham",
+        "harbour": "mar", "ford": "vad", "hill": "tor", "new": "ner",
+        "king": "ros", "salt": "sel", "bridge": "brig", "mill": "mel",
+        "well": "pat", "sun": "sol", "sand": "tam", "market": "sev",
+        "realm": "mark"
+      },
+      "branches": {
+        "human_heartland": {"sound_changes": [], "add_roots": {}},
+        "human_maritime": {"sound_changes": [["v", "b"], ["th", "t"], ["w", "v"]],
+                           "add_roots": {"sail": "vela", "bay": "gol"}},
+        "human_desert": {"sound_changes": [["p", "f"], ["th", "s"], ["e", "i"]],
+                         "add_roots": {"well": "kanat", "dune": "rig", "glass": "sira"}},
+        "human_cold": {"sound_changes": [["v", "f"], ["ar", "or"], ["nd", "nn"]],
+                       "add_roots": {"ice": "isk", "hearth": "arn"}},
+        "human_large_island": {"sound_changes": [["th", "t"], ["l", "r"]],
+                               "add_roots": {"terrace": "dan", "kiln": "yaki"}},
+        "human_rainforest": {"sound_changes": [["s", "sh"], ["th", "t"]],
+                             "add_roots": {"feather": "kitza", "canopy": "napan"}}
+      }
+    },
+    "elven": {
+      "parent_race": "elf",
+      "word_order": "verb_medial",
+      "affixing": "prefixing",
+      "roots": {
+        "stone": "gond", "water": "nael", "high": "tael", "deep": "thal",
+        "wood": "taur", "field": "laen", "river": "duin", "gate": "annon",
+        "hall": "mereth", "old": "ando", "north": "fori", "cold": "hela",
+        "fire": "naur", "green": "lain", "shore": "aeril", "wind": "siria",
+        "road": "pada", "house": "mar",
+        "grove": "sila", "song": "aeth", "leaf": "lith", "star": "eiri",
+        "long": "anda", "tide": "mael", "foam": "vaen", "light": "galad",
+        "dark": "mori", "silver": "kelev",
+        "realm": "doren"
+      },
+      "branches": {
+        "elf": {"sound_changes": [], "add_roots": {}},
+        "tidekin": {"sound_changes": [["th", "s"], ["sh", "s"], ["ts", "s"],
+                                      ["ch", "s"], ["z", "s"], ["nd", "n"]],
+                    "add_roots": {"reef": "riel", "salt": "sael", "keel": "loa"}}
+      }
+    },
+    "dwarven": {
+      "parent_race": "dwarf",
+      "word_order": "verb_final",
+      "affixing": "suffixing",
+      "roots": {
+        "stone": "khas", "water": "sirn", "high": "tor", "deep": "gund",
+        "wood": "barg", "field": "mek", "river": "durn", "gate": "kadr",
+        "hall": "dum", "old": "ulk", "north": "nord", "cold": "krum",
+        "fire": "nar", "green": "leg", "shore": "hakn", "wind": "guld",
+        "road": "rak", "house": "bod",
+        "forge": "bral", "hold": "dorn", "iron": "ang", "gold": "bor",
+        "peak": "garn", "king": "rik", "hammer": "mund", "ash": "grim",
+        "salt": "sulk", "vault": "gok", "ember": "mokh",
+        "realm": "rik"
+      },
+      "branches": {
+        "dwarf": {"sound_changes": [], "add_roots": {}},
+        "frosthold_dwarf": {"sound_changes": [["kh", "q"], ["nd", "nt"], ["a", "o"]],
+                            "add_roots": {"ice": "merk", "pact": "gorn"}},
+        "gnome": {"sound_changes": [["kh", "k"], ["q", "k"], ["gh", "g"],
+                                    ["rn", "rl"], ["aa", "a"]],
+                  "add_roots": {"gear": "spril", "glass": "glis", "spark": "pik"}},
+        "hill_dwarf": {"sound_changes": [["kh", "h"], ["q", "k"], ["gh", "g"],
+                                         ["u", "o"]],
+                       "add_roots": {"table": "born", "orchard": "mel", "barrow": "dolm"}}
+      }
+    }
+  },
+  "forbidden_forms": ["person", "mordor", "hell", "arse", "damn", "shit", "piss",
+                      "crap", "slut", "rape", "nazi", "cock", "tit", "fart"],
+  "personal_templates": [
+    {"pattern": ["quality", "craft"], "weight": 4},
+    {"pattern": ["craft", "quality"], "weight": 3},
+    {"pattern": ["terrain", "craft"], "weight": 2},
+    {"pattern": ["quality", "terrain"], "weight": 2}
+  ],
+  "settlement_templates": [
+    {"pattern": ["terrain", "site"], "weight": 5},
+    {"pattern": ["quality", "terrain"], "weight": 3},
+    {"pattern": ["craft", "site"], "weight": 2}
+  ],
+  "slot_roles": {
+    "terrain": ["stone", "water", "wood", "field", "river", "shore", "north", "wind"],
+    "site": ["hall", "gate", "house", "hold", "road", "bridge", "harbour", "vault",
+             "grove", "forge", "well", "terrace", "keel", "barrow", "table"],
+    "quality": ["high", "deep", "old", "cold", "green", "long", "dark", "light", "new"],
+    "craft": ["fire", "gold", "iron", "salt", "glass", "gear", "silver", "sail",
+              "kiln", "ember", "ice", "spark", "orchard"]
+  }
+}

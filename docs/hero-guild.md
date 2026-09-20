@@ -3,7 +3,7 @@
 This additive planning calculator is separate from generated city/world state.
 `fantasy_world_generator.hero_guild.calculate(request, policy=None)` estimates
 membership, activity, service and beds for one existing core guild hall. It does
-not create NPCs, change population, place buildings or allocate housing.
+not create NPCs, change population, place buildings or allocate housing. People are materialized separately and read-only by the [NPC roster](npc-roster.md).
 
 Policies live in packaged `hero_guild_policies.json`, keyed by exact civilization
 ID with schema version and authored revision. Every current civilization has an

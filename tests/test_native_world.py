@@ -23,7 +23,7 @@ from native_cxx import compile_native, compiler_command
 
 SOURCES = ('json.cpp', 'numeric.cpp', 'counter.cpp', 'genesis.cpp', 'pyrandom.cpp', 'globe.cpp', 'frame.cpp',
            'registry.cpp', 'hydrology.cpp', 'tectonics.cpp', 'history.cpp', 'climate.cpp', 'biomes.cpp',
-           'magic.cpp', 'ecology.cpp', 'catalogue.cpp', 'profiles.cpp', 'settlements.cpp', 'founding.cpp',
+           'magic.cpp', 'astrology.cpp', 'legacy.cpp', 'ecology.cpp', 'catalogue.cpp', 'profiles.cpp', 'settlements.cpp', 'founding.cpp',
            'roads.cpp', 'scene.cpp', 'cityplan.cpp', 'humans.cpp', 'society.cpp', 'nests.cpp', 'wars.cpp', 'ages.cpp', 'layers.cpp', 'world.cpp',
            # The settlement-geometry slice scene.cpp calls at the final stage: the three
            # planners, the geometry they share and the scene that dimensions their plots.
@@ -454,6 +454,10 @@ class NativeWorldTests(unittest.TestCase):
                 self.assertEqual(int(row[4]), expected['destroyed_age'])
                 self.assertEqual(float(row[5]), expected['probability'])
                 self.assertEqual(float(row[6]), expected['roll'])
+                # Every ruin seeds a key point; its school, intensity and basis are contract too.
+                self.assertEqual(row[7], expected['legacy']['school'])
+                self.assertEqual(float(row[8]), expected['legacy']['intensity'])
+                self.assertEqual(row[9], expected['legacy']['basis'])
         # Wars decide which cities reach the finished world at all, so they are
         # compared themselves and not only through the ruins they leave.
         wars = [war for entry in staged['history']['ages'] for war in entry['wars']]

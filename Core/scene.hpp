@@ -63,8 +63,8 @@ struct WorldScene {
 };
 // Densifies each route onto the surface at roughly four metre spacing, the same
 // interval the reference uses, so a drawn road follows the ground rather than cutting
-// through it. City anchors are the site nodes: street plans are a later slice, so no
-// building is invented here.
+// through it. City anchors are the site nodes; the buildings inside a settlement come
+// from plan_settlement_buildings, which runs once the world is final.
 WorldScene build_scene(const WorldEnvelope& world,const std::vector<FoundedCity>& sites,
                        const std::vector<Road>& roads,const SettlementFields& fields);
 // Everything the civilizations add to a generated world: capacity fields, founded

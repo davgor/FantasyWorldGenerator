@@ -28,7 +28,7 @@ class BiomeContractTests(unittest.TestCase):
         world = generate_request({'recipe_version': 3, 'seed': 42, 'overrides': {'size': 17}})
         self.assertEqual(world['generator_version'], 16)
         self.assert_current(world)
-        self.assertEqual(len(world['terrain']['magical_biomes']), 104)
+        self.assertEqual(len(world['terrain']['magical_biomes']), 156)
         for stage in (8, 9, 10, 13, 14, 15, 16):
             view = materialize_stage(world, stage)
             self.assert_current(view)
@@ -41,7 +41,7 @@ class BiomeContractTests(unittest.TestCase):
         self.assert_current(advanced)
         self.assertEqual(len(advanced['history']['ages']), 3)
         json.dumps(advanced, allow_nan=False)
-        for changes in ({'terrain_version': 5}, {'biome': 9}, {'variant': 104}, {'variant': True}):
+        for changes in ({'terrain_version': 5}, {'biome': 9}, {'variant': 156}, {'variant': True}):
             broken = copy.deepcopy(world)
             if 'terrain_version' in changes:broken['terrain']['version'] = changes['terrain_version']
             if 'biome' in changes:broken['layers']['biome'][0] = [changes['biome']]*17

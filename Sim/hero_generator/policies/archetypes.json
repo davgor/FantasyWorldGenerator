@@ -1,0 +1,1381 @@
+{
+  "schema": "fantasy-world-generator.hero-archetypes",
+  "revision": 4,
+  "notes": "Alignment-neutral cores with pole notes. `requires` is a list of conjunctions over features the wells compute; a feature no well computes yet simply never fires. `prior` weights frequency by alignment and never clamps. `intensity` pushes the derived alignment to a corner or a moral pole after selection. `faces` names the faces a card wears: null for one face, public/true for deceivers, calm/unleashed for the beast, first/second for the fractured heart.",
+  "cards": [
+    {
+      "id": "conqueror",
+      "name": "The Conqueror",
+      "prior": {
+        "law": 0.6,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:warlord"
+        ],
+        [
+          "role:sovereign"
+        ],
+        [
+          "role:founder"
+        ]
+      ],
+      "boosts": {
+        "realm:contested": 3.0,
+        "war:international_victor": 1.5,
+        "role:founder": 0.5,
+        "role:sovereign": 1.5
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Many crowns mean endless war; I will end it with one.",
+        "wants": "Everything under one rule, theirs.",
+        "fears": "A peace made without them.",
+        "tells": "Mourns the dead of their own wars; keeps maps, not trophies.",
+        "mechanic": "Claim `unify` targets every neighbouring realm; refuses treaties that leave two sovereigns.",
+        "never": [
+          "accept a peace that leaves a rival crowned"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Conquest by treaty, marriage and siege in that order; every surrender is kept.",
+        "chaotic": "Conquest by charisma and sudden strikes; borders redrawn on a whim.",
+        "good": "Liberates as it annexes; the conquered eat better than before.",
+        "evil": "The one peace is their peace; dissent is a border to close."
+      },
+      "lines": {
+        "LG": "You'll keep your laws, your gods and your granaries. You'll lose your war. That's the whole offer.",
+        "CE": "Kingdoms are kindling. I'm just the one honest enough to bring the torch."
+      },
+      "faces": null
+    },
+    {
+      "id": "exiled_hero",
+      "name": "The Exiled Hero",
+      "prior": {
+        "law": 0.0,
+        "good": 0.6
+      },
+      "requires": [
+        [
+          "role:pretender",
+          "home:fell"
+        ],
+        [
+          "role:exile"
+        ]
+      ],
+      "boosts": {
+        "heir:capital": 1.3
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Home is the people, not the ground.",
+        "wants": "Their people safe wherever they now stand.",
+        "fears": "Being invited back and finding they no longer belong.",
+        "tells": "Flinches at their old banners; sends coin home anonymously.",
+        "mechanic": "Claim `protect` the new home rather than `retake` the old one.",
+        "never": [
+          "sell out the new home to buy back the old"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Builds walls and charters for the new settlement.",
+        "chaotic": "Builds a network of friends instead of walls.",
+        "good": "Shelters other exiles, whoever they are.",
+        "evil": "Protects their people by breaking their neighbours first."
+      },
+      "lines": {
+        "LG": "Everything I have left is behind me now, and it needs a wall.",
+        "NE": "They exiled me for what I did. They should have asked what I'd do for the ones who followed me."
+      },
+      "faces": null
+    },
+    {
+      "id": "oathbound",
+      "name": "The Oathbound",
+      "prior": {
+        "law": 0.7,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "order:member"
+        ],
+        [
+          "role:domain_holder",
+          "keypoint:ruin_born"
+        ],
+        [
+          "role:council"
+        ],
+        [
+          "role:keeper"
+        ]
+      ],
+      "boosts": {
+        "role:council": 0.5
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "A promise outlives the one who made it.",
+        "wants": "To discharge the oath.",
+        "fears": "The day the oath and their conscience finally part ways.",
+        "tells": "Hesitates before the hard act, then does it anyway.",
+        "mechanic": "The claim is inherited from the charter and cannot change.",
+        "never": [
+          "reinterpret the oath to escape it"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Keeps the oath's letter.",
+        "chaotic": "Keeps the oath's spirit, reinterpreted freely but never abandoned.",
+        "good": "The oath is a shield held over others.",
+        "evil": "The oath is a licence."
+      },
+      "lines": {
+        "LN": "I would spare you if the vow allowed one word of mercy. It does not.",
+        "CE": "I swore to keep the pass closed. Nobody said how many bodies it takes."
+      },
+      "faces": null
+    },
+    {
+      "id": "inherited_hero",
+      "name": "The Inherited Hero",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "legend:predecessor"
+        ]
+      ],
+      "boosts": {
+        "role:pretender": 1.5
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "They didn't finish. So I will.",
+        "wants": "To close the predecessor's claim exactly as it was left.",
+        "fears": "Learning the predecessor was wrong.",
+        "tells": "Carries the relic more than uses it; borrows the predecessor's phrases.",
+        "mechanic": "Claim copied from the legend, target unchanged.",
+        "never": [
+          "alter the target of the inherited claim"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Inherits the predecessor's methods as well as the goal.",
+        "chaotic": "Inherits the goal only; the methods are their own.",
+        "good": "Honours the predecessor by protecting whoever they protected.",
+        "evil": "Finishes the predecessor's vendetta and adds their own."
+      },
+      "lines": {
+        "NG": "This was his sword and his fight. The sword still cuts.",
+        "LE": "She spared them. That's the only part of her plan I'm changing."
+      },
+      "faces": null
+    },
+    {
+      "id": "false_hero",
+      "name": "The False Hero",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "deed:credited_not_actual"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "The story is what people needed; who did the deed is a detail.",
+        "wants": "The credit to hold.",
+        "fears": "The actual actor speaking.",
+        "tells": "Cannot describe the deed from the inside; over-tips witnesses.",
+        "mechanic": "Deed roles `credited` and `actual` diverge; the actual actor is the rival; conflict is exposure.",
+        "never": [
+          "confess unprompted"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Believes the record is now the truth.",
+        "chaotic": "Enjoys the game of keeping it up.",
+        "good": "Uses the fame to do real good, guiltily.",
+        "evil": "Silences the actual actor."
+      },
+      "lines": {
+        "CG": "You'd have done the same. Let's not bore these good people with technicalities.",
+        "LE": "The chronicle says I killed it. Chronicles are law here. Be careful who you contradict."
+      },
+      "faces": [
+        "public",
+        "true"
+      ]
+    },
+    {
+      "id": "redeemed",
+      "name": "The Redeemed",
+      "prior": {
+        "law": 0.0,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "villain:prior_age",
+          "stake:regained"
+        ]
+      ],
+      "boosts": {},
+      "drift": {
+        "law": 0.0,
+        "good": 0.15
+      },
+      "intensity": null,
+      "core": {
+        "belief": "The good I do now doesn't cancel the ledger; it has to outweigh it.",
+        "wants": "The world better than the ledger says.",
+        "fears": "Being trusted before they have earned it.",
+        "tells": "Knows villain tradecraft too well; hates how easy the dark shortcut is.",
+        "mechanic": "Two faces across ages; may pick `exploit` while claiming `protect`.",
+        "never": [
+          "return to the old cause for gain"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Submits to judgement and serves the sentence in public.",
+        "chaotic": "Disappears and does good anonymously.",
+        "good": "Refuses every dark shortcut.",
+        "evil": "The drift has stalled; the old methods are used for the greater good."
+      },
+      "lines": {
+        "NG": "Don't thank me for this. Just make sure it was necessary.",
+        "LE": "I'm reformed. That's why I'll do it cleanly this time."
+      },
+      "faces": null
+    },
+    {
+      "id": "tainted_one",
+      "name": "The Tainted One",
+      "prior": {
+        "law": 0.3,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "ley:tainted_home"
+        ],
+        [
+          "order:member",
+          "order:against_dark"
+        ]
+      ],
+      "boosts": {},
+      "drift": {
+        "law": 0.0,
+        "good": -0.15
+      },
+      "intensity": null,
+      "core": {
+        "belief": "The code holds. It has to.",
+        "wants": "To do right without the shadow noticing.",
+        "fears": "Enjoying the shadow.",
+        "tells": "The ground near their home answers them; wounds close too fast.",
+        "mechanic": "Alignment carries a drift toward the dark each age.",
+        "never": [
+          "use the taint on an innocent"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Rituals and counting keep the shadow boxed.",
+        "chaotic": "Lets it out in bursts, on people who deserve it.",
+        "good": "Warns everyone away before it starts.",
+        "evil": "Has stopped pretending it is a curse."
+      },
+      "lines": {
+        "LG": "Stand back when it starts. I'll be me again in a moment. Usually.",
+        "CN": "It only comes out for the ones who earn it. Don't earn it."
+      },
+      "faces": null
+    },
+    {
+      "id": "forgiving",
+      "name": "The Forgiving",
+      "prior": {
+        "law": 0.0,
+        "good": 0.4
+      },
+      "requires": [
+        [
+          "rival:spared"
+        ],
+        [
+          "role:council",
+          "seat:chaplain"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Everyone is one mercy away from turning.",
+        "wants": "The enemy changed.",
+        "fears": "Being right about people too late.",
+        "tells": "Leaves exits in every fight; every rival is still alive.",
+        "mechanic": "Rivals never resolve to dead on their account.",
+        "never": [
+          "kill a surrendered foe"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Mercy as due process; formal pardons.",
+        "chaotic": "Mercy on impulse, even for the unrepentant.",
+        "good": "Believes it.",
+        "evil": "Forgives because a debtor is worth more than a corpse."
+      },
+      "lines": {
+        "CG": "You'll always get one more chance. That's the point of me.",
+        "LE": "Of course you're pardoned. Now you owe me, and everyone knows it."
+      },
+      "faces": null
+    },
+    {
+      "id": "tyrant",
+      "name": "The Tyrant",
+      "prior": {
+        "law": 0.3,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "role:warlord",
+          "war:civil_victor"
+        ],
+        [
+          "role:sovereign",
+          "realm:cold_conflicts_2"
+        ]
+      ],
+      "boosts": {
+        "civ:lost_many": 1.5
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Control is the only order that lasts.",
+        "wants": "No challenge to exist.",
+        "fears": "The crowd, the heir, the mirror.",
+        "tells": "Removes competent subordinates; cannot bear laughter.",
+        "mechanic": "Claim `hold` on every city in the realm; council members become rivals on schedule.",
+        "never": [
+          "apologise in public",
+          "share credit"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Control through law, census and permits.",
+        "chaotic": "Control through personal terror and favour.",
+        "good": "The strongman who crushes dissent so the harvest comes in, and genuinely feeds people.",
+        "evil": "Control is the point."
+      },
+      "lines": {
+        "CG": "I hanged three grain-hoarders and nobody starved this winter. Argue with the full bellies.",
+        "LE": "Kneel or don't. The outcome is the same. Kneeling is faster."
+      },
+      "faces": null
+    },
+    {
+      "id": "mastermind",
+      "name": "The Mastermind",
+      "prior": {
+        "law": 0.4,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "role:schemer",
+          "stakes:2"
+        ],
+        [
+          "role:council",
+          "seat:mage"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Failure is a branch I have already priced.",
+        "wants": "The end state, indifferent to the path.",
+        "fears": "The variable they did not model.",
+        "tells": "Never surprised; asks questions they already know the answers to.",
+        "mechanic": "The claim carries a fallback chain; failure of one target promotes the next.",
+        "never": [
+          "act without a fallback"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Plans inside institutions.",
+        "chaotic": "Plans that exploit everyone else's rules.",
+        "good": "The end state is other people's safety; still manipulates to get there.",
+        "evil": "People are pieces."
+      },
+      "lines": {
+        "LG": "You did exactly what I hoped. I keep hope and plan separate.",
+        "CE": "There were four ways this ended. You picked the one where you're useful. Well done."
+      },
+      "faces": null
+    },
+    {
+      "id": "corrupt",
+      "name": "The Corrupt",
+      "prior": {
+        "law": 0.0,
+        "good": -0.6
+      },
+      "requires": [
+        [
+          "seat:trade"
+        ],
+        [
+          "role:council",
+          "seat:magistrate"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Everything has a price; virtue just hides its invoice.",
+        "wants": "Wealth and the safety it buys.",
+        "fears": "An audit, a fire, a sudden equal.",
+        "tells": "Knows the price of every shipment; generous to those who can hurt them.",
+        "mechanic": "Claim `exploit` on the city's shipments and trade routes.",
+        "never": [
+          "die for anything"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Corruption through contract and fee.",
+        "chaotic": "Smuggling and bribes.",
+        "good": "Skims to fund something decent; a crooked philanthropist.",
+        "evil": "Sells the city short."
+      },
+      "lines": {
+        "NG": "This one's at cost. The orphanage doesn't run on prayers.",
+        "NE": "I like you. So this one's at cost. Next time we talk about interest."
+      },
+      "faces": null
+    },
+    {
+      "id": "beast",
+      "name": "The Beast",
+      "prior": {
+        "law": -0.5,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "role:champion",
+          "deed:dark_nest"
+        ],
+        [
+          "role:dread",
+          "dread:person_shaped"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "The calm is the lie. The rage is what I am.",
+        "wants": "Something worth breaking for.",
+        "fears": "Hurting the few they love.",
+        "tells": "Warns people to leave rooms; scars on the hands.",
+        "mechanic": "Two states, calm and unleashed; the unleashed face has its own alignment and does not recognise allies.",
+        "never": [
+          "turn on their pack while calm"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Rules for when it is allowed out.",
+        "chaotic": "No rules, only people.",
+        "good": "The rage targets the guilty.",
+        "evil": "The rage is enjoyed."
+      },
+      "lines": {
+        "LG": "Go. Now. I'm not asking twice because I won't be here to ask.",
+        "CE": "Stay. Watch. It's better with an audience."
+      },
+      "faces": [
+        "calm",
+        "unleashed"
+      ]
+    },
+    {
+      "id": "incarnate",
+      "name": "The Incarnate",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "fame:renowned"
+        ]
+      ],
+      "boosts": {
+        "fame:legendary": 1.0
+      },
+      "drift": null,
+      "intensity": "corner",
+      "core": {
+        "belief": "Their corner of the grid, stated as a law of nature.",
+        "wants": "The world to match the corner.",
+        "fears": "Nothing personal; only the corner failing.",
+        "tells": "Perfectly predictable; enemies plan around them.",
+        "mechanic": "Pushed to the corner and never drifts; refuses claims outside it.",
+        "never": [
+          "act outside the corner, even to win"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Every word is a statute.",
+        "chaotic": "Every act is a rebellion.",
+        "good": "Every act is a kindness, however hard.",
+        "evil": "Every act is a taking."
+      },
+      "lines": {
+        "LG": "It isn't that I won't. There's no version of me that could.",
+        "CE": "There's no version of me that wouldn't."
+      },
+      "faces": null
+    },
+    {
+      "id": "broken_soul",
+      "name": "The Broken Soul",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "home:fell",
+          "civ:lost_many"
+        ],
+        [
+          "home:fell",
+          "ally:lost"
+        ]
+      ],
+      "boosts": {
+        "heir:capital": 1.5
+      },
+      "drift": null,
+      "intensity": "good_axis",
+      "core": {
+        "belief": "Everything I loved is gone, so I am free.",
+        "wants": "Vengeance or salvation, at any cost.",
+        "fears": "Hope.",
+        "tells": "Talks to the dead; keeps a list.",
+        "mechanic": "Claims are `avenge`; fame multiplied; the moral axis is pushed to its pole.",
+        "never": [
+          "return to ordinary life"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "The list is a ledger, settled in order.",
+        "chaotic": "Whoever is nearest to the wound today.",
+        "good": "Saves others from the same loss, recklessly.",
+        "evil": "Makes the world share the loss."
+      },
+      "lines": {
+        "NG": "Do you know what's left when the last thing burns? Room to carry someone else out.",
+        "CE": "Room to move."
+      },
+      "faces": null
+    },
+    {
+      "id": "fractured_heart",
+      "name": "The Fractured Heart",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "deeds:two_civilizations"
+        ],
+        [
+          "deeds:two_schools"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Two beliefs, one per face, each sincere.",
+        "wants": "Each face wants its own thing.",
+        "fears": "The other face.",
+        "tells": "Contradicts their own promises; memory gaps.",
+        "mechanic": "Two faces, each with its own alignment and claim; the faces may conflict.",
+        "never": [
+          "betray that face's cause while wearing it"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "This face keeps the promises the other made.",
+        "chaotic": "This face makes promises the other will not keep.",
+        "good": "This face does not know what the other did.",
+        "evil": "This face knows exactly what the other did."
+      },
+      "lines": {
+        "NG": "I said that? … Which of us are you talking to now?",
+        "LE": "Her. You were talking to her. I'm the one who keeps the promises."
+      },
+      "faces": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "id": "malevolent_benevolent",
+      "name": "The Malevolent / Benevolent",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "fame:legendary"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": "good_axis",
+      "core": {
+        "belief": "Good or evil is not a choice; it is what I am for.",
+        "wants": "The world remade in their moral image.",
+        "fears": "Indifference.",
+        "tells": "Thrives visibly when the realm matches their order-or-chaos preference; withers when it does not.",
+        "mechanic": "The moral axis is pushed to its pole; law is a preference, not an axis; when the realm does not match, the claim becomes `convert`.",
+        "never": [
+          "compromise the moral pole"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Builds churches, or courts.",
+        "chaotic": "Raises crowds, or mobs.",
+        "good": "Does not need to be believed; needs to be watched.",
+        "evil": "Does not need to be served; will be anyway."
+      },
+      "lines": {
+        "LG": "I don't need you to believe me. Watch what happens next.",
+        "CE": "I don't need you to serve me. You will, but I don't need it."
+      },
+      "faces": null
+    },
+    {
+      "id": "deceiver",
+      "name": "The Deceiver",
+      "prior": {
+        "law": 0.0,
+        "good": -0.4
+      },
+      "requires": [
+        [
+          "role:magister",
+          "school:dark"
+        ],
+        [
+          "role:domain_holder",
+          "school:dark"
+        ],
+        [
+          "role:schemer"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "People do the right thing only when handed the wrong reason.",
+        "wants": "The true claim advanced by hands that think they are helping.",
+        "fears": "A single honest witness.",
+        "tells": "The results of their quests always tilt the same way; they know the ley map too well for their public role.",
+        "mechanic": "A public face and a true face; quest hooks whose stated and actual effects differ.",
+        "never": [
+          "reveal the true face voluntarily"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Deceptions that are technically true.",
+        "chaotic": "A different story for everyone.",
+        "good": "The hidden goal is benign and the lies are for the player's peace of mind.",
+        "evil": "The hidden goal feeds on the player."
+      },
+      "lines": {
+        "NE": "You saved my life. Let me repay it. There's a shrine poisoning the valley; I know how to cleanse it.",
+        "CG": "I lied about why. I didn't lie about what it does. You'd have argued, and we didn't have the week."
+      },
+      "faces": [
+        "public",
+        "true"
+      ]
+    },
+    {
+      "id": "mentor",
+      "name": "The Mentor",
+      "prior": {
+        "law": 0.0,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "mentor:successor"
+        ],
+        [
+          "role:magister",
+          "seat:college"
+        ],
+        [
+          "role:council",
+          "seat:mage"
+        ],
+        [
+          "role:council",
+          "seat:librarian"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "My part is over; make yours count.",
+        "wants": "The successor to surpass them.",
+        "fears": "Outliving another one.",
+        "tells": "Hides an injury or a doom.",
+        "mechanic": "Attached to a successor; takes the player on if the successor fails or dies.",
+        "never": [
+          "fight the successor's fight for them"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Formal training and tests.",
+        "chaotic": "Throws them in the river.",
+        "good": "Dies for them if it comes to that.",
+        "evil": "Builds a successor to use, or to be surpassed by on their own terms."
+      },
+      "lines": {
+        "NG": "I could tell you. Then it would be my victory.",
+        "LE": "I made you. Remember that when you think you've outgrown me."
+      },
+      "faces": null
+    },
+    {
+      "id": "trickster",
+      "name": "The Trickster",
+      "prior": {
+        "law": -0.6,
+        "good": 0.2
+      },
+      "requires": [
+        [
+          "role:camp_leader"
+        ],
+        [
+          "role:schemer",
+          "stake:none"
+        ],
+        [
+          "role:council",
+          "seat:magistrate"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Every throne is a joke; I just say it out loud.",
+        "wants": "The powerful humbled, the pattern broken.",
+        "fears": "Becoming what they mock.",
+        "tells": "Their pranks always land on the guilty.",
+        "mechanic": "Targets the highest-fame notable in reach; claims are `expose`.",
+        "never": [
+          "side with the strongest"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Satire, petitions and legal traps.",
+        "chaotic": "Theft and theatre.",
+        "good": "Returns what they steal, with interest.",
+        "evil": "The joke ends with someone hanged."
+      },
+      "lines": {
+        "CG": "Of course I lied. You'd have been so bored.",
+        "CE": "The punchline's tomorrow at dawn. Bring the whole court."
+      },
+      "faces": null
+    },
+    {
+      "id": "zealot",
+      "name": "The Zealot",
+      "prior": {
+        "law": 0.5,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:prophet"
+        ],
+        [
+          "role:heresiarch"
+        ],
+        [
+          "role:council",
+          "seat:chaplain"
+        ],
+        [
+          "role:keeper",
+          "shrine:ruin"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Doubt is the only sin.",
+        "wants": "The faith spread.",
+        "fears": "Silence from above.",
+        "tells": "Cannot laugh at their own creed.",
+        "mechanic": "Claim `convert` on the cities of the mother faith, or of the schism.",
+        "never": [
+          "tolerate blasphemy"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Orthodoxy, councils and inquisition.",
+        "chaotic": "Revival, ecstatic crowds and prophecy.",
+        "good": "Converts by feeding and healing.",
+        "evil": "Converts by fire."
+      },
+      "lines": {
+        "LG": "I've doubted. That's how I know doubt's the enemy. Sit, eat, I'll show you.",
+        "CE": "The fire doesn't ask whether you believe. Neither will I, after tonight."
+      },
+      "faces": null
+    },
+    {
+      "id": "reluctant_hero",
+      "name": "The Reluctant Hero",
+      "prior": {
+        "law": 0.0,
+        "good": 0.2
+      },
+      "requires": [
+        [
+          "role:pretender",
+          "heir:small"
+        ],
+        [
+          "heir:unclaimed"
+        ],
+        [
+          "role:reeve"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Someone has to; I wish it weren't me.",
+        "wants": "To go home.",
+        "fears": "Being good at this.",
+        "tells": "Competence they refuse to own.",
+        "mechanic": "The mantle is held but not accepted until a deed of their own.",
+        "never": [
+          "abandon people who depend on them"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Does the duty by the book, resentfully.",
+        "chaotic": "Does it their own way, grumbling.",
+        "good": "Cannot walk past the helpless.",
+        "evil": "Does it because the mantle pays, and finds they like the power."
+      },
+      "lines": {
+        "NG": "Fine. But when this is done, someone else has the sword.",
+        "NE": "I didn't ask for the crown. I'm keeping it, though. Let's be clear about that."
+      },
+      "faces": null
+    },
+    {
+      "id": "fallen_hero",
+      "name": "The Fallen Hero",
+      "prior": {
+        "law": 0.0,
+        "good": -0.1
+      },
+      "requires": [
+        [
+          "role:champion",
+          "defence:failed"
+        ],
+        [
+          "role:warlord",
+          "home:fell_later"
+        ]
+      ],
+      "boosts": {},
+      "drift": {
+        "law": 0.0,
+        "good": -0.15
+      },
+      "intensity": null,
+      "core": {
+        "belief": "I did everything right and it didn't matter.",
+        "wants": "To matter again, by any means.",
+        "fears": "Pity.",
+        "tells": "Still does the heroic thing by reflex, then sneers at it.",
+        "mechanic": "Fame preserved, stake lost; when cornered, one last stand or a betrayal on a seeded coin flip.",
+        "never": [
+          "admit the fall was their fault"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Blames the rules that failed them; keeps the rank.",
+        "chaotic": "Drinks, drifts, sells the sword.",
+        "good": "One last stand when it counts.",
+        "evil": "Joins what beat them."
+      },
+      "lines": {
+        "LG": "They sang about me once. The song's true. That's the worst part.",
+        "CE": "Ask them how the song ends. I'll tell you: it doesn't. Nobody's left to sing it."
+      },
+      "faces": null
+    },
+    {
+      "id": "kingmaker",
+      "name": "The Kingmaker",
+      "prior": {
+        "law": 0.5,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "council:outranks_sovereign"
+        ],
+        [
+          "role:council",
+          "seat:commander"
+        ],
+        [
+          "role:council",
+          "seat:magistrate",
+          "role:schemer"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Crowns are worn; power is held.",
+        "wants": "To choose the next ruler.",
+        "fears": "A sovereign who does not need them.",
+        "tells": "Everyone important owes them.",
+        "mechanic": "Claim `hold` on the sovereign, not the city.",
+        "never": [
+          "take the throne themselves"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Through offices and law.",
+        "chaotic": "Through secrets and friendships.",
+        "good": "Keeps a weak ruler from doing harm.",
+        "evil": "Keeps a weak ruler because weak is useful."
+      },
+      "lines": {
+        "LG": "His Majesty will decide. I've helped him understand what he decides. It's usually the kind thing.",
+        "NE": "The queen reigns. Everyone who matters knows who signs."
+      },
+      "faces": null
+    },
+    {
+      "id": "puppet_sovereign",
+      "name": "The Puppet Sovereign",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "sovereign:advised"
+        ],
+        [
+          "role:sovereign",
+          "dynasty:founding",
+          "realm:contested"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "I reign; that is enough.",
+        "wants": "Ceremony, comfort and to be loved.",
+        "fears": "The day the strings show.",
+        "tells": "Looks to the adviser before answering.",
+        "mechanic": "Claims are copies of the adviser's.",
+        "never": [
+          "contradict the adviser in public"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Rules by ritual.",
+        "chaotic": "Rules by mood; the adviser manages the moods.",
+        "good": "Occasionally brave for the people.",
+        "evil": "Cruel when unwatched, cowardly when watched."
+      },
+      "lines": {
+        "NG": "My chancellor says it's wise. He's rarely wrong, I'm told.",
+        "LE": "Do as the chancellor says. And do it where I can watch."
+      },
+      "faces": null
+    },
+    {
+      "id": "rebel",
+      "name": "The Rebel",
+      "prior": {
+        "law": -0.6,
+        "good": 0.3
+      },
+      "requires": [
+        [
+          "realm:tyrant",
+          "seat:none"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "A law that crushes is not a law.",
+        "wants": "The tyrant gone.",
+        "fears": "Becoming the next one.",
+        "tells": "Cannot plan past the fall.",
+        "mechanic": "Claim `overthrow` on the Tyrant; the camp becomes theirs if they lose.",
+        "never": [
+          "bow"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "A rebel with a charter and a provisional council.",
+        "chaotic": "A rebel with a knife.",
+        "good": "Spares the tyrant's servants.",
+        "evil": "The fall is an excuse."
+      },
+      "lines": {
+        "CG": "We don't have an army. We have everyone he's stepped on.",
+        "LE": "After him, there's a vacancy. I've been very clear about who fills it."
+      },
+      "faces": null
+    },
+    {
+      "id": "knight_errant",
+      "name": "The Knight Errant",
+      "prior": {
+        "law": 0.6,
+        "good": 0.5
+      },
+      "requires": [
+        [
+          "role:champion",
+          "order:remnant"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "The oath doesn't need a hall.",
+        "wants": "A cause worthy of the order's name.",
+        "fears": "The order dying with them.",
+        "tells": "Polishes a badge for an order no one else remembers.",
+        "mechanic": "No home; presence is the road.",
+        "never": [
+          "fight for pay alone"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Follows the old code to the letter.",
+        "chaotic": "Follows whoever last showed them kindness.",
+        "good": "Serves any just cause free.",
+        "evil": "Serves any cause that lets the order's name be feared again."
+      },
+      "lines": {
+        "LG": "The Wardens of the Pale number one, today. Tell me where you're going.",
+        "CE": "The order's dead. Its name isn't. I rent it out."
+      },
+      "faces": null
+    },
+    {
+      "id": "magnate",
+      "name": "The Magnate",
+      "prior": {
+        "law": 0.4,
+        "good": -0.3
+      },
+      "requires": [
+        [
+          "seat:trade",
+          "routes:2"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Ships and grain rule; crowns collect.",
+        "wants": "Monopoly.",
+        "fears": "A free port.",
+        "tells": "Knows every city's food deficit by heart.",
+        "mechanic": "Claim `exploit` on routes, not cities.",
+        "never": [
+          "destroy an asset out of spite"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Charters, tariffs and guild seats.",
+        "chaotic": "Privateers and price shocks.",
+        "good": "Feeds cities in famine at a fair price, and remembers.",
+        "evil": "Starves cities to buy them."
+      },
+      "lines": {
+        "LN": "Wars end. Debts don't. Sit, eat. Let's talk about after.",
+        "NE": "Their granary's empty. Mine isn't. That's not a threat, it's a price list."
+      },
+      "faces": null
+    },
+    {
+      "id": "hermit_sage",
+      "name": "The Hermit Sage",
+      "prior": {
+        "law": 0.0,
+        "good": 0.1
+      },
+      "requires": [
+        [
+          "role:magister",
+          "college:destroyed"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Knowledge outlives cities; it does not need me to shout.",
+        "wants": "To be left alone, and to be right.",
+        "fears": "Their work used.",
+        "tells": "The hut sits on a ley node.",
+        "mechanic": "Presence at a ley node; claims are `hold` on knowledge, a relic.",
+        "never": [
+          "give the dangerous half of the answer"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Will teach if the forms are followed.",
+        "chaotic": "Teaches whoever amuses them.",
+        "good": "Gives the safe half of the answer.",
+        "evil": "Sells the dangerous half."
+      },
+      "lines": {
+        "NG": "I know exactly what you're asking. That's why I'm saying no.",
+        "NE": "I know exactly what you're asking. It'll cost you exactly what it's worth."
+      },
+      "faces": null
+    },
+    {
+      "id": "obsessed_hunter",
+      "name": "The Obsessed Hunter",
+      "prior": {
+        "law": 0.0,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:pretender",
+          "dread:living"
+        ],
+        [
+          "role:champion",
+          "dread:failed_against"
+        ],
+        [
+          "role:reeve",
+          "hamlet:threatened"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "It has to die, and it has to be by me.",
+        "wants": "The Dread's head.",
+        "fears": "Someone else killing it.",
+        "tells": "Scars matching the Dread's species; every topic returns to it.",
+        "mechanic": "A single claim `kill` on the Dread; no other claims accepted.",
+        "never": [
+          "let the Dread go"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "A warrant, a method, a schedule.",
+        "chaotic": "Whatever works, whoever gets hurt.",
+        "good": "Hunts because it will kill again.",
+        "evil": "Hunts because it beat them."
+      },
+      "lines": {
+        "NG": "You've seen its tracks? Show me. Then get your people out of its path.",
+        "CE": "Show me. Everything else can burn."
+      },
+      "faces": null
+    },
+    {
+      "id": "turncoat",
+      "name": "The Turncoat",
+      "prior": {
+        "law": -0.5,
+        "good": -0.2
+      },
+      "requires": [
+        [
+          "sides:both"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Loyalty is a bet; I bet well.",
+        "wants": "The winning side at the end.",
+        "fears": "A side that remembers.",
+        "tells": "Too well-informed about the other camp.",
+        "mechanic": "Bond kinds flip when the fame ordering of their two sides flips.",
+        "never": [
+          "die for a losing side"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Defects with paperwork and terms.",
+        "chaotic": "Defects mid-battle.",
+        "good": "Switched because the first side was wrong.",
+        "evil": "Switched because the first side was losing."
+      },
+      "lines": {
+        "CG": "I was with them until I saw what they did to the village. Now I'm with you. Ask me again after the next village.",
+        "NE": "I was never really with them. I'm not really with you. Relax; it's the same thing."
+      },
+      "faces": null
+    },
+    {
+      "id": "warden",
+      "name": "The Warden",
+      "prior": {
+        "law": 0.6,
+        "good": 0.2
+      },
+      "requires": [
+        [
+          "role:domain_holder",
+          "seat:none"
+        ],
+        [
+          "order:member",
+          "warden:post"
+        ],
+        [
+          "role:champion"
+        ]
+      ],
+      "boosts": {},
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "It stays behind the line. That's all.",
+        "wants": "Nothing to change.",
+        "fears": "Relief that never comes.",
+        "tells": "Knows the thing they guard by name.",
+        "mechanic": "Presence fixed; claim `hold` on the line.",
+        "never": [
+          "leave the post"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "The watch rota is sacred.",
+        "chaotic": "The line is wherever they are standing.",
+        "good": "Lets refugees through, both ways.",
+        "evil": "The line keeps the thing in, and the wardens fed."
+      },
+      "lines": {
+        "LN": "Third night this month it's tested the ward. You want through? You're coming back with a message.",
+        "CE": "Nothing gets past me. That includes you, unless you've brought something it likes."
+      },
+      "faces": null
+    },
+    {
+      "id": "ancient",
+      "name": "The Ancient",
+      "prior": {
+        "law": 0.4,
+        "good": 0.0
+      },
+      "requires": [
+        [
+          "role:dread",
+          "dread:long_lived",
+          "dread:ages_2"
+        ],
+        [
+          "role:dread",
+          "dread:long_lived",
+          "fame:renowned"
+        ]
+      ],
+      "boosts": {
+        "dread:ages_2": 2.0
+      },
+      "drift": null,
+      "intensity": null,
+      "core": {
+        "belief": "Cities are weather.",
+        "wants": "Its long thought, undisturbed.",
+        "fears": "Nothing mortal; only the ley collapsing.",
+        "tells": "Remembers the ruin as a living city.",
+        "mechanic": "Claims are `hold` on its own lair; it bargains, it does not give quests.",
+        "never": [
+          "hurry"
+        ]
+      },
+      "pole_notes": {
+        "lawful": "Honours every bargain across centuries.",
+        "chaotic": "Makes bargains it may forget.",
+        "good": "Shelters what shelters under it.",
+        "evil": "Eats the impatient."
+      },
+      "lines": {
+        "LN": "Your grandmother's grandmother asked the same. I gave her the same answer. Wait.",
+        "CE": "Your grandmother's grandmother asked the same. She was delicious."
+      },
+      "faces": null
+    }
+  ]
+}

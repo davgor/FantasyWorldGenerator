@@ -1,0 +1,165 @@
+{
+  "schema": "fantasy-world-generator.hero-names",
+  "revision": 6,
+  "notes": "Syllable tables per parent race; epithets per role with {lost} {home} {victor} {defeated} {city} {species} {school} {School} {site} placeholders filled from the person's own record; cover roles a public face may wear. The race syllable tables were removed at revision 5: given names come from the heritage genome keyed by civilization id, and the last reader of the parent-race tables (npc_roster) now calls the genome too. Epithets and cover roles stay - they are English on purpose, because they are what a player reads. Revision 6: the two epithets that name a school inside a title use {School}, which fills capitalised. A school name is wanted lowercase mid-sentence and capitalised in a title, so the choice belongs in the template and the casing at substitution.",
+  "epithets": {
+    "pretender": [
+      "the Dispossessed",
+      "of {lost}",
+      "Heir of {lost}",
+      "the Unseated",
+      "Last of {lost}",
+      "the Unforgetting",
+      "of the Broken Gate"
+    ],
+    "warlord": [
+      "the Victor of {defeated}",
+      "{defeated}sbane",
+      "Ironhand",
+      "the Unyielding",
+      "Who Took {defeated}",
+      "the Wall of {victor}",
+      "the Unbowed"
+    ],
+    "magister": [
+      "the Unburnt",
+      "Last Master of {lost}",
+      "of the Ashen College",
+      "the Quiet Hand",
+      "of {home}",
+      "the Ledger-Keeper"
+    ],
+    "domain_holder": [
+      "Warden of {lost}",
+      "Keeper of the {School} Stone",
+      "the Sleepless",
+      "Who Stayed",
+      "of the {School} Line"
+    ],
+    "legend": [
+      "of Blessed Memory",
+      "the Remembered"
+    ],
+    "dread": [
+      "the Devourer of {city}",
+      "Who Ate {city}",
+      "the Scourge of {city}",
+      "the Silence over {city}",
+      "{city}'s Doom",
+      "the Old Hunger"
+    ],
+    "sovereign": [
+      "of {home}",
+      "the Crowned",
+      "First of the Line",
+      "the Sitting",
+      "Who Holds {home}"
+    ],
+    "council": [
+      "{seat} of {home}",
+      "the {seat}",
+      "of the {home} Bench",
+      "Who Keeps the Ledger of {home}"
+    ],
+    "champion": [
+      "the Shield of {home}",
+      "Who Held {home}",
+      "Wyrmward",
+      "of the Order",
+      "the Line-Holder",
+      "Who Failed {lost}"
+    ],
+    "prophet": [
+      "the Voice",
+      "of the Schism",
+      "the Awakened",
+      "Who Heard"
+    ],
+    "heresiarch": [
+      "the Heresiarch",
+      "of the Broken Creed",
+      "Who Turned",
+      "the Unforgiven"
+    ],
+    "exile": [
+      "the Banished",
+      "of the Long Road",
+      "the Cast-Out",
+      "Who Would Not Kneel"
+    ],
+    "founder": [
+      "the Far-Walker",
+      "First Stone of {home}",
+      "the Wayfinder",
+      "Who Crossed"
+    ],
+    "reeve": [
+      "Reeve of the {site}",
+      "of the {site}",
+      "Who Speaks for the {site}",
+      "the Reeve"
+    ],
+    "castellan": [
+      "Castellan of the {site}",
+      "Who Holds the {site}",
+      "of the Wall",
+      "the Castellan"
+    ],
+    "harbourmaster": [
+      "Harbourmaster of the {site}",
+      "of the Quay",
+      "Who Keeps the {site}",
+      "the Harbourmaster"
+    ],
+    "keeper": [
+      "Keeper of the {site}",
+      "Who Tends the {site}",
+      "of the Altar",
+      "the Keeper"
+    ]
+  },
+  "cover_roles": {
+    "magister": [
+      "healer",
+      "scribe",
+      "pilgrim",
+      "midwife",
+      "herbalist"
+    ],
+    "domain_holder": [
+      "hermit",
+      "charcoal burner",
+      "shepherd"
+    ],
+    "pretender": [
+      "merchant",
+      "courier",
+      "minstrel"
+    ],
+    "warlord": [
+      "sellsword",
+      "caravan guard"
+    ],
+    "default": [
+      "traveller"
+    ],
+    "champion": [
+      "sellsword",
+      "drover"
+    ],
+    "council": [
+      "clerk",
+      "factor"
+    ],
+    "sovereign": [
+      "pilgrim"
+    ],
+    "prophet": [
+      "beggar"
+    ],
+    "heresiarch": [
+      "scribe",
+      "pilgrim"
+    ]
+  }
+}

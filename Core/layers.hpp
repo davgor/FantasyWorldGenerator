@@ -20,6 +20,8 @@ struct Layers {
     Grid ley[8],instability[8];
     Grid magic_density,magic_hazard,magic_growth,magic_opposition,dominant_magic;
     Grid ley_holy,ley_primordial;
+    // How far each cell's magic sways with the moon (terrain_astrology.lunar_sensitivity).
+    Grid lunar_sensitivity;
     // Ecology: coastal, marine, cold and mineral proxies, plus one field per region.
     Grid metal_richness,coastal_exposure,harbor_suitability,fishing_productivity;
     Grid reef,lagoon,estuary,sheltered_bay,rocky_coast,kelp,fjord,open_ocean,maritime;

@@ -1,0 +1,360 @@
+{
+  "schema": "fantasy-world-generator.npc-roster-fixture",
+  "fixture_version": 3,
+  "notes": "A hand-built world (two cities, one of them unbuildable, one hamlet, one fortress, a three-person cast including a legend and a castellan posted outside any planned site) and the roster it must yield under the recorded policy revisions. Names are deliberately NOT pinned: the heritage language genome replaces the interim name generator, and a name in a fixture is a tripwire for a subsystem this package does not own. Regenerate with Sim/tests/test_npc_roster.world() when a policy revision changes, and bump fixture_version.",
+  "policy_revision": {
+    "posts": 1,
+    "names": 2
+  },
+  "summary": {
+    "total": 27,
+    "alive": 26,
+    "dead": 1,
+    "important": 8,
+    "important_fraction": 0.2963,
+    "sites": 4,
+    "heroes_linked": 3,
+    "unresolved_parent_race": 0,
+    "unanchored_sites": 0,
+    "roster_mismatches": 0,
+    "duplicate_site_keys": 0,
+    "important_capped_out": 1,
+    "cast_outside_a_planned_site": 1,
+    "cast_located_by_presence": 1,
+    "cast_presence_unresolved": 0
+  },
+  "sites": [
+    {
+      "uid": "fortress-node-512",
+      "kind": "fortress",
+      "name": "the fortress above Bracken",
+      "civilization_id": "human_heartland",
+      "parent_race_id": "human",
+      "city_class": null,
+      "plan_id": "fortress-0",
+      "node": 512,
+      "plan_status": "complete",
+      "posts": 8
+    },
+    {
+      "uid": "hamlet-node-301",
+      "kind": "hamlet",
+      "name": "the farmstead below Bracken",
+      "civilization_id": "human_heartland",
+      "parent_race_id": "human",
+      "city_class": null,
+      "plan_id": "coastal-0-0",
+      "node": 301,
+      "plan_status": "complete",
+      "posts": 4
+    },
+    {
+      "uid": "surface-city-0-40-human_heartland",
+      "kind": "city",
+      "name": "Bracken City (Age 1)",
+      "civilization_id": "human_heartland",
+      "parent_race_id": "human",
+      "city_class": "medium",
+      "plan_id": "surface-city-0-40-human_heartland",
+      "node": 40,
+      "plan_status": "complete",
+      "posts": 12
+    },
+    {
+      "uid": "surface-city-0-77-dwarf",
+      "kind": "city",
+      "name": "Umber City",
+      "civilization_id": "dwarf",
+      "parent_race_id": "dwarf",
+      "city_class": "small",
+      "plan_id": "surface-city-0-77-dwarf",
+      "node": 77,
+      "plan_status": "unbuildable",
+      "posts": 0
+    }
+  ],
+  "people": [
+    {
+      "uid": "npc-fortress-node-512-keep_tower-0",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "commander",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": true
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-1",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "commander",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-2",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-3",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-4",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-5",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-6",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-fortress-node-512-keep_tower-7",
+      "site_uid": "fortress-node-512",
+      "site_kind": "fortress",
+      "post": "keep_guard",
+      "building_id": "building.keep_tower",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-hamlet-node-301-hamlet_farmyard-0",
+      "site_uid": "hamlet-node-301",
+      "site_kind": "hamlet",
+      "post": "farmer",
+      "building_id": "building.hamlet_farmyard",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-hamlet-node-301-hamlet_farmyard-1",
+      "site_uid": "hamlet-node-301",
+      "site_kind": "hamlet",
+      "post": "farmer",
+      "building_id": "building.hamlet_farmyard",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-hamlet-node-301-hamlet_farmyard-2",
+      "site_uid": "hamlet-node-301",
+      "site_kind": "hamlet",
+      "post": "farmer",
+      "building_id": "building.hamlet_farmyard",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-hamlet-node-301-hamlet_smith_shed-0",
+      "site_uid": "hamlet-node-301",
+      "site_kind": "hamlet",
+      "post": "smith",
+      "building_id": "building.hamlet_smith_shed",
+      "plot_id": "plot-1",
+      "status": "alive",
+      "important": true
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-0",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_officer",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": true
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-1",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_officer",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-2",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-3",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-4",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-5",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-6",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guardhouse-7",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "watch_guard",
+      "building_id": "building.guardhouse",
+      "plot_id": "plot-3",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guildhall-0",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "cook",
+      "building_id": "building.guildhall",
+      "plot_id": "plot-1",
+      "status": "alive",
+      "important": true
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-guildhall-1",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "bartender",
+      "building_id": "building.guildhall",
+      "plot_id": "plot-1",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-smithy-0",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "smith",
+      "building_id": "building.smithy",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": true
+    },
+    {
+      "uid": "npc-surface-city-0-40-human_heartland-smithy-1",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "apprentice",
+      "building_id": "building.smithy",
+      "plot_id": "plot-0",
+      "status": "alive",
+      "important": false
+    },
+    {
+      "uid": "npc-hero-castellan-fortress-0",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "castellan",
+      "building_id": null,
+      "plot_id": "",
+      "status": "alive",
+      "important": true,
+      "hero_uid": "hero-castellan-fortress-0",
+      "presence_kind": "fortress",
+      "presence_uid": "fortress-0",
+      "presence_node": 512,
+      "presence_x": 3,
+      "presence_z": 3
+    },
+    {
+      "uid": "npc-hero-sovereign-surface-city-0-40-human_heartland",
+      "site_uid": "surface-city-0-40-human_heartland",
+      "site_kind": "city",
+      "post": "sovereign",
+      "building_id": null,
+      "plot_id": "",
+      "status": "alive",
+      "important": true,
+      "hero_uid": "hero-sovereign-surface-city-0-40-human_heartland",
+      "presence_kind": "city",
+      "presence_uid": "surface-city-0-40-human_heartland"
+    },
+    {
+      "uid": "npc-hero-pretender-surface-city-9-99-dwarf",
+      "site_uid": null,
+      "site_kind": null,
+      "post": "pretender",
+      "building_id": null,
+      "plot_id": "",
+      "status": "dead",
+      "important": true,
+      "hero_uid": "hero-pretender-surface-city-9-99-dwarf",
+      "presence_kind": null,
+      "presence_uid": null
+    }
+  ]
+}

@@ -232,9 +232,9 @@ struct FFantasyCityMarker
 
 /** One building a city plan reserved a node for.
 
-    The generator plans which building stands on which grid node, not where its walls
-    are: plot geometry belongs to the city-planner stage, which is not ported. A
-    consumer should treat this as a reserved slot with an identity, not a footprint.
+    This is the district plan's reserved slot: which building stands on which grid
+    node, with no footprint of its own. The drawn building, with its real size and
+    heading, is FFantasySceneBuilding; a consumer that wants geometry wants that one.
 */
 USTRUCT(BlueprintType)
 struct FFantasyPlannedBuilding

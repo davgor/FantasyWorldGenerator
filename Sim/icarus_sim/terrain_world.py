@@ -6,6 +6,13 @@ from functools import lru_cache
 from .terrain_profiles import civilization_ids, profile_options
 
 NETWORKS = ('weave', 'umbral', 'infernal', 'radiant', 'fire', 'water', 'earth', 'air')
+# The hidden schools carry the same six options, because generate_networks reads them for
+# every school in the taxonomy, but their occurrence is locked at zero: min == max == 0
+# makes validate_options reject any nonzero override, so no request can raise one at
+# generation. Only the corruption API puts a node in these. These names must stay in step
+# with HIDDEN_SCHOOLS in terrain_leyline_history; a mismatch is a KeyError at generation,
+# and test_terrain_recipes pins the two together.
+HIDDEN_NETWORKS = ('blood', 'void', 'rot', 'eldritch')
 ZONES = ('demonic', 'draconic', 'pirate', 'steampunk', 'witch_huts', 'red_sands',
          'dead_sea', 'starlight_lakes', 'haunted_sands', 'enchanted', 'fungal', 'crystal', 'haunted_marsh')
 
@@ -57,14 +64,38 @@ OPTIONS = {
     'salinity': spec(.65, 0., 1., 'Coasts', 'Arid lake salinization strength'),
     'seasonality': spec(1., 0., 2., 'Cold', 'Latitude-dependent temperature seasonality'),
     'ice_accumulation': spec(.5, 0., 1., 'Cold', 'Moisture required for persistent land ice'),
+    'lunar_influence': spec(.5, 0., 1., 'Moon', 'How strongly lunar surges sway the age lottery; zero leaves the moon a spectator'),
+    'war_survival': spec(0., 0., 1., 'Communities', 'Chance a defeated city survives a war as its victor\'s vassal instead of a ruin; zero keeps every loser a ruin'),
+    'moon_variation': spec(0, 0, 4294967295, 'Moon', 'Independent moon seed variation', 'seed'),
+    'moon_synodic_days': spec(0, 0, 34, 'Moon', 'Phase cycle in days; zero lets the seed choose 26..34', 'days'),
+    'moon_spin_days': spec(0, 0, 63, 'Moon', 'Spin cycle in days (which meridian faces the world); zero lets the seed choose 15..63', 'days'),
+    'moon_nod_days': spec(0, 0, 37, 'Moon', 'Nod cycle in days (which hemisphere leans in); zero lets the seed choose 17..37', 'days'),
+    'moon_tilt_degrees': spec(0., 0., 35., 'Moon', 'Maximum lean of the moon toward the world; zero lets the seed choose 10..35', 'degrees'),
+    # Super villains. Zero raises none, which is the default, so an untouched world is
+    # exactly the world it was before they existed.
+    'villain_rise': spec(0., 0., 1., 'Communities', "Share of a region's concentrated turmoil that becomes villain tier each age; zero raises none"),
+    'villain_hold': spec(.7, 0., 1., 'Communities', 'Tier a seated villain falls below to lose the world; under the rise band, so a reign is long once established'),
+    'villain_density': spec(3., 1., 12., 'Communities', 'Cultural regions per villain permitted at or above the band; the rest stall just beneath it', 'regions'),
+    # Nomads. Bands are placed per unit area of habitable land, so the count follows the
+    # ground rather than the raster: the same world holds the same bands at any grid size.
+    'nomad_occurrence': spec(1., 0., 3., 'Nomads', 'Overall multiplier on travelling bands; zero leaves the world settled'),
+    'nomad_density': spec(18., 0., 200., 'Nomads', 'Candidate bands per thousand square kilometres of habitable land', 'bands/1000km2'),
+    'nomad_variation': spec(0, 0, 4294967295, 'Nomads', 'Independent nomad seed variation', 'seed'),
+    'beast_movement_share': spec(1., 0., 1., 'Nomads', 'Share of eligible creature sites that become travelling groups; wildlife is dense enough that routing every one is mostly volume'),
 }
-for name in NETWORKS:
+for name in NETWORKS + HIDDEN_NETWORKS:
+    hidden = name in HIDDEN_NETWORKS
     for suffix, definition in {
-        'occurrence': spec(1., 0., 1., name.title(), 'Probability this magical network manifests'),
+        'occurrence': spec(0., 0., 0., name.title(), 'Locked at zero: a hidden school cannot manifest during generation')
+                      if hidden else
+                      spec(1., 0., 1., name.title(), 'Probability this magical network manifests'),
         'nodes': spec(8, 3, 24, name.title(), 'Independent ley node count', 'nodes'),
         'width': spec(110., 10., 2000., name.title(), 'Gaussian influence reach', 'm'),
-        'strength': spec(.45 if name in ('umbral','infernal') else .7, 0., 2., name.title(), 'Magical influence amplitude'),
-        'instability': spec(.65 if name == 'infernal' else .2, 0., 1., name.title(), 'Instability independent of density'),
+        # A hidden school saturates above the known eight on purpose. At equal strength a
+        # corrupted cell cannot clear dominant_school's 0.08 margin over a strong radiant
+        # or earth field, so the ground would never mutate and corruption would be invisible.
+        'strength': spec(1.15 if hidden else .45 if name in ('umbral','infernal') else .7, 0., 2., name.title(), 'Magical influence amplitude'),
+        'instability': spec(.8 if hidden else .65 if name == 'infernal' else .2, 0., 1., name.title(), 'Instability independent of density'),
         'variation': spec(0, 0, 4294967295, name.title(), 'Independent network seed variation', 'seed'),
     }.items():
         OPTIONS[name+'_'+suffix] = definition
@@ -109,6 +140,20 @@ def default_config(version=3):
                   magic_instability=.45, belt_width=.08, settlement_count=24)
 
 
+# Physical distance around the world for each world_size preset. These replace the old
+# design-radius multipliers (1x/2x/3x of 10000), which produced 11/22/33 km worlds -- too
+# small to hold a capital, let alone the multi-layer cities, and small enough that 142 m
+# of relief read as a spike field rather than terrain.
+WORLD_SIZE_CIRCUMFERENCE_KM={'small':200.,'medium':400.,'large':600.}
+# Relief budget and collision gain behind the presets. Relief stays constant across the
+# three sizes rather than scaling with circumference: at 200 km, 4 km peaks are already a
+# hundred times Earth's relief-to-circumference ratio, and scaling that linearly would put
+# 12 km walls on the large world. A larger world therefore means more land, not taller
+# mountains. Ground-level drama is the detail sampler's job, not the relief budget's.
+DEFAULT_RELIEF_M=1667.
+DEFAULT_OROGENY=10.
+
+
 def registry(version=3):
     cfg=asdict(default_config(version))
     inactive={'world_recipe','world_options','auto_parameters','ley_nodes','ley_width','magic_instability',
@@ -120,15 +165,23 @@ def registry(version=3):
                         'population_profile':['mixed',*civilization_ids()]}.items():
         result[key]['choices']=choices
     result['population_profile']['choice_labels']={p['id']:p['name'] for p in profile_options()}
-    bounds={'seed':(0,4294967295),'size':(3,257),'phase':(1,16 if version==3 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
+    # Authored world shape. These are not Config fields: they are consumed by the request
+    # builder, which derives globe_radius, tectonic_relief, amplitude and wavelength from
+    # them. Zero keeps the world_size preset, so every existing request is unaffected.
+    result['circumference_km']={'default':0.,'group':'World','type':'number','units':'km',
+        'description':'Physical distance around the world; zero keeps the world_size preset'}
+    result['relief_m']={'default':0.,'group':'World','type':'number','units':'m',
+        'description':'Physical relief budget from ocean floor to continental platform; zero keeps the tectonic_relief default'}
+    bounds={'seed':(0,4294967295),'size':(3,1025),'phase':(1,16 if version==3 else 9),'tectonics':(1,1),'magic_enabled':(0,1),
+            'circumference_km':(0,100000),'relief_m':(0,1e6),
             'plate_count':(3,48),'layout_variation':(0,4294967295),'detail_variation':(0,4294967295),
             'crust_bias':(-1,1),'belt_width':(.01,.3),'mountain_detail':(0,1),'temperature_offset':(-40,40),
             'moisture_bias':(-1,1),'wind_bearing':(0,360),'rain_passes':(1,128),'rain_strength':(0,3),
             'erosion_passes':(0,40),'erosion_strength':(0,1),'ley_nodes':(3,24),'ley_width':(10,2000),
             'magic_instability':(0,1),'human_magic_limit':(0,1),'college_count':(0,12),
             'hamlets_per_core':(0,8),'fortress_count':(0,1024),'settlement_count':(0,24),
-            'support_reach':(100,10000),'culture_link_cost':(1,100000),'urban_food_demand':(0,10000),
-            'human_adaptation':(0,1),'settlement_spacing':(10,10000),'stubbornness':(0,1),
+            'support_reach':(100,100000),'culture_link_cost':(1,100000),'urban_food_demand':(0,10000),
+            'human_adaptation':(0,1),'settlement_spacing':(10,100000),'stubbornness':(0,1),
             'road_max_grade':(.01,1),'bridge_cost':(0,10000),'river_threshold_km2':(.001,100),
             'world_scale':(.001,1000),'globe_radius':(.01,1e7),'extent':(.01,1e7),
             'amplitude':(0,1e7),'wavelength':(.01,1e7),'depth':(0,1e7),'width':(.01,1e7),
@@ -174,7 +227,32 @@ def generate_request(body):
         if key in option_defs:extra[key]=value
         else:raw[key]=value
     raw['seed']=seed
-    if 'globe_radius' not in overrides:raw['globe_radius']=10000*{'small':1,'medium':2,'large':3}.get(raw['world_size'],1)
+    # Authored world shape. Physical circumference and relief in, design-space radius and
+    # relief out, including the wavelength that Core/genesis.cpp:148-167 never derives --
+    # leave it fixed and a world past about 150 km resolves no surface noise at all.
+    # An explicit globe_radius still bypasses all of this, and an explicit override of any
+    # derived key wins, so a width can be authored and one term hand-tuned.
+    circumference=raw.pop('circumference_km',0.)*1000.;relief=raw.pop('relief_m',0.)
+    if circumference<=0 and 'globe_radius' not in overrides:
+        circumference=WORLD_SIZE_CIRCUMFERENCE_KM.get(raw['world_size'],WORLD_SIZE_CIRCUMFERENCE_KM['small'])*1000.
+    if circumference>0:
+        from .terrain_scale import shape_overrides
+        derived=shape_overrides(circumference,relief or DEFAULT_RELIEF_M,
+                                raw['orogeny'] if 'orogeny' in overrides else DEFAULT_OROGENY,
+                                raw['plate_count'],raw['world_scale'])
+        for key in ('globe_radius','tectonic_relief','amplitude','wavelength','orogeny'):
+            if key not in overrides:raw[key]=derived[key]
+        # Distances that decide how far a city reaches are authored against the reference
+        # world and have to grow with it. derive_population would have scaled them, but it
+        # is unreachable on recipe 3 (auto_parameters is forbidden there), so they are
+        # derived here instead. Left absolute, the rural layer disappears completely.
+        from .terrain_scale import reach_scale
+        factor=reach_scale(circumference)
+        for key,ceiling in (('settlement_spacing',100000.),('support_reach',100000.),
+                            ('culture_link_cost',100000.)):
+            if key not in overrides:raw[key]=min(ceiling,raw[key]*factor)
+    elif relief>0:
+        raise ValueError('relief_m needs circumference_km; a relief budget alone cannot size a world')
     # Explicit requests for stronger regions bias prerequisites. Direct prerequisite
     # overrides always win, and the original requested overrides remain auditable.
     biases={}
@@ -190,7 +268,10 @@ def generate_request(body):
             else:raw[target]=value
             biases[target]={'value':value,'source':zone+' request biases suitable conditions; placement remains conditional'}
     if raw['shape']!='globe' or raw['tectonics']!=1:raise ValueError('World recipe requires a tectonic globe')
-    if type(raw['size']) is not int or raw['size']>257:raise ValueError('Interactive grid maximum is 257')
+    # 257 stays the interactive ceiling in practice; larger grids are for offline worlds
+    # and cost roughly the square of the size. Age advancement still refuses above 257
+    # (terrain_history.validate_age_world), so a 513 world generates but cannot be aged.
+    if type(raw['size']) is not int or raw['size']>1025:raise ValueError('Grid maximum is 1025')
     raw['world_options']=json.dumps(extra,sort_keys=True)
     cfg=Config(**raw)
     result=generate(cfg)

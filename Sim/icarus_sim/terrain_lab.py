@@ -89,10 +89,10 @@ class Config:
         for key,high in (('hamlets_per_core',8),('fortress_count',1024)):
             if type(getattr(self,key)) is not int or not 0<=getattr(self,key)<=high:
                 raise ValueError(f'{key} must be an integer 0..{high}')
-        for key,low,high in (('support_reach',100,10000),('culture_link_cost',1,100000),('urban_food_demand',0,10000),('human_adaptation',0,1)):
+        for key,low,high in (('support_reach',100,100000),('culture_link_cost',1,100000),('urban_food_demand',0,10000),('human_adaptation',0,1)):
             value=getattr(self,key)
             if not math.isfinite(value) or not low<=value<=high:raise ValueError(f'{key} must be {low}..{high}')
-        for key,low,high in (('wind_bearing',0,360),('rain_strength',0,3),('settlement_spacing',10,10000),
+        for key,low,high in (('wind_bearing',0,360),('rain_strength',0,3),('settlement_spacing',10,100000),
                              ('stubbornness',0,1),('road_max_grade',.01,1),('bridge_cost',0,10000)):
             value=getattr(self,key)
             if not math.isfinite(value) or not low<=value<=high:raise ValueError(f'{key} must be {low}..{high}')

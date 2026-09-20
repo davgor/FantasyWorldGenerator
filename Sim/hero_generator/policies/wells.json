@@ -1,0 +1,130 @@
+{
+  "schema": "fantasy-world-generator.hero-wells-policy",
+  "revision": 5,
+  "notes": "Precipitation chances, council seats by city class, magic tables, placement and cross-cutting feature thresholds. Countryside, ports and shrines roll per site (reeve, castellan, harbourmaster, keeper, cult). Each candidate rolls once with child_seed(seed, 'hero-roll-' + uid); every roll is recorded in heroes.rolls. chance = min(cap, base + bonus), the bonus reading the event's own weight.",
+  "cap": 0.95,
+  "precipitation": {
+    "heir": {
+      "base": 0.4,
+      "per_city_class": {
+        "small": 0.0,
+        "medium": 0.2,
+        "capital": 0.4
+      }
+    },
+    "warlord": {
+      "base": 0.25,
+      "per_war_kind": {
+        "civil": 0.1,
+        "regional": 0.25,
+        "international": 0.4
+      },
+      "per_extra_war": 0.15,
+      "one_per_city": true
+    },
+    "dread": {
+      "base": 0.5,
+      "per_nest_tier": 0.08
+    },
+    "domain_holder": {
+      "base": 0.2,
+      "per_intensity": 0.12
+    },
+    "magister": {
+      "base": 0.75
+    },
+    "college_magister": {
+      "base": 0.6
+    },
+    "camp": {
+      "base": 0.3,
+      "per_city_class": {
+        "small": 0.0,
+        "medium": 0.1,
+        "capital": 0.2
+      }
+    },
+    "sovereign": {
+      "base": 0.9
+    },
+    "council": {
+      "base": 0.3,
+      "capital_bonus": 0.15
+    },
+    "diaspora": {
+      "base": 0.7
+    },
+    "champion": {
+      "base": 0.35,
+      "per_nest_tier": 0.1,
+      "reach_factor": 3.0
+    },
+    "reeve": {
+      "base": 0.25,
+      "starving_bonus": 0.25,
+      "threatened_bonus": 0.3,
+      "reach_factor": 1.5
+    },
+    "castellan": {
+      "base": 0.35,
+      "pressed_bonus": 0.3,
+      "per_defence": 0.05
+    },
+    "harbourmaster": {
+      "base": 0.3,
+      "per_route": 0.15,
+      "terminal_bonus": 0.2
+    },
+    "keeper": {
+      "base": 0.3
+    },
+    "cult": {
+      "base": 0.6
+    }
+  },
+  "seats": {
+    "capital": [
+      "magistrate",
+      "commander",
+      "chaplain",
+      "market_steward",
+      "mage"
+    ],
+    "medium": [
+      "magistrate",
+      "commander",
+      "market_steward"
+    ],
+    "small": [
+      "magistrate"
+    ]
+  },
+  "magic": {
+    "dark_schools": [
+      "umbral",
+      "infernal",
+      "weave"
+    ],
+    "opposites": {
+      "radiant": "umbral",
+      "umbral": "radiant",
+      "fire": "water",
+      "water": "fire",
+      "earth": "air",
+      "air": "earth",
+      "weave": "infernal",
+      "infernal": "weave"
+    },
+    "hook_intensity_delta": 0.5
+  },
+  "placement": {
+    "heir_leads_own_camp": true,
+    "magister_at_camp": [
+      "captive",
+      "hidden"
+    ]
+  },
+  "features": {
+    "tainted_threshold": 0.45
+  }
+}

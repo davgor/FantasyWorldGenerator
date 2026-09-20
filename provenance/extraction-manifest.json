@@ -44,7 +44,7 @@
       "source": "Sim/icarus_sim/terrain_area.py",
       "source_sha256": "f015b60eebfb0fc4d30f4cec7dc5bbb60595feb2b725c1b1f8721b05a94a341f",
       "destination": "Sim/icarus_sim/terrain_area.py",
-      "destination_sha256": "104aa13368f706cae63b0663534fec4333602edfba258356d4a93b6a20a4b453",
+      "destination_sha256": "e260d5c519518dbaf057aba50ac6654b69904351ed8db76accaf8b018230d495",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -54,6 +54,12 @@
           "destination_sha256": "104aa13368f706cae63b0663534fec4333602edfba258356d4a93b6a20a4b453",
           "decision": "docs/decisions/015-explicit-biome-states.md",
           "reason": "User-authorized clean-start biome contract: replace retired phenotypes with explicit natural and magical state rules, current-version tests, or synchronized production documentation."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "104aa13368f706cae63b0663534fec4333602edfba258356d4a93b6a20a4b453",
+          "destination_sha256": "e260d5c519518dbaf057aba50ac6654b69904351ed8db76accaf8b018230d495",
+          "reason": "Tolerate registry entries that are authored inputs rather than config fields, so the non-default override record skips keys the request builder consumes."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -285,7 +291,7 @@
       "source": "Sim/icarus_sim/terrain_lab.py",
       "source_sha256": "6f76b5d6953bde3291a706d2f1263044b81e9b167e1da7ed73681fc3ee46c34c",
       "destination": "Sim/icarus_sim/terrain_lab.py",
-      "destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
+      "destination_sha256": "daf2be9bbf311e231f9a6528f7dcefdec6ebb1f5afe56888702554a9d314ff36",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -326,6 +332,12 @@
           "destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "0b3ce4542afc4251f14b8e4efb8d200c86b7d83fb4984ed66c52321a7fb3c3c0",
+          "destination_sha256": "daf2be9bbf311e231f9a6528f7dcefdec6ebb1f5afe56888702554a9d314ff36",
+          "reason": "settlement_spacing and support_reach upper bounds raised to 100 km so reaches can scale with a 200-600 km world. At the old 10 km ceiling a derived city spacing could not be expressed and the rural catchment stayed smaller than one raster cell."
         }
       ]
     },
@@ -373,7 +385,7 @@
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
       "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
       "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
-      "destination_sha256": "a62f2a298d45a22021429625602ac9b6da978cd550fafc32fad99092c79f3320",
+      "destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -390,6 +402,20 @@
           "destination_sha256": "a62f2a298d45a22021429625602ac9b6da978cd550fafc32fad99092c79f3320",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Profile document version 2: 32 monsters re-tiered against the tier definitions (drakes are not dragons, fodder undead can hurt rather than kill, liches and the great sea monsters are campaign threats) and 257 species added, 141 monsters and 116 animals weighted to the harmless end, so the catalogue is a pyramid like the placement budget it is divided into. Every monster family now spans all five tiers. Placement moves for every seed because the tier budget is shared among whoever qualifies."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a62f2a298d45a22021429625602ac9b6da978cd550fafc32fad99092c79f3320",
+          "destination_sha256": "92fb62a711172a1f6408d9a2851307533f0aed4612b29b347d7f3fc0de4bfab8",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized hidden bestiary: the blood and void nest families and the eldritch-gated aberrants. Every entry requires a hidden school's potency, which is zero in any generated world, so none can be placed by generation."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "92fb62a711172a1f6408d9a2851307533f0aed4612b29b347d7f3fc0de4bfab8",
+          "destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Creature movement classes: every profile declares `movement` (nester | migratory | irruptive | follower | drifter), defaulting to nester so no existing creature changes behaviour, and seventeen creatures are added that only exist because movement does -- wandering dead with no grave to return to, irruptive swarms out of marginal ground, followers that derive their route from a host, migratory herds, and a barrow wight added deliberately as the stationary contrast. The undead split follows a rule rather than a tag: an undead with a grave nests at it, an undead without one wanders. Profiles 663 -> 680. Behavior reviewed is the movement field and the added rows; coverage is Sim/tests/test_creature_movement.py, which asserts structural placeability rather than observed placement. Documented in docs/nomads.md."
         }
       ],
       "modification": "Diverged from the pinned extraction; see revisions."
@@ -480,7 +506,7 @@
       "source": "Sim/icarus_sim/terrain_profiles.py",
       "source_sha256": "614b5ce9b2826c31f4c61c45d143ef2b9f8a5e04a8ba29abfdf306e72d4ca0c1",
       "destination": "Sim/icarus_sim/terrain_profiles.py",
-      "destination_sha256": "a147b600b869634a8264e807f95185abb599b1061327fd6e66adb1dcfff79a03",
+      "destination_sha256": "fc91fab93fdb1e9af7e376edb39b1605224a2dc233df07ab6a5883d43b694edb",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -512,6 +538,13 @@
           "destination_sha256": "a147b600b869634a8264e807f95185abb599b1061327fd6e66adb1dcfff79a03",
           "decision": "docs/civilizations.md",
           "reason": "Arctic specialization: independent crop climate, per-civilization founding minima, bounded winter fisheries and Frosthold Dwarves; algorithm13."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a147b600b869634a8264e807f95185abb599b1061327fd6e66adb1dcfff79a03",
+          "destination_sha256": "fc91fab93fdb1e9af7e376edb39b1605224a2dc233df07ab6a5883d43b694edb",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized twelve-school taxonomy: ground held by a hidden school is uninhabitable to every people, as a rule rather than 52 authored opinions per profile, because the fallback would otherwise read corrupted ground as its clean natural core."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -520,9 +553,18 @@
       "source": "Sim/icarus_sim/terrain_recipes.py",
       "source_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
       "destination": "Sim/icarus_sim/terrain_recipes.py",
-      "destination_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
-      "status": "exact",
-      "reason": "Reference implementation, regression fixture, or inherited capability requirement"
+      "destination_sha256": "58688d440c1e6f2ea13469b417898bcca03e819b202148667a11978c1de14fef",
+      "status": "modified",
+      "reason": "Reference implementation, regression fixture, or inherited capability requirement",
+      "revisions": [
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "498b3caa0a83a624fc1ef834aea9495bb4bbbad23a2f597a5eca8740117ef710",
+          "destination_sha256": "58688d440c1e6f2ea13469b417898bcca03e819b202148667a11978c1de14fef",
+          "reason": "derive_population settlement spacing ceiling raised from 1500 m to the 10000 m settlement_spacing config bound. At 1500 m every city on a world wider than about 25 km was clamped into a single region; the formula asks for 3.2 km at a 200 km circumference."
+        }
+      ],
+      "modification": "World shape is authored as circumference and relief instead of a design radius; original extraction source hash retained."
     },
     {
       "source": "Sim/icarus_sim/terrain_seasons.py",
@@ -553,7 +595,7 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "e44d4ae9089031a4c26f205d36c5e956effaa5df95bb7b1c84c45ff4fc67eb8c",
+      "destination_sha256": "2277f19243d568bc5a55fb2e9ddf5c0c4b5449a39b20f944744f3c240358c2f9",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -629,6 +671,24 @@
           "destination_sha256": "e44d4ae9089031a4c26f205d36c5e956effaa5df95bb7b1c84c45ff4fc67eb8c",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "e44d4ae9089031a4c26f205d36c5e956effaa5df95bb7b1c84c45ff4fc67eb8c",
+          "destination_sha256": "9d888818ee103ee474b411bacf2a8552bb3bb78e0afa42387c7016f8f53dbd6d",
+          "reason": "Bound the city packing ceiling by raster resolution as well as habitable area. Spacing alone bounded density while the world was 11 km across and a cell was 87 m; on a 200 km world a size-17 grid has 12.5 km cells against an 8 km spacing, so the area ceiling admitted about 63 cities onto 289 nodes, each planning a full crop. The binding spacing is now whichever of the two is coarser, which changes nothing at rasters fine enough for the spacing to dominate."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "9d888818ee103ee474b411bacf2a8552bb3bb78e0afa42387c7016f8f53dbd6d",
+          "destination_sha256": "2837f4147aa29d5805463397aace6f99243c1742ab2dc07f4271e16042b6d6e0",
+          "reason": "Honour an explicitly lowered settlement_count even on the inferred path. The parameter is published as \"Maximum surface cities\" but the inferred branch discarded it, so a request for two cities returned ten; the recipe default still means \"no ceiling but the ground\"."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "2837f4147aa29d5805463397aace6f99243c1742ab2dc07f4271e16042b6d6e0",
+          "destination_sha256": "2277f19243d568bc5a55fb2e9ddf5c0c4b5449a39b20f944744f3c240358c2f9",
+          "reason": "Name settlements from each people's own language instead of a 24-word English list indexed by founding order. The index was the defect: names[k%24] renamed every later city when one was founded earlier, and could not survive an age advance without the downstream copy-back. Naming now keys on the node and its coordinates, runs in node order so collision redraws are canonical, and returns a gloss beside each name. The native mirror in Core/scene.cpp still holds the old list and is deferred to the native port phase, so city names differ between the reference and the port until then."
         }
       ]
     },
@@ -709,7 +769,7 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "b4dea982bdda6c815cfe808b0404180ec7e32871945160b64723488dc2320dd7",
+      "destination_sha256": "bf9392fb5254b78afd0c9868ac51bebb9608a20326a4c182a530d6852e1fa888",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -750,6 +810,65 @@
           "destination_sha256": "b4dea982bdda6c815cfe808b0404180ec7e32871945160b64723488dc2320dd7",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "b4dea982bdda6c815cfe808b0404180ec7e32871945160b64723488dc2320dd7",
+          "destination_sha256": "52172ee42d64e5e81eaae2b2ea5783d6b65d8189a7e517eed0e3b8a88741df8f",
+          "reason": "User-requested lunar cycle: add the lunar_influence world option (default .5) that scales how far lunar surges sway the age lottery. Astrology contract documented in docs/astrology.md."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "52172ee42d64e5e81eaae2b2ea5783d6b65d8189a7e517eed0e3b8a88741df8f",
+          "destination_sha256": "75021c079fa95ab5f4c6642fd5bcd61a052c59cab98a5fc85e840f7446e8cbff",
+          "reason": "Authored world shape: circumference_km and relief_m registry entries consumed by the request builder to derive globe_radius, tectonic_relief, amplitude, wavelength and orogeny (including the wavelength Core/genesis.cpp world_shape_overrides never derives, without which a world past ~150 km resolves no surface noise). world_size presets move from 11/22/33 km to 200/400/600 km circumference. Grid ceiling raised 257 to 1025."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "75021c079fa95ab5f4c6642fd5bcd61a052c59cab98a5fc85e840f7446e8cbff",
+          "destination_sha256": "a5464a18b2384f737897b3c888a0fc501098ce442820939913c6dd6f3cc8172a",
+          "reason": "Derive settlement_spacing, support_reach and culture_link_cost from circumference in the request builder. derive_population would have scaled them but is unreachable on recipe 3 (auto_parameters is forbidden there), so a 200 km world kept the 450 m / 1000 m reference defaults: 222 cities, a support reach of a sixth of one cell, and zero hamlets and zero fortresses."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a5464a18b2384f737897b3c888a0fc501098ce442820939913c6dd6f3cc8172a",
+          "destination_sha256": "8e84f8f5e1bffa86816823166c62ea93b80121ef7a676879f66266b551e5b19a",
+          "reason": "User-requested moon controls: moon_variation and explicit moon cycle/tilt options (zero means seeded) so the lunar cycle is controllable from the generation API. Documented in docs/astrology.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "8e84f8f5e1bffa86816823166c62ea93b80121ef7a676879f66266b551e5b19a",
+          "destination_sha256": "dd408901a6988fc27be0fab8af27dd072d794b099296f60a34c8aaaf6559593b",
+          "decision": "docs/story-web.md",
+          "reason": "World option `war_survival` (default 0, identity preserved): the chance a defeated city survives a war as a vassal. Documented in docs/terrain-world-layers.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "dd408901a6988fc27be0fab8af27dd072d794b099296f60a34c8aaaf6559593b",
+          "destination_sha256": "4b30ce11d3606a65adc011eed5cdb9993fb94d2fb11b1b784e88e0ffc0a3779f",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized twelve-school taxonomy: declare the four hidden schools as options so generate_networks can read them, with occurrence locked at min == max == 0 so no request can raise one during generation."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "4b30ce11d3606a65adc011eed5cdb9993fb94d2fb11b1b784e88e0ffc0a3779f",
+          "destination_sha256": "bdc3413718ce78541b861db8b8b83ef0267755d678a2a365a5a160c05616ab0d",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized super villains: villain_rise, villain_hold and villain_density, all defaulting to a world that raises none, so an untouched world carries no villains block at all."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "bdc3413718ce78541b861db8b8b83ef0267755d678a2a365a5a160c05616ab0d",
+          "destination_sha256": "1885a7c3d10dc5aa53b83857939edae9d18ea6d919c371177aaeaad0f47a7bc3",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized corruption API: hidden schools saturate above the known eight (strength 1.15). At equal strength a corrupted cell cannot clear dominant_school's 0.08 margin over a strong radiant or earth field, so corrupted ground would never mutate and corruption would be invisible."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "1885a7c3d10dc5aa53b83857939edae9d18ea6d919c371177aaeaad0f47a7bc3",
+          "destination_sha256": "bf9392fb5254b78afd0c9868ac51bebb9608a20326a4c182a530d6852e1fa888",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Nomads: four registry options -- nomad_occurrence, nomad_density (bands per thousand square kilometres of habitable land, so the count follows the ground rather than the raster), nomad_variation for independent reroll, and beast_movement_share to thin the travelling creature groups. No per-classification multipliers: the six gates already decide what a start point can raise, and a knob nothing reads is worse than no knob. Behavior reviewed is the option declarations; coverage is Sim/tests/test_terrain_nomads.py and docs/nomads.md."
         }
       ]
     },
@@ -912,7 +1031,7 @@
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
+      "destination_sha256": "e2cb31f7f32627e7446ec0eae9a08b07ba94075df8c0d2d31490debf18afed0f",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -936,6 +1055,12 @@
           "destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Added the catalogue-shape test: both books widest at tier one, tiers one and two outnumbering four and five, and every monster family spanning all five tiers."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "b453c8f405a497565da8fa2577f90e367e3f1934e933d839cdade033eb82e389",
+          "destination_sha256": "e2cb31f7f32627e7446ec0eae9a08b07ba94075df8c0d2d31490debf18afed0f",
+          "reason": "Derive the wide comparison world from the current default (sqrt(3) times the circumference for three times the surface) instead of a hardcoded 20 km. The fixed width silently became narrower than the default when the world grew to 200 km, inverting the population-scales-with-ground comparison."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -978,7 +1103,7 @@
       "source": "Sim/tests/test_terrain_recipes.py",
       "source_sha256": "aaf96bc61e0b980a78613bfd9d009935d0b1eb4baf7947e032ad717288e494f2",
       "destination": "Sim/tests/test_terrain_recipes.py",
-      "destination_sha256": "2be866decebb42efc712635778c6b21d089a9fbd40b83a93bec5287d8628b6c0",
+      "destination_sha256": "94b849a86ecf8035df48529878c31dc09b8b62ff07c5d8f5968a33ab17426d0b",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -996,6 +1121,13 @@
           "destination_sha256": "2be866decebb42efc712635778c6b21d089a9fbd40b83a93bec5287d8628b6c0",
           "decision": "docs/decisions/016-standalone-civilizations.md",
           "reason": "User-authorized standalone civilization replacement and suitability-ranked city classes, associated tests, selectors, UI and documentation. Existing original source hashes retained; baseline Git hash records any pre-existing divergence."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "2be866decebb42efc712635778c6b21d089a9fbd40b83a93bec5287d8628b6c0",
+          "destination_sha256": "94b849a86ecf8035df48529878c31dc09b8b62ff07c5d8f5968a33ab17426d0b",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized twelve-school taxonomy: pin the option-table names against the school taxonomy, since a drift between them is a KeyError at generation, and pin that a generated world raises no hidden school."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -1142,7 +1274,7 @@
       "source": "docs/catalogue/creatures.json",
       "source_sha256": "d4538e4155e89893abb9f4b746a9de8ef2b0cac1b9f7758e9638ea77489cef05",
       "destination": "docs/catalogue/creatures.json",
-      "destination_sha256": "64d13355a8ebb1ce2a238a9d5ac44f091497990280b40f558107bbdb006304a7",
+      "destination_sha256": "40cca868c0ff90d56d068a74c03395766eaa7c2dd58c98a94fab2f18b8065c3b",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revisions": [
@@ -1152,6 +1284,20 @@
           "destination_sha256": "64d13355a8ebb1ce2a238a9d5ac44f091497990280b40f558107bbdb006304a7",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Gained a name and description for each of the 257 species added in profile document version 2; the coverage test requires the two files to name the same creatures."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "64d13355a8ebb1ce2a238a9d5ac44f091497990280b40f558107bbdb006304a7",
+          "destination_sha256": "2e3e38aee1caa3e97d892c654056eab248b4101b0baa9deb63f906abfac5ab60",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized hidden bestiary: describe the blood, void and eldritch-gated creatures so the catalogue names every profile."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "2e3e38aee1caa3e97d892c654056eab248b4101b0baa9deb63f906abfac5ab60",
+          "destination_sha256": "40cca868c0ff90d56d068a74c03395766eaa7c2dd58c98a94fab2f18b8065c3b",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Creature catalogue: the seventeen creatures added by the movement roster pass, so the prose catalogue and terrain_nest_profiles name the same set both ways as test_terrain_nests::test_catalogue_coverage requires. 663 -> 680 entries. Paired with the terrain_nest_profiles.json revision of the same date."
         }
       ],
       "modification": "Diverged from the pinned extraction; see revisions."
@@ -1530,7 +1676,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "81db97b9c85b5ead2b5d09cb1d084b098634968d1c591d6bb9fa7f5c2c15213e",
+      "destination_sha256": "b8bfc7ea4ceb3642daa8da90e8fee7f654facfd558dadafb5bab6711922f722d",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1704,6 +1850,32 @@
           "destination_sha256": "81db97b9c85b5ead2b5d09cb1d084b098634968d1c591d6bb9fa7f5c2c15213e",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Habitat section records profile document version 2: the reviewed re-tiers, the tier spreads before and after, and that a catalogue change moves every seed."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "81db97b9c85b5ead2b5d09cb1d084b098634968d1c591d6bb9fa7f5c2c15213e",
+          "destination_sha256": "3bd655d1de6109b9a446fd9a8da85e0ac92b00eaed6a18d46321e4833bf41ffd",
+          "reason": "User-requested lunar cycle and pantheon: moon and lunar surge subsection, age lottery under the moon, ruin legacies, god departure, age-API pins and the visitation API. Canonical contracts in docs/astrology.md and docs/pantheon.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "3bd655d1de6109b9a446fd9a8da85e0ac92b00eaed6a18d46321e4833bf41ffd",
+          "destination_sha256": "efd7f2ddf648bc869ee9a049ec4e3d1c19c75409096db1442d5454ef33ca6b8b",
+          "reason": "User-requested moon controls: note the generation overrides, the moon query endpoint and the explicit-day fields of the age and summon APIs."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "efd7f2ddf648bc869ee9a049ec4e3d1c19c75409096db1442d5454ef33ca6b8b",
+          "destination_sha256": "8856897d769e9d74def5f90cd43b20d04e3414cf39ef47315585482ffb08236a",
+          "decision": "docs/story-web.md",
+          "reason": "Threat assessment 3 (war outlook: wars_recent, enemy_living, war_risk) and the war_survival world option documented."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "8856897d769e9d74def5f90cd43b20d04e3414cf39ef47315585482ffb08236a",
+          "destination_sha256": "b8bfc7ea4ceb3642daa8da90e8fee7f654facfd558dadafb5bab6711922f722d",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized twelve-school taxonomy: document the four hidden Outside schools, the appended catalogue positions 104-155 that leave every recorded biome_variant index meaning what it meant, and that generation can never raise a hidden school."
         }
       ]
     },
@@ -1763,7 +1935,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "8885793f094c7214ec58f1600cb40a2abb4e8963baa11d89c5213098212e3d62",
+      "destination_sha256": "523c789edf505b321c1b0b2a74c3fb1867390ad4ece1daf303c8605f46d6b8b0",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1853,6 +2025,75 @@
           "destination_sha256": "8885793f094c7214ec58f1600cb40a2abb4e8963baa11d89c5213098212e3d62",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Lab ruin presentation: the globe and atlas draw a broken-keep RUIN icon instead of a square marker and letter. Rendering only; ruin state, identity and the generated world contract are unchanged."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "8885793f094c7214ec58f1600cb40a2abb4e8963baa11d89c5213098212e3d62",
+          "destination_sha256": "a3f6f91ab9183cae9be3efa6f9b2a832fdcd134f513e88c30424319e22958a84",
+          "reason": "User-requested lunar cycle and pantheon: history replay clears the astrology, lunar_almanac, religion and wildlife state keys like the Python STATE_KEYS; lunar_sensitivity layer label. Documented in docs/astrology.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a3f6f91ab9183cae9be3efa6f9b2a832fdcd134f513e88c30424319e22958a84",
+          "destination_sha256": "144a2e4b5d5941f9206b9c8934fadea26bd06e0c9f947b1afc382e10e30b3a54",
+          "decision": "docs/hero-generator.md",
+          "reason": "Hero generator cast panel: `heroes` joins historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS. Documented in docs/hero-generator.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "144a2e4b5d5941f9206b9c8934fadea26bd06e0c9f947b1afc382e10e30b3a54",
+          "destination_sha256": "6189720e67ace49ff41dc115d0af3519fb769de0cffa1e6a63837975775a0bbb",
+          "decision": "docs/story-web.md",
+          "reason": "Story web panel: `story_web` joins historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS. Documented in docs/story-web.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "6189720e67ace49ff41dc115d0af3519fb769de0cffa1e6a63837975775a0bbb",
+          "destination_sha256": "52393add5b8e493eb91593e761bb79aa51844efd5ac9513a538cfe1f088e916c",
+          "decision": "board/in-progress/SUPER-VILLAINS.md",
+          "reason": "User-authorized super villains: list `villains` in historyStateKeys, without which the stage scrubber shows the final cast at every earlier stage."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "52393add5b8e493eb91593e761bb79aa51844efd5ac9513a538cfe1f088e916c",
+          "destination_sha256": "a3128421325ec46574612698da06ee4ff6be72a3d161738e0eb6edd23693b67c",
+          "decision": "docs/npc-roster.md",
+          "reason": "NPC roster: list `npcs` in historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS, and the roster does not appear at stages before the planners ran. Documented in docs/npc-roster.md. (Destination hash corrected from 5cc8e485 to a3128421 by the KEY-LOCATIONS change: the original value was captured after key_locations had also been added to the same line, so it recorded two changes under one reason. Behavior reviewed is unchanged - the npcs entry in historyStateKeys - and its coverage is the npcs stage-isolation assertion.)"
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a3128421325ec46574612698da06ee4ff6be72a3d161738e0eb6edd23693b67c",
+          "destination_sha256": "5cc8e485dbc8d938d940fe5b29b32aab7d3e16fda882fd16ad84a30c20a9636d",
+          "decision": "docs/key-locations.md",
+          "reason": "Key locations: list `key_locations` in historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS, and the locations do not appear at stages before stage sixteen. Omitting it fails silently. Documented in docs/key-locations.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "5cc8e485dbc8d938d940fe5b29b32aab7d3e16fda882fd16ad84a30c20a9636d",
+          "destination_sha256": "b301373e763097f590978011e6267804a7a8bb3f330de4c89879b00f547dbacc",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Nomads: list `nomads` in historyStateKeys so the lab's stage scrubber clears it the way the Python STATE_KEYS tuple does, and travelling bands do not appear at stages before the simulation completed. materialize_stage builds from everything NOT in that list, so omitting the entry does not raise -- it silently shows the final bands at every earlier stage. Behavior reviewed is the single historyStateKeys entry; its coverage is the nomads stage-isolation assertion in tests/test_world_schema_conformance.py."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "b301373e763097f590978011e6267804a7a8bb3f330de4c89879b00f547dbacc",
+          "destination_sha256": "327cc311c07849670f224d46591bead30b17fef8de6e4360ad49643fdc28e317",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Nomads: list `beast_movements` and `encounters` in historyStateKeys alongside `nomads`, so the lab's stage scrubber clears all three the way the Python STATE_KEYS tuple does. materialize_stage builds from everything NOT in that list, so an omitted entry does not raise -- it silently shows the final value at every earlier stage. Behavior reviewed is the two added entries; coverage is the stage-isolation assertions in tests/test_world_schema_conformance.py."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "327cc311c07849670f224d46591bead30b17fef8de6e4360ad49643fdc28e317",
+          "destination_sha256": "764dbd6dcca566e0f7112fa14b7bb79b716380300a0eb9625e8011f91985ec94",
+          "decision": "board/in-progress/NOMADS.md",
+          "reason": "Nomads: list `pending_ley_edits` and `settlement_candidates` in historyStateKeys with the other nomad blocks, so the stage scrubber clears them rather than showing their final value at every earlier stage. Both are written by the nomad write-back pass at stage sixteen."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "764dbd6dcca566e0f7112fa14b7bb79b716380300a0eb9625e8011f91985ec94",
+          "destination_sha256": "523c789edf505b321c1b0b2a74c3fb1867390ad4ece1daf303c8605f46d6b8b0",
+          "decision": "docs/key-locations.md",
+          "reason": "Key location exterior plans: list `key_location_plans` in historyStateKeys so the stage scrubber clears it like the Python STATE_KEYS and the plans do not appear at stages before sixteen. Omitting it fails silently."
         }
       ]
     },
@@ -1860,7 +2101,7 @@
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
+      "destination_sha256": "8995f725d4ddfa684112ec91344f8a5ea5fb257401e7ea985ab75965707699ff",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1893,6 +2134,18 @@
           "destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "69748b8fdfd4631c9e0b89271266e6ebb4caac3dd99b9b3e63271be63e9413c2",
+          "destination_sha256": "c5126d5215df464531765b9b8fb826d93d3039cd67d5e7235fe70a731078dccc",
+          "reason": "User-requested pantheon: POST /world/summon routes to terrain_visitation.visitation_request beside /world/advance-age, same body limit. Documented in docs/pantheon.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "c5126d5215df464531765b9b8fb826d93d3039cd67d5e7235fe70a731078dccc",
+          "destination_sha256": "8995f725d4ddfa684112ec91344f8a5ea5fb257401e7ea985ab75965707699ff",
+          "reason": "User-requested moon controls: POST /world/moon routes to terrain_astrology.lunar_request, the stateless moon query for any day or hour. Documented in docs/astrology.md."
         }
       ]
     },
@@ -1900,7 +2153,7 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "9b4b6d5b9ae9068fb1c56a1b66613ccdad3e74ebb3677f66f93bdf679724b138",
+      "destination_sha256": "6d3d3e428fe83bb49e582dcb7b0ef0d118b140c56d86fd51513e1e680d600829",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1976,6 +2229,53 @@
           "destination_sha256": "9b4b6d5b9ae9068fb1c56a1b66613ccdad3e74ebb3677f66f93bdf679724b138",
           "decision": "docs/terrain-world-layers.md",
           "reason": "The lab atlas reads both habitat passes and shows danger tier, range and den; the removed per-anchor reason and sample count are gone from the UI with them."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "9b4b6d5b9ae9068fb1c56a1b66613ccdad3e74ebb3677f66f93bdf679724b138",
+          "destination_sha256": "850b247692df28f5b4bb51787f77aa4425eb712e296ad8620ff64c7583d9c0d5",
+          "reason": "Draw inland hamlets and fortresses on the diagnostic atlas. drawAtlas iterated cities, ruins, ports, terrain features, landmarks, nests and sky islands but never data.humans, so every rural site a world places was an invisible pixel; the legend now names the rural glyphs."
+        },
+        {
+          "date": "2026-09-18",
+          "previous_destination_sha256": "850b247692df28f5b4bb51787f77aa4425eb712e296ad8620ff64c7583d9c0d5",
+          "destination_sha256": "c4595092f97d231e13522a8179bba9df54aadf54dc196934b38d1abbcc01c41e",
+          "reason": "User-requested lunar cycle and pantheon: Moon panel (phase, rise hour, leaning, events), Moonlit magic display scaling, ruin legacy text, Gods panel with Summon and Send home against POST /world/summon. Documented in docs/astrology.md and docs/pantheon.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "c4595092f97d231e13522a8179bba9df54aadf54dc196934b38d1abbcc01c41e",
+          "destination_sha256": "be674c1106ff539dbdf3185cc09ca627949202ba07ee283766e68d1f66e99bda",
+          "decision": "docs/hero-generator.md",
+          "reason": "Hero generator cast panel: renderHeroes cards (civilization, race, role, archetype, alignment, fame, position, event log, situation, persona, truth, precipitation roll ledger, faces, quest hooks, camps, relics, ruin/camp/college pins, orgs and allies), living-cast diamond pins on the atlas coloured by the good axis, hover readout. Documented in docs/hero-generator.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "be674c1106ff539dbdf3185cc09ca627949202ba07ee283766e68d1f66e99bda",
+          "destination_sha256": "78a9e25ffa2f032cdd3c784016170d6ce7c0bb8c0f7ee8ecc578e5951e2c1fe8",
+          "decision": "docs/story-web.md",
+          "reason": "Story web panel: per-hero spiderweb SVG (spokes at pull angle, act rings, threads and cuts), offered hook, acts and options, weight breakdown behind the truth checkbox, offered-trope histogram, and the offered spoke in the atlas hover. Documented in docs/story-web.md; the hero site lookup resolves hamlet, fortress, port and shrine presences."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "78a9e25ffa2f032cdd3c784016170d6ce7c0bb8c0f7ee8ecc578e5951e2c1fe8",
+          "destination_sha256": "aafd3ee4952d6baff67321ba8dbaa05c0fe868113a79fd938296c608e5f46046",
+          "decision": "docs/npc-roster.md",
+          "reason": "NPC roster panel: the summary line, reported unresolved counts, a collapsible posts-by-site table and one card per site listing only its earmarked people with the verbs each post can offer. The thousands of ordinary posts are counted, never listed. Documented in docs/npc-roster.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "aafd3ee4952d6baff67321ba8dbaa05c0fe868113a79fd938296c608e5f46046",
+          "destination_sha256": "a5adcbe0232a7757d9643c6384e7d7d573f7a5bacec907bb8c1fa1626ecbd4f3",
+          "decision": "docs/key-locations.md",
+          "reason": "Key locations panel and atlas markers: a Key locations toggle and family filter beside the beast-nest controls, family-grouped cards in #world-viewer listing name, tier, threat, state, occupant, any succession and interior size, a per-family glyph drawn under the nest circles with alpha and size by tier, and key_location added to the hero site-kind resolver so a hero standing at one resolves. Documented in docs/key-locations.md."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "a5adcbe0232a7757d9643c6384e7d7d573f7a5bacec907bb8c1fa1626ecbd4f3",
+          "destination_sha256": "6d3d3e428fe83bb49e582dcb7b0ef0d118b140c56d86fd51513e1e680d600829",
+          "decision": "docs/key-locations.md",
+          "reason": "Key location chains: a chain and cluster count in the panel summary, and each chain drawn as a connected run on the atlas rather than loose glyphs, with seam-crossing segments broken so a run does not draw back across the map. Documented in docs/key-locations.md."
         }
       ]
     }

@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Story web v1",
+  "description": "The `story_web` block a finished world carries: for every living person and Dread in `heroes`, the trope spokes their record admits, the deterministic weight of each, the offered resting hook, the offered trope's three bound acts with options and exit threads, and the ledger of tropes considered and refused. Structural envelope; the weight equation, predicate vocabulary and catalogue lint are validated by the package's own tests. A failed block carries only version, status and error.",
+  "type": "object",
+  "required": ["version", "status"],
+  "properties": {
+    "version": {"const": 1},
+    "status": {"enum": ["ok", "failed"]},
+    "error": {"type": "string"},
+    "policy_revision": {
+      "type": "object",
+      "required": ["tropes", "constraints", "weights"],
+      "properties": {
+        "tropes": {"type": "integer", "minimum": 1},
+        "constraints": {"type": "integer", "minimum": 1},
+        "weights": {"type": "integer", "minimum": 1}
+      }
+    },
+    "heroes_revision": {"type": ["object", "null"]},
+    "summary": {
+      "type": "object",
+      "required": ["woven", "unwoven", "tropes", "reachable_tropes", "offered", "mean_spokes"],
+      "properties": {
+        "woven": {"type": "integer", "minimum": 0},
+        "unwoven": {"type": "integer", "minimum": 0},
+        "tropes": {"type": "integer", "minimum": 1},
+        "reachable_tropes": {"type": "integer", "minimum": 0},
+        "offered": {"type": "object"},
+        "mean_spokes": {"type": "number", "minimum": 0}
+      }
+    },
+    "webs": {"type": "array", "items": {"$ref": "#/$defs/web"}},
+    "unwoven": {"type": "array", "items": {"$ref": "#/$defs/unwoven"}},
+    "tropes": {"type": "array", "items": {"$ref": "#/$defs/trope_summary"}},
+    "unreachable_tropes": {"type": "array", "items": {"type": "string"}},
+    "method": {"type": "string"},
+    "limits": {"type": "string"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "minLength": 1},
+    "axes": {
+      "type": "object",
+      "required": ["law", "good"],
+      "properties": {
+        "law": {"type": "number", "minimum": -1, "maximum": 1},
+        "good": {"type": "number", "minimum": -1, "maximum": 1}
+      }
+    },
+    "trope_summary": {
+      "type": "object",
+      "required": ["id", "name", "pull", "cast", "angle"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "name": {"type": "string"},
+        "pull": {"$ref": "#/$defs/axes"},
+        "cast": {"type": "array", "items": {"enum": ["person", "dread"]}, "minItems": 1},
+        "angle": {"type": "number", "minimum": 0, "maximum": 360}
+      }
+    },
+    "breakdown": {
+      "type": "object",
+      "required": ["boosts", "boosted_by", "alignment_fit", "archetype_fit", "claim_fit"],
+      "properties": {
+        "boosts": {"type": "number", "minimum": 0},
+        "boosted_by": {"type": "array", "items": {"type": "string"}},
+        "alignment_fit": {"type": "number", "minimum": 0},
+        "archetype_fit": {"type": "number", "minimum": 0},
+        "claim_fit": {"type": "number", "minimum": 0}
+      }
+    },
+    "spoke": {
+      "type": "object",
+      "required": ["trope_id", "name", "weight", "breakdown", "angle"],
+      "properties": {
+        "trope_id": {"$ref": "#/$defs/identifier"},
+        "name": {"type": "string"},
+        "weight": {"type": "number", "minimum": 0},
+        "breakdown": {"$ref": "#/$defs/breakdown"},
+        "angle": {"type": "number", "minimum": 0, "maximum": 360}
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["open", "alignment", "feature", "claim"]},
+        "axis": {"enum": ["law", "good"]},
+        "toward": {"enum": ["up", "down"]},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "verb": {"type": "string"}
+      }
+    },
+    "thread": {
+      "type": "object",
+      "required": ["to", "weight", "condition", "cut"],
+      "properties": {
+        "to": {"$ref": "#/$defs/identifier"},
+        "weight": {"type": "number", "minimum": 0},
+        "condition": {"$ref": "#/$defs/condition"},
+        "cut": {"type": ["string", "null"]}
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["id", "text", "delta", "effect"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "text": {"type": "string"},
+        "delta": {"$ref": "#/$defs/axes"},
+        "effect": {"type": "string"}
+      }
+    },
+    "act": {
+      "type": "object",
+      "required": ["id", "title", "ring", "prompt", "completion", "abandonment", "options"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "title": {"type": "string"},
+        "ring": {"type": "integer", "minimum": 1, "maximum": 3},
+        "prompt": {"type": "string"},
+        "completion": {
+          "type": "object",
+          "required": ["kind", "target", "state"],
+          "properties": {"kind": {"const": "target"}, "target": {"type": "string"}, "state": {"type": "string"}}
+        },
+        "abandonment": {
+          "type": "object",
+          "required": ["kind", "days", "implicit"],
+          "properties": {
+            "kind": {"const": "deadline"},
+            "days": {"type": "integer", "minimum": 1},
+            "implicit": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "options": {"type": "array", "items": {"$ref": "#/$defs/option"}, "minItems": 2, "maxItems": 4}
+      }
+    },
+    "rest": {
+      "type": "object",
+      "required": ["hook", "armed", "initiative_day"],
+      "properties": {
+        "hook": {
+          "type": "object",
+          "required": ["trope_id", "act_id", "prompt", "expires_day"],
+          "properties": {
+            "trope_id": {"$ref": "#/$defs/identifier"},
+            "act_id": {"$ref": "#/$defs/identifier"},
+            "prompt": {"type": "string"},
+            "expires_day": {"type": "integer", "minimum": 1}
+          }
+        },
+        "armed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["trope_id", "weight"],
+            "properties": {"trope_id": {"$ref": "#/$defs/identifier"}, "weight": {"type": "number", "minimum": 0}}
+          }
+        },
+        "initiative_day": {"type": "integer", "minimum": 1}
+      }
+    },
+    "considered": {
+      "type": "object",
+      "required": ["trope_id", "missing"],
+      "properties": {
+        "trope_id": {"$ref": "#/$defs/identifier"},
+        "missing": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "web": {
+      "type": "object",
+      "required": ["uid", "display_name", "role", "archetype", "alignment", "claim", "facts", "constraints", "spokes",
+                   "offered", "rest", "acts", "threads", "considered", "examples"],
+      "properties": {
+        "uid": {"$ref": "#/$defs/identifier"},
+        "display_name": {"type": ["string", "null"]},
+        "role": {"type": "string"},
+        "archetype": {"type": ["string", "null"]},
+        "alignment": {
+          "type": "object",
+          "required": ["law", "good", "code", "angle"],
+          "properties": {
+            "law": {"type": "number", "minimum": -1, "maximum": 1},
+            "good": {"type": "number", "minimum": -1, "maximum": 1},
+            "code": {"type": "string", "pattern": "^[LNC][GNE]$"},
+            "angle": {"type": "number", "minimum": 0, "maximum": 360}
+          }
+        },
+        "claim": {"type": "string"},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "constraints": {
+          "type": "object",
+          "required": ["claim_locked", "drift_locked", "allowed_verbs"],
+          "properties": {
+            "claim_locked": {"type": "boolean"},
+            "drift_locked": {"type": "boolean"},
+            "allowed_verbs": {"type": ["array", "null"], "items": {"type": "string"}}
+          }
+        },
+        "spokes": {"type": "array", "items": {"$ref": "#/$defs/spoke"}, "minItems": 1},
+        "offered": {"$ref": "#/$defs/identifier"},
+        "rest": {"$ref": "#/$defs/rest"},
+        "acts": {"type": "array", "items": {"$ref": "#/$defs/act"}, "minItems": 3, "maxItems": 3},
+        "threads": {"type": "array", "items": {"$ref": "#/$defs/thread"}},
+        "considered": {"type": "array", "items": {"$ref": "#/$defs/considered"}},
+        "examples": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "unwoven": {
+      "type": "object",
+      "required": ["uid", "display_name", "archetype", "facts", "nearest"],
+      "properties": {
+        "uid": {"$ref": "#/$defs/identifier"},
+        "display_name": {"type": ["string", "null"]},
+        "archetype": {"type": ["string", "null"]},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "nearest": {"type": "array", "items": {"$ref": "#/$defs/considered"}}
+      }
+    }
+  }
+}

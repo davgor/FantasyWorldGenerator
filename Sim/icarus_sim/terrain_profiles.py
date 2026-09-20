@@ -3,8 +3,13 @@ import json
 import hashlib
 import math
 from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue
+from .terrain_leyline_history import HIDDEN_SCHOOLS
 
 VARIANT_IDS = frozenset(b['id'] for b in biome_catalogue())
+# Ground a hidden school holds. A profile may still author an explicit opinion about
+# one, but none does and none needs to: these are the defaults below.
+HIDDEN_VARIANT_IDS = frozenset(b['id'] for b in biome_catalogue() if b['magic_school'] in HIDDEN_SCHOOLS)
+HIDDEN_PREFERENCE, HIDDEN_FOOD = -1., 0.
 
 FIELDS=set('name description food_temperature_ideal minimum_founding_residents temperature_ideal temperature_tolerance slope_comfort site_slope_limit work_slope_limit road_grade_limit water_reach moisture_ideal water_weight slope_weight climate_weight moisture_weight resource_weight flood_penalty magic_penalty mutation_limit difficult_fraction food_temperature_tolerance food_slope_comfort food_moisture_ideal irrigation food_demand land_per_city_km2 support_multiplier college_slope_limit college_temperature_min college_temperature_max college_water_reach college_flood_limit college_suitability_min biome_preferences food_biome_multipliers magic_biome_preferences food_magic_biome_multipliers'.split())
 
@@ -91,10 +96,25 @@ def civilization_ids():
 
 
 def biome_preference(profile, core_id, variant_id=None):
-    """An exact magical state overrides its natural-core preference."""
+    """An exact magical state overrides its natural-core preference.
+
+    Ground held by a hidden school is uninhabitable to everyone, and that is a rule rather
+    than 52 authored opinions per people: nobody has a cultural preference about a school
+    they have never heard of. Without it the fallback below would read a rotted grassland
+    as plain grassland, and settlement placement would find corrupted ground exactly as
+    attractive as clean ground.
+    """
+    if variant_id in HIDDEN_VARIANT_IDS:
+        return profile['magic_biome_preferences'].get(variant_id, HIDDEN_PREFERENCE)
     return profile['magic_biome_preferences'].get(variant_id, profile['biome_preferences'].get(str(core_id), 0))
 
 
 def biome_food_multiplier(profile, core_id, variant_id=None):
-    """Exact state food factor, before independent school-specific hazard losses."""
+    """Exact state food factor, before independent school-specific hazard losses.
+
+    Corrupted ground feeds nobody; which of the four took it is the corruption record's
+    business, not the terrain table's.
+    """
+    if variant_id in HIDDEN_VARIANT_IDS:
+        return profile['food_magic_biome_multipliers'].get(variant_id, HIDDEN_FOOD)
     return profile['food_magic_biome_multipliers'].get(variant_id, profile['food_biome_multipliers'].get(str(core_id), 1))

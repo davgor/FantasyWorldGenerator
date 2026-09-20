@@ -1,0 +1,146 @@
+{
+  "schema": "fantasy-world-generator.heritage-derivation",
+  "revision": 1,
+  "notes": "How the seventeen key traits become a culture and a language genome. Three rule kinds: copy takes an axis value verbatim, from/map looks it up, craft indexes craft_focus. Every map must be total over its axis enum, so adding an axis value cannot silently produce an empty culture. Culture carries no numbers; genome rates do, because a rate is what they are.",
+  "culture": {
+    "household": {
+      "unit": {"copy": "kinship"},
+      "inheritance": {"from": "kinship", "map": {
+        "nuclear_household": "divided_among_children", "extended_clan": "hold_undivided",
+        "lineage_house": "house_entail", "age_cohort": "cohort_commons",
+        "crew_and_berth": "hull_and_share", "guild_family": "shop_and_tools"}},
+      "naming_pattern": {"from": "kinship", "map": {
+        "nuclear_household": "given_plus_father", "extended_clan": "given_plus_clan",
+        "lineage_house": "given_plus_house", "age_cohort": "given_plus_cohort",
+        "crew_and_berth": "given_plus_vessel", "guild_family": "given_plus_workshop"}},
+      "marriage_move": {"from": "kinship", "map": {
+        "nuclear_household": "new_household", "extended_clan": "to_the_hold",
+        "lineage_house": "to_the_elder_house", "age_cohort": "within_the_cohort",
+        "crew_and_berth": "to_either_deck", "guild_family": "to_the_bench"}}
+    },
+    "governance": {
+      "seat": {"copy": "authority"},
+      "succession": {"from": "authority", "map": {
+        "elder_council": "seniority", "hereditary_lord": "eldest_of_the_line",
+        "guild_assembly": "elected_term", "acclaimed_war_leader": "acclaimed_in_the_field",
+        "temple_seat": "chosen_by_omen", "consensus_moot": "acclaimed_each_moot"}},
+      "law_form": {"from": "memory_mode", "map": {
+        "oral_formulaic": "spoken_precedent", "sung_lineage": "sung_precedent",
+        "written_archive": "written_code", "carved_record": "carved_statute",
+        "ledger_and_seal": "written_charter"}},
+      "assembly": {"from": "mobility", "map": {
+        "rooted": "winter_court", "seasonal_transhumance": "gathering_at_the_move",
+        "voyaging": "landing_moot", "caravan": "caravanserai_council",
+        "frontier_expanding": "county_assize"}}
+    },
+    "livelihood": {
+      "primary": {"craft": 0},
+      "secondary": {"craft": 1},
+      "exchange": {"from": "outsiders", "map": {
+        "hostile": "weighed_barter", "wary": "weighed_barter",
+        "transactional": "coin_and_tally", "hospitable": "share_and_gift",
+        "assimilating": "coin_and_credit"}},
+      "calendar": {"from": "mobility", "map": {
+        "rooted": "two_season_dark_and_thaw", "seasonal_transhumance": "drive_and_return",
+        "voyaging": "tide_and_run", "caravan": "market_quarters",
+        "frontier_expanding": "sowing_and_harvest"}}
+    },
+    "memory": {
+      "record": {"copy": "memory_mode"},
+      "teaching": {"from": "lifespan_tempo", "map": {
+        "brief": "short_apprenticeship", "human": "indentured_apprenticeship",
+        "long": "hold_apprenticeship", "ancient": "lifelong_fostering"}},
+      "oath_form": {"from": "memory_mode", "map": {
+        "oral_formulaic": "spoken_before_witnesses", "sung_lineage": "sung_before_kin",
+        "written_archive": "signed_and_witnessed", "carved_record": "cut_into_the_lintel",
+        "ledger_and_seal": "signed_and_sealed"}},
+      "taboo": {"from": "magic_stance", "map": {
+        "untrained": "speaking_to_the_unseen", "ritual_communal": "rite_out_of_season",
+        "scholarly_licensed": "unlicensed_practice", "inherited_bloodline": "teaching_the_bloodless",
+        "taboo_avoidant": "the_worked_word", "bargained_with": "breaking_the_terms"}}
+    },
+    "contact": {
+      "stranger_rite": {"from": "outsiders", "map": {
+        "hostile": "gate_challenge", "wary": "threshold_question",
+        "transactional": "open_counter", "hospitable": "bread_and_seat",
+        "assimilating": "named_as_kin"}},
+      "trade_stance": {"copy": "outsiders"},
+      "war_stance": {"from": "authority", "map": {
+        "elder_council": "defend_the_grove", "hereditary_lord": "hold_and_deny",
+        "guild_assembly": "paid_levy", "acclaimed_war_leader": "raid_and_withdraw",
+        "temple_seat": "sanctioned_war", "consensus_moot": "muster_and_disperse"}}
+    },
+    "faith": {
+      "school": {"copy": "magic_school"},
+      "practice": {"copy": "magic_stance"},
+      "site": {"from": "magic_school", "map": {
+        "weave": "chartered_college", "umbral": "unlit_vault", "infernal": "warded_pit",
+        "radiant": "sun_terrace", "fire": "ember_hearth", "water": "tideline_stone",
+        "earth": "deep_cairn", "air": "wind_gallery"}},
+      "festival": {"from": "magic_stance", "map": {
+        "untrained": "harvest_thanks", "ritual_communal": "the_long_rite",
+        "scholarly_licensed": "charter_day", "inherited_bloodline": "the_naming_of_lines",
+        "taboo_avoidant": "the_quiet_week", "bargained_with": "the_terms_renewed"}}
+    }
+  },
+  "genome": {
+    "phonotactics": {
+      "syllable": {"from": "speech_environment", "map": {
+        "open_plain": "(C)(C)V(C)", "surf": "(C)V(V)(N)", "forest": "(C)V(C)",
+        "stone_hall": "(C)V(C)", "wind_scoured": "(C)V(C)(C)", "humid_canopy": "(C)V(N)",
+        "market_din": "(C)(C)V(C)", "terraced_valley": "(C)V(C)"}},
+      "vowel_length": {"from": "breath_capacity", "map": {
+        "short": "none", "steady": "none", "deep": "none", "sustained": "contrastive"}},
+      "hiatus": {"from": "breath_capacity", "map": {
+        "short": "forbidden", "steady": "allowed", "deep": "forbidden", "sustained": "preferred"}},
+      "geminates": {"from": "speech_environment", "map": {
+        "open_plain": false, "surf": false, "forest": false, "stone_hall": true,
+        "wind_scoured": true, "humid_canopy": false, "market_din": false,
+        "terraced_valley": true}}
+    },
+    "prosody": {
+      "stress": {"from": "carrying_register", "map": {
+        "quiet": "penultimate", "conversational": "initial",
+        "carrying": "initial", "calling": "penultimate"}},
+      "tone": {"from": "speech_environment", "map": {
+        "open_plain": "none", "surf": "none", "forest": "none", "stone_hall": "none",
+        "wind_scoured": "none", "humid_canopy": "register", "market_din": "none",
+        "terraced_valley": "register"}},
+      "word_shape": {"from": "breath_capacity", "map": {
+        "short": "monosyllabic_heavy", "steady": "disyllabic",
+        "deep": "disyllabic", "sustained": "trisyllabic_flowing"}}
+    },
+    "morphology": {
+      "compounding": {"from": "memory_mode", "map": {
+        "oral_formulaic": "light", "sung_lineage": "light", "written_archive": "moderate",
+        "carved_record": "heavy", "ledger_and_seal": "heavy"}},
+      "honorific": {"from": "authority", "map": {
+        "elder_council": "age_suffix", "hereditary_lord": "title_prefix",
+        "guild_assembly": "rank_suffix", "acclaimed_war_leader": "deed_epithet",
+        "temple_seat": "sacred_prefix", "consensus_moot": "none"}},
+      "call_form": {"from": "carrying_register", "map": {
+        "quiet": false, "conversational": false, "carrying": true, "calling": true}}
+    },
+    "orthography": {
+      "script_form": {"from": "writing_surface", "map": {
+        "none": "unwritten", "knot_and_cord": "knotted_cord", "incised_stone": "angular_rune",
+        "carved_wood": "notched_stave", "inked_hide": "round_hand",
+        "pressed_fibre_paper": "cursive_nib"}},
+      "direction": {"from": "writing_surface", "map": {
+        "none": "unwritten", "knot_and_cord": "strand_order", "incised_stone": "vertical_column",
+        "carved_wood": "boustrophedon", "inked_hide": "left_to_right",
+        "pressed_fibre_paper": "left_to_right"}}
+    },
+    "rates": {
+      "third_syllable": {"from": "breath_capacity", "map": {
+        "short": 0.1, "steady": 0.35, "deep": 0.3, "sustained": 0.7}},
+      "cluster": {"from": "speech_environment", "map": {
+        "open_plain": 0.3, "surf": 0.05, "forest": 0.15, "stone_hall": 0.2,
+        "wind_scoured": 0.55, "humid_canopy": 0.05, "market_din": 0.4,
+        "terraced_valley": 0.2}},
+      "loanword": {"from": "outsiders", "map": {
+        "hostile": 0.05, "wary": 0.15, "transactional": 0.3,
+        "hospitable": 0.3, "assimilating": 0.45}}
+    }
+  }
+}

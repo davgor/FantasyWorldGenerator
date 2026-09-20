@@ -1,0 +1,628 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/key-locations.schema.json",
+  "title": "Key locations",
+  "description": "The charged non-settlement places a finished world implies: caves, mines, barrows, mausoleums, shrines, watchtowers, ley nexuses, lairs, drowned ruins and wonders. Produced by the standalone key_locations package, which reads the finished world JSON and mutates nothing, so the world's own recipe, replay identity and native parity are untouched. FANTASY_WORLD_KEY_LOCATIONS=0 leaves the key absent.",
+  "type": "object",
+  "required": [
+    "version",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "failed"
+      ]
+    },
+    "error": {
+      "type": "string",
+      "description": "Present only when status is failed; the block is reported, never raised."
+    },
+    "catalogue_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "catalogue_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Archetypes in the catalogue, not locations placed."
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "sites",
+        "by_tier",
+        "by_family",
+        "by_state",
+        "by_occupant",
+        "dungeons"
+      ],
+      "properties": {
+        "sites": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "by_tier": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "by_family": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "by_state": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "by_occupant": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "dungeons": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tier-2 complexes with a hostile occupant. There is no dungeon archetype; this is what the word means here."
+        }
+      }
+    },
+    "families": {
+      "type": "object",
+      "description": "Display metadata per family: name, glyph, colour, spacing."
+    },
+    "sites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "placement",
+          "kind",
+          "name",
+          "family",
+          "tier",
+          "state",
+          "occupant",
+          "threat",
+          "node",
+          "x",
+          "z",
+          "direction",
+          "height_m",
+          "layer",
+          "domain",
+          "suitability",
+          "origin",
+          "links",
+          "asset_id",
+          "reason",
+          "interior",
+          "succession"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^keyloc-[a-z0-9_.-]+$",
+            "description": "Derived from where the place is, never from where it landed in a list. Node sites: keyloc-<archetype>-<node>. Chain members: keyloc-<archetype>-<chain key>-<metres along it>. Cluster members: keyloc-<archetype>-<anchor node>-<offset>-<index>. None of them renumber when the block is re-derived on advance_age_request, so a foreign key survives. Stable is not immortal: if an age transition drowns a location or destroys the culture that justified it, the location legitimately ceases to exist and the id resolves to nothing. Treat a dangling key as \"the place is gone\", not as renumbering."
+          },
+          "kind": {
+            "type": "string",
+            "description": "Archetype id, e.g. silver_mine, karst_cave, mausoleum."
+          },
+          "name": {
+            "type": "string",
+            "description": "Unique within a world. Descriptor templates filled from world facts, in the same idiom hero_generator uses for sites."
+          },
+          "family": {
+            "enum": [
+              "subterranean",
+              "extractive",
+              "fortification",
+              "funerary",
+              "sacred",
+              "wayside",
+              "arcane",
+              "lair",
+              "drowned",
+              "wonder",
+              "curiosity"
+            ]
+          },
+          "tier": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3,
+            "description": "PHYSICAL SCALE AND BUILD-OUT ONLY - never danger. 0 a marker with no interior ever; 1 a one-scene site; 2 a multi-room complex that always has an interior; 3 a unique world-scale wonder. A tier-3 wonder may be harmless and a tier-1 barrow lethal: read threat for danger. Unrelated to the three other 'tier' fields in this tree - creature tier (int 1-5 danger, terrain_nest_profiles.json), villain tier (float standing that also sets reach in metres, terrain_villains.py) and hero tier (string enum notable/renowned/legendary, hero-generator.schema.json)."
+          },
+          "threat": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Danger, on the same 1-5 creature-tier rubric the nest catalogue uses: 1 harmless, 5 a campaign threat. Derived from occupant class, state, tier, local weave instability and the tier of any nest nearby. Travel distance is deliberately not included - that is a function of where the party is."
+          },
+          "state": {
+            "enum": [
+              "natural",
+              "active",
+              "occupied",
+              "abandoned",
+              "ruined",
+              "buried",
+              "drowned",
+              "sealed",
+              "corrupted",
+              "reclaimed",
+              "restored"
+            ],
+            "description": "Derived, not authored: a nearby ruin ages a site, remoteness empties it, an unstable weave corrupts it, passing ages wear it down. 'natural' is for geology, which has no builders to leave. A 'forgotten fortress' is state ruined with occupant none."
+          },
+          "occupant": {
+            "enum": [
+              "none",
+              "builders",
+              "descendants",
+              "squatters",
+              "monsters",
+              "cult",
+              "undead",
+              "beasts",
+              "fae",
+              "nature"
+            ],
+            "description": "Who is there now, derived from state, remoteness and what lives nearby."
+          },
+          "node": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Sphere-grid node id, as every other point record in the world uses."
+          },
+          "x": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "z": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "direction": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "height_m": {
+            "type": "number"
+          },
+          "layer": {
+            "const": "surface"
+          },
+          "domain": {
+            "enum": [
+              "land",
+              "water",
+              "ocean",
+              "lake",
+              "any"
+            ]
+          },
+          "suitability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "suitability_factors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Per-term breakdown of the score, for explainability."
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "age",
+              "culture_id",
+              "civilization_id",
+              "ruin_id",
+              "school",
+              "ages_since"
+            ],
+            "properties": {
+              "age": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "culture_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "civilization_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ruin_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The fallen city this location belongs to, when one is near enough to explain it."
+              },
+              "school": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Dominant magic school of the ground."
+              },
+              "ages_since": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "succession": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Set when something moved in after the builders left, which is where dungeons come from. Recorded rather than silently overwriting the occupant, so a consumer can say 'a goblin warren that used to be a silver mine'.",
+            "required": [
+              "from_occupant",
+              "to_occupant",
+              "note"
+            ],
+            "properties": {
+              "from_occupant": {
+                "type": "string"
+              },
+              "to_occupant": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "chain",
+              "chain_index",
+              "cluster",
+              "anchor"
+            ],
+            "properties": {
+              "chain": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cluster": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "anchor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "chain_index": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Position along the chain, counted from its start. Ordered, not arbitrary."
+              }
+            }
+          },
+          "asset_id": {
+            "type": "string",
+            "pattern": "^marker\\.key_location\\.[a-z_]+$"
+          },
+          "reason": {
+            "type": "string",
+            "description": "One sentence saying why this place is here."
+          },
+          "interior": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Present on every tier-2 site and on nothing else. A GRAPH, NOT GEOMETRY: chambers carry depth, role, rough size and connections, with no metre positions, no contents and no encounters. A real interior layout is a later phase.",
+            "required": [
+              "version",
+              "plan",
+              "levels",
+              "chambers",
+              "entrances"
+            ],
+            "properties": {
+              "version": {
+                "const": 1
+              },
+              "plan": {
+                "enum": [
+                  "linear",
+                  "branching",
+                  "radial",
+                  "warren",
+                  "vault"
+                ]
+              },
+              "plan_note": {
+                "type": "string"
+              },
+              "levels": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "chambers": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "depth",
+                    "role",
+                    "size_m",
+                    "connects",
+                    "flooded",
+                    "collapsed"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "depth": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "size_m": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "connects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "flooded": {
+                      "type": "boolean"
+                    },
+                    "collapsed": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "entrances": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "chamber",
+                    "kind",
+                    "hidden"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "chamber": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "hidden": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "method": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "string"
+              }
+            }
+          },
+          "placement": {
+            "enum": [
+              "node",
+              "path",
+              "cluster"
+            ],
+            "description": "How this location was positioned. \"node\" sites sit on a sphere-grid node and no two of them ever share one. \"path\" members belong to a chain and stand at interpolated points along a road, a frontier or an approach - a waystone every 2 km cannot be node-snapped on a 12 km raster - and \"cluster\" members stand at a real offset from an anchor. Both of the latter may share a node with each other; their node is for reading layers, not identity."
+          }
+        }
+      }
+    },
+    "chains": {
+      "type": "array",
+      "description": "Ordered runs of markers along something the world already has. A lone waystone is noise; eleven counting down to a shrine is a story.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "archetype",
+          "along",
+          "interval_m",
+          "length_m",
+          "anchor",
+          "members",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "description": "The chain spec that produced it."
+          },
+          "name": {
+            "type": "string",
+            "description": "A type label (\"Waystone line\"), not a proper noun."
+          },
+          "archetype": {
+            "type": "string"
+          },
+          "along": {
+            "enum": [
+              "road",
+              "frontier",
+              "approach"
+            ]
+          },
+          "interval_m": {
+            "type": "number",
+            "description": "Absolute metres, deliberately unscaled: how far apart people set waystones is a fact about people, not about world size."
+          },
+          "length_m": {
+            "type": "number"
+          },
+          "anchor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The site the chain leads to, for an approach."
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Site ids in walk order, start to end."
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "description": "Sites that hang off an anchor already placed: a siege camp outside a ruined fort, cottages beside a mine, barrows ringing a necropolis.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "anchor",
+          "anchor_kind",
+          "anchor_name",
+          "members",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "anchor": {
+            "type": "string",
+            "description": "Site id of what explains this cluster."
+          },
+          "anchor_kind": {
+            "type": "string"
+          },
+          "anchor_name": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "description": "One row per archetype, including those that placed nothing and why. A world with no volcanism reports the gap rather than approximating around it.",
+      "items": {
+        "type": "object",
+        "required": [
+          "archetype",
+          "placed",
+          "wanted",
+          "candidates",
+          "reason"
+        ],
+        "properties": {
+          "archetype": {
+            "type": "string"
+          },
+          "placed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "wanted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "candidates": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    }
+  }
+}

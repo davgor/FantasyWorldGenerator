@@ -51,3 +51,29 @@ class RecipeTests(unittest.TestCase):
         data=profiles();del data['human_heartland']['water_weight']
         with patch('icarus_sim.terrain_profiles.profiles',return_value=data):
             with self.assertRaises(ValueError):get_profile('human_heartland')
+
+    def test_hidden_schools_are_declared_but_unreachable_at_generation(self):
+        """The taxonomy is twelve, the world can only ever raise eight of them."""
+        from icarus_sim.terrain_leyline_history import SCHOOLS,KNOWN_SCHOOLS,HIDDEN_SCHOOLS
+        from icarus_sim.terrain_world import NETWORKS,HIDDEN_NETWORKS,OPTIONS,generate_request
+        # The option table keeps its own name tuples; a drift here is a KeyError at
+        # generation, so it is pinned rather than left to be discovered.
+        self.assertEqual(tuple(KNOWN_SCHOOLS),NETWORKS)
+        self.assertEqual(tuple(HIDDEN_SCHOOLS),HIDDEN_NETWORKS)
+        # Appended, never inserted: dominant_magic exports an index into this order.
+        self.assertEqual(list(SCHOOLS),list(KNOWN_SCHOOLS)+list(HIDDEN_SCHOOLS))
+        self.assertEqual(list(SCHOOLS)[:8],list(KNOWN_SCHOOLS))
+        for name in HIDDEN_SCHOOLS:
+            spec=OPTIONS[name+'_occurrence']
+            self.assertEqual((spec['default'],spec['min'],spec['max']),(0.,0.,0.))
+            with self.assertRaises(ValueError):
+                generate_request({'seed':1,'recipe_version':3,'overrides':{'size':17,name+'_occurrence':1.}})
+
+    def test_a_generated_world_never_raises_a_hidden_school(self):
+        from icarus_sim.terrain_leyline_history import HIDDEN_SCHOOLS
+        from icarus_sim.terrain_world import generate_request
+        world=generate_request({'seed':42,'recipe_version':3,'overrides':{'size':17,'phase':9}})
+        for name in HIDDEN_SCHOOLS:
+            net=world['magic']['networks'][name]
+            self.assertEqual((net['nodes'],net['edges'],net['distribution']),([],[],None))
+            self.assertFalse(any(v for row in world['layers']['ley_'+name] for v in row))

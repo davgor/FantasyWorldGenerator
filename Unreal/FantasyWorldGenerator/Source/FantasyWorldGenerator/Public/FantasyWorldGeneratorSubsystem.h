@@ -114,9 +114,9 @@ public:
 	bool GetRoads(int32 LatitudeRows, TArray<FFantasyRoadPolyline>& OutRoads, FString& OutDiagnostic) const;
 
 	/**
-	 * Buildings the city plans reserved a node for, with the registry identity each
-	 * one carries. These are planned slots, not footprints: the generator does not
-	 * place walls, and a consumer that draws them should say so.
+	 * Buildings the city district plans reserved a node for, with the registry
+	 * identity each one carries. These are planned slots, not footprints; for the
+	 * drawn buildings with their real dimensions, call GetSceneBuildings.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "FantasyWorldGenerator|Places")
 	bool GetPlannedBuildings(int32 LatitudeRows, TArray<FFantasyPlannedBuilding>& OutBuildings,

@@ -68,8 +68,8 @@ WorldScene build_scene(const WorldEnvelope& world,const std::vector<FoundedCity>
         CityAnchor anchor;
         anchor.id="city-"+std::to_string(index);
         anchor.population_profile=site.population_profile;
-        // Cities carry a marker identity until the city-plan slice lands and every
-        // building resolves through its own registry row.
+        // The anchor is the settlement's place on the map, not a structure: its
+        // buildings each carry their own registry identity in scene.buildings.
         anchor.asset_id="marker.city_ruins";
         anchor.node=site.node;
         anchor.direction=direction(point.first,point.second,world.size);

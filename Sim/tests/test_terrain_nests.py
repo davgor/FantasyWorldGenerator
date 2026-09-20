@@ -80,13 +80,14 @@ def surface_km2(world):
 class NestWorldTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from icarus_sim.terrain_recipes import RECIPE_WORLD_SCALE
         cls.world=build()
-        # Three times the surface, the size the engine consumer asks for. The recipe's
-        # own world is 40 km2, small enough that a handful of lairs is all the pyramid
-        # has to show; shape claims are made here instead.
-        cls.wide_radius=20*1000/(2*3.141592653589793*RECIPE_WORLD_SCALE)
-        cls.wide=build(globe_radius=cls.wide_radius)
+        # Three times the surface, so the population claims below have room to show a
+        # shape. Expressed against whatever the default world currently is rather than a
+        # fixed radius: surface goes as circumference squared, so sqrt(3) times around.
+        # A hardcoded width silently became NARROWER than the default when the world
+        # grew from 11 km to 200 km, which inverted this whole comparison.
+        cls.wide_circumference_km=200.*3**.5
+        cls.wide=build(circumference_km=cls.wide_circumference_km)
 
     def test_replay_and_isolation(self):
         from icarus_sim.terrain_lab import generate,Config
@@ -182,12 +183,12 @@ class NestWorldTests(unittest.TestCase):
         self.assertEqual(w['beast_nests']['sites'],[])
         # The cap is a safety valve applied per pass. It runs after placement, so it
         # keeps exactly the most notable of the anchors the world already chose.
-        w=build(globe_radius=self.wide_radius,nest_limit=12)
+        w=build(circumference_km=self.wide_circumference_km,nest_limit=12)
         for key,_ in PASSES:
             kept=sorted(self.wide[key]['sites'],key=lambda a:(-a['tier'],a['id']))[:12]
             self.assertEqual([a['id'] for a in w[key]['sites']],sorted(a['id'] for a in kept),key)
             self.assertEqual(sum(d['placed'] for d in w[key]['diagnostics']),12,key)
-        w=build(globe_radius=self.wide_radius,nest_per_species=1)
+        w=build(circumference_km=self.wide_circumference_km,nest_per_species=1)
         for key,_ in PASSES:
             ids=[s['species_id'] for s in w[key]['sites']]
             self.assertTrue(ids,key)

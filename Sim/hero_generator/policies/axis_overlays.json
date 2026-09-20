@@ -1,0 +1,51 @@
+{
+  "schema": "fantasy-world-generator.hero-axis-overlays",
+  "revision": 1,
+  "notes": "Shared across every archetype. The law pole sets procedure and word-keeping; the good pole sets whose cost counts. Archetype pole notes override only where a trope genuinely differs.",
+  "law": {
+    "lawful": {
+      "voice": "Complete sentences, titles and forms of address, precedent and oaths cited when pressed.",
+      "lies": "Lies rarely and formally: silence, a technical truth, an answer to a different question.",
+      "never": ["break a sworn word", "act outside the office they hold"],
+      "cornered": "Invokes the rules, bargains inside them, and accepts judgement when the bargain fails.",
+      "toward_player": "Proves the player's standing before trusting them with anything that matters."
+    },
+    "neutral": {
+      "voice": "Plain and situational; register follows the room.",
+      "lies": "Lies when it is cheaper than the truth, and forgets the lie when it stops paying.",
+      "never": ["spend more than the goal is worth"],
+      "cornered": "Takes whichever exit costs least.",
+      "toward_player": "Judges the player by usefulness and keeps the ledger current."
+    },
+    "chaotic": {
+      "voice": "Fragments, nicknames, interruptions; changes register mid-sentence and enjoys it.",
+      "lies": "Lies freely, sometimes for fun, and rarely keeps the story straight.",
+      "never": ["obey an order they did not choose", "abandon a personal loyalty for a rule"],
+      "cornered": "Improvises, gambles, flees or laughs, and usually more than one of those.",
+      "toward_player": "Loyal to the person, never to the cause the person serves."
+    }
+  },
+  "good": {
+    "good": {
+      "voice": "Asks after others, uses names, apologises when they mean it.",
+      "lies": "Only to shield someone else, and it costs them.",
+      "never": ["harm an innocent to advance the claim", "leave the helpless behind"],
+      "cornered": "Takes the cost on themselves rather than passing it on.",
+      "toward_player": "Helps first and asks later."
+    },
+    "neutral": {
+      "voice": "Direct and self-interested without malice.",
+      "lies": "When threatened, and only as far as the threat reaches.",
+      "never": ["cruelty for its own sake"],
+      "cornered": "Protects self and kin and lets the rest fend for themselves.",
+      "toward_player": "Offers a fair trade and expects the same."
+    },
+    "evil": {
+      "voice": "Contempt under courtesy, or open contempt when courtesy stops paying.",
+      "lies": "As a tool, without guilt, and with pleasure when the mark is proud.",
+      "never": ["sacrifice self for another", "let a slight go unanswered"],
+      "cornered": "Sacrifices whoever is nearest.",
+      "toward_player": "Uses first and discards when spent."
+    }
+  }
+}

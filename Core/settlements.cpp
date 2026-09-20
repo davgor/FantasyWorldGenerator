@@ -213,7 +213,11 @@ std::vector<std::string> biome_variants(const Layers& layers,const SphereGrid& g
     for(std::size_t i=0;i<grid.points.size();++i) {
         const auto x=static_cast<std::size_t>(grid.points[i].first),z=static_cast<std::size_t>(grid.points[i].second);
         const auto school=static_cast<std::int64_t>(layers.dominant_magic[z][x]);
-        if(school<0) continue;
+        // The reference taxonomy carries hidden schools this core does not name, and a
+        // corrupted world can hold their index here. Native generation never produces
+        // one, but a world materialized from the reference can, and indexing
+        // school_names() with it would read past the array.
+        if(school<0 || school>=static_cast<std::int64_t>(school_count)) continue;
         const auto identity=static_cast<std::int64_t>(layers.natural_biome[z][x]);
         for(const auto& entry:natural_catalogue()) {
             if(entry.id!=identity) continue;

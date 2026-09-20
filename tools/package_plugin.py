@@ -23,13 +23,23 @@ REGISTRY_SOURCE='Contracts/catalogues/unreal-asset-registry-v1.json'
 REGISTRY_TARGET=ARCHIVE_PREFIX+'Data/unreal-asset-registry-v1.json'
 CATALOGUE_SOURCE='Contracts/catalogues/native-catalogues-v1.json'
 CATALOGUE_TARGET=ARCHIVE_PREFIX+'Data/native-catalogues-v1.json'
+# The settlement planners read these four at runtime, by path, exactly as the reference
+# does. They MUST travel: the plugin has to be a folder a game copies and keeps, with
+# nothing reaching back into this repository. Without them a packaged game silently
+# produces no buildings, because the planners degrade rather than fail.
+PLANNER_CATALOGUES=('civilizations.json','buildings.json','city_shapes.json','castles.json')
+PLANNER_SOURCE_DIRECTORY='Sim/icarus_sim'
+# Installed beside the plugin so a game can read, at runtime, exactly which generator
+# build it is pinned to. The archive's own file name is a digest of everything, but a
+# consumer never sees the archive -- it sees the folder.
+IDENTITY_TARGET=ARCHIVE_PREFIX+'Data/plugin-manifest.json'
 # Source-only plugin: refuse anything that could smuggle a binary, asset or build product.
 ALLOWED_SUFFIXES=('.uplugin','.h','.hpp','.inl','.cpp','.cs','.md','.ini')
 
 
 def manifest_metadata(registry,catalogues):
     return dict(schema='fantasy-world-generator.unreal-plugin-package',schema_version=2,
-                plugin='FantasyWorldGenerator',plugin_version='0.2.0',module='FantasyWorldGenerator',module_type='Runtime',
+                plugin='FantasyWorldGenerator',plugin_version='0.3.0',module='FantasyWorldGenerator',module_type='Runtime',
                 engine=dict(version='5.8',requested_patch='5.8.2',platforms=['Win64']),
                 genesis='native-core',native_generate='available',core_vendored=True,recipe_version=3,
                 coordinates=dict(version=1,unreal_x='east_m * 100',unreal_y='north_m * 100',
@@ -42,8 +52,12 @@ def manifest_metadata(registry,catalogues):
                                 registry_sha256=catalogues['registry']['sha256']),
                 qualification='unqualified-source-only',unreal_qualified=False,unreal_cooked_runtime=False,
                 python_runtime_required=False,license='LICENSE',
-                limitations=['Generate, on-demand sampling and registry resolution are native; '
-                             'settlement, road and nest placement are not in this envelope yet',
+                # Hermetic: every catalogue the compiled rules read at runtime is staged
+                # under Data/, so the installed folder is the whole generator and a game
+                # keeps working when this repository is not on the machine.
+                self_contained=True,
+                limitations=['Generate, on-demand sampling, registry resolution, settlement, '
+                             'road, habitat and building-geometry placement are all native',
                              'No Unreal Build Tool, editor load or cooked-runtime result is implied by this archive',
                              'Terrain presentation is a runtime procedural surface, not an editor Landscape actor',
                              'No Python runtime, sidecar or embedded interpreter',
@@ -98,6 +112,11 @@ def plugin_files(root=ROOT):
     # Authoring traits and habitat rules travel as data; the rules that read them are
     # compiled Core sources, not a JSON world.
     payload[CATALOGUE_TARGET]=(root/CATALOGUE_SOURCE).read_bytes()
+    for name in PLANNER_CATALOGUES:
+        source=root/PLANNER_SOURCE_DIRECTORY/name
+        if not source.is_file():
+            raise ValueError('missing planner catalogue for staging: '+name)
+        payload[ARCHIVE_PREFIX+'Data/'+name]=source.read_bytes()
     return payload
 
 
@@ -107,9 +126,20 @@ def bundle_bytes(root=ROOT):
     catalogues=json.loads(payload[CATALOGUE_TARGET])
     # The private notice travels inside the plugin folder that a consumer copies.
     payload[ARCHIVE_PREFIX+'LICENSE']=(root/'LICENSE').read_bytes()
-    manifest=dict(manifest_metadata(registry,catalogues),
-                  files={name:hashlib.sha256(data).hexdigest() for name,data in sorted(payload.items())})
-    payload['manifest.json']=(json.dumps(manifest,sort_keys=True,indent=2)+'\n').encode()
+    files={name:hashlib.sha256(data).hexdigest() for name,data in sorted(payload.items())}
+    # One digest over every file's digest: the generator's identity, stable and
+    # computable before the manifest that carries it exists. A game records this and
+    # knows precisely which generator its worlds came from; two folders agreeing on it
+    # produce identical worlds from identical seeds.
+    identity=hashlib.sha256(
+        ''.join(f'{name}:{digest}\n' for name,digest in sorted(files.items())).encode()).hexdigest()
+    manifest=dict(manifest_metadata(registry,catalogues),generator_identity=identity,files=files)
+    encoded=(json.dumps(manifest,sort_keys=True,indent=2)+'\n').encode()
+    # Twice on purpose: at the archive root for inspection, and inside the plugin
+    # folder because install() copies only that folder and a game must be able to read
+    # its own generator version without the archive.
+    payload['manifest.json']=encoded
+    payload[IDENTITY_TARGET]=encoded
     output=io.BytesIO()
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_STORED) as archive:
         for name,data in sorted(payload.items()):

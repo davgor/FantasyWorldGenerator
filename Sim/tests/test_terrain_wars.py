@@ -192,8 +192,17 @@ class WarsInGeneratedWorldTests(unittest.TestCase):
             self.assertIn(war['defeated_uid'], ruins)
             self.assertEqual(ruins[war['defeated_uid']]['cause'], 'war_' + war['kind'])
             self.assertEqual(ruins[war['defeated_uid']]['destroyed_age'], war['age'])
-        for uid in victors:
-            self.assertNotEqual(ruins.get(uid, {}).get('cause', ''), 'war_' + WAR_CIVIL)
+        # A city can be drawn into several wars in one age and is only lost once, so a
+        # victor may still fall to another war; it is never the ruin of the war it won.
+        for war in fought:
+            ruin = ruins.get(war['victor_uid'])
+            if ruin and ruin['cause'].startswith('war_'):
+                self.assertNotEqual(ruin['evidence']['war_id'], war['id'])
+        self.assertTrue(victors)
+        # The invariant the resolver enforces: a city is lost at most once per age.
+        for age in ages:
+            lost = [war['defeated_uid'] for war in age['wars']]
+            self.assertEqual(len(lost), len(set(lost)), 'a city can be dragged into several wars but is only lost once')
 
     def test_both_sides_keep_the_war_and_a_ruin_keeps_what_it_fought(self):
         fought = [war for age in self.world['history']['ages'] for war in age['wars']]

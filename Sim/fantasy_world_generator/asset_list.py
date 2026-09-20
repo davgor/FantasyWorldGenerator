@@ -156,10 +156,75 @@ def _castle_planner_assets():
                          'rendering':'Fortification module or bailey shell; production art remains unassigned'}} for s in rows]
 
 
+def _key_location_assets() -> list[dict[str, Any]]:
+    """One marker per key-location archetype.
+
+    The catalogue has no cave, tomb, waystone or standing-stone mesh, so these are markers
+    with production art unassigned rather than claims of supported geometry. They are listed
+    because the exhaustive list describes every potential final state, and a generated world
+    can reference any of these the moment the archetype places.
+    """
+    from key_locations.catalogue import load
+
+    document = load()
+    rows = []
+    for archetype in document["archetypes"]:
+        family = document["families"][archetype["family"]]
+        rows.append({
+            "id": f"marker.key_location.{archetype['id']}",
+            "kind": "marker",
+            "name": archetype["name"],
+            "source": "simulation.key_locations",
+            "status": "schematic",
+            "selectors": {"key_location_kind": archetype["id"]},
+            "metadata": {
+                "family": archetype["family"],
+                "tier": archetype["tier"],
+                "domain": archetype["domain"],
+                "display_color_rgb": family["color"],
+                "glyph": family["glyph"],
+                "interior": bool(archetype.get("interior")),
+                "rendering": "Map marker; production art remains unassigned.",
+                "catalogue_revision": document["revision"],
+                "recipe_version": 3,
+            },
+        })
+    return rows
+
+
+def _key_location_part_assets() -> list[dict[str, Any]]:
+    """One identity per exterior kit part.
+
+    These are the things that actually stand on the ground at a location, so unlike the
+    per-archetype markers they carry real footprints and dimensions. Still schematic: the
+    metres are sized for legibility and no production art is assigned.
+    """
+    from key_locations.exteriors import load
+
+    document = load()
+    return [{
+        "id": part["id"],
+        "kind": "building" if part["kind"] == "structure" else "marker",
+        "name": part["name"],
+        "source": "simulation.key_location_exteriors",
+        "status": "schematic",
+        "selectors": {"part_id": part["id"]},
+        "metadata": {
+            "part_kind": part["kind"],
+            "dimensions_m": part["dimensions_m"],
+            "plot_m": part["plot_m"],
+            "rendering": "Labeled footprint; production art remains unassigned.",
+            "catalogue_revision": document["revision"],
+            "recipe_version": 3,
+        },
+    } for part in document["parts"]]
+
+
 def compile_asset_list() -> dict[str, Any]:
     """Return a deterministic, normalized potential-state asset catalogue."""
     assets = (_terrain_assets() + _creature_assets() + _building_assets() + _production_assets()
-              + _history_assets() + _city_planner_assets() + _castle_planner_assets())
+              + _history_assets() + _city_planner_assets() + _castle_planner_assets()
+              + _key_location_assets() + _key_location_part_assets())
     assets.sort(key=lambda item: item["id"])
     ids = [item["id"] for item in assets]
     if len(ids) != len(set(ids)):

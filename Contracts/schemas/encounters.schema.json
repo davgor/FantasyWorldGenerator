@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Encounters v1",
+  "description": "The `encounters` block: an index of what travelling thing is near here, at this time of year, and what it is. An index, not a quest generator -- no objectives, stakes, rewards or difficulty, because the consumer that would define them does not exist yet. What it guarantees is that the question is answerable in one lookup rather than a scan over every leg of every group.",
+  "type": "object",
+  "required": [
+    "version",
+    "entries",
+    "occupancy",
+    "by_month",
+    "by_node",
+    "method",
+    "limits"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "group_uid",
+          "source",
+          "kind",
+          "disposition",
+          "threat_tier",
+          "size"
+        ],
+        "properties": {
+          "group_uid": {
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "nomads",
+              "beast_movements"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "description": "A nomad classification or a creature species id."
+          },
+          "disposition": {
+            "enum": [
+              "hostile",
+              "wary",
+              "tradeable",
+              "devout",
+              "fleeing"
+            ]
+          },
+          "threat_tier": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "On the creature-tier rubric so it reads the same as beast_nests. A band takes its tier from its classification: what a band will do to you is a property of what kind of band it is."
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "carries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seeks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "host_uid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "god_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "speed_m_per_day": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "column_length_m": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "occupancy": {
+      "type": "array",
+      "description": "One record per camp a group holds. Camps only: a group in transit is derivable from its leg node path and its speed.",
+      "items": {
+        "type": "object",
+        "required": [
+          "entry",
+          "node",
+          "camp_id",
+          "camp_kind",
+          "months"
+        ],
+        "properties": {
+          "entry": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index into entries[]."
+          },
+          "node": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "camp_id": {
+            "type": "string"
+          },
+          "camp_kind": {
+            "type": "string"
+          },
+          "from_day": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "to_day": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "months": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            }
+          }
+        }
+      }
+    },
+    "by_month": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "by_node": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

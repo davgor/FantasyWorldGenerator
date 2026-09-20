@@ -3,6 +3,18 @@ from .terrain_profiles import profiles, get_profile, civilization_ids
 from .civilization_registry import section,entity_rules,registry_identity
 
 
+def heritage_of(key):
+    """Key traits, derived culture and derived language for one civilization.
+
+    Imported here rather than at module scope because heritage is a leaf package that
+    knows nothing of the registry: something that imports both has to pair a civilization
+    with its parent race, and the report is the natural place for that.
+    """
+    from heritage import resolve
+    resolved=resolve(key,entity_rules(key)['parent_race_id'])
+    return {k:resolved[k] for k in ('traits','culture','genome','provenance')}
+
+
 def matches(rule, environment):
     if not rule:return True
     if 'all' in rule:return all(matches(r,environment) for r in rule['all'])
@@ -64,12 +76,18 @@ def classify_cities(sites):
 
 
 def civilization_report(sites):
+    from heritage import heritage_identity
     classes=section('city_classification')
-    return {'version':2,'registry':registry_identity(),'medium_suitability_min':classes['medium_suitability_min'],'capital_scope':classes['capital_scope'],
+    # Version 3 adds the heritage block. It rides inside `civilizations`, which is already a
+    # history state key, so the stage scrubber needs no new entry and the lab is untouched.
+    return {'version':3,'registry':registry_identity(),
+            'heritage':heritage_identity(tuple((key,entity_rules(key)['parent_race_id']) for key in civilization_ids())),
+            'medium_suitability_min':classes['medium_suitability_min'],'capital_scope':classes['capital_scope'],
             'parent_races':section('parent_races'),
             'presentation_defaults':{k:v for k,v in section('defaults').items() if k.endswith('_color_rgb')},
             'entities':[dict(id=key,region_index=index,name=get_profile(key)['name'],**get_profile(key)['civilization'],
                              presentation=entity_rules(key)['presentation'],parent_race_id=entity_rules(key)['parent_race_id'],
+                             heritage=heritage_of(key),
                              city_count=sum(s['population_profile']==key for s in sites),
                              capital_node=next((s['node'] for s in sites if s['population_profile']==key and s['city_class']=='capital'),None))
                         for index,key in enumerate(civilization_ids())]}

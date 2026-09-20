@@ -134,6 +134,7 @@ int main(int argc,char** argv) {
             {"temperature",&l.temperature},{"moisture",&l.moisture},{"biome",&l.biome},
             {"landform",&l.landform},{"natural_biome",&l.natural_biome},{"salinity",&l.salinity},
             {"flood_risk",&l.flood_risk},{"freshwater_distance",&l.freshwater_distance},
+            {"lunar_sensitivity",&l.lunar_sensitivity},
             };
         for(const auto& entry:named) if(!entry.second->empty()) emit_grid(entry.first,*entry.second);
         emit_grid("area",Grid{{world.land_km2,world.ocean_km2,world.lake_km2,world.dry_km2}});
@@ -426,8 +427,9 @@ int main(int argc,char** argv) {
                 city.population_profile.c_str(),static_cast<long long>(city.founded_age),
                 city.founding_year,city.name.c_str());
         for(const Ruin& ruin:ruins)
-            std::printf("RUIN\t%s\t%zu\t%s\t%lld\t%.17g\t%.17g\n",ruin.id.c_str(),ruin.node,
-                ruin.cause.c_str(),static_cast<long long>(ruin.destroyed_age),ruin.probability,ruin.roll);
+            std::printf("RUIN\t%s\t%zu\t%s\t%lld\t%.17g\t%.17g\t%s\t%.17g\t%s\n",ruin.id.c_str(),ruin.node,
+                ruin.cause.c_str(),static_cast<long long>(ruin.destroyed_age),ruin.probability,ruin.roll,
+                ruin.new_node_school.c_str(),ruin.legacy_intensity,ruin.legacy_basis.c_str());
         for(const War& war:wars)
             std::printf("WAR\t%s\t%s\t%s\t%s\t%lld\t%.17g\t%.17g\t%.17g\n",war.id.c_str(),
                 war.kind.c_str(),war.victor_uid.c_str(),war.defeated_uid.c_str(),
@@ -886,7 +888,8 @@ int main(int argc,char** argv) {
             {"reef",&l.reef},{"lagoon",&l.lagoon},{"estuary",&l.estuary},{"sheltered_bay",&l.sheltered_bay},
             {"rocky_coast",&l.rocky_coast},{"kelp",&l.kelp},{"fjord",&l.fjord},{"open_ocean",&l.open_ocean},
             {"maritime",&l.maritime},{"boreal",&l.boreal},{"tundra",&l.tundra},{"ice_cap",&l.ice_cap},
-            {"coastal_support",&l.coastal_support},{"island_habitat",&l.island_habitat}};
+            {"coastal_support",&l.coastal_support},{"island_habitat",&l.island_habitat},
+            {"lunar_sensitivity",&l.lunar_sensitivity}};
         for(const auto& entry:derived) if(!entry.second->empty()) emit_grid(entry.first,*entry.second);
         return 0;
     }

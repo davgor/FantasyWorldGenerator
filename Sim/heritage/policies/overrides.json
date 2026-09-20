@@ -1,0 +1,30 @@
+{
+  "schema": "fantasy-world-generator.heritage-overrides",
+  "revision": 1,
+  "notes": "Sparse hand-tunes over the derived culture and genome. Every entry here is a deliberate departure from the derivation; an entry that restates the derived value is a load error, so this file stays a list of real decisions rather than a slowly fossilising copy of the output. Inventory patches use add/drop, and dropping a phoneme the derivation never produced is an error too.",
+  "culture": {
+    "frosthold_dwarf": {
+      "memory": {"taboo": "letting_the_forge_die"},
+      "faith": {"festival": "ember_vigil"}
+    },
+    "tidekin": {
+      "memory": {"taboo": "naming_the_drowned"},
+      "faith": {"festival": "the_long_ebb"}
+    },
+    "gnome": {
+      "memory": {"taboo": "unlicensed_copy"},
+      "faith": {"festival": "patent_day"}
+    },
+    "hill_dwarf": {
+      "faith": {"festival": "the_full_table"}
+    },
+    "human_cold": {
+      "faith": {"festival": "the_long_night_watch"}
+    }
+  },
+  "genome": {
+    "tidekin": {
+      "inventory": {"consonants": {"add": ["lh"], "drop": ["p", "g"]}}
+    }
+  }
+}

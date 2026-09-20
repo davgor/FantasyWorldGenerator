@@ -1,6 +1,6 @@
 {
- "asset_list_sha256": "53620d94d9e7daa96ed994a2023f40c0d612dbb791978c5978eda26078992c67",
- "content_sha256": "107150fa05ffe23b88ab1168a68e37fc3384a69002ea959f9dbaccb51572ec96",
+ "asset_list_sha256": "e2ca9d2b2d886702326517e9a7d57eb532e6cdaadc69d5721ff1cbd35c0253fb",
+ "content_sha256": "fcba8964565324d9401bdbfd774bff340b1e261ecf02ec30984d8ad95ec3ddbd",
  "recipe_version": 3,
  "rows": [
   {
@@ -1168,6 +1168,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.absence-titans",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.abyssal-choir-worms",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -1432,6 +1438,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.barrow-wight",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.basalt-guardians",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -1570,6 +1582,18 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.blood-barons",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.blood-ticks",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.blue-mussel",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -1696,6 +1720,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.brood-mothers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.brood-surgeons",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -1787,6 +1817,24 @@
   },
   {
    "id": "creature.caracal",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.caravan-jackals",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.carrion-flies",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.carrion-followers",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2092,6 +2140,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.corpse-lights",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.corpse-moths",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -2117,6 +2171,12 @@
   },
   {
    "id": "creature.crested-porcupine",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.crimson-courts",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2177,6 +2237,12 @@
   },
   {
    "id": "creature.desert-tortoise",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.devouring-tide",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2273,6 +2339,12 @@
   },
   {
    "id": "creature.dust-imps",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.dust-wisps",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2381,6 +2453,12 @@
   },
   {
    "id": "creature.emu",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.entropy-motes",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2512,6 +2590,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.exsanguinators",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.eyebud-clusters",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -2579,6 +2663,12 @@
   },
   {
    "id": "creature.flame-elementals",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.flesh-amalgams",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2693,6 +2783,12 @@
   },
   {
    "id": "creature.geoffroy-s-spider-monkey",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.geometry-wraiths",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -2879,6 +2975,12 @@
   },
   {
    "id": "creature.grass-snake",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.grass-tide-rats",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -3112,6 +3214,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.herd-stalkers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.hexbound-penitents",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -3149,6 +3257,12 @@
   },
   {
    "id": "creature.hollow-deer",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.hollow-echoes",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -3197,6 +3311,12 @@
   },
   {
    "id": "creature.hunger-saints",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.hunt-wraiths",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -3586,6 +3706,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.mind-flayers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.mirror-confessors",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -3754,6 +3880,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.null-wardens",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.nurse-shark",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -3874,6 +4006,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.pilgrim-elk",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.pilgrim-tortoises",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -3887,6 +4025,12 @@
   },
   {
    "id": "creature.pitch-crawlers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.plague-cortege",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -3965,6 +4109,12 @@
   },
   {
    "id": "creature.rainbow-trout",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.ravening-swarm",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4127,6 +4277,12 @@
   },
   {
    "id": "creature.river-serpents",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.road-shades",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4336,6 +4492,12 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.silence-eaters",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.silt-wisps",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -4372,7 +4534,19 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.skin-takers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.sky-rays",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.skywhales",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4498,6 +4672,18 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.star-cold-drifters",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.star-spawn",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.static-fleas",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -4594,6 +4780,36 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.tentacled-dreamers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.the-long-thirst",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.the-unwriting",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.the-watching-deep",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.the-wild-hunt",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.thicket-drakes",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
@@ -4631,6 +4847,12 @@
   },
   {
    "id": "creature.thunder-boars",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.thunder-herd",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4714,7 +4936,25 @@
    "status": "placeholder"
   },
   {
+   "id": "creature.unlit-shapes",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.unquiet-column",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
    "id": "creature.vampires",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.vein-hounds",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4733,6 +4973,12 @@
   },
   {
    "id": "creature.virginia-opossum",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.void-ghosts",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4823,6 +5069,12 @@
   },
   {
    "id": "creature.wax-crawlers",
+   "kind": "creature",
+   "path": "/Engine/BasicShapes/Sphere.Sphere",
+   "status": "placeholder"
+  },
+  {
+   "id": "creature.weepers",
    "kind": "creature",
    "path": "/Engine/BasicShapes/Sphere.Sphere",
    "status": "placeholder"
@@ -4990,7 +5242,1039 @@
    "status": "placeholder"
   },
   {
+   "id": "keyloc.part.adit_mouth",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.altar_stone",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.arch_span",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.barrow_mound",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.bone_midden",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.boulder",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.bridge_span",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.broch_shell",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.cairn",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.campfire",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.caravan_range",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.cave_mouth",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.chapel",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.charcoal_hearth",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.chasm_edge",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.circle_cut",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.cloister_range",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.coffin_ledge",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.colossus_figure",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.crannog_platform",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.crater_rim",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.crystal_spur",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.drowned_roof",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.drying_rack",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.dyke_bank",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.excarnation_platform",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.fallen_column",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ford_marker",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.foundation_line",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.gatehouse",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.geyser_vent",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.gibbet_post",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.grave_marker",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.headframe",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ice_mouth",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.inn_house",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.kiln",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.lean_to",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ley_pillar",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.nest_mound",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ore_track",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ossuary_shed",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.overgrown_mound",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.palisade",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.peat_stack",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.petrified_figure",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.pilgrim_shelter",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.piling",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.portal_arch",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.quarry_face",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.rampart",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.rock_outcrop",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.rubble_pile",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ruined_wall",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.salt_pan",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.scree_fan",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.shrine_niche",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.sinkhole_rim",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.slag_mound",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.spoil_heap",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.stable",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.standing_stone",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.tar_seep",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.tent",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.tomb_facade",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.tower",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.tower_spire",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.wall_segment",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.ward_stone",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.watch_platform",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.waystone",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.well_head",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.winding_shed",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.wreck_hull",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
+   "id": "keyloc.part.yard_wall",
+   "kind": "building",
+   "path": "/Engine/BasicShapes/Cube.Cube",
+   "status": "placeholder"
+  },
+  {
    "id": "marker.city_ruins",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.academy_ruin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.aqueduct_span",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.arena_ruin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.bandit_camp",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.barrow",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.barrow_field",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.battlefield",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.beacon_tower",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.beast_den",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.binding_site",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.border_fort",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.boundary_stone",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.bridge",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.cairn_field",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.caravanserai",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.charcoal_camp",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.cliff_coffins",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.colossus",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.crannog",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.crossroads",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.crystal_cavern",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.dragon_lair",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.drowned_temple",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.drowned_village",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.excarnation_tower",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.fairy_ring",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.fallen_star",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.ferry_crossing",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.ford",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.gem_mine",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.geyser_basin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.giants_hall",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.gibbet",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.glacier_cave",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.great_stump",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.hedge_inn",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.hermit_cell",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.hermitage",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.hillfort",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.holy_well",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.hunting_lodge",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.iron_mine",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.karst_cave",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.lava_tube",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.ley_nexus",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.library_ruin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.lighthouse",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.lime_kiln",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.linear_dyke",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.logging_camp",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.maelstrom",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.mausoleum",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.meteor_crater",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.miners_cottages",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.monastery",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.mountain_sanctuary",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.natural_arch",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.necropolis",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.observatory",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.oracle_cave",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.pass_hospice",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.peat_cuttings",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.petrified_army",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.pilgrim_station",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.plague_pit",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.portal_arch",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.quarantine_isle",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.quarry",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.refuge_broch",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.reliquary_chapel",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.rift_chasm",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.sacred_grove",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.salt_mine",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.salt_pans",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.sea_cave",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.ship_burial",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.siege_camp",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.silver_mine",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.sinkhole",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.smelter_ruin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.spider_wood",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.standing_stones",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.summoning_circle",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.surf_ruin",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.tar_pit",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.the_scar",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.titan_skeleton",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.toll_station",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.watchtower",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.wayside_shrine",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.waystone",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.whaling_station",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.wild_magic_scar",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.witch_cottage",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.wizard_tower",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.wreck_field",
+   "kind": "marker",
+   "path": "/Engine/BasicShapes/Cone.Cone",
+   "status": "placeholder"
+  },
+  {
+   "id": "marker.key_location.wyvern_eyrie",
    "kind": "marker",
    "path": "/Engine/BasicShapes/Cone.Cone",
    "status": "placeholder"
@@ -8032,7 +9316,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.boreal_forest.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.boreal_forest.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.boreal_forest.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8056,7 +9352,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.boreal_forest.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.boreal_forest.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.boreal_forest.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8080,7 +9388,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.cold_tundra.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.cold_tundra.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.cold_tundra.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8104,7 +9424,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.cold_tundra.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.cold_tundra.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.cold_tundra.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8128,7 +9460,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.desert.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.desert.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.desert.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8152,7 +9496,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.desert.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.desert.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.desert.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8176,7 +9532,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.exposed_rock.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.exposed_rock.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.exposed_rock.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8200,7 +9568,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.exposed_rock.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.exposed_rock.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.exposed_rock.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8224,7 +9604,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.forest.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.forest.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.forest.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8248,7 +9640,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.forest.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.forest.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.forest.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8272,7 +9676,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.grassland.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.grassland.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.grassland.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8296,7 +9712,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.grassland.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.grassland.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.grassland.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8320,7 +9748,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.lake.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.lake.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.lake.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8344,7 +9784,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.lake.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.lake.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.lake.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8368,7 +9820,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.land_ice.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.land_ice.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.land_ice.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8392,7 +9856,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.land_ice.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.land_ice.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.land_ice.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8416,7 +9892,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.marsh.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.marsh.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.marsh.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8440,7 +9928,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.marsh.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.marsh.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.marsh.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8464,7 +9964,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.ocean.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.ocean.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.ocean.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8488,7 +10000,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.ocean.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.ocean.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.ocean.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8512,7 +10036,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.rainforest.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.rainforest.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.rainforest.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8536,7 +10072,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.rainforest.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.rainforest.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.rainforest.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8560,7 +10108,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.snow.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.snow.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.snow.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8584,7 +10144,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.snow.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.snow.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.snow.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8608,7 +10180,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.tundra.blood",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.tundra.earth",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.tundra.eldritch",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"
@@ -8632,7 +10216,19 @@
    "status": "placeholder"
   },
   {
+   "id": "terrain.mutation.tundra.rot",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
    "id": "terrain.mutation.tundra.umbral",
+   "kind": "terrain_surface",
+   "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
+   "status": "placeholder"
+  },
+  {
+   "id": "terrain.mutation.tundra.void",
    "kind": "terrain_surface",
    "path": "/Engine/EngineMaterials/EmissiveMeshMaterial.EmissiveMeshMaterial",
    "status": "placeholder"

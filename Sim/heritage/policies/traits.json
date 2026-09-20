@@ -1,0 +1,120 @@
+{
+  "schema": "fantasy-world-generator.heritage-traits",
+  "revision": 1,
+  "notes": "Seventeen categorical key traits per people. Six soma axes drive phonology, three register axes drive prosody and script, eight social axes drive culture. No numbers live here: the quantitative habitat profile is civilizations.json and these must never restate it. Each race base is the unmarked member, so human_heartland, elf and dwarf carry empty deltas and every other entry reads as its diff from its archetype.",
+  "races": {
+    "human": {
+      "body_scale": "mid", "vocal_tract": "even", "breath_capacity": "steady",
+      "hearing_band": "flat", "lifespan_tempo": "brief", "dentition": "even",
+      "speech_environment": "open_plain", "carrying_register": "conversational",
+      "writing_surface": "inked_hide",
+      "kinship": "nuclear_household", "authority": "hereditary_lord",
+      "mobility": "frontier_expanding", "memory_mode": "written_archive",
+      "craft_focus": ["husbandry_and_tillage", "wood_and_weave"],
+      "outsiders": "transactional", "magic_stance": "scholarly_licensed",
+      "magic_school": "radiant"
+    },
+    "elf": {
+      "body_scale": "tall", "vocal_tract": "narrow", "breath_capacity": "sustained",
+      "hearing_band": "high_weighted", "lifespan_tempo": "ancient", "dentition": "even",
+      "speech_environment": "forest", "carrying_register": "quiet",
+      "writing_surface": "carved_wood",
+      "kinship": "lineage_house", "authority": "elder_council",
+      "mobility": "rooted", "memory_mode": "sung_lineage",
+      "craft_focus": ["wood_and_weave", "herb_and_dye"],
+      "outsiders": "wary", "magic_stance": "inherited_bloodline",
+      "magic_school": "weave"
+    },
+    "dwarf": {
+      "body_scale": "compact", "vocal_tract": "resonant_chest", "breath_capacity": "deep",
+      "hearing_band": "low_weighted", "lifespan_tempo": "long", "dentition": "blunt",
+      "speech_environment": "stone_hall", "carrying_register": "carrying",
+      "writing_surface": "incised_stone",
+      "kinship": "extended_clan", "authority": "guild_assembly",
+      "mobility": "rooted", "memory_mode": "carved_record",
+      "craft_focus": ["metal_and_forge", "stone_and_vault"],
+      "outsiders": "wary", "magic_stance": "ritual_communal",
+      "magic_school": "earth"
+    }
+  },
+  "peoples": {
+    "human_maritime": {
+      "speech_environment": "surf", "carrying_register": "calling",
+      "kinship": "crew_and_berth", "authority": "guild_assembly",
+      "mobility": "voyaging", "outsiders": "assimilating",
+      "craft_focus": ["seafaring", "husbandry_and_tillage"],
+      "magic_school": "water"
+    },
+    "human_desert": {
+      "speech_environment": "wind_scoured", "breath_capacity": "deep",
+      "writing_surface": "pressed_fibre_paper",
+      "kinship": "lineage_house", "mobility": "caravan",
+      "memory_mode": "oral_formulaic",
+      "craft_focus": ["glass_and_mechanism", "herb_and_dye"],
+      "magic_school": "fire"
+    },
+    "human_cold": {
+      "speech_environment": "wind_scoured", "breath_capacity": "short",
+      "carrying_register": "calling", "writing_surface": "carved_wood",
+      "kinship": "extended_clan", "authority": "consensus_moot",
+      "mobility": "seasonal_transhumance", "memory_mode": "oral_formulaic",
+      "craft_focus": ["ice_and_preserve", "seafaring"],
+      "outsiders": "wary", "magic_school": "water"
+    },
+    "human_large_island": {
+      "speech_environment": "terraced_valley", "carrying_register": "quiet",
+      "hearing_band": "high_weighted", "writing_surface": "pressed_fibre_paper",
+      "kinship": "lineage_house", "authority": "temple_seat",
+      "craft_focus": ["clay_and_kiln", "wood_and_weave"],
+      "outsiders": "wary", "magic_school": "air"
+    },
+    "human_rainforest": {
+      "speech_environment": "humid_canopy", "carrying_register": "calling",
+      "hearing_band": "high_weighted", "writing_surface": "knot_and_cord",
+      "kinship": "age_cohort", "authority": "temple_seat",
+      "memory_mode": "sung_lineage",
+      "craft_focus": ["stone_and_vault", "herb_and_dye"],
+      "outsiders": "hostile", "magic_stance": "ritual_communal",
+      "magic_school": "earth"
+    },
+    "human_heartland": {},
+    "elf": {},
+    "dwarf": {},
+    "tidekin": {
+      "speech_environment": "surf", "carrying_register": "calling",
+      "hearing_band": "low_weighted",
+      "kinship": "crew_and_berth", "authority": "consensus_moot",
+      "mobility": "voyaging",
+      "craft_focus": ["seafaring", "herb_and_dye"],
+      "outsiders": "transactional", "magic_school": "water"
+    },
+    "gnome": {
+      "body_scale": "small", "vocal_tract": "narrow",
+      "breath_capacity": "short", "hearing_band": "wide",
+      "lifespan_tempo": "human",
+      "speech_environment": "market_din", "carrying_register": "conversational",
+      "writing_surface": "pressed_fibre_paper",
+      "kinship": "guild_family", "mobility": "caravan",
+      "memory_mode": "ledger_and_seal",
+      "craft_focus": ["glass_and_mechanism", "metal_and_forge"],
+      "outsiders": "assimilating", "magic_stance": "scholarly_licensed",
+      "magic_school": "weave"
+    },
+    "hill_dwarf": {
+      "body_scale": "small",
+      "speech_environment": "open_plain", "carrying_register": "conversational",
+      "writing_surface": "inked_hide",
+      "kinship": "nuclear_household", "authority": "consensus_moot",
+      "memory_mode": "oral_formulaic",
+      "craft_focus": ["husbandry_and_tillage", "herb_and_dye"],
+      "outsiders": "hospitable", "magic_stance": "taboo_avoidant"
+    },
+    "frosthold_dwarf": {
+      "speech_environment": "wind_scoured", "breath_capacity": "short",
+      "authority": "hereditary_lord",
+      "craft_focus": ["metal_and_forge", "ice_and_preserve"],
+      "outsiders": "hostile", "magic_stance": "bargained_with",
+      "magic_school": "water"
+    }
+  }
+}

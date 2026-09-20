@@ -1,6 +1,8 @@
 # PANTHEON — God catalogue and world-decided pantheons
 
-Drafted: 2026-09-18. Status: design proposal, no code. Owner: local agent.
+Drafted: 2026-09-18. Status: in progress, folded into the lunar-cycle work ([ASTROLOGY](ASTROLOGY.md)); canonical contract in [docs/pantheon.md](../../docs/pantheon.md). Owner: lunar-cycle session.
+
+Decisions taken since the draft: cosmology is chosen per world; folded civic gods stay listed as saints; a moon god (`god_turning_moon`, aspects Pale Warden / Turning Face from the almanac's leaning) and a Turning Moon cosmology join the catalogue; feasts derive from the lunar almanac (surge days, full moons, hollow nights); gods stay dormant in generation and act only through `POST /world/summon` (see the visitation API in docs/pantheon.md), which is highly disruptive and leaves a footprint on departure. Implemented: `Sim/icarus_sim/pantheon.json`, `terrain_religion.py`, `terrain_visitation.py`, `Sim/tests/test_religion.py`, `test_visitation.py`.
 
 ## Requested behavior
 

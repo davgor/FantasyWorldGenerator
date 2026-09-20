@@ -62,7 +62,10 @@ def derive_population(result,cfg):
     if not cfg.auto_parameters or 'water' not in result:return cfg
     p=get_profile(cfg.population_profile);area=result['water']['dry_km2']
     count=min(24,math.floor(area/p['land_per_city_km2'])) if area>0 else 0
-    spacing=max(150,min(1500,math.sqrt(area*1e6/max(1,count))*.27))
+    # The ceiling is the settlement_spacing config bound, not a world-size assumption.
+    # At 1500 m a world wider than about 25 km had every city clamped into one region:
+    # the formula wants 3.2 km at a 200 km circumference and 8.6 km at 1000 km.
+    spacing=max(150,min(10000,math.sqrt(area*1e6/max(1,count))*.27))
     reach=max(100,min(10000,spacing*2.2*p['support_multiplier']))
     return record(result,cfg,{'settlement_count':count,'settlement_spacing':spacing,'support_reach':reach,'culture_link_cost':reach*1.8},
         {'settlement_count':'dry land area / population land-per-city trait; maximum 24',

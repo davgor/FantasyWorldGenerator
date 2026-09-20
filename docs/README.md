@@ -3,6 +3,11 @@
 - [Repository plan](../PLAN.md) is the canonical roadmap, ownership, package, and acceptance handoff.
 - [Simulation and world layers](terrain-world-layers.md) is the canonical generator behavior contract.
 - [Unified globe scene](unified-world-scene.md) defines leyline variation, city/world junctions and global placements.
+- [The moon](astrology.md) defines the lunar cycle, its almanac and clock hooks, temporary ley surges and ruin legacies.
+- [Pantheon](pantheon.md) defines the god catalogue, cosmologies, faiths and the visitation API that lets the orchestrator summon a god.
+- [Hidden schools](hidden-schools.md) defines the twelve-school taxonomy: the four schools the world does not know, why they are appended rather than inserted, and why generation can never raise one.
+- [Super villains](super-villains.md) defines the antagonists that operate on a different order than the kings around them: tier as continuous reach, the turmoil that raises it, and the fate lottery they take cities through.
+- [Corruption](corruption.md) defines the four hidden gods, the encounters gate that decides whether one acts, the four failure modes, and the cleansing that is also how a walking god is opposed.
 - [Continuous terrain data](continuous-terrain.md) defines shared physical heights and resolved tile exports.
 - [Final-world city planner](city-planner.md) defines ordered building filling, worker housing and the lab city view.
 - [Final-world hamlet planner](hamlet-planner.md) defines independent rural packing, dedicated hamlet building IDs and lab hamlet view.
@@ -10,7 +15,15 @@
 - [Historical city shapes](city-shapes.md) defines the sourced shape catalogue and location-based planner selection.
 - [Civilization master registry](civilizations.md) is the canonical authoring guide for entities, generation rules and construction libraries.
 - [Hero guild planning](hero-guild.md) defines opt-in demographic, party, service and accommodation calculations with explicit configurable rates.
+- [Hero generator](hero-generator.md) defines the separate cast package: people precipitated from ruins and wars, alignment-then-archetype selection, personas, and the `heroes` export.
+- [Story web](story-web.md) defines the separate story-web package: every living hero's trope spokes, the deterministic weight equation, the offered resting hook, bound acts with options and threads, and the `story_web` export.
+- [Heritage](heritage.md) defines the separate heritage package: seventeen categorical key traits per race, the culture derived from them, the language genome derived from culture and physiology, and the morphemic naming those genomes drive.
+- [NPC roster](npc-roster.md) defines the separate people package: one record per staffed post, the bounded quest-giver earmark, the alive/dead state and the `npcs` export.
+- [Key locations](key-locations.md) defines the separate places package: ninety-seven catalogue archetypes across eleven families, percentile-relative placement, derived state and occupant, the succession pass that produces dungeons without a dungeon archetype, chains and clusters for the places that are wrong placed alone, tier-2 interior chamber graphs, and the `key_locations` export.
+- [Nomads](nomads.md) defines the travelling bands the land raises once the simulation settles: the six classifications, the hard geographic gate each one must pass before any weight is drawn, why a candidate satisfying none raises nobody, and the `nomads` export.
+- [Beast movement](beast-movement.md) defines the creatures that do not hold ground: the five movement classes on the creature catalogue, why an undead with a grave nests at it and one without wanders, and the `beast_movements` and `encounters` exports.
 - [Standalone civilizations](decisions/016-standalone-civilizations.md) defines human entities, cultural habitat rules and city classifications.
+- [Heritage chain](decisions/021-heritage-chain.md) records why the categorical race layer is a leaf package rather than a registry section, and what that keeps still.
 - [Terrain FantasyWorldGenerator](terrain-math-lab.md) records the mathematical model and its evolution.
 - [Unreal integration](unreal-integration.md) defines the engine boundary, UnrealWorldGen consumer, and current limitations.
 - [Unreal Editor MCP](unreal-mcp.md) is the UnrealWorldGen editor bridge; Unity MCP is not a substitute.

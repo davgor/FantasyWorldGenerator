@@ -1,0 +1,3771 @@
+{
+  "schema": "fantasy-world-generator.key-location-exteriors",
+  "schema_version": 1,
+  "revision": 2,
+  "note": "Exterior kits: what stands on the ground at a key location, arranged by rule. Parts are shared across archetypes so a rubble pile is one identity everywhere. A kit resolves per archetype, falling back to its family, so every archetype has one. Arrangement decides the shape - a stone circle is a ring, a mine head terraces down the fall of the slope, a monastery is a courtyard, a cave is a mouth with its approach. Plot and dimension metres are schematic placeholders sized for legibility, not measured art. Parts that move the ground carry a `shaping` spec; the planner emits those both as parametric primitives, which are the truth, and as a sampled surface grid, which is the coarse derived form.",
+  "parts": [
+    {
+      "id": "keyloc.part.cave_mouth",
+      "name": "Cave mouth",
+      "kind": "opening",
+      "plot_m": {
+        "width": 6,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 4,
+        "height": 4
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 4.0,
+        "depth_m": 1.6
+      }
+    },
+    {
+      "id": "keyloc.part.rock_outcrop",
+      "name": "Rock outcrop",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 5,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 5,
+        "depth": 5,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 3.4,
+        "height_m": 2.2
+      }
+    },
+    {
+      "id": "keyloc.part.boulder",
+      "name": "Boulder",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 2.5,
+        "depth": 2.5
+      },
+      "dimensions_m": {
+        "width": 2.5,
+        "depth": 2.5,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.scree_fan",
+      "name": "Scree fan",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 9,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 7,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 6.0,
+        "height_m": 1.1
+      }
+    },
+    {
+      "id": "keyloc.part.sinkhole_rim",
+      "name": "Sinkhole rim",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 11,
+        "depth": 11
+      },
+      "dimensions_m": {
+        "width": 11,
+        "depth": 11,
+        "height": 2
+      },
+      "shaping": {
+        "shape": "rim",
+        "radius_m": 6.0,
+        "height_m": 0.8,
+        "depth_m": 9.0
+      }
+    },
+    {
+      "id": "keyloc.part.arch_span",
+      "name": "Stone arch",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 12,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 12,
+        "depth": 3,
+        "height": 9
+      }
+    },
+    {
+      "id": "keyloc.part.geyser_vent",
+      "name": "Geyser vent",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 3,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 3,
+        "depth": 3,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 2.0,
+        "depth_m": 0.8
+      }
+    },
+    {
+      "id": "keyloc.part.tar_seep",
+      "name": "Tar seep",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 7,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 7,
+        "depth": 6,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 4.0,
+        "depth_m": 1.0
+      }
+    },
+    {
+      "id": "keyloc.part.ice_mouth",
+      "name": "Ice mouth",
+      "kind": "opening",
+      "plot_m": {
+        "width": 7,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 7,
+        "depth": 4,
+        "height": 5
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 4.0,
+        "depth_m": 1.6
+      }
+    },
+    {
+      "id": "keyloc.part.crater_rim",
+      "name": "Crater rim",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 16,
+        "depth": 16
+      },
+      "dimensions_m": {
+        "width": 16,
+        "depth": 16,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "rim",
+        "radius_m": 11.0,
+        "height_m": 3.2,
+        "depth_m": 5.0
+      }
+    },
+    {
+      "id": "keyloc.part.crystal_spur",
+      "name": "Crystal spur",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 3,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 3,
+        "depth": 3,
+        "height": 4
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 2.2,
+        "height_m": 1.4
+      }
+    },
+    {
+      "id": "keyloc.part.chasm_edge",
+      "name": "Chasm edge",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 14,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 14,
+        "depth": 4,
+        "height": 2
+      },
+      "shaping": {
+        "shape": "trench",
+        "length_m": 15.0,
+        "width_m": 5.0,
+        "depth_m": 7.0
+      }
+    },
+    {
+      "id": "keyloc.part.headframe",
+      "name": "Winding headframe",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 6,
+        "height": 9
+      }
+    },
+    {
+      "id": "keyloc.part.adit_mouth",
+      "name": "Adit mouth",
+      "kind": "opening",
+      "plot_m": {
+        "width": 4,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 3,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 3.0,
+        "depth_m": 1.4
+      }
+    },
+    {
+      "id": "keyloc.part.spoil_heap",
+      "name": "Spoil heap",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 10,
+        "depth": 8
+      },
+      "dimensions_m": {
+        "width": 10,
+        "depth": 8,
+        "height": 4
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 6.0,
+        "height_m": 3.4
+      }
+    },
+    {
+      "id": "keyloc.part.winding_shed",
+      "name": "Winding shed",
+      "kind": "structure",
+      "plot_m": {
+        "width": 8,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 5,
+        "height": 4
+      }
+    },
+    {
+      "id": "keyloc.part.ore_track",
+      "name": "Ore track",
+      "kind": "path",
+      "plot_m": {
+        "width": 12,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 12,
+        "depth": 2,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "trench",
+        "length_m": 13.0,
+        "width_m": 2.6,
+        "depth_m": 0.5
+      }
+    },
+    {
+      "id": "keyloc.part.kiln",
+      "name": "Kiln",
+      "kind": "structure",
+      "plot_m": {
+        "width": 4,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 4,
+        "height": 5
+      }
+    },
+    {
+      "id": "keyloc.part.charcoal_hearth",
+      "name": "Charcoal hearth",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 5,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 5,
+        "depth": 5,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "level",
+        "radius_m": 3.5,
+        "height_m": 0.0
+      }
+    },
+    {
+      "id": "keyloc.part.salt_pan",
+      "name": "Salt pan",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 9,
+        "depth": 9
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 9,
+        "height": 1
+      },
+      "shaping": {
+        "shape": "level",
+        "radius_m": 6.0,
+        "height_m": -0.4
+      }
+    },
+    {
+      "id": "keyloc.part.peat_stack",
+      "name": "Peat stack",
+      "kind": "structure",
+      "plot_m": {
+        "width": 3,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 3,
+        "depth": 3,
+        "height": 2
+      },
+      "shaping": {
+        "shape": "trench",
+        "length_m": 4.0,
+        "width_m": 3.0,
+        "depth_m": 0.9
+      }
+    },
+    {
+      "id": "keyloc.part.drying_rack",
+      "name": "Drying rack",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 2,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.slag_mound",
+      "name": "Slag mound",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 8,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 7,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 5.0,
+        "height_m": 2.6
+      }
+    },
+    {
+      "id": "keyloc.part.quarry_face",
+      "name": "Quarry face",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 14,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 14,
+        "depth": 5,
+        "height": 7
+      },
+      "shaping": {
+        "shape": "cut",
+        "radius_m": 8.0,
+        "depth_m": 6.5
+      }
+    },
+    {
+      "id": "keyloc.part.tower",
+      "name": "Tower",
+      "kind": "structure",
+      "plot_m": {
+        "width": 7,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 7,
+        "depth": 7,
+        "height": 12
+      }
+    },
+    {
+      "id": "keyloc.part.wall_segment",
+      "name": "Wall segment",
+      "kind": "structure",
+      "plot_m": {
+        "width": 10,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 10,
+        "depth": 2,
+        "height": 6
+      }
+    },
+    {
+      "id": "keyloc.part.gatehouse",
+      "name": "Gatehouse",
+      "kind": "structure",
+      "plot_m": {
+        "width": 9,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 7,
+        "height": 9
+      }
+    },
+    {
+      "id": "keyloc.part.rampart",
+      "name": "Rampart",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 14,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 14,
+        "depth": 5,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "bank",
+        "length_m": 15.0,
+        "width_m": 6.0,
+        "height_m": 2.6
+      }
+    },
+    {
+      "id": "keyloc.part.palisade",
+      "name": "Palisade",
+      "kind": "structure",
+      "plot_m": {
+        "width": 8,
+        "depth": 1
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 1,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.watch_platform",
+      "name": "Watch platform",
+      "kind": "structure",
+      "plot_m": {
+        "width": 4,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 4,
+        "height": 6
+      }
+    },
+    {
+      "id": "keyloc.part.broch_shell",
+      "name": "Broch shell",
+      "kind": "structure",
+      "plot_m": {
+        "width": 9,
+        "depth": 9
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 9,
+        "height": 8
+      }
+    },
+    {
+      "id": "keyloc.part.dyke_bank",
+      "name": "Dyke bank",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 18,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 18,
+        "depth": 6,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "bank",
+        "length_m": 19.0,
+        "width_m": 7.0,
+        "height_m": 2.8
+      }
+    },
+    {
+      "id": "keyloc.part.barrow_mound",
+      "name": "Barrow mound",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 12,
+        "depth": 10
+      },
+      "dimensions_m": {
+        "width": 12,
+        "depth": 10,
+        "height": 4
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 7.5,
+        "height_m": 3.6
+      }
+    },
+    {
+      "id": "keyloc.part.standing_stone",
+      "name": "Standing stone",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1.5,
+        "depth": 1
+      },
+      "dimensions_m": {
+        "width": 1.5,
+        "depth": 1,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.cairn",
+      "name": "Cairn",
+      "kind": "structure",
+      "plot_m": {
+        "width": 2.5,
+        "depth": 2.5
+      },
+      "dimensions_m": {
+        "width": 2.5,
+        "depth": 2.5,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.tomb_facade",
+      "name": "Tomb facade",
+      "kind": "structure",
+      "plot_m": {
+        "width": 8,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 3,
+        "height": 5
+      }
+    },
+    {
+      "id": "keyloc.part.grave_marker",
+      "name": "Grave marker",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1,
+        "depth": 0.6
+      },
+      "dimensions_m": {
+        "width": 1,
+        "depth": 0.6,
+        "height": 1.2
+      }
+    },
+    {
+      "id": "keyloc.part.excarnation_platform",
+      "name": "Excarnation platform",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 6,
+        "height": 7
+      },
+      "shaping": {
+        "shape": "platform",
+        "radius_m": 4.0,
+        "height_m": 0.9
+      }
+    },
+    {
+      "id": "keyloc.part.coffin_ledge",
+      "name": "Coffin ledge",
+      "kind": "structure",
+      "plot_m": {
+        "width": 5,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 5,
+        "depth": 2,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.ossuary_shed",
+      "name": "Ossuary shed",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.shrine_niche",
+      "name": "Shrine niche",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1.6,
+        "depth": 1.2
+      },
+      "dimensions_m": {
+        "width": 1.6,
+        "depth": 1.2,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.chapel",
+      "name": "Chapel",
+      "kind": "structure",
+      "plot_m": {
+        "width": 9,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 6,
+        "height": 7
+      }
+    },
+    {
+      "id": "keyloc.part.cloister_range",
+      "name": "Cloister range",
+      "kind": "structure",
+      "plot_m": {
+        "width": 14,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 14,
+        "depth": 7,
+        "height": 7
+      }
+    },
+    {
+      "id": "keyloc.part.altar_stone",
+      "name": "Altar stone",
+      "kind": "structure",
+      "plot_m": {
+        "width": 3,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 3,
+        "depth": 2,
+        "height": 1.2
+      }
+    },
+    {
+      "id": "keyloc.part.well_head",
+      "name": "Well head",
+      "kind": "structure",
+      "plot_m": {
+        "width": 2.5,
+        "depth": 2.5
+      },
+      "dimensions_m": {
+        "width": 2.5,
+        "depth": 2.5,
+        "height": 1.5
+      }
+    },
+    {
+      "id": "keyloc.part.colossus_figure",
+      "name": "Colossal figure",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 4,
+        "height": 14
+      }
+    },
+    {
+      "id": "keyloc.part.pilgrim_shelter",
+      "name": "Pilgrim shelter",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 4,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.waystone",
+      "name": "Waystone",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1,
+        "depth": 0.8
+      },
+      "dimensions_m": {
+        "width": 1,
+        "depth": 0.8,
+        "height": 1.4
+      }
+    },
+    {
+      "id": "keyloc.part.bridge_span",
+      "name": "Bridge span",
+      "kind": "structure",
+      "plot_m": {
+        "width": 14,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 14,
+        "depth": 4,
+        "height": 4
+      }
+    },
+    {
+      "id": "keyloc.part.ford_marker",
+      "name": "Ford marker",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1,
+        "depth": 0.8
+      },
+      "dimensions_m": {
+        "width": 1,
+        "depth": 0.8,
+        "height": 1.2
+      }
+    },
+    {
+      "id": "keyloc.part.gibbet_post",
+      "name": "Gibbet",
+      "kind": "structure",
+      "plot_m": {
+        "width": 2,
+        "depth": 1.5
+      },
+      "dimensions_m": {
+        "width": 2,
+        "depth": 1.5,
+        "height": 5
+      }
+    },
+    {
+      "id": "keyloc.part.inn_house",
+      "name": "Roadhouse",
+      "kind": "structure",
+      "plot_m": {
+        "width": 12,
+        "depth": 8
+      },
+      "dimensions_m": {
+        "width": 12,
+        "depth": 8,
+        "height": 6
+      }
+    },
+    {
+      "id": "keyloc.part.stable",
+      "name": "Stable",
+      "kind": "structure",
+      "plot_m": {
+        "width": 10,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 10,
+        "depth": 5,
+        "height": 4
+      }
+    },
+    {
+      "id": "keyloc.part.yard_wall",
+      "name": "Yard wall",
+      "kind": "structure",
+      "plot_m": {
+        "width": 10,
+        "depth": 1
+      },
+      "dimensions_m": {
+        "width": 10,
+        "depth": 1,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.caravan_range",
+      "name": "Caravan range",
+      "kind": "structure",
+      "plot_m": {
+        "width": 16,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 16,
+        "depth": 6,
+        "height": 5
+      }
+    },
+    {
+      "id": "keyloc.part.ley_pillar",
+      "name": "Ley pillar",
+      "kind": "structure",
+      "plot_m": {
+        "width": 2,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 2,
+        "depth": 2,
+        "height": 5
+      }
+    },
+    {
+      "id": "keyloc.part.tower_spire",
+      "name": "Spire",
+      "kind": "structure",
+      "plot_m": {
+        "width": 8,
+        "depth": 8
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 8,
+        "height": 18
+      }
+    },
+    {
+      "id": "keyloc.part.ward_stone",
+      "name": "Ward stone",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1.4,
+        "depth": 1.4
+      },
+      "dimensions_m": {
+        "width": 1.4,
+        "depth": 1.4,
+        "height": 2.4
+      }
+    },
+    {
+      "id": "keyloc.part.portal_arch",
+      "name": "Portal arch",
+      "kind": "structure",
+      "plot_m": {
+        "width": 5,
+        "depth": 2
+      },
+      "dimensions_m": {
+        "width": 5,
+        "depth": 2,
+        "height": 6
+      }
+    },
+    {
+      "id": "keyloc.part.circle_cut",
+      "name": "Cut circle",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 8,
+        "depth": 8
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 8,
+        "height": 0.2
+      },
+      "shaping": {
+        "shape": "level",
+        "radius_m": 5.0,
+        "height_m": 0.0
+      }
+    },
+    {
+      "id": "keyloc.part.petrified_figure",
+      "name": "Petrified figure",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1.2,
+        "depth": 1.2
+      },
+      "dimensions_m": {
+        "width": 1.2,
+        "depth": 1.2,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.bone_midden",
+      "name": "Bone midden",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 7,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 7,
+        "depth": 6,
+        "height": 2
+      }
+    },
+    {
+      "id": "keyloc.part.nest_mound",
+      "name": "Nest mound",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 9,
+        "depth": 8
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 8,
+        "height": 3
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 5.5,
+        "height_m": 2.4
+      }
+    },
+    {
+      "id": "keyloc.part.wreck_hull",
+      "name": "Wreck hull",
+      "kind": "structure",
+      "plot_m": {
+        "width": 16,
+        "depth": 5
+      },
+      "dimensions_m": {
+        "width": 16,
+        "depth": 5,
+        "height": 4
+      }
+    },
+    {
+      "id": "keyloc.part.drowned_roof",
+      "name": "Drowned roof",
+      "kind": "structure",
+      "plot_m": {
+        "width": 7,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 7,
+        "depth": 6,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.piling",
+      "name": "Piling",
+      "kind": "structure",
+      "plot_m": {
+        "width": 1,
+        "depth": 1
+      },
+      "dimensions_m": {
+        "width": 1,
+        "depth": 1,
+        "height": 3
+      }
+    },
+    {
+      "id": "keyloc.part.crannog_platform",
+      "name": "Crannog platform",
+      "kind": "structure",
+      "plot_m": {
+        "width": 12,
+        "depth": 12
+      },
+      "dimensions_m": {
+        "width": 12,
+        "depth": 12,
+        "height": 2
+      },
+      "shaping": {
+        "shape": "platform",
+        "radius_m": 7.0,
+        "height_m": 1.8
+      }
+    },
+    {
+      "id": "keyloc.part.rubble_pile",
+      "name": "Rubble pile",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 4,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 3,
+        "height": 1.5
+      }
+    },
+    {
+      "id": "keyloc.part.ruined_wall",
+      "name": "Ruined wall",
+      "kind": "structure",
+      "plot_m": {
+        "width": 8,
+        "depth": 1.5
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 1.5,
+        "height": 2.5
+      }
+    },
+    {
+      "id": "keyloc.part.fallen_column",
+      "name": "Fallen column",
+      "kind": "structure",
+      "plot_m": {
+        "width": 6,
+        "depth": 1.2
+      },
+      "dimensions_m": {
+        "width": 6,
+        "depth": 1.2,
+        "height": 1.2
+      }
+    },
+    {
+      "id": "keyloc.part.foundation_line",
+      "name": "Foundation line",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 9,
+        "depth": 6
+      },
+      "dimensions_m": {
+        "width": 9,
+        "depth": 6,
+        "height": 0.4
+      },
+      "shaping": {
+        "shape": "level",
+        "radius_m": 6.0,
+        "height_m": 0.0
+      }
+    },
+    {
+      "id": "keyloc.part.overgrown_mound",
+      "name": "Overgrown mound",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 8,
+        "depth": 7
+      },
+      "dimensions_m": {
+        "width": 8,
+        "depth": 7,
+        "height": 2
+      },
+      "shaping": {
+        "shape": "mound",
+        "radius_m": 5.5,
+        "height_m": 1.8
+      }
+    },
+    {
+      "id": "keyloc.part.tent",
+      "name": "Tent",
+      "kind": "structure",
+      "plot_m": {
+        "width": 4,
+        "depth": 4
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 4,
+        "height": 2.5
+      }
+    },
+    {
+      "id": "keyloc.part.campfire",
+      "name": "Campfire",
+      "kind": "terrain",
+      "plot_m": {
+        "width": 1.5,
+        "depth": 1.5
+      },
+      "dimensions_m": {
+        "width": 1.5,
+        "depth": 1.5,
+        "height": 0.4
+      },
+      "shaping": {
+        "shape": "level",
+        "radius_m": 1.6,
+        "height_m": 0.0
+      }
+    },
+    {
+      "id": "keyloc.part.lean_to",
+      "name": "Lean-to",
+      "kind": "structure",
+      "plot_m": {
+        "width": 4,
+        "depth": 3
+      },
+      "dimensions_m": {
+        "width": 4,
+        "depth": 3,
+        "height": 2
+      }
+    }
+  ],
+  "family_kits": {
+    "subterranean": {
+      "id": "family.subterranean",
+      "arrangement": "mouth",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.scree_fan",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "extractive": {
+      "id": "family.extractive",
+      "arrangement": "terrace",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.adit_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            0,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "fortification": {
+      "id": "family.fortification",
+      "arrangement": "courtyard",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.tower",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.wall_segment",
+          "count": [
+            3,
+            6
+          ],
+          "arrangement": "courtyard"
+        },
+        {
+          "part": "keyloc.part.gatehouse",
+          "count": [
+            0,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rampart",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "funerary": {
+      "id": "family.funerary",
+      "arrangement": "scatter",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.barrow_mound",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            3,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "sacred": {
+      "id": "family.sacred",
+      "arrangement": "courtyard",
+      "spread_m": 13,
+      "parts": [
+        {
+          "part": "keyloc.part.chapel",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            4
+          ]
+        }
+      ]
+    },
+    "wayside": {
+      "id": "family.wayside",
+      "arrangement": "row",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "arcane": {
+      "id": "family.arcane",
+      "arrangement": "ring",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.ley_pillar",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.circle_cut",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "lair": {
+      "id": "family.lair",
+      "arrangement": "mouth",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.nest_mound",
+          "count": [
+            0,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "drowned": {
+      "id": "family.drowned",
+      "arrangement": "scatter",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.drowned_roof",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            3,
+            8
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "wonder": {
+      "id": "family.wonder",
+      "arrangement": "ring",
+      "spread_m": 34,
+      "parts": [
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            0,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            4,
+            10
+          ]
+        }
+      ]
+    },
+    "curiosity": {
+      "id": "family.curiosity",
+      "arrangement": "scatter",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.foundation_line",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            2,
+            5
+          ]
+        }
+      ]
+    }
+  },
+  "archetype_kits": {
+    "sea_cave": {
+      "id": "sea_cave",
+      "arrangement": "mouth",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    "natural_arch": {
+      "id": "natural_arch",
+      "arrangement": "single",
+      "spread_m": 6,
+      "parts": [
+        {
+          "part": "keyloc.part.arch_span",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            1,
+            3
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "sinkhole": {
+      "id": "sinkhole",
+      "arrangement": "ring",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.sinkhole_rim",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            3,
+            6
+          ]
+        }
+      ]
+    },
+    "geyser_basin": {
+      "id": "geyser_basin",
+      "arrangement": "scatter",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.geyser_vent",
+          "count": [
+            3,
+            8
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "tar_pit": {
+      "id": "tar_pit",
+      "arrangement": "scatter",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.tar_seep",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            0,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "glacier_cave": {
+      "id": "glacier_cave",
+      "arrangement": "mouth",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.ice_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.scree_fan",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "meteor_crater": {
+      "id": "meteor_crater",
+      "arrangement": "ring",
+      "spread_m": 22,
+      "parts": [
+        {
+          "part": "keyloc.part.crater_rim",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            4,
+            9
+          ]
+        }
+      ]
+    },
+    "crystal_cavern": {
+      "id": "crystal_cavern",
+      "arrangement": "mouth",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.crystal_spur",
+          "count": [
+            3,
+            8
+          ]
+        }
+      ]
+    },
+    "rift_chasm": {
+      "id": "rift_chasm",
+      "arrangement": "row",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.chasm_edge",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            5
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "lava_tube": {
+      "id": "lava_tube",
+      "arrangement": "mouth",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.scree_fan",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "karst_cave": {
+      "id": "karst_cave",
+      "arrangement": "mouth",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.sinkhole_rim",
+          "count": [
+            0,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    "iron_mine": {
+      "id": "mine_head",
+      "arrangement": "terrace",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.headframe",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.adit_mouth",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.ore_track",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "silver_mine": {
+      "id": "mine_head",
+      "arrangement": "terrace",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.headframe",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.adit_mouth",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.ore_track",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "gem_mine": {
+      "id": "mine_head",
+      "arrangement": "terrace",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.headframe",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.adit_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "salt_mine": {
+      "id": "salt_works",
+      "arrangement": "terrace",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.adit_mouth",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.salt_pan",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "salt_pans": {
+      "id": "salt_flats",
+      "arrangement": "scatter",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.salt_pan",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "quarry": {
+      "id": "quarry",
+      "arrangement": "terrace",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.quarry_face",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.ore_track",
+          "count": [
+            0,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "lime_kiln": {
+      "id": "lime_kiln",
+      "arrangement": "scatter",
+      "spread_m": 8,
+      "parts": [
+        {
+          "part": "keyloc.part.kiln",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.spoil_heap",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "charcoal_camp": {
+      "id": "charcoal_camp",
+      "arrangement": "scatter",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.charcoal_hearth",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "peat_cuttings": {
+      "id": "peat_cuttings",
+      "arrangement": "row",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.peat_stack",
+          "count": [
+            3,
+            8
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "smelter_ruin": {
+      "id": "smelter_ruin",
+      "arrangement": "scatter",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.slag_mound",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.kiln",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "whaling_station": {
+      "id": "shore_station",
+      "arrangement": "row",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "logging_camp": {
+      "id": "logging_camp",
+      "arrangement": "scatter",
+      "spread_m": 13,
+      "parts": [
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.campfire",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "watchtower": {
+      "id": "watchtower",
+      "arrangement": "single",
+      "spread_m": 7,
+      "parts": [
+        {
+          "part": "keyloc.part.tower",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.palisade",
+          "count": [
+            0,
+            4
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "beacon_tower": {
+      "id": "beacon",
+      "arrangement": "single",
+      "spread_m": 7,
+      "parts": [
+        {
+          "part": "keyloc.part.watch_platform",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "hillfort": {
+      "id": "hillfort",
+      "arrangement": "ring",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.rampart",
+          "count": [
+            3,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.palisade",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.foundation_line",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "linear_dyke": {
+      "id": "dyke",
+      "arrangement": "row",
+      "spread_m": 26,
+      "parts": [
+        {
+          "part": "keyloc.part.dyke_bank",
+          "count": [
+            3,
+            6
+          ]
+        }
+      ]
+    },
+    "refuge_broch": {
+      "id": "broch",
+      "arrangement": "single",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.broch_shell",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            4
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "toll_station": {
+      "id": "toll",
+      "arrangement": "row",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.tower",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "siege_camp": {
+      "id": "siege_camp",
+      "arrangement": "scatter",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.tent",
+          "count": [
+            4,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.campfire",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.palisade",
+          "count": [
+            0,
+            4
+          ]
+        }
+      ]
+    },
+    "barrow": {
+      "id": "barrow",
+      "arrangement": "single",
+      "spread_m": 8,
+      "parts": [
+        {
+          "part": "keyloc.part.barrow_mound",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "cairn_field": {
+      "id": "cairn_field",
+      "arrangement": "scatter",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            4,
+            11
+          ]
+        }
+      ]
+    },
+    "necropolis": {
+      "id": "necropolis",
+      "arrangement": "scatter",
+      "spread_m": 26,
+      "parts": [
+        {
+          "part": "keyloc.part.tomb_facade",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            8,
+            18
+          ]
+        },
+        {
+          "part": "keyloc.part.ossuary_shed",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "mausoleum": {
+      "id": "mausoleum",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.tomb_facade",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            2,
+            6
+          ],
+          "arrangement": "scatter"
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            4
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "excarnation_tower": {
+      "id": "excarnation",
+      "arrangement": "single",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.excarnation_platform",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            0,
+            3
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "cliff_coffins": {
+      "id": "cliff_coffins",
+      "arrangement": "row",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.coffin_ledge",
+          "count": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    "ship_burial": {
+      "id": "ship_burial",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.barrow_mound",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            1,
+            3
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "plague_pit": {
+      "id": "plague_pit",
+      "arrangement": "scatter",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.overgrown_mound",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "standing_stones": {
+      "id": "stone_circle",
+      "arrangement": "ring",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            5,
+            12
+          ]
+        },
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "wayside_shrine": {
+      "id": "wayside_shrine",
+      "arrangement": "single",
+      "spread_m": 4,
+      "parts": [
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "holy_well": {
+      "id": "holy_well",
+      "arrangement": "single",
+      "spread_m": 6,
+      "parts": [
+        {
+          "part": "keyloc.part.well_head",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "monastery": {
+      "id": "monastery",
+      "arrangement": "courtyard",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.cloister_range",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.chapel",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    "hermitage": {
+      "id": "hermitage",
+      "arrangement": "single",
+      "spread_m": 6,
+      "parts": [
+        {
+          "part": "keyloc.part.chapel",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "colossus": {
+      "id": "colossus",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.colossus_figure",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            0,
+            3
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "sacred_grove": {
+      "id": "sacred_grove",
+      "arrangement": "ring",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.standing_stone",
+          "count": [
+            0,
+            4
+          ]
+        }
+      ]
+    },
+    "pilgrim_station": {
+      "id": "pilgrim_station",
+      "arrangement": "single",
+      "spread_m": 7,
+      "parts": [
+        {
+          "part": "keyloc.part.pilgrim_shelter",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "row"
+        }
+      ]
+    },
+    "reliquary_chapel": {
+      "id": "reliquary_chapel",
+      "arrangement": "single",
+      "spread_m": 8,
+      "parts": [
+        {
+          "part": "keyloc.part.chapel",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            3
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "mountain_sanctuary": {
+      "id": "mountain_sanctuary",
+      "arrangement": "terrace",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.chapel",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.pilgrim_shelter",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "drowned_temple": {
+      "id": "drowned_temple",
+      "arrangement": "scatter",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.fallen_column",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.drowned_roof",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "oracle_cave": {
+      "id": "oracle_cave",
+      "arrangement": "mouth",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.altar_stone",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "waystone": {
+      "id": "waystone",
+      "arrangement": "single",
+      "spread_m": 3,
+      "parts": [
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "boundary_stone": {
+      "id": "boundary_stone",
+      "arrangement": "single",
+      "spread_m": 3,
+      "parts": [
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "gibbet": {
+      "id": "gibbet",
+      "arrangement": "single",
+      "spread_m": 4,
+      "parts": [
+        {
+          "part": "keyloc.part.gibbet_post",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "ford": {
+      "id": "ford",
+      "arrangement": "row",
+      "spread_m": 8,
+      "parts": [
+        {
+          "part": "keyloc.part.ford_marker",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "bridge": {
+      "id": "bridge",
+      "arrangement": "single",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.bridge_span",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "row"
+        }
+      ]
+    },
+    "crossroads": {
+      "id": "crossroads",
+      "arrangement": "single",
+      "spread_m": 5,
+      "parts": [
+        {
+          "part": "keyloc.part.waystone",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "hedge_inn": {
+      "id": "roadhouse",
+      "arrangement": "courtyard",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.inn_house",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.stable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "pass_hospice": {
+      "id": "hospice",
+      "arrangement": "single",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.pilgrim_shelter",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            3
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "ferry_crossing": {
+      "id": "ferry",
+      "arrangement": "row",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "caravanserai": {
+      "id": "caravanserai",
+      "arrangement": "courtyard",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.caravan_range",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.well_head",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "wizard_tower": {
+      "id": "wizard_tower",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.tower_spire",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            0,
+            5
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "ley_nexus": {
+      "id": "ley_nexus",
+      "arrangement": "ring",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.ley_pillar",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            4,
+            8
+          ]
+        }
+      ]
+    },
+    "summoning_circle": {
+      "id": "summoning_circle",
+      "arrangement": "single",
+      "spread_m": 6,
+      "parts": [
+        {
+          "part": "keyloc.part.circle_cut",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            0,
+            4
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "portal_arch": {
+      "id": "portal_arch",
+      "arrangement": "single",
+      "spread_m": 7,
+      "parts": [
+        {
+          "part": "keyloc.part.portal_arch",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            0,
+            4
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "petrified_army": {
+      "id": "petrified_army",
+      "arrangement": "scatter",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.petrified_figure",
+          "count": [
+            8,
+            20
+          ]
+        }
+      ]
+    },
+    "binding_site": {
+      "id": "binding_site",
+      "arrangement": "ring",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.ward_stone",
+          "count": [
+            5,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.circle_cut",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "academy_ruin": {
+      "id": "academy_ruin",
+      "arrangement": "courtyard",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            3,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.fallen_column",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.foundation_line",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.tower_spire",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "wild_magic_scar": {
+      "id": "scar",
+      "arrangement": "scatter",
+      "spread_m": 18,
+      "parts": [
+        {
+          "part": "keyloc.part.circle_cut",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.petrified_figure",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "dragon_lair": {
+      "id": "dragon_lair",
+      "arrangement": "mouth",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    "giants_hall": {
+      "id": "giants_hall",
+      "arrangement": "mouth",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            4,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "wyvern_eyrie": {
+      "id": "eyrie",
+      "arrangement": "scatter",
+      "spread_m": 11,
+      "parts": [
+        {
+          "part": "keyloc.part.nest_mound",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.rock_outcrop",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "beast_den": {
+      "id": "beast_den",
+      "arrangement": "mouth",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.cave_mouth",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.bone_midden",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "spider_wood": {
+      "id": "spider_wood",
+      "arrangement": "scatter",
+      "spread_m": 15,
+      "parts": [
+        {
+          "part": "keyloc.part.overgrown_mound",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "drowned_village": {
+      "id": "drowned_village",
+      "arrangement": "scatter",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.drowned_roof",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            4,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "wreck_field": {
+      "id": "wreck_field",
+      "arrangement": "scatter",
+      "spread_m": 22,
+      "parts": [
+        {
+          "part": "keyloc.part.wreck_hull",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            2,
+            6
+          ]
+        }
+      ]
+    },
+    "crannog": {
+      "id": "crannog",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.crannog_platform",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            4,
+            8
+          ],
+          "arrangement": "ring"
+        }
+      ]
+    },
+    "surf_ruin": {
+      "id": "surf_ruin",
+      "arrangement": "scatter",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.piling",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "observatory": {
+      "id": "observatory",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.tower_spire",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            3
+          ],
+          "arrangement": "courtyard"
+        }
+      ]
+    },
+    "lighthouse": {
+      "id": "lighthouse",
+      "arrangement": "single",
+      "spread_m": 9,
+      "parts": [
+        {
+          "part": "keyloc.part.tower",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.winding_shed",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "bandit_camp": {
+      "id": "bandit_camp",
+      "arrangement": "scatter",
+      "spread_m": 12,
+      "parts": [
+        {
+          "part": "keyloc.part.tent",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.campfire",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "part": "keyloc.part.palisade",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "witch_cottage": {
+      "id": "witch_cottage",
+      "arrangement": "single",
+      "spread_m": 8,
+      "parts": [
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.drying_rack",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "scatter"
+        },
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            0,
+            2
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "hunting_lodge": {
+      "id": "hunting_lodge",
+      "arrangement": "single",
+      "spread_m": 10,
+      "parts": [
+        {
+          "part": "keyloc.part.inn_house",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.stable",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "library_ruin": {
+      "id": "library_ruin",
+      "arrangement": "courtyard",
+      "spread_m": 16,
+      "parts": [
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            3,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.fallen_column",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.foundation_line",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "arena_ruin": {
+      "id": "arena_ruin",
+      "arrangement": "ring",
+      "spread_m": 20,
+      "parts": [
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            5,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.foundation_line",
+          "count": [
+            1,
+            3
+          ],
+          "arrangement": "single"
+        }
+      ]
+    },
+    "aqueduct_span": {
+      "id": "aqueduct",
+      "arrangement": "row",
+      "spread_m": 22,
+      "parts": [
+        {
+          "part": "keyloc.part.fallen_column",
+          "count": [
+            3,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            1,
+            3
+          ]
+        }
+      ]
+    },
+    "fairy_ring": {
+      "id": "fairy_ring",
+      "arrangement": "ring",
+      "spread_m": 6,
+      "parts": [
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.boulder",
+          "count": [
+            3,
+            7
+          ]
+        }
+      ]
+    },
+    "quarantine_isle": {
+      "id": "quarantine_isle",
+      "arrangement": "scatter",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.ruined_wall",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "battlefield": {
+      "id": "battlefield",
+      "arrangement": "scatter",
+      "spread_m": 24,
+      "parts": [
+        {
+          "part": "keyloc.part.grave_marker",
+          "count": [
+            3,
+            9
+          ]
+        },
+        {
+          "part": "keyloc.part.cairn",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "part": "keyloc.part.rubble_pile",
+          "count": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "miners_cottages": {
+      "id": "cottage_row",
+      "arrangement": "row",
+      "spread_m": 14,
+      "parts": [
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            2,
+            5
+          ]
+        },
+        {
+          "part": "keyloc.part.yard_wall",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "hermit_cell": {
+      "id": "hermit_cell",
+      "arrangement": "single",
+      "spread_m": 5,
+      "parts": [
+        {
+          "part": "keyloc.part.lean_to",
+          "count": [
+            1,
+            1
+          ]
+        },
+        {
+          "part": "keyloc.part.shrine_niche",
+          "count": [
+            0,
+            1
+          ],
+          "arrangement": "scatter"
+        }
+      ]
+    },
+    "border_fort": {
+      "id": "border_fort",
+      "arrangement": "courtyard",
+      "spread_m": 17,
+      "parts": [
+        {
+          "part": "keyloc.part.tower",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "part": "keyloc.part.wall_segment",
+          "count": [
+            4,
+            7
+          ]
+        },
+        {
+          "part": "keyloc.part.gatehouse",
+          "count": [
+            1,
+            1
+          ],
+          "arrangement": "single"
+        },
+        {
+          "part": "keyloc.part.rampart",
+          "count": [
+            0,
+            2
+          ]
+        }
+      ]
+    }
+  }
+}

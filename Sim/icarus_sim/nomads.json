@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "notes": "Balance table for terrain_nomads. Every reach is a multiple of settlement spacing, never a metre constant, so a wider world does not turn a local band into a regional one. Speeds are absolute metres per day because a walking pace is a property of the traveller, not of the world. Gates are hard: a classification whose preconditions fail is ineligible outright, and a candidate that satisfies none produces no band at all. Thresholds are tuned so each hard gate admits a minority of land: most ground raises nobody, and a cult needs genuinely charged sacred ground rather than any ley whisper.",
+  "candidate": {
+    "density_per_1000km2": 18.0,
+    "settlement_clearance_spacings": 0.3,
+    "min_suitability": 0.12
+  },
+  "classifications": {
+    "survivors": {
+      "weight": 1.6,
+      "disposition": "fleeing",
+      "speed_m_per_day": 11000,
+      "size": [
+        30,
+        260
+      ],
+      "column_length_per_head_m": 1.4,
+      "seeks": [
+        "shelter",
+        "kin",
+        "food"
+      ],
+      "carries": [
+        "what they could lift"
+      ],
+      "gate": {
+        "ruin_reach_spacings": 0.9,
+        "refuge_reach_spacings": 2.5
+      }
+    },
+    "deserters": {
+      "weight": 1.0,
+      "disposition": "wary",
+      "speed_m_per_day": 17000,
+      "size": [
+        12,
+        90
+      ],
+      "column_length_per_head_m": 2.2,
+      "seeks": [
+        "cover",
+        "plunder",
+        "a way out"
+      ],
+      "carries": [
+        "army issue",
+        "stolen supply"
+      ],
+      "gate": {
+        "war_reach_spacings": 0.8,
+        "min_ruggedness": 0.32
+      }
+    },
+    "cultists": {
+      "weight": 0.8,
+      "disposition": "devout",
+      "speed_m_per_day": 13000,
+      "size": [
+        15,
+        140
+      ],
+      "column_length_per_head_m": 1.8,
+      "seeks": [
+        "the god",
+        "sacred ground",
+        "converts"
+      ],
+      "carries": [
+        "relics",
+        "offerings"
+      ],
+      "gate": {
+        "min_ley_intensity": 2.0,
+        "ley_reach_spacings": 0.35,
+        "shrine_reach_spacings": 0.8,
+        "claim_reach_spacings": 1.2
+      }
+    },
+    "merchants": {
+      "weight": 1.3,
+      "disposition": "tradeable",
+      "speed_m_per_day": 24000,
+      "size": [
+        8,
+        70
+      ],
+      "column_length_per_head_m": 6.0,
+      "seeks": [
+        "markets",
+        "escort",
+        "a safe night"
+      ],
+      "carries": [
+        "goods",
+        "coin",
+        "news"
+      ],
+      "gate": {
+        "road_reach_spacings": 0.35,
+        "market_reach_spacings": 3.0,
+        "min_markets": 2,
+        "min_market_population": 2000
+      }
+    },
+    "bandits": {
+      "weight": 1.2,
+      "disposition": "hostile",
+      "speed_m_per_day": 19000,
+      "size": [
+        10,
+        80
+      ],
+      "column_length_per_head_m": 2.0,
+      "seeks": [
+        "plunder",
+        "ransom",
+        "weak escorts"
+      ],
+      "carries": [
+        "stolen goods"
+      ],
+      "gate": {
+        "min_ruggedness": 0.34,
+        "strike_reach_spacings": 1.3,
+        "control_clear_spacings": 0.9
+      }
+    },
+    "wanderers": {
+      "weight": 2.0,
+      "disposition": "wary",
+      "speed_m_per_day": 15000,
+      "size": [
+        40,
+        420
+      ],
+      "column_length_per_head_m": 3.2,
+      "seeks": [
+        "pasture",
+        "water",
+        "a sheltered winter"
+      ],
+      "carries": [
+        "herds",
+        "tents",
+        "craft"
+      ],
+      "gate": {
+        "min_forage": 0.07,
+        "min_seasonal_swing": 0.3,
+        "summer_reach_spacings": 3.5,
+        "winter_reach_spacings": 3.5
+      }
+    }
+  }
+}

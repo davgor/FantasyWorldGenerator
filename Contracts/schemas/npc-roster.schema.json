@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NPC roster v1",
+  "description": "The `npcs` block a finished world carries: one record per staffed post in every planned city, hamlet and castle, plus the cast folded in by uid, with the earmark that says who is worth talking to and the state that says whether they are alive. Structural envelope; the earmark rules, post expansion and policy lint are validated by the package's own tests. A failed block carries only version, status and error.",
+  "type": "object",
+  "required": [
+    "version",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "failed"
+      ]
+    },
+    "error": {
+      "type": "string"
+    },
+    "policy_revision": {
+      "type": "object",
+      "required": [
+        "posts",
+        "names"
+      ],
+      "properties": {
+        "posts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "names": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "registry": {
+      "type": "object",
+      "description": "The civilization registry the world was built from, recorded beside the policy the post labels came from. A per-civilization size-block staffing override replaces the library roster for that entry alone; none exists today, so the labels are correct now and could mislabel one civilization's posts later. Naming both identities is what makes that visible without failing a block for a registry revision that had nothing to do with staffing.",
+      "properties": {
+        "world_revision": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "world_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "labels_from": {
+          "type": "string"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "total",
+        "alive",
+        "dead",
+        "important",
+        "sites",
+        "heroes_linked"
+      ],
+      "description": "Counts, including every case that could not be resolved. These are reported rather than hidden so a consumer can tell a quiet world from a broken join.",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "alive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dead": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "important": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "important_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sites": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "heroes_linked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_parent_race": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unanchored_sites": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "roster_mismatches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_site_keys": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "important_capped_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cast_outside_a_planned_site": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cast_located_by_presence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cast records whose true placement differed from the site they are filed under and were given a presence_node."
+        },
+        "cast_presence_unresolved": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cast records whose presence names a place this block could not locate. Always present, including at zero: a counter that appears only once it is non-zero cannot be told apart from one that was never computed, and this is the one that moves when a future well places someone with no index entry."
+        }
+      }
+    },
+    "sites": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/site"
+      }
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/person"
+      }
+    },
+    "post_verbs": {
+      "type": "object",
+      "description": "Post label to the verbs that post can plausibly offer. A post absent from this map, or mapped to an empty list, can be held but never becomes a quest giver.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "verbs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "uid",
+        "kind",
+        "name",
+        "posts"
+      ],
+      "description": "A planned place that holds staffed posts. `uid` is the join target for a person's `site_uid`: the stable city uid for a city, and `hamlet-node-<n>` / `fortress-node-<n>` otherwise. The node spelling is deliberate - the cast package keys the same places on their ORDINAL plan ids (`fortress-36`), which renumber on every age advance, so a bare `fortress-<n>` would read as the cast's id and join the wrong row silently.",
+      "properties": {
+        "uid": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Open vocabulary, shared with the cast's `presence.site_kind`, NOT a closed enum: today only city, hamlet and fortress have staffing rosters, and travelling groups and key locations are expected to add cases. Resolve a uid against the block its kind names."
+        },
+        "name": {
+          "type": "string"
+        },
+        "civilization_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The primary join key for culture, language and per-race traits. One of the registry's civilization ids."
+        },
+        "parent_race_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "human, elf or dwarf. Selects the language FAMILY only; never join on the parent alone - the subrace carries the culture. Null, and counted in summary, when it could not be resolved: a guessed parent is a wrong tongue."
+        },
+        "city_class": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "capital",
+            "medium",
+            "small",
+            null
+          ]
+        },
+        "plan_id": {
+          "type": "string",
+          "description": "The planner's own ordinal id (`hamlet-0`, `fortress-21`, `coastal-19-36`). A convenience for joining back to the plan within one generation. It renumbers on every age advance and is NEVER identity."
+        },
+        "node": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "x": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "z": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "plan_status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The planner's own status. An unbuildable or partial plan still gets a site row, with however many posts it placed - a site with no people is a fact about the terrain, not a missing record."
+        },
+        "posts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "required": [
+        "uid",
+        "name",
+        "site_uid",
+        "post",
+        "status",
+        "important"
+      ],
+      "description": "One person. A post record fills a job in a placed building; a cast record carries `hero_uid` and fills no building, so `building_id` is null and `site_uid` may be null for a legend or the dispossessed.",
+      "properties": {
+        "uid": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A given name in this people’s own tongue, from the heritage genome keyed on the site’s civilization id. Null, for the same reason parent_race_id is null and counted alongside it, when the parent race could not be resolved: the parent race selects the language family, so without it there is no tongue to name anyone in, and a guessed parent is a wrong tongue. Before the genome swap this field was always a string because an unresolved people silently drew human names - that was the defect, not the guarantee."
+        },
+        "site_uid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Resolves in sites[]. Null only on a cast record whose presence is somewhere this block has no row for - a camp, ruin, college, port, shrine or nest - or who has no presence at all."
+        },
+        "site_kind": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "post": {
+          "type": "string",
+          "description": "The job held, or the cast role for a hero. Tagged with verbs through post_verbs."
+        },
+        "building_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Null on a cast record: a sovereign holds no roster post, and picking a building for one would invent a fact."
+        },
+        "plot_id": {
+          "type": "string",
+          "description": "The plot this post stands in, for joining to world_scene. Positional within a plan that is rebuilt on every age advance, so it is a location, never identity."
+        },
+        "status": {
+          "enum": [
+            "alive",
+            "dead"
+          ],
+          "description": "Birth state. Alive for every staffed post; dead only for a cast member the hero generator has passed into legend. Never mutated here - a runtime copies the block into its own save and flips it there. A person whose site was ruined by an age advance stops appearing rather than turning dead, so absence means gone."
+        },
+        "important": {
+          "type": "boolean",
+          "description": "The earmark: this person may be offered as a quest giver if a generator finds them a reason. Authored, and the bound a consumer may rely on is PER SITE, not a fraction of the roster - each site contributes at most its own cap, so the post-derived earmark grows with the number of sites and never with how generous a civilization's building list becomes. Do not size against summary.important_fraction: every cast record is important and is deliberately not capped, so on a small world that fraction measures the cast rather than the cap (measured 7.0% at size 65 against 9.4% at size 17). summary.important_capped_out reports what the cap refused."
+        },
+        "hero_uid": {
+          "type": "string",
+          "description": "Present only on a cast record. Resolves against heroes.people[] or heroes.dreads[], which keep their own uids."
+        },
+        "presence_kind": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The cast's own word for where this person stands, carried verbatim so an odd placement resolves against the block that owns it."
+        },
+        "presence_uid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The cast's own id for that place, in the cast's namespace: a castellan's is the ORDINAL `fortress-36`, which does not resolve in sites[] and is not meant to. Use presence_node for position."
+        },
+        "presence_node": {
+          "type": "integer",
+          "description": "The terrain node the person actually stands on, present only when their true placement differs from the site they are filed under. Resolved here because only the generating world can do the join: a castellan whose fortress keys differently falls back to their home city, which is a real place and the wrong one, and anything measuring travel needs this rather than the fallback."
+        },
+        "presence_x": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "presence_z": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -15,6 +15,7 @@ std::vector<std::pair<std::string,const Grid*>> named_layers(const Layers& layer
         {"magic_growth",&layers.magic_growth},{"magic_opposition",&layers.magic_opposition},
         {"dominant_magic",&layers.dominant_magic},
         {"ley_holy",&layers.ley_holy},{"ley_primordial",&layers.ley_primordial},
+        {"lunar_sensitivity",&layers.lunar_sensitivity},
         {"metal_richness",&layers.metal_richness},{"coastal_exposure",&layers.coastal_exposure},
         {"harbor_suitability",&layers.harbor_suitability},
         {"fishing_productivity",&layers.fishing_productivity},

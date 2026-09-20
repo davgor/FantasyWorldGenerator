@@ -67,7 +67,7 @@ Linear infrastructure has no staff per segment. Maintenance and patrol crews are
 
 Current Heartland target worker beds are 86 small / 188 medium / 285 capital if every listed facility is placed; before conditional additions they are 85 / 161 / 235. Staffing exposes the cost of the existing generous lists without validating or reducing their scale. The generator's population estimate remains separate until land, services, employment and housing are reconciled.
 
-Schema 3 requires staffing on every measured structure and rejects schema-2 registry files. Revision 3 changes the registry hash, requiring regeneration of revision-2 worlds before age advancement. Recipe 3 / algorithm 9, report version 2, building selections, runtime layouts and asset output are unchanged. No NPCs or housing are created by these planning calculations.
+Schema 3 requires staffing on every measured structure and rejects schema-2 registry files. Revision 3 changes the registry hash, requiring regeneration of revision-2 worlds before age advancement. Recipe 3 / algorithm 9, report version 2, building selections, runtime layouts and asset output are unchanged. No NPCs or housing are created by these planning calculations. The separate [NPC roster](npc-roster.md) package expands these placed rosters into one person per post after generation finishes, without changing this data or any generated city state.
 
 ## Core guild hall (registry revision 4)
 

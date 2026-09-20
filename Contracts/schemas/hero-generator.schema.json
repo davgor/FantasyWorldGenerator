@@ -1,0 +1,1258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hero generator cast v1",
+  "description": "The `heroes` block a finished world carries: people, dreads, realms, camps, relics, quest hooks, bonds, mantles and the precipitation roll ledger (including the hamlet, fortress, port and shrine wells) precipitated from the exported history. Structural envelope; deed ids, fame arithmetic and archetype preconditions are validated by the package's own tests. A failed block carries only version, status and error.",
+  "type": "object",
+  "required": [
+    "version",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "failed"
+      ]
+    },
+    "error": {
+      "type": "string"
+    },
+    "policy_revision": {
+      "type": "object",
+      "required": [
+        "archetypes",
+        "axis_overlays",
+        "alignment",
+        "names",
+        "wells"
+      ],
+      "properties": {
+        "archetypes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "axis_overlays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "alignment": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "names": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "wells": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "final_age": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "living",
+        "legends",
+        "dreads",
+        "realms",
+        "candidates",
+        "precipitated",
+        "camps",
+        "hooks",
+        "orgs"
+      ],
+      "properties": {
+        "living": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "legends": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dreads": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "realms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "precipitated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "camps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hooks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "orgs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/person"
+      }
+    },
+    "dreads": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dread"
+      }
+    },
+    "realms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/realm"
+      }
+    },
+    "orgs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/org"
+      }
+    },
+    "camps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/camp"
+      }
+    },
+    "quest_hooks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/quest_hook"
+      }
+    },
+    "relics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relic"
+      }
+    },
+    "bonds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bond"
+      }
+    },
+    "mantles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mantle"
+      }
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    },
+    "rolls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/roll"
+      }
+    }
+  },
+  "$defs": {
+    "alignment": {
+      "type": "object",
+      "required": [
+        "law",
+        "good",
+        "label",
+        "code"
+      ],
+      "properties": {
+        "law": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "good": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[LNC][GNE]$"
+        },
+        "drift": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": [
+        "archetype",
+        "belief",
+        "wants",
+        "fears",
+        "tells",
+        "mechanic",
+        "manner",
+        "voice",
+        "lies",
+        "toward_player",
+        "cornered",
+        "never",
+        "line"
+      ],
+      "properties": {
+        "archetype": {
+          "type": "string"
+        },
+        "belief": {
+          "type": "string"
+        },
+        "wants": {
+          "type": "string"
+        },
+        "fears": {
+          "type": "string"
+        },
+        "tells": {
+          "type": "string"
+        },
+        "mechanic": {
+          "type": "string"
+        },
+        "manner": {
+          "type": "string"
+        },
+        "voice": {
+          "type": "string"
+        },
+        "lies": {
+          "type": "string"
+        },
+        "toward_player": {
+          "type": "string"
+        },
+        "cornered": {
+          "type": "string"
+        },
+        "never": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "line": {
+          "type": "string"
+        }
+      }
+    },
+    "deed": {
+      "type": "object",
+      "required": [
+        "event_kind",
+        "event_id",
+        "age",
+        "role"
+      ],
+      "properties": {
+        "event_kind": {
+          "enum": [
+            "ruin",
+            "war",
+            "nest",
+            "founding",
+            "hamlet",
+            "fortress",
+            "port",
+            "shrine"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "role": {
+          "enum": [
+            "credited",
+            "actual",
+            "victim",
+            "heir",
+            "keeper"
+          ]
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "verb",
+        "target_uid",
+        "target_name"
+      ],
+      "properties": {
+        "verb": {
+          "enum": [
+            "hold",
+            "retake",
+            "avenge",
+            "exploit",
+            "convert",
+            "protect",
+            "unify",
+            "kill",
+            "expose",
+            "overthrow"
+          ]
+        },
+        "target_uid": {
+          "type": "string"
+        },
+        "target_name": {
+          "type": "string"
+        }
+      }
+    },
+    "site_ref": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "kind",
+        "uid",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "city",
+            "ruin",
+            "camp",
+            "college",
+            "nest",
+            "road",
+            "hamlet",
+            "fortress",
+            "port",
+            "shrine"
+          ]
+        },
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "presence": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "site_kind",
+        "uid",
+        "situation"
+      ],
+      "properties": {
+        "site_kind": {
+          "enum": [
+            "city",
+            "ruin",
+            "camp",
+            "college",
+            "nest",
+            "road",
+            "hamlet",
+            "fortress",
+            "port",
+            "shrine",
+            "key_location"
+          ]
+        },
+        "uid": {
+          "type": "string"
+        },
+        "situation": {
+          "type": "string"
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "required": [
+        "uid",
+        "role",
+        "well",
+        "status",
+        "name",
+        "epithet",
+        "display_name",
+        "race_id",
+        "civilization_id",
+        "realm_uid",
+        "born_age",
+        "home",
+        "presence",
+        "fame",
+        "tier",
+        "alignment",
+        "archetype",
+        "archetype_name",
+        "persona",
+        "faces",
+        "deeds",
+        "claim",
+        "companion",
+        "rivals",
+        "org_uid",
+        "predecessor_uid",
+        "selectable",
+        "seed",
+        "log",
+        "situation",
+        "kin",
+        "school",
+        "node_id",
+        "allies",
+        "seat",
+        "nest_id"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "pretender",
+            "warlord",
+            "magister",
+            "domain_holder",
+            "sovereign",
+            "council",
+            "champion",
+            "prophet",
+            "heresiarch",
+            "exile",
+            "founder",
+            "reeve",
+            "castellan",
+            "harbourmaster",
+            "keeper"
+          ]
+        },
+        "well": {
+          "enum": [
+            "ruins",
+            "magic",
+            "cities",
+            "guilds",
+            "hamlets",
+            "fortresses",
+            "ports",
+            "shrines"
+          ]
+        },
+        "status": {
+          "enum": [
+            "living",
+            "legend"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "epithet": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "race_id": {
+          "type": "string"
+        },
+        "civilization_id": {
+          "type": "string"
+        },
+        "realm_uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "born_age": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "home": {
+          "$ref": "#/$defs/site_ref"
+        },
+        "presence": {
+          "$ref": "#/$defs/presence"
+        },
+        "fame": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tier": {
+          "enum": [
+            "notable",
+            "renowned",
+            "legendary"
+          ]
+        },
+        "alignment": {
+          "$ref": "#/$defs/alignment"
+        },
+        "archetype": {
+          "type": "string"
+        },
+        "archetype_name": {
+          "type": "string"
+        },
+        "persona": {
+          "$ref": "#/$defs/persona"
+        },
+        "faces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/face"
+          }
+        },
+        "deeds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/deed"
+          }
+        },
+        "claim": {
+          "$ref": "#/$defs/claim"
+        },
+        "companion": {
+          "type": "object",
+          "required": [
+            "eligible",
+            "join_condition",
+            "offered_from_face"
+          ],
+          "properties": {
+            "eligible": {
+              "type": "boolean"
+            },
+            "join_condition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "offered_from_face": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "rivals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "org_uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "predecessor_uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selectable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/log_entry"
+          }
+        },
+        "situation": {
+          "type": "string"
+        },
+        "kin": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "school": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "node_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "allies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seat": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nest_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "site_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "dread": {
+      "type": "object",
+      "required": [
+        "uid",
+        "role",
+        "well",
+        "nest_id",
+        "species",
+        "family",
+        "nest_tier",
+        "tier",
+        "status",
+        "presence",
+        "deeds",
+        "destroyed",
+        "fame",
+        "name",
+        "display_name",
+        "archetype",
+        "archetype_name",
+        "alignment",
+        "persona",
+        "selectable",
+        "seed",
+        "log",
+        "situation"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "role": {
+          "const": "dread"
+        },
+        "well": {
+          "const": "ruins"
+        },
+        "nest_id": {
+          "type": "string"
+        },
+        "species": {
+          "type": "string"
+        },
+        "family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nest_tier": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "tier": {
+          "enum": [
+            "notable",
+            "renowned",
+            "legendary"
+          ]
+        },
+        "status": {
+          "enum": [
+            "living",
+            "legend"
+          ]
+        },
+        "presence": {
+          "$ref": "#/$defs/presence"
+        },
+        "deeds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/deed"
+          }
+        },
+        "fame": {
+          "type": "number",
+          "minimum": 0
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "archetype": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "archetype_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alignment": {
+          "$ref": "#/$defs/alignment"
+        },
+        "persona": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "selectable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/log_entry"
+          }
+        },
+        "situation": {
+          "type": "string"
+        }
+      }
+    },
+    "realm": {
+      "type": "object",
+      "required": [
+        "uid",
+        "name",
+        "civilization_id",
+        "civilization_name",
+        "capital_uid",
+        "city_uids",
+        "culture_id",
+        "sovereign_uid"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "civilization_id": {
+          "type": "string"
+        },
+        "civilization_name": {
+          "type": "string"
+        },
+        "capital_uid": {
+          "type": "string"
+        },
+        "city_uids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "culture_id": {
+          "type": "string"
+        },
+        "sovereign_uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "bond": {
+      "type": "object",
+      "required": [
+        "a",
+        "b",
+        "kind",
+        "from_event"
+      ],
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "b": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "rival",
+            "ally",
+            "kin",
+            "mentor",
+            "debt",
+            "betrayed"
+          ]
+        },
+        "from_event": {
+          "type": "string"
+        }
+      }
+    },
+    "mantle": {
+      "type": "object",
+      "required": [
+        "claim",
+        "predecessor_uid",
+        "civilization_id",
+        "vacant_since_age"
+      ],
+      "properties": {
+        "claim": {
+          "$ref": "#/$defs/claim"
+        },
+        "predecessor_uid": {
+          "type": "string"
+        },
+        "civilization_id": {
+          "type": "string"
+        },
+        "vacant_since_age": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "roll": {
+      "type": "object",
+      "required": [
+        "candidate_uid",
+        "kind",
+        "event_id",
+        "age",
+        "chance",
+        "roll",
+        "precipitated"
+      ],
+      "properties": {
+        "candidate_uid": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "heir",
+            "warlord",
+            "dread",
+            "domain_holder",
+            "magister",
+            "college_magister",
+            "camp",
+            "sovereign",
+            "council",
+            "champion",
+            "prophet",
+            "heresiarch",
+            "exile",
+            "founder",
+            "reeve",
+            "castellan",
+            "harbourmaster",
+            "keeper",
+            "cult"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "chance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "roll": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "precipitated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "log_entry": {
+      "type": "object",
+      "required": [
+        "age",
+        "event_kind",
+        "event_id",
+        "role",
+        "text"
+      ],
+      "properties": {
+        "age": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "event_kind": {
+          "enum": [
+            "ruin",
+            "war",
+            "nest",
+            "founding",
+            "hamlet",
+            "fortress",
+            "port",
+            "shrine"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "credited",
+            "actual",
+            "victim",
+            "heir",
+            "keeper"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "face": {
+      "type": "object",
+      "required": [
+        "label",
+        "name",
+        "apparent_role",
+        "alignment",
+        "claim",
+        "persona"
+      ],
+      "properties": {
+        "label": {
+          "enum": [
+            "public",
+            "true",
+            "calm",
+            "unleashed",
+            "first",
+            "second"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "apparent_role": {
+          "type": "string"
+        },
+        "alignment": {
+          "$ref": "#/$defs/alignment"
+        },
+        "claim": {
+          "$ref": "#/$defs/claim"
+        },
+        "persona": {
+          "$ref": "#/$defs/persona"
+        }
+      }
+    },
+    "camp": {
+      "type": "object",
+      "required": [
+        "uid",
+        "ruin_uid",
+        "name",
+        "node",
+        "x",
+        "z",
+        "direction",
+        "origin",
+        "civilization_id",
+        "since_age"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "ruin_uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "node": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "direction": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "origin": {
+          "enum": [
+            "ruin_squat"
+          ]
+        },
+        "civilization_id": {
+          "type": "string"
+        },
+        "since_age": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "leader_uid": {
+          "type": "string"
+        }
+      }
+    },
+    "relic": {
+      "type": "object",
+      "required": [
+        "uid",
+        "kind",
+        "name",
+        "origin_event",
+        "resting_at",
+        "holder_uid",
+        "school"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "focus",
+            "banner",
+            "crown",
+            "reliquary"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "origin_event": {
+          "type": "string"
+        },
+        "resting_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "holder_uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "school": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "quest_hook": {
+      "type": "object",
+      "required": [
+        "hook_id",
+        "giver_uid",
+        "offered_from_face",
+        "stated_purpose",
+        "actual_effect",
+        "unwitting",
+        "target"
+      ],
+      "properties": {
+        "hook_id": {
+          "type": "string"
+        },
+        "giver_uid": {
+          "type": "string"
+        },
+        "offered_from_face": {
+          "type": "string"
+        },
+        "stated_purpose": {
+          "type": "string"
+        },
+        "actual_effect": {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "ruin",
+                "city",
+                "relic",
+                "ley_node",
+                "nest",
+                "college",
+                "hamlet",
+                "fortress",
+                "port",
+                "shrine"
+              ]
+            },
+            "uid": {
+              "type": "string"
+            },
+            "node_id": {
+              "type": "string"
+            },
+            "school": {
+              "type": "string"
+            },
+            "intensity_delta": {
+              "type": "number"
+            },
+            "action": {
+              "type": "string"
+            }
+          }
+        },
+        "unwitting": {
+          "type": "boolean"
+        },
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "org": {
+      "type": "object",
+      "required": [
+        "uid",
+        "kind",
+        "name",
+        "home",
+        "members",
+        "charter"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "order",
+            "dynasty",
+            "council",
+            "college",
+            "remnant"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "home": {
+          "$ref": "#/$defs/site_ref"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "charter": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nomads v1",
+  "description": "The `nomads` block a finished world carries: the travelling bands placed after the simulation settles, each classified by the ground it started on rather than by a free roll. Unlike the heroes, story-web and npc-roster blocks, this one is generated inside the pipeline rather than attached by a separate package, so it carries no status/error pair -- a failure here fails generation. Structural envelope only; the classification gates themselves are validated by Sim/tests/test_terrain_nomads.py, which re-derives every band's preconditions from the exported basis.",
+  "type": "object",
+  "required": [
+    "version",
+    "groups",
+    "counts",
+    "rolls",
+    "method",
+    "limits"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "method": {
+      "type": "string"
+    },
+    "limits": {
+      "type": "string"
+    },
+    "counts": {
+      "type": "object",
+      "description": "Bands per classification. Present for every classification including the ones a world raised none of, so a quiet world is distinguishable from a broken pass.",
+      "required": [
+        "survivors",
+        "deserters",
+        "cultists",
+        "merchants",
+        "bandits",
+        "wanderers"
+      ],
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/band"
+      }
+    },
+    "rolls": {
+      "type": "array",
+      "description": "Every candidate start point considered, precipitated or not. Diagnostic rather than content: it answers 'why is there a cult here' and, just as importantly, 'why is there nothing here'. A consumer building encounters should read groups, not this.",
+      "items": {
+        "$ref": "#/$defs/roll"
+      }
+    },
+    "routes": {
+      "type": "object",
+      "description": "Summary of the route pass. Present once routes have been built.",
+      "required": [
+        "version",
+        "routed",
+        "stranded",
+        "day_march_m",
+        "method",
+        "limits"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "routed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stranded": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Bands whose circuit could not be built -- most often a herder with no reachable winter ground. Reported rather than hidden, because it is the case the classification gate cannot see on its own: reachability needs the route pass to exist."
+        },
+        "day_march_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "method": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "string"
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "description": "What the bands did to the world. Present once the write-back pass has run.",
+      "required": [
+        "version",
+        "leyline_edits",
+        "leyline_edits_queued",
+        "towns_under_raid_pressure",
+        "roads_ridden",
+        "settlement_candidates",
+        "method",
+        "limits"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "leyline_edits": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Known-school circuits deepened directly."
+        },
+        "leyline_edits_queued": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Hidden-school intents queued into pending_ley_edits, because advance_age_request refuses a leyline edit outside KNOWN_SCHOOLS."
+        },
+        "towns_under_raid_pressure": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "roads_ridden": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "settlement_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "method": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "direction": {
+      "type": "array",
+      "description": "Unit vector on the globe, the same convention every other placed entity uses.",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "day": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Day of the year, or null until the route pass assigns a schedule.",
+      "minimum": 0
+    },
+    "band": {
+      "type": "object",
+      "required": [
+        "uid",
+        "classification",
+        "origin",
+        "node",
+        "direction",
+        "size",
+        "speed_m_per_day",
+        "column_length_m",
+        "disposition",
+        "camps",
+        "legs",
+        "basis"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Keyed to the terrain node, never to an ordinal or a culture id: those are renumbered by an age transition and a band has to survive one.",
+          "pattern": "^nomad-[0-9]+-[0-9]+(-[0-9]+)?$"
+        },
+        "classification": {
+          "enum": [
+            "survivors",
+            "deserters",
+            "cultists",
+            "merchants",
+            "bandits",
+            "wanderers"
+          ]
+        },
+        "parent_uid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The band this one split from, once lineage fission exists in the route pass."
+        },
+        "origin": {
+          "type": "object",
+          "description": "Who raised this band. World generation raises 'world'; a villain or a god raising one later through the spawn API names itself here, which is the seam that lets villains spawn cultists without either feature importing the other.",
+          "required": [
+            "kind",
+            "id",
+            "age"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "world",
+                "god",
+                "villain"
+              ]
+            },
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "age": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "god_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Set for cultists, null otherwise. Always resolves in the world's exported religion.gods, including the hidden gods that pantheon.json does not carry."
+        },
+        "school": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "node": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "direction": {
+          "$ref": "#/$defs/direction"
+        },
+        "biome": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "speed_m_per_day": {
+          "type": "number",
+          "description": "Absolute metres per day, deliberately not a ratio of settlement spacing: a walking pace belongs to the traveller rather than to the world. This and the camp day windows are what a later time-mover interpolates.",
+          "exclusiveMinimum": 0
+        },
+        "column_length_m": {
+          "type": "number",
+          "description": "How far the band strings out along its path, so a player meeting one on the move sees a column rather than a point.",
+          "exclusiveMinimum": 0
+        },
+        "disposition": {
+          "enum": [
+            "hostile",
+            "wary",
+            "tradeable",
+            "devout",
+            "fleeing"
+          ]
+        },
+        "seeks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "carries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "camps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "node",
+              "direction",
+              "kind"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "node": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "direction": {
+                "$ref": "#/$defs/direction"
+              },
+              "kind": {
+                "description": "A lair or a base is a place you can find and raid; a station or a seasonal camp is empty most of the year. A quest that says 'clear the camp' is only valid for the former, which is why the band uid rather than the camp id is the durable handle.",
+                "enum": [
+                  "winter",
+                  "summer",
+                  "base",
+                  "station",
+                  "lair",
+                  "shrine",
+                  "terminal",
+                  "calving"
+                ]
+              },
+              "arrive_day": {
+                "$ref": "#/$defs/day"
+              },
+              "depart_day": {
+                "$ref": "#/$defs/day"
+              }
+            }
+          }
+        },
+        "legs": {
+          "type": "array",
+          "description": "The walked path between camps. Empty until the route pass; node lists deliberately share the shape of roads.routes[].nodes so the scene builder densifies them with no new code.",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "nodes",
+              "length_m",
+              "branch"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "length_m": {
+                "type": "number",
+                "minimum": 0
+              },
+              "depart_day": {
+                "$ref": "#/$defs/day"
+              },
+              "arrive_day": {
+                "$ref": "#/$defs/day"
+              },
+              "branch": {
+                "description": "trunk is the annual round; base_limb is the transhumance split where part of the group holds a base while the herd moves; fission is a child clan inheriting part of the parent range; spur is a short out-and-back raid or shrine visit.",
+                "enum": [
+                  "trunk",
+                  "base_limb",
+                  "fission",
+                  "spur"
+                ]
+              }
+            }
+          }
+        },
+        "basis": {
+          "type": "object",
+          "description": "The evidence that classified this band, naming the actual ruin uid, war site uid, ley node id, shrine id, market uids or villain claim id. This is the join back into the rest of the world and the field a quest compiler should build on: a survivor band names the ruin it fled and the town it is heading for, which is a quest with no further inference. Note that a uid here can outlive the record it points at -- an age advance moves a ruined city from settlements.sites into ruins -- so a consumer must resolve against both."
+        },
+        "route_status": {
+          "enum": [
+            "routed",
+            "stranded"
+          ],
+          "description": "Whether this band walks a circuit. A stranded band keeps its start camp and no legs."
+        },
+        "round_length_m": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total length of one full circuit."
+        }
+      }
+    },
+    "roll": {
+      "type": "object",
+      "required": [
+        "node",
+        "x",
+        "z",
+        "eligible",
+        "evidence",
+        "precipitated"
+      ],
+      "properties": {
+        "node": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible": {
+          "type": "array",
+          "description": "Classifications whose hard preconditions held. Empty means the ground raised nobody, which is a result rather than a failure.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "object"
+        },
+        "precipitated": {
+          "type": "boolean"
+        },
+        "roll": {
+          "type": "number",
+          "minimum": 0
+        },
+        "chose": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -617,10 +617,9 @@ bool UFantasyWorldGeneratorSubsystem::GetSceneBuildings(int32 LatitudeRows,
 		Building.Position = UnwrapPosition(World, LatitudeRows, Direction, HeightMetres);
 		Building.DimensionsMetres = FVector(Source.width_m, Source.depth_m, Source.height_m);
 		Building.RotationDegrees = Source.rotation_degrees;
-		Building.WidthAxis = UnwrapAxis(World, LatitudeRows, Centre, HeightMetres, Building.Position,
-			Source.width_axis, FVector::ForwardVector);
-		Building.DepthAxis = UnwrapAxis(World, LatitudeRows, Centre, HeightMetres, Building.Position,
-			Source.depth_axis, FVector::RightVector);
+		const fantasy_world_generator::TangentFrame Ground = GroundFrame(Direction);
+		Building.WidthAxis = UnwrapAxis(Ground, Source.width_axis, FVector::ForwardVector);
+		Building.DepthAxis = UnwrapAxis(Ground, Source.depth_axis, FVector::RightVector);
 		OutBuildings.Add(Building);
 	}
 	return true;

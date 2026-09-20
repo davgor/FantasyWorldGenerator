@@ -22,6 +22,22 @@ struct WorldOptions {
     double animal_tier_falloff=4.,monster_tier_falloff=2.;
     double nest_density=1.,nest_fantasy=1.,nest_min_suitability=.3,nest_spacing=1.;
     double nest_settlement_clearance=250.;
+    // How strongly lunar surges sway the age lottery; zero leaves the moon a spectator.
+    double lunar_influence=.5;
+    // Chance a defeated city survives a war as a vassal instead of a ruin. Mirrors the
+    // Python registry; the native war resolver does not draw it yet, so only zero is
+    // reproduced natively.
+    double war_survival=0.;
+    // Share of a region's concentrated turmoil that becomes super villain tier each age,
+    // raising an antagonist that then takes cities in its own name. Mirrors the Python
+    // registry; the native age lottery does not draw it yet, so only zero is reproduced
+    // natively.
+    double villain_rise=0.;
+    // Tier a seated villain falls below to lose the world, and cultural regions per
+    // villain permitted at the band. Both mirror the Python registry and are unread here,
+    // because villain_rise is zero natively and nothing can be seated to hold or to cap.
+    double villain_hold=.7;
+    double villain_density=3.;
 };
 // Resolved recipe-3 configuration. Field names follow terrain_lab.Config so the
 // Python oracle and this port stay comparable line by line.

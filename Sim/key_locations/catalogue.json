@@ -1,0 +1,4808 @@
+{
+  "schema": "fantasy-world-generator.key-locations-catalogue",
+  "schema_version": 1,
+  "revision": 2,
+  "note": "Archetypes are data. Adding one is a catalogue edit, not a code change; if a new kind of place needs new code, the placement engine is underspecified and that is the bug to fix. Thresholds are percentile-relative against each world's own distribution, with an absolute floor where 'the best available' should still not qualify on a world that has none of the thing. Spacing is in cell multiples of a fixed reference raster, never the raster in hand, so it is a physical distance that scales with the world and does not change when the same world is sampled more finely.",
+  "families": {
+    "subterranean": {
+      "name": "Subterranean",
+      "glyph": "C",
+      "color": [
+        122,
+        106,
+        92
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "extractive": {
+      "name": "Extractive",
+      "glyph": "M",
+      "color": [
+        150,
+        128,
+        74
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "fortification": {
+      "name": "Fortification",
+      "glyph": "F",
+      "color": [
+        128,
+        140,
+        156
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "funerary": {
+      "name": "Funerary",
+      "glyph": "B",
+      "color": [
+        110,
+        96,
+        120
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "sacred": {
+      "name": "Sacred",
+      "glyph": "S",
+      "color": [
+        214,
+        196,
+        132
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "wayside": {
+      "name": "Wayside",
+      "glyph": "W",
+      "color": [
+        176,
+        160,
+        140
+      ],
+      "family_spacing_cells": 0.5
+    },
+    "arcane": {
+      "name": "Arcane",
+      "glyph": "L",
+      "color": [
+        166,
+        104,
+        214
+      ],
+      "family_spacing_cells": 1.2
+    },
+    "lair": {
+      "name": "Lair",
+      "glyph": "D",
+      "color": [
+        154,
+        62,
+        58
+      ],
+      "family_spacing_cells": 1.5
+    },
+    "drowned": {
+      "name": "Drowned",
+      "glyph": "~",
+      "color": [
+        78,
+        142,
+        178
+      ],
+      "family_spacing_cells": 1.0
+    },
+    "wonder": {
+      "name": "Wonder",
+      "glyph": "*",
+      "color": [
+        232,
+        214,
+        160
+      ],
+      "family_spacing_cells": 6.0
+    },
+    "curiosity": {
+      "name": "Curiosity",
+      "glyph": "?",
+      "color": [
+        150,
+        170,
+        150
+      ],
+      "family_spacing_cells": 1.0
+    }
+  },
+  "archetypes": [
+    {
+      "id": "karst_cave",
+      "name": "Karst cave system",
+      "family": "subterranean",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "rainfall",
+          "above_percentile": 0.45
+        },
+        {
+          "layer": "slope",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "relic_incision",
+          "weight": 1.0
+        },
+        {
+          "layer": "rainfall",
+          "weight": 0.6
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.3
+        }
+      ],
+      "per_1000_km2": 0.55,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.4,
+        "beasts": 0.3,
+        "monsters": 0.2,
+        "squatters": 0.1
+      },
+      "interior": {
+        "plan": "warren",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          6,
+          18
+        ]
+      },
+      "names": [
+        "the caves under {near}",
+        "the {adj} deeps",
+        "the swallet at {near}"
+      ],
+      "reason": "Rainwater cut the limestone under a broken slope."
+    },
+    {
+      "id": "sea_cave",
+      "name": "Sea cave",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "coastal_exposure",
+          "above_percentile": 0.75,
+          "min": 0.05
+        },
+        {
+          "layer": "rocky_coast",
+          "above_percentile": 0.6,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "rocky_coast",
+          "weight": 1.0
+        },
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.7
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 1.1,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.4,
+        "squatters": 0.35,
+        "beasts": 0.25
+      },
+      "names": [
+        "the smugglers' grotto below {near}",
+        "the sea cave at {near}"
+      ],
+      "reason": "Surf hollowed the headland where no watch can see the entrance."
+    },
+    {
+      "id": "lava_tube",
+      "name": "Lava tube",
+      "family": "subterranean",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "volcanic",
+          "above_percentile": 0.9,
+          "min": 0.08
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "volcanic",
+          "weight": 1.0
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.3,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.45,
+        "monsters": 0.35,
+        "beasts": 0.2
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          5,
+          12
+        ]
+      },
+      "names": [
+        "the fire road under {near}",
+        "the black tube"
+      ],
+      "reason": "A drained lava channel runs empty under the flow field."
+    },
+    {
+      "id": "crystal_cavern",
+      "name": "Crystal cavern",
+      "family": "subterranean",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "metal_richness",
+          "above_percentile": 0.85,
+          "min": 0.05
+        },
+        {
+          "layer": "height",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "metal_richness",
+          "weight": 1.0
+        },
+        {
+          "layer": "height",
+          "weight": 0.4
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.22,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.5,
+        "monsters": 0.3,
+        "cult": 0.2
+      },
+      "interior": {
+        "plan": "vault",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          4,
+          10
+        ]
+      },
+      "names": [
+        "the geode vault",
+        "the bright hollow under {near}"
+      ],
+      "reason": "Mineral-rich rock left a hollow lined with grown crystal."
+    },
+    {
+      "id": "sinkhole",
+      "name": "Sinkhole",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "rainfall",
+          "above_percentile": 0.5
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "catchment",
+          "weight": 0.8
+        },
+        {
+          "layer": "rainfall",
+          "weight": 0.6
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.3,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.6,
+        "beasts": 0.25,
+        "nature": 0.15
+      },
+      "names": [
+        "the swallow hole at {near}",
+        "the {adj} pit"
+      ],
+      "reason": "The roof of a water-cut void gave way and left an open shaft."
+    },
+    {
+      "id": "rift_chasm",
+      "name": "Rift chasm",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "shear",
+          "above_percentile": 0.85,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "shear",
+          "weight": 1.0
+        },
+        {
+          "layer": "relic_gorge",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.7,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.7,
+        "monsters": 0.3
+      },
+      "names": [
+        "the {adj} rift",
+        "the tear at {near}"
+      ],
+      "reason": "Ground torn along a shearing plate margin and never closed."
+    },
+    {
+      "id": "natural_arch",
+      "name": "Natural arch",
+      "family": "subterranean",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.6
+        },
+        {
+          "layer": "rainfall",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "slope",
+          "weight": 0.8
+        },
+        {
+          "layer": "erosion",
+          "weight": 0.6
+        },
+        {
+          "layer": "rainfall",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 3.2,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.9,
+        "nature": 0.1
+      },
+      "names": [
+        "the {adj} arch",
+        "the stone gate above {near}"
+      ],
+      "reason": "Dry wind cut through the weaker band and left the span standing."
+    },
+    {
+      "id": "tar_pit",
+      "name": "Tar pit",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.3
+        },
+        {
+          "layer": "deposition",
+          "above_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "deposition",
+          "weight": 0.9
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.6,
+        "beasts": 0.4
+      },
+      "names": [
+        "the black seep at {near}",
+        "the {adj} mire"
+      ],
+      "reason": "Bitumen works up through the basin fill and holds whatever walks in."
+    },
+    {
+      "id": "geyser_basin",
+      "name": "Geyser basin",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "volcanic",
+          "above_percentile": 0.82,
+          "min": 0.05
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "volcanic",
+          "weight": 1.0
+        },
+        {
+          "layer": "slope",
+          "weight": 0.3,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.6,
+      "spacing_cells": 1.8,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.7,
+        "cult": 0.15,
+        "nature": 0.15
+      },
+      "names": [
+        "the steaming flats at {near}",
+        "the {adj} springs"
+      ],
+      "reason": "Hot rock near the surface drives the water back out."
+    },
+    {
+      "id": "glacier_cave",
+      "name": "Glacier cave",
+      "family": "subterranean",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "temperature",
+          "max": -2.0
+        },
+        {
+          "layer": "height",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ice_cap",
+          "weight": 0.9
+        },
+        {
+          "layer": "height",
+          "weight": 0.5
+        },
+        {
+          "layer": "temperature",
+          "weight": 0.6,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.3,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.5,
+        "beasts": 0.3,
+        "monsters": 0.2
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          4,
+          11
+        ]
+      },
+      "names": [
+        "the blue hollow",
+        "the ice road under {near}"
+      ],
+      "reason": "Meltwater bored a passage under the ice and left it open."
+    },
+    {
+      "id": "meteor_crater",
+      "name": "Meteor crater",
+      "family": "subterranean",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.6
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.18,
+      "spacing_cells": 6.0,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "natural": 1.0
+      },
+      "occupants": {
+        "none": 0.5,
+        "cult": 0.3,
+        "nature": 0.2
+      },
+      "names": [
+        "the fallen star at {near}",
+        "the {adj} bowl"
+      ],
+      "reason": "Something came down here and the ring it made never filled in."
+    },
+    {
+      "id": "iron_mine",
+      "name": "Iron mine",
+      "family": "extractive",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "metal_richness",
+          "above_percentile": 0.6,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "metal_richness",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.6,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.3
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.4,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.3,
+        "monsters": 0.25,
+        "squatters": 0.15
+      },
+      "interior": {
+        "plan": "branching",
+        "levels": [
+          2,
+          4
+        ],
+        "chambers": [
+          8,
+          22
+        ]
+      },
+      "names": [
+        "the iron workings at {near}",
+        "the {adj} adit"
+      ],
+      "reason": "Ore in the ridge and a road already running to it."
+    },
+    {
+      "id": "silver_mine",
+      "name": "Silver mine",
+      "family": "extractive",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "metal_richness",
+          "above_percentile": 0.8,
+          "min": 0.04
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "metal_richness",
+          "weight": 1.0
+        },
+        {
+          "layer": "height",
+          "weight": 0.4
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.32,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "active": 0.25,
+        "abandoned": 0.45,
+        "ruined": 0.3
+      },
+      "occupants": {
+        "none": 0.3,
+        "monsters": 0.35,
+        "builders": 0.2,
+        "squatters": 0.15
+      },
+      "interior": {
+        "plan": "branching",
+        "levels": [
+          2,
+          5
+        ],
+        "chambers": [
+          10,
+          26
+        ]
+      },
+      "names": [
+        "the deeps under {near}",
+        "the silver cut at {near}"
+      ],
+      "reason": "A rich seam worked from above until the good rock ran out."
+    },
+    {
+      "id": "gem_mine",
+      "name": "Gem mine",
+      "family": "extractive",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "metal_richness",
+          "above_percentile": 0.88,
+          "min": 0.05
+        },
+        {
+          "layer": "height",
+          "above_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "metal_richness",
+          "weight": 1.0
+        },
+        {
+          "layer": "height",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.2,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.2,
+        "abandoned": 0.45,
+        "sealed": 0.35
+      },
+      "occupants": {
+        "none": 0.3,
+        "monsters": 0.3,
+        "builders": 0.2,
+        "cult": 0.2
+      },
+      "interior": {
+        "plan": "branching",
+        "levels": [
+          2,
+          4
+        ],
+        "chambers": [
+          7,
+          18
+        ]
+      },
+      "names": [
+        "the bright cut",
+        "the gem workings above {near}"
+      ],
+      "reason": "Stone worth more than iron, high enough that carrying it out was the hard part."
+    },
+    {
+      "id": "salt_mine",
+      "name": "Salt mine",
+      "family": "extractive",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "salinity",
+          "above_percentile": 0.8,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "salinity",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.25,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.4,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.3,
+        "undead": 0.2,
+        "squatters": 0.15
+      },
+      "interior": {
+        "plan": "vault",
+        "levels": [
+          2,
+          3
+        ],
+        "chambers": [
+          8,
+          20
+        ]
+      },
+      "names": [
+        "the salt halls at {near}",
+        "the white workings"
+      ],
+      "reason": "Rock salt near enough the surface to cut, and salt is worth a road."
+    },
+    {
+      "id": "quarry",
+      "name": "Quarry",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.6,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.4,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.4,
+        "drowned": 0.25
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.45,
+        "beasts": 0.2
+      },
+      "names": [
+        "the stone cut above {near}",
+        "the {adj} quarry"
+      ],
+      "reason": "Workable stone within a cart's haul of somewhere that wanted walls."
+    },
+    {
+      "id": "salt_pans",
+      "name": "Salt pans",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "salinity",
+          "above_percentile": 0.7,
+          "min": 0.02
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.3
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "salinity",
+          "weight": 1.0
+        },
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.5
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.5,
+        "abandoned": 0.35,
+        "drowned": 0.15
+      },
+      "occupants": {
+        "builders": 0.5,
+        "none": 0.4,
+        "squatters": 0.1
+      },
+      "names": [
+        "the salt flats at {near}",
+        "the white pans"
+      ],
+      "reason": "Flat brine ground that dries faster than it fills."
+    },
+    {
+      "id": "charcoal_camp",
+      "name": "Charcoal burner's camp",
+      "family": "extractive",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.45
+        },
+        {
+          "layer": "temperature",
+          "min": -2.0
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.7
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 3.6,
+      "spacing_cells": 0.7,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.45,
+        "abandoned": 0.55
+      },
+      "occupants": {
+        "builders": 0.4,
+        "none": 0.45,
+        "squatters": 0.15
+      },
+      "names": [
+        "the burner's clearing",
+        "the char pits near {near}"
+      ],
+      "reason": "Standing timber far enough out that nobody minds the smoke."
+    },
+    {
+      "id": "lime_kiln",
+      "name": "Lime kiln",
+      "family": "extractive",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 2.8,
+      "spacing_cells": 0.7,
+      "settlement_clearance_cells": 0.15,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.6
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.65
+      },
+      "names": [
+        "the kiln above {near}",
+        "the burnt hill"
+      ],
+      "reason": "Limestone and a road; mortar is made where the stone is."
+    },
+    {
+      "id": "peat_cuttings",
+      "name": "Peat cuttings",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "wetland_distance",
+          "below_percentile": 0.25
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "wetland_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.0,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.45,
+        "abandoned": 0.4,
+        "drowned": 0.15
+      },
+      "occupants": {
+        "builders": 0.4,
+        "none": 0.45,
+        "nature": 0.15
+      },
+      "names": [
+        "the turf banks at {near}",
+        "the black cuttings"
+      ],
+      "reason": "Cut peat dries into the only fuel this ground offers."
+    },
+    {
+      "id": "whaling_station",
+      "name": "Whaling station",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "coastal_exposure",
+          "above_percentile": 0.6,
+          "min": 0.03
+        },
+        {
+          "layer": "fishing_productivity",
+          "above_percentile": 0.6,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "fishing_productivity",
+          "weight": 1.0
+        },
+        {
+          "layer": "harbor_suitability",
+          "weight": 0.7
+        }
+      ],
+      "per_1000_km2": 0.45,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.5,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.45,
+        "squatters": 0.2
+      },
+      "names": [
+        "the flensing station at {near}",
+        "the bone shore"
+      ],
+      "reason": "Deep water close in and a beach flat enough to haul onto."
+    },
+    {
+      "id": "logging_camp",
+      "name": "Logging camp",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.5
+        },
+        {
+          "layer": "temperature",
+          "min": -4.0
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.8
+        },
+        {
+          "layer": "river",
+          "weight": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.2,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.45,
+        "abandoned": 0.45,
+        "reclaimed": 0.1
+      },
+      "occupants": {
+        "builders": 0.4,
+        "none": 0.4,
+        "squatters": 0.2
+      },
+      "names": [
+        "the timber camp at {near}",
+        "the cut"
+      ],
+      "reason": "Good timber beside water that will float it out."
+    },
+    {
+      "id": "smelter_ruin",
+      "name": "Smelter ruin",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "metal_richness",
+          "above_percentile": 0.55,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "metal_richness",
+          "weight": 0.8
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.7,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "ruined": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "none": 0.5,
+        "squatters": 0.3,
+        "monsters": 0.2
+      },
+      "names": [
+        "the slag heaps at {near}",
+        "the burnt works"
+      ],
+      "reason": "Ore was cooked here; the spoil outlasted everything that used it."
+    },
+    {
+      "id": "border_fort",
+      "name": "Border fort",
+      "family": "fortification",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "frontier",
+          "min": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "tpi",
+          "weight": 0.9
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "frontier",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.45,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.3,
+        "ruined": 0.5,
+        "abandoned": 0.2
+      },
+      "occupants": {
+        "builders": 0.25,
+        "none": 0.3,
+        "squatters": 0.25,
+        "monsters": 0.2
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          8,
+          20
+        ]
+      },
+      "names": [
+        "the march fort at {near}",
+        "the {adj} keep"
+      ],
+      "reason": "A road crossing a border, on the only ground that sees both ways."
+    },
+    {
+      "id": "watchtower",
+      "name": "Watchtower",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "tpi",
+          "above_percentile": 0.7
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "tpi",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.7,
+          "invert": true
+        },
+        {
+          "layer": "height",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.6,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.3,
+        "ruined": 0.5,
+        "abandoned": 0.2
+      },
+      "occupants": {
+        "builders": 0.25,
+        "none": 0.5,
+        "squatters": 0.25
+      },
+      "names": [
+        "the watch above {near}",
+        "the {adj} tower"
+      ],
+      "reason": "High ground that can see the road and be seen from the next tower."
+    },
+    {
+      "id": "hillfort",
+      "name": "Hillfort",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "tpi",
+          "above_percentile": 0.8
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "tpi",
+          "weight": 1.0
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.5,
+          "invert": true
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "ruined": 0.6,
+        "abandoned": 0.25,
+        "reclaimed": 0.15
+      },
+      "occupants": {
+        "none": 0.4,
+        "squatters": 0.2,
+        "nature": 0.2,
+        "monsters": 0.2
+      },
+      "names": [
+        "the old ring above {near}",
+        "the {adj} camp"
+      ],
+      "reason": "Banks and ditches on a hill, older than anyone still holding the valley."
+    },
+    {
+      "id": "toll_station",
+      "name": "Toll station",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.2
+        },
+        {
+          "layer": "river",
+          "above_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "river",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.9,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.45,
+        "ruined": 0.35,
+        "abandoned": 0.2
+      },
+      "occupants": {
+        "builders": 0.4,
+        "none": 0.3,
+        "squatters": 0.3
+      },
+      "names": [
+        "the toll at {near}",
+        "the chain tower"
+      ],
+      "reason": "Where the road meets the water, somebody charges for the crossing."
+    },
+    {
+      "id": "linear_dyke",
+      "name": "Linear dyke",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "frontier",
+          "min": 0.5
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "frontier",
+          "weight": 1.0
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.4,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "ruined": 0.55,
+        "abandoned": 0.3,
+        "reclaimed": 0.15
+      },
+      "occupants": {
+        "none": 0.7,
+        "nature": 0.3
+      },
+      "names": [
+        "the long dyke",
+        "the earthwork at {near}"
+      ],
+      "reason": "Somebody dug a line across the open ground and meant it to mean something."
+    },
+    {
+      "id": "refuge_broch",
+      "name": "Refuge broch",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.8
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.6
+        },
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.7,
+      "spacing_cells": 1.8,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "abandoned": 0.45,
+        "ruined": 0.4,
+        "active": 0.15
+      },
+      "occupants": {
+        "none": 0.5,
+        "descendants": 0.2,
+        "squatters": 0.2,
+        "beasts": 0.1
+      },
+      "names": [
+        "the broch at {near}",
+        "the {adj} refuge"
+      ],
+      "reason": "A drystone tower to climb into when raiders come up the coast."
+    },
+    {
+      "id": "barrow",
+      "name": "Barrow",
+      "family": "funerary",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "dry_valley",
+          "weight": 0.6
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.5
+        },
+        {
+          "layer": "slope",
+          "weight": 0.3,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 2.2,
+      "spacing_cells": 0.9,
+      "settlement_clearance_cells": 0.25,
+      "states": {
+        "sealed": 0.5,
+        "ruined": 0.3,
+        "buried": 0.2
+      },
+      "occupants": {
+        "none": 0.45,
+        "undead": 0.25,
+        "beasts": 0.15,
+        "nature": 0.15
+      },
+      "names": [
+        "the barrow above {near}",
+        "the {adj} mound"
+      ],
+      "reason": "Dry rising ground in sight of where the dead had lived.",
+      "also_scatters": true,
+      "note": "Scatters on its own and is also the member of a barrow ring; both are true of barrows."
+    },
+    {
+      "id": "barrow_field",
+      "name": "Barrow field",
+      "family": "funerary",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.45
+        },
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.4,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "sealed": 0.4,
+        "ruined": 0.35,
+        "buried": 0.25
+      },
+      "occupants": {
+        "none": 0.35,
+        "undead": 0.35,
+        "squatters": 0.15,
+        "nature": 0.15
+      },
+      "interior": {
+        "plan": "vault",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          6,
+          16
+        ]
+      },
+      "names": [
+        "the barrows at {near}",
+        "the field of mounds"
+      ],
+      "reason": "Generations buried on the same ridge above the same dead town."
+    },
+    {
+      "id": "mausoleum",
+      "name": "Mausoleum",
+      "family": "funerary",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.4,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "sealed": 0.45,
+        "ruined": 0.3,
+        "corrupted": 0.25
+      },
+      "occupants": {
+        "none": 0.3,
+        "undead": 0.4,
+        "cult": 0.2,
+        "squatters": 0.1
+      },
+      "interior": {
+        "plan": "vault",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          7,
+          18
+        ]
+      },
+      "names": [
+        "the mausoleum of {culture}",
+        "the {adj} tomb at {near}"
+      ],
+      "reason": "Cut stone raised for one family who expected to be remembered."
+    },
+    {
+      "id": "cairn_field",
+      "name": "Cairn field",
+      "family": "funerary",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 0.8
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 3.0,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "abandoned": 0.6,
+        "ruined": 0.4
+      },
+      "occupants": {
+        "none": 0.85,
+        "nature": 0.15
+      },
+      "names": [
+        "the cairns above {near}",
+        "the {adj} stones"
+      ],
+      "reason": "Stones piled by everyone who passed, for reasons nobody agrees on."
+    },
+    {
+      "id": "excarnation_tower",
+      "name": "Excarnation tower",
+      "family": "funerary",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.55
+        },
+        {
+          "layer": "rainfall",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 0.8
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.6
+        },
+        {
+          "layer": "rainfall",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "active": 0.25,
+        "abandoned": 0.45,
+        "ruined": 0.3
+      },
+      "occupants": {
+        "none": 0.5,
+        "descendants": 0.2,
+        "beasts": 0.3
+      },
+      "names": [
+        "the sky tower above {near}",
+        "the {adj} silence"
+      ],
+      "reason": "High dry stone where the dead are given to the birds."
+    },
+    {
+      "id": "ship_burial",
+      "name": "Ship burial",
+      "family": "funerary",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "coastal_exposure",
+          "above_percentile": 0.55,
+          "min": 0.02
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.8
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.6,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "buried": 0.5,
+        "sealed": 0.3,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "none": 0.55,
+        "undead": 0.3,
+        "nature": 0.15
+      },
+      "names": [
+        "the ship mound at {near}",
+        "the keel barrow"
+      ],
+      "reason": "A hull dragged above the tideline and buried with its owner in it."
+    },
+    {
+      "id": "plague_pit",
+      "name": "Plague pit",
+      "family": "funerary",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.3,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.6,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "buried": 0.5,
+        "corrupted": 0.3,
+        "reclaimed": 0.2
+      },
+      "occupants": {
+        "none": 0.4,
+        "undead": 0.35,
+        "nature": 0.25
+      },
+      "names": [
+        "the pit outside {near}",
+        "the {adj} ground"
+      ],
+      "reason": "Dug in a hurry, downwind, and never marked."
+    },
+    {
+      "id": "necropolis",
+      "name": "Necropolis",
+      "family": "funerary",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.3
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.2,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 0.7,
+      "states": {
+        "abandoned": 0.35,
+        "ruined": 0.35,
+        "corrupted": 0.3
+      },
+      "occupants": {
+        "undead": 0.4,
+        "none": 0.25,
+        "cult": 0.2,
+        "squatters": 0.15
+      },
+      "interior": {
+        "plan": "warren",
+        "levels": [
+          2,
+          4
+        ],
+        "chambers": [
+          14,
+          34
+        ]
+      },
+      "names": [
+        "the city of the dead at {near}",
+        "the {adj} necropolis"
+      ],
+      "reason": "A city that buried more people than it ever housed."
+    },
+    {
+      "id": "cliff_coffins",
+      "name": "Cliff coffins",
+      "family": "funerary",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.75
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "slope",
+          "weight": 1.0
+        },
+        {
+          "layer": "height",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "sealed": 0.5,
+        "ruined": 0.3,
+        "abandoned": 0.2
+      },
+      "occupants": {
+        "none": 0.65,
+        "undead": 0.2,
+        "beasts": 0.15
+      },
+      "names": [
+        "the hanging coffins at {near}",
+        "the {adj} ledge"
+      ],
+      "reason": "Coffins pegged into a rock face nobody can reach without rope."
+    },
+    {
+      "id": "wayside_shrine",
+      "name": "Wayside shrine",
+      "family": "sacred",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.3
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.3
+        }
+      ],
+      "per_1000_km2": 5.0,
+      "spacing_cells": 0.6,
+      "settlement_clearance_cells": 0.15,
+      "states": {
+        "active": 0.55,
+        "abandoned": 0.3,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "descendants": 0.35,
+        "none": 0.5,
+        "cult": 0.15
+      },
+      "names": [
+        "the shrine on the {near} road",
+        "the {adj} niche"
+      ],
+      "reason": "Set where travellers wanted something to thank before going on."
+    },
+    {
+      "id": "monastery",
+      "name": "Monastery",
+      "family": "sacred",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.7
+        },
+        {
+          "layer": "freshwater_distance",
+          "weight": 0.6,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.4,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "active": 0.35,
+        "ruined": 0.4,
+        "abandoned": 0.25
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.3,
+        "cult": 0.2,
+        "squatters": 0.2
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          10,
+          24
+        ]
+      },
+      "names": [
+        "the abbey at {near}",
+        "the house of {god}"
+      ],
+      "reason": "Far enough from the world to be quiet, near enough water to live."
+    },
+    {
+      "id": "hermitage",
+      "name": "Hermitage",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.7
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 1.0
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.4,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "active": 0.3,
+        "abandoned": 0.5,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.5,
+        "nature": 0.2
+      },
+      "names": [
+        "the hermit's cell above {near}",
+        "the {adj} cell"
+      ],
+      "reason": "Somewhere hard enough to reach that nobody comes twice."
+    },
+    {
+      "id": "sacred_grove",
+      "name": "Sacred grove",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.8
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.2,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "active": 0.4,
+        "reclaimed": 0.4,
+        "corrupted": 0.2
+      },
+      "occupants": {
+        "nature": 0.4,
+        "fae": 0.25,
+        "cult": 0.2,
+        "none": 0.15
+      },
+      "names": [
+        "the grove at {near}",
+        "the {adj} wood"
+      ],
+      "reason": "Old trees nobody will cut, for a reason the local story has kept."
+    },
+    {
+      "id": "standing_stones",
+      "name": "Standing stones",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "tpi",
+          "weight": 0.7
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.8,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "abandoned": 0.5,
+        "active": 0.25,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "none": 0.6,
+        "cult": 0.2,
+        "fae": 0.2
+      },
+      "names": [
+        "the stones at {near}",
+        "the {adj} ring"
+      ],
+      "reason": "Raised stones on open ground, aligned on something worth aligning on."
+    },
+    {
+      "id": "oracle_cave",
+      "name": "Oracle cave",
+      "family": "sacred",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.6
+        },
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 1.0
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.28,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.3,
+        "sealed": 0.3,
+        "corrupted": 0.4
+      },
+      "occupants": {
+        "cult": 0.4,
+        "none": 0.3,
+        "monsters": 0.3
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          4,
+          10
+        ]
+      },
+      "names": [
+        "the oracle at {near}",
+        "the {adj} mouth"
+      ],
+      "reason": "A cleft that answers, or did once, and people still come to ask."
+    },
+    {
+      "id": "holy_well",
+      "name": "Holy well",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "freshwater_distance",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "freshwater_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.6,
+          "invert": true
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.6,
+      "spacing_cells": 1.2,
+      "settlement_clearance_cells": 0.25,
+      "states": {
+        "active": 0.5,
+        "abandoned": 0.3,
+        "corrupted": 0.2
+      },
+      "occupants": {
+        "descendants": 0.35,
+        "none": 0.4,
+        "cult": 0.15,
+        "fae": 0.1
+      },
+      "names": [
+        "the well at {near}",
+        "the {adj} spring"
+      ],
+      "reason": "Water that never fails, which is reason enough to call it holy."
+    },
+    {
+      "id": "mountain_sanctuary",
+      "name": "Mountain sanctuary",
+      "family": "sacred",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.82
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 1.0
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.22,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "active": 0.3,
+        "abandoned": 0.4,
+        "ruined": 0.3
+      },
+      "occupants": {
+        "builders": 0.25,
+        "none": 0.4,
+        "monsters": 0.2,
+        "cult": 0.15
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          6,
+          15
+        ]
+      },
+      "names": [
+        "the high sanctuary above {near}",
+        "the roof of {god}"
+      ],
+      "reason": "Built where the climb is the pilgrimage."
+    },
+    {
+      "id": "drowned_temple",
+      "name": "Drowned temple",
+      "family": "sacred",
+      "tier": 2,
+      "domain": "water",
+      "requires": [
+        {
+          "layer": "water_depth",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "water_depth",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.06,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "drowned": 1.0
+      },
+      "occupants": {
+        "none": 0.4,
+        "monsters": 0.35,
+        "undead": 0.25
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          6,
+          16
+        ]
+      },
+      "names": [
+        "the drowned temple off {near}",
+        "the sunken house of {god}"
+      ],
+      "reason": "The water came up and the columns are still standing under it."
+    },
+    {
+      "id": "colossus",
+      "name": "Colossus",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "tpi",
+          "weight": 0.7
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.6,
+          "invert": true
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.35,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "ruined": 0.5,
+        "abandoned": 0.3,
+        "active": 0.2
+      },
+      "occupants": {
+        "none": 0.7,
+        "cult": 0.2,
+        "nature": 0.1
+      },
+      "names": [
+        "the colossus at {near}",
+        "the {adj} figure"
+      ],
+      "reason": "Carved big enough to be seen from the road, by someone who wanted that."
+    },
+    {
+      "id": "reliquary_chapel",
+      "name": "Reliquary chapel",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.0,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.4,
+        "ruined": 0.35,
+        "abandoned": 0.25
+      },
+      "occupants": {
+        "descendants": 0.35,
+        "none": 0.4,
+        "cult": 0.25
+      },
+      "names": [
+        "the chapel of {god} at {near}",
+        "the {adj} reliquary"
+      ],
+      "reason": "Built over something small that is worth the detour."
+    },
+    {
+      "id": "crossroads",
+      "name": "Crossroads",
+      "family": "wayside",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.12
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 1.0,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 3.2,
+      "spacing_cells": 0.9,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.7,
+        "abandoned": 0.3
+      },
+      "occupants": {
+        "none": 0.6,
+        "descendants": 0.25,
+        "squatters": 0.15
+      },
+      "names": [
+        "the crossroads at {near}",
+        "the {adj} meeting"
+      ],
+      "reason": "Two roads meeting, which is never only a place to turn."
+    },
+    {
+      "id": "bridge",
+      "name": "Bridge",
+      "family": "wayside",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.18
+        },
+        {
+          "layer": "river",
+          "above_percentile": 0.7
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "river",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.8,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.5,
+      "spacing_cells": 1.0,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.5,
+        "ruined": 0.35,
+        "abandoned": 0.15
+      },
+      "occupants": {
+        "none": 0.55,
+        "descendants": 0.2,
+        "monsters": 0.15,
+        "squatters": 0.1
+      },
+      "names": [
+        "the bridge at {near}",
+        "the {adj} span"
+      ],
+      "reason": "The narrowest crossing on the reach, so the road bends to it."
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "family": "wayside",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "river",
+          "above_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "river",
+          "weight": 0.8
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.7,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 2.6,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.15,
+      "states": {
+        "active": 0.75,
+        "drowned": 0.25
+      },
+      "occupants": {
+        "none": 0.8,
+        "squatters": 0.2
+      },
+      "names": [
+        "the ford at {near}",
+        "the {adj} crossing"
+      ],
+      "reason": "Shallow gravel where a laden cart can get across without a bridge."
+    },
+    {
+      "id": "pass_hospice",
+      "name": "Pass hospice",
+      "family": "wayside",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.65
+        },
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.3
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 0.8
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.8,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.7,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.35,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.4,
+        "squatters": 0.25
+      },
+      "names": [
+        "the hospice on the {near} pass",
+        "the {adj} refuge"
+      ],
+      "reason": "The last roof before the pass, kept by whoever is paid to keep it."
+    },
+    {
+      "id": "ferry_crossing",
+      "name": "Ferry crossing",
+      "family": "wayside",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "river",
+          "above_percentile": 0.8
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "river",
+          "weight": 1.0
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.7,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.25,
+      "states": {
+        "active": 0.55,
+        "abandoned": 0.45
+      },
+      "occupants": {
+        "descendants": 0.4,
+        "none": 0.4,
+        "squatters": 0.2
+      },
+      "names": [
+        "the ferry at {near}",
+        "the {adj} landing"
+      ],
+      "reason": "Too deep to ford and not worth a bridge, so somebody keeps a boat."
+    },
+    {
+      "id": "hedge_inn",
+      "name": "Hedge inn",
+      "family": "wayside",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.22
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 1.4,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.55,
+        "abandoned": 0.3,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "descendants": 0.45,
+        "none": 0.25,
+        "squatters": 0.3
+      },
+      "names": [
+        "the inn on the {near} road",
+        "the {adj} house"
+      ],
+      "reason": "A day's walk from anywhere, which is exactly why it is here."
+    },
+    {
+      "id": "gibbet",
+      "name": "Gibbet",
+      "family": "wayside",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.2
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.5
+        },
+        {
+          "layer": "frontier",
+          "weight": 0.3
+        }
+      ],
+      "per_1000_km2": 2.4,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.6
+      },
+      "occupants": {
+        "none": 0.8,
+        "undead": 0.1,
+        "nature": 0.1
+      },
+      "names": [
+        "the gibbet at {near}",
+        "the {adj} tree"
+      ],
+      "reason": "Put where the road can see it, which is the whole point of it."
+    },
+    {
+      "id": "caravanserai",
+      "name": "Caravanserai",
+      "family": "wayside",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "rainfall",
+          "below_percentile": 0.22
+        },
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "freshwater_distance",
+          "weight": 0.8,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.3,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.35,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.3,
+        "squatters": 0.35
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          8,
+          18
+        ]
+      },
+      "names": [
+        "the caravanserai at {near}",
+        "the {adj} yard"
+      ],
+      "reason": "Water in dry country, walled, because water in dry country needs walls."
+    },
+    {
+      "id": "ley_nexus",
+      "name": "Ley nexus",
+      "family": "arcane",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.9
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 1.0
+        },
+        {
+          "layer": "magic_growth",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "active": 0.6,
+        "corrupted": 0.25,
+        "sealed": 0.15
+      },
+      "occupants": {
+        "none": 0.4,
+        "cult": 0.3,
+        "fae": 0.15,
+        "monsters": 0.15
+      },
+      "names": [
+        "the {school} nexus at {near}",
+        "the {adj} knot"
+      ],
+      "reason": "Where the lines cross, the ground remembers it."
+    },
+    {
+      "id": "wizard_tower",
+      "name": "Wizard's tower",
+      "family": "arcane",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.9
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.6
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.35,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "abandoned": 0.4,
+        "sealed": 0.25,
+        "ruined": 0.2,
+        "active": 0.15
+      },
+      "occupants": {
+        "none": 0.35,
+        "monsters": 0.25,
+        "cult": 0.2,
+        "undead": 0.2
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          3,
+          6
+        ],
+        "chambers": [
+          7,
+          16
+        ]
+      },
+      "names": [
+        "the tower at {near}",
+        "the {adj} spire"
+      ],
+      "reason": "Strong ground, far from anyone who would ask what the noise was."
+    },
+    {
+      "id": "wild_magic_scar",
+      "name": "Wild-magic scar",
+      "family": "arcane",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_hazard",
+          "above_percentile": 0.85
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_hazard",
+          "weight": 1.0
+        },
+        {
+          "layer": "magic_opposition",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.9,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "corrupted": 0.7,
+        "reclaimed": 0.2,
+        "sealed": 0.1
+      },
+      "occupants": {
+        "none": 0.4,
+        "monsters": 0.35,
+        "nature": 0.25
+      },
+      "names": [
+        "the blasted heath at {near}",
+        "the {adj} scar"
+      ],
+      "reason": "Something went wrong here and the ground has not agreed to forget."
+    },
+    {
+      "id": "binding_site",
+      "name": "Binding site",
+      "family": "arcane",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_hazard",
+          "above_percentile": 0.75
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_hazard",
+          "weight": 0.9
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.7
+        }
+      ],
+      "per_1000_km2": 0.18,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "sealed": 0.6,
+        "corrupted": 0.25,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "none": 0.45,
+        "monsters": 0.3,
+        "cult": 0.25
+      },
+      "interior": {
+        "plan": "vault",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          5,
+          13
+        ]
+      },
+      "names": [
+        "the binding at {near}",
+        "the {adj} prison"
+      ],
+      "reason": "Built to hold one thing, and nothing else was built anywhere near it."
+    },
+    {
+      "id": "portal_arch",
+      "name": "Portal arch",
+      "family": "arcane",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.7
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.9
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "sealed": 0.4,
+        "active": 0.3,
+        "ruined": 0.3
+      },
+      "occupants": {
+        "none": 0.5,
+        "cult": 0.25,
+        "fae": 0.25
+      },
+      "names": [
+        "the arch at {near}",
+        "the {adj} gate"
+      ],
+      "reason": "A standing frame with nothing on the other side of it, most days."
+    },
+    {
+      "id": "academy_ruin",
+      "name": "Mage academy ruin",
+      "family": "arcane",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.65
+        },
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.8
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.7,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.15,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 0.7,
+      "states": {
+        "ruined": 0.6,
+        "corrupted": 0.25,
+        "sealed": 0.15
+      },
+      "occupants": {
+        "none": 0.3,
+        "monsters": 0.3,
+        "undead": 0.2,
+        "cult": 0.2
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          2,
+          4
+        ],
+        "chambers": [
+          12,
+          28
+        ]
+      },
+      "names": [
+        "the burnt college at {near}",
+        "the {adj} halls"
+      ],
+      "reason": "They taught something here until it taught them back."
+    },
+    {
+      "id": "summoning_circle",
+      "name": "Summoning circle",
+      "family": "arcane",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.7
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 2.0,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "abandoned": 0.5,
+        "corrupted": 0.3,
+        "active": 0.2
+      },
+      "occupants": {
+        "none": 0.6,
+        "cult": 0.3,
+        "monsters": 0.1
+      },
+      "names": [
+        "the ring cut at {near}",
+        "the {adj} circle"
+      ],
+      "reason": "Cut into the turf by someone who did not want to be interrupted."
+    },
+    {
+      "id": "petrified_army",
+      "name": "Petrified army",
+      "family": "arcane",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_hazard",
+          "above_percentile": 0.7
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_hazard",
+          "weight": 0.8
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.6,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.25,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "corrupted": 0.5,
+        "abandoned": 0.35,
+        "reclaimed": 0.15
+      },
+      "occupants": {
+        "none": 0.75,
+        "cult": 0.15,
+        "nature": 0.1
+      },
+      "names": [
+        "the stone host at {near}",
+        "the {adj} field"
+      ],
+      "reason": "Ranks of figures in stone, still facing the way they were told to."
+    },
+    {
+      "id": "dragon_lair",
+      "name": "Dragon lair",
+      "family": "lair",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.8
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 1.0
+        },
+        {
+          "layer": "metal_richness",
+          "weight": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.14,
+      "spacing_cells": 6.0,
+      "settlement_clearance_cells": 1.2,
+      "states": {
+        "active": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "monsters": 0.8,
+        "none": 0.2
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          4,
+          9
+        ]
+      },
+      "names": [
+        "the wyrm's seat above {near}",
+        "the {adj} hoard"
+      ],
+      "reason": "High, defensible, and within a day's flight of something worth taking."
+    },
+    {
+      "id": "giants_hall",
+      "name": "Giant's hall",
+      "family": "lair",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.7
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 0.8
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.16,
+      "spacing_cells": 5.0,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "active": 0.5,
+        "abandoned": 0.3,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "monsters": 0.7,
+        "none": 0.3
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          4,
+          10
+        ]
+      },
+      "names": [
+        "the hall under {near}",
+        "the {adj} hold"
+      ],
+      "reason": "Built at a scale nobody local could have raised."
+    },
+    {
+      "id": "spider_wood",
+      "name": "Spider wood",
+      "family": "lair",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.6
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.8
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.7,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.7,
+      "states": {
+        "reclaimed": 0.6,
+        "corrupted": 0.4
+      },
+      "occupants": {
+        "beasts": 0.6,
+        "monsters": 0.4
+      },
+      "names": [
+        "the webbed wood at {near}",
+        "the {adj} thicket"
+      ],
+      "reason": "Dense wet timber nobody has thinned in a long time."
+    },
+    {
+      "id": "beast_den",
+      "name": "Beast den",
+      "family": "lair",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.7
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5
+        },
+        {
+          "layer": "nest_distance",
+          "weight": 0.6,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 1.5,
+      "spacing_cells": 1.5,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.7,
+        "abandoned": 0.3
+      },
+      "occupants": {
+        "beasts": 0.8,
+        "none": 0.2
+      },
+      "names": [
+        "the den above {near}",
+        "the {adj} earth"
+      ],
+      "reason": "Sheltered ground with prey below and nobody hunting it."
+    },
+    {
+      "id": "wyvern_eyrie",
+      "name": "Wyvern eyrie",
+      "family": "lair",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "above_percentile": 0.8
+        },
+        {
+          "layer": "height",
+          "above_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "slope",
+          "weight": 0.9
+        },
+        {
+          "layer": "height",
+          "weight": 0.7
+        }
+      ],
+      "per_1000_km2": 0.4,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "active": 0.65,
+        "abandoned": 0.35
+      },
+      "occupants": {
+        "beasts": 0.5,
+        "monsters": 0.5
+      },
+      "names": [
+        "the eyrie above {near}",
+        "the {adj} crag"
+      ],
+      "reason": "A ledge nothing without wings can reach."
+    },
+    {
+      "id": "drowned_village",
+      "name": "Drowned village",
+      "family": "drowned",
+      "tier": 1,
+      "domain": "water",
+      "requires": [
+        {
+          "layer": "water_depth",
+          "below_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "water_depth",
+          "weight": 0.9,
+          "invert": true
+        },
+        {
+          "layer": "old_river",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.18,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "drowned": 1.0
+      },
+      "occupants": {
+        "none": 0.6,
+        "monsters": 0.25,
+        "undead": 0.15
+      },
+      "names": [
+        "the drowned village off {near}",
+        "the {adj} shallows"
+      ],
+      "reason": "The water came up faster than the roofs came down."
+    },
+    {
+      "id": "wreck_field",
+      "name": "Wreck field",
+      "family": "drowned",
+      "tier": 1,
+      "domain": "water",
+      "requires": [
+        {
+          "layer": "water_depth",
+          "below_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "reef",
+          "weight": 0.9
+        },
+        {
+          "layer": "water_depth",
+          "weight": 0.5,
+          "invert": true
+        },
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.22,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "drowned": 1.0
+      },
+      "occupants": {
+        "none": 0.7,
+        "monsters": 0.3
+      },
+      "names": [
+        "the wrecks off {near}",
+        "the {adj} teeth"
+      ],
+      "reason": "Shoal water on a course ships kept taking anyway."
+    },
+    {
+      "id": "surf_ruin",
+      "name": "Surf-line ruin",
+      "family": "drowned",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "coastal_exposure",
+          "above_percentile": 0.7,
+          "min": 0.03
+        },
+        {
+          "layer": "height",
+          "below_percentile": 0.25
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "coastal_exposure",
+          "weight": 0.9
+        },
+        {
+          "layer": "ruin_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "ruined": 0.6,
+        "drowned": 0.4
+      },
+      "occupants": {
+        "none": 0.65,
+        "squatters": 0.2,
+        "monsters": 0.15
+      },
+      "names": [
+        "the half-drowned ruin at {near}",
+        "the {adj} stones"
+      ],
+      "reason": "Built on a shore that has since moved inland."
+    },
+    {
+      "id": "crannog",
+      "name": "Crannog",
+      "family": "drowned",
+      "tier": 1,
+      "domain": "lake",
+      "requires": [
+        {
+          "layer": "water_depth",
+          "below_percentile": 0.3
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "water_depth",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.3,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "abandoned": 0.5,
+        "ruined": 0.3,
+        "active": 0.2
+      },
+      "occupants": {
+        "none": 0.5,
+        "descendants": 0.3,
+        "squatters": 0.2
+      },
+      "names": [
+        "the crannog on {near} water",
+        "the {adj} island"
+      ],
+      "reason": "An island built by hand because an island is easier to hold."
+    },
+    {
+      "id": "fallen_star",
+      "name": "Crater of the fallen star",
+      "family": "wonder",
+      "tier": 3,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "magic_density",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.8
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.0,
+      "min_count": 0,
+      "max_count": 1,
+      "spacing_cells": 8.0,
+      "settlement_clearance_cells": 1.5,
+      "states": {
+        "corrupted": 0.5,
+        "abandoned": 0.5
+      },
+      "occupants": {
+        "none": 0.4,
+        "cult": 0.35,
+        "monsters": 0.25
+      },
+      "names": [
+        "the Godsfall",
+        "the {adj} Wound"
+      ],
+      "reason": "Something fell out of the sky and the world is still shaped around it."
+    },
+    {
+      "id": "titan_skeleton",
+      "name": "Titan skeleton",
+      "family": "wonder",
+      "tier": 3,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.6
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.0,
+      "min_count": 0,
+      "max_count": 1,
+      "spacing_cells": 8.0,
+      "settlement_clearance_cells": 1.5,
+      "states": {
+        "abandoned": 0.6,
+        "reclaimed": 0.4
+      },
+      "occupants": {
+        "none": 0.4,
+        "squatters": 0.3,
+        "cult": 0.3
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          1,
+          2
+        ],
+        "chambers": [
+          6,
+          14
+        ]
+      },
+      "names": [
+        "the Bones",
+        "the {adj} Ribs"
+      ],
+      "reason": "Ribs standing out of the ground like a roofless hall."
+    },
+    {
+      "id": "great_stump",
+      "name": "The great stump",
+      "family": "wonder",
+      "tier": 3,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.7
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.0,
+      "min_count": 0,
+      "max_count": 1,
+      "spacing_cells": 8.0,
+      "settlement_clearance_cells": 1.5,
+      "states": {
+        "reclaimed": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "nature": 0.4,
+        "fae": 0.35,
+        "none": 0.25
+      },
+      "names": [
+        "the Stump",
+        "the {adj} Bole"
+      ],
+      "reason": "A cut surface wide enough to build a village on, and someone did."
+    },
+    {
+      "id": "the_scar",
+      "name": "The Scar",
+      "family": "wonder",
+      "tier": 3,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "shear",
+          "above_percentile": 0.7
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "shear",
+          "weight": 0.9
+        },
+        {
+          "layer": "magic_hazard",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.0,
+      "min_count": 0,
+      "max_count": 1,
+      "spacing_cells": 8.0,
+      "settlement_clearance_cells": 1.5,
+      "states": {
+        "corrupted": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "none": 0.45,
+        "monsters": 0.35,
+        "cult": 0.2
+      },
+      "names": [
+        "the Scar",
+        "the {adj} Tear"
+      ],
+      "reason": "The ground opened along the whole plate margin and stayed open."
+    },
+    {
+      "id": "maelstrom",
+      "name": "The standing maelstrom",
+      "family": "wonder",
+      "tier": 3,
+      "domain": "ocean",
+      "requires": [
+        {
+          "layer": "water_depth",
+          "above_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "water_depth",
+          "weight": 0.7
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.0,
+      "min_count": 0,
+      "max_count": 1,
+      "spacing_cells": 8.0,
+      "settlement_clearance_cells": 1.0,
+      "states": {
+        "active": 1.0
+      },
+      "occupants": {
+        "none": 0.6,
+        "monsters": 0.4
+      },
+      "names": [
+        "the Maelstrom",
+        "the {adj} Mouth"
+      ],
+      "reason": "Water turning in one place for longer than anyone has records for."
+    },
+    {
+      "id": "observatory",
+      "name": "Observatory",
+      "family": "curiosity",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "height",
+          "above_percentile": 0.6
+        },
+        {
+          "layer": "rainfall",
+          "below_percentile": 0.6
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "height",
+          "weight": 0.9
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.6
+        },
+        {
+          "layer": "rainfall",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.2,
+      "spacing_cells": 4.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.3,
+        "abandoned": 0.45,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.45,
+        "cult": 0.25
+      },
+      "interior": {
+        "plan": "linear",
+        "levels": [
+          2,
+          4
+        ],
+        "chambers": [
+          5,
+          12
+        ]
+      },
+      "names": [
+        "the observatory above {near}",
+        "the {adj} eye"
+      ],
+      "reason": "Clear dry air and height, because the moons are worth watching properly."
+    },
+    {
+      "id": "library_ruin",
+      "name": "Library ruin",
+      "family": "curiosity",
+      "tier": 2,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.18,
+      "spacing_cells": 3.5,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "ruined": 0.55,
+        "sealed": 0.25,
+        "abandoned": 0.2
+      },
+      "occupants": {
+        "none": 0.4,
+        "cult": 0.25,
+        "undead": 0.2,
+        "squatters": 0.15
+      },
+      "interior": {
+        "plan": "radial",
+        "levels": [
+          1,
+          3
+        ],
+        "chambers": [
+          8,
+          20
+        ]
+      },
+      "names": [
+        "the scriptorium at {near}",
+        "the {adj} stacks"
+      ],
+      "reason": "What burned was the roof; what is under it may not have burned."
+    },
+    {
+      "id": "lighthouse",
+      "name": "Lighthouse",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "coastal_exposure",
+          "above_percentile": 0.75,
+          "min": 0.03
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "coastal_exposure",
+          "weight": 1.0
+        },
+        {
+          "layer": "reef",
+          "weight": 0.6
+        },
+        {
+          "layer": "tpi",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 0.5,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "active": 0.4,
+        "abandoned": 0.35,
+        "ruined": 0.25
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.5,
+        "squatters": 0.2
+      },
+      "names": [
+        "the light at {near}",
+        "the {adj} lamp"
+      ],
+      "reason": "A headland that has taken enough ships to be worth a fire on."
+    },
+    {
+      "id": "quarantine_isle",
+      "name": "Quarantine isle",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "island_habitat",
+          "above_percentile": 0.7,
+          "min": 0.02
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "island_habitat",
+          "weight": 0.9
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.25,
+      "spacing_cells": 3.0,
+      "settlement_clearance_cells": 0.5,
+      "states": {
+        "abandoned": 0.55,
+        "ruined": 0.3,
+        "active": 0.15
+      },
+      "occupants": {
+        "none": 0.45,
+        "undead": 0.25,
+        "squatters": 0.3
+      },
+      "names": [
+        "the lazaret off {near}",
+        "the {adj} isle"
+      ],
+      "reason": "Close enough to supply, far enough that nothing walks back."
+    },
+    {
+      "id": "arena_ruin",
+      "name": "Arena ruin",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.3
+        },
+        {
+          "layer": "slope",
+          "below_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 1.0,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.3,
+      "spacing_cells": 2.5,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "ruined": 0.7,
+        "reclaimed": 0.3
+      },
+      "occupants": {
+        "none": 0.4,
+        "squatters": 0.3,
+        "beasts": 0.3
+      },
+      "names": [
+        "the arena at {near}",
+        "the {adj} ring"
+      ],
+      "reason": "A bowl of seats around a floor that has soaked up a great deal."
+    },
+    {
+      "id": "aqueduct_span",
+      "name": "Aqueduct span",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 0.45,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.3,
+      "states": {
+        "ruined": 0.65,
+        "active": 0.2,
+        "reclaimed": 0.15
+      },
+      "occupants": {
+        "none": 0.75,
+        "nature": 0.25
+      },
+      "names": [
+        "the aqueduct at {near}",
+        "the {adj} arches"
+      ],
+      "reason": "Carried water to somewhere that no longer needs any."
+    },
+    {
+      "id": "fairy_ring",
+      "name": "Fairy ring",
+      "family": "curiosity",
+      "tier": 0,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.5
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "magic_density",
+          "weight": 0.8
+        },
+        {
+          "layer": "moisture",
+          "weight": 0.5
+        }
+      ],
+      "per_1000_km2": 2.6,
+      "spacing_cells": 0.8,
+      "settlement_clearance_cells": 0.2,
+      "states": {
+        "active": 0.6,
+        "reclaimed": 0.4
+      },
+      "occupants": {
+        "fae": 0.5,
+        "none": 0.35,
+        "nature": 0.15
+      },
+      "names": [
+        "the ring at {near}",
+        "the {adj} circle"
+      ],
+      "reason": "A ring in the grass that the locals walk around rather than through."
+    },
+    {
+      "id": "witch_cottage",
+      "name": "Witch's cottage",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.5
+        },
+        {
+          "layer": "moisture",
+          "above_percentile": 0.4
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "settlement_distance",
+          "weight": 0.8
+        },
+        {
+          "layer": "magic_density",
+          "weight": 0.6
+        }
+      ],
+      "per_1000_km2": 0.9,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "active": 0.45,
+        "abandoned": 0.4,
+        "corrupted": 0.15
+      },
+      "occupants": {
+        "builders": 0.4,
+        "none": 0.3,
+        "fae": 0.15,
+        "cult": 0.15
+      },
+      "names": [
+        "the cottage at {near}",
+        "the {adj} hut"
+      ],
+      "reason": "Out past the last field, which is where you go when you want to be found on purpose."
+    },
+    {
+      "id": "bandit_camp",
+      "name": "Bandit camp",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "road_distance",
+          "below_percentile": 0.4
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.45
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "road_distance",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "settlement_distance",
+          "weight": 0.7
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4
+        }
+      ],
+      "per_1000_km2": 1.1,
+      "spacing_cells": 1.8,
+      "settlement_clearance_cells": 0.8,
+      "states": {
+        "active": 0.55,
+        "abandoned": 0.45
+      },
+      "occupants": {
+        "squatters": 0.8,
+        "none": 0.2
+      },
+      "names": [
+        "the camp above the {near} road",
+        "the {adj} hide"
+      ],
+      "reason": "Cover within a dash of the road and a long ride from the nearest garrison."
+    },
+    {
+      "id": "hunting_lodge",
+      "name": "Hunting lodge",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "moisture",
+          "above_percentile": 0.45
+        },
+        {
+          "layer": "settlement_distance",
+          "above_percentile": 0.35
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "moisture",
+          "weight": 0.6
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.5,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.6,
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.45,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.4,
+        "squatters": 0.3
+      },
+      "names": [
+        "the lodge at {near}",
+        "the {adj} lodge"
+      ],
+      "reason": "Good hunting and a roof for whoever owns the right to it."
+    },
+    {
+      "id": "battlefield",
+      "name": "Regrown battlefield",
+      "family": "curiosity",
+      "tier": 1,
+      "domain": "land",
+      "requires": [
+        {
+          "layer": "slope",
+          "below_percentile": 0.45
+        },
+        {
+          "layer": "ruin_distance",
+          "below_percentile": 0.55
+        }
+      ],
+      "prefers": [
+        {
+          "layer": "ruin_distance",
+          "weight": 0.8,
+          "invert": true
+        },
+        {
+          "layer": "slope",
+          "weight": 0.4,
+          "invert": true
+        },
+        {
+          "layer": "road_distance",
+          "weight": 0.4,
+          "invert": true
+        }
+      ],
+      "per_1000_km2": 0.8,
+      "spacing_cells": 2.0,
+      "settlement_clearance_cells": 0.4,
+      "states": {
+        "reclaimed": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "none": 0.5,
+        "undead": 0.2,
+        "nature": 0.3
+      },
+      "names": [
+        "the field at {near}",
+        "the {adj} ground"
+      ],
+      "reason": "Flat open ground beside a road, which is where armies agree to meet."
+    },
+    {
+      "id": "waystone",
+      "name": "Waystone",
+      "family": "wayside",
+      "tier": 0,
+      "domain": "land",
+      "placement": "path",
+      "prefers": [],
+      "states": {
+        "active": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "none": 0.85,
+        "descendants": 0.15
+      },
+      "names": [
+        "the {ordinal} stone on the {near} road",
+        "the {adj} stone"
+      ],
+      "reason": "Counted out along the road so a traveller knows how much is left."
+    },
+    {
+      "id": "boundary_stone",
+      "name": "Boundary stone",
+      "family": "wayside",
+      "tier": 0,
+      "domain": "land",
+      "placement": "path",
+      "prefers": [],
+      "states": {
+        "active": 0.45,
+        "abandoned": 0.4,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "none": 0.9,
+        "nature": 0.1
+      },
+      "names": [
+        "the march stone at {near}",
+        "the {adj} marker"
+      ],
+      "reason": "Cut where one claim ends, by people who expected to be argued with."
+    },
+    {
+      "id": "beacon_tower",
+      "name": "Beacon tower",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "placement": "path",
+      "prefers": [],
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.35,
+        "ruined": 0.3
+      },
+      "occupants": {
+        "none": 0.55,
+        "builders": 0.25,
+        "squatters": 0.2
+      },
+      "names": [
+        "the beacon above {near}",
+        "the {adj} fire"
+      ],
+      "reason": "Sited so the next beacon can see it, and lit when it must not be alone."
+    },
+    {
+      "id": "pilgrim_station",
+      "name": "Pilgrim station",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "placement": "path",
+      "prefers": [],
+      "states": {
+        "active": 0.5,
+        "abandoned": 0.35,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "descendants": 0.4,
+        "none": 0.4,
+        "cult": 0.2
+      },
+      "names": [
+        "the {ordinal} station on the road to {near}",
+        "the {adj} rest"
+      ],
+      "reason": "A day's walk apart on the approach, for people who arrive on foot."
+    },
+    {
+      "id": "siege_camp",
+      "name": "Siege camp",
+      "family": "fortification",
+      "tier": 1,
+      "domain": "land",
+      "placement": "cluster",
+      "prefers": [],
+      "states": {
+        "ruined": 0.6,
+        "abandoned": 0.4
+      },
+      "occupants": {
+        "none": 0.7,
+        "squatters": 0.2,
+        "nature": 0.1
+      },
+      "names": [
+        "the siege lines below {near}",
+        "the {adj} camp"
+      ],
+      "reason": "Dug in sight of the walls by whoever was waiting them out."
+    },
+    {
+      "id": "miners_cottages",
+      "name": "Miners' cottages",
+      "family": "extractive",
+      "tier": 1,
+      "domain": "land",
+      "placement": "cluster",
+      "prefers": [],
+      "states": {
+        "active": 0.3,
+        "abandoned": 0.5,
+        "ruined": 0.2
+      },
+      "occupants": {
+        "builders": 0.3,
+        "none": 0.4,
+        "squatters": 0.3
+      },
+      "names": [
+        "the cottages at {near}",
+        "the {adj} row"
+      ],
+      "reason": "Built where the shift ended, and emptied when it stopped."
+    },
+    {
+      "id": "hermit_cell",
+      "name": "Hermit's cell",
+      "family": "sacred",
+      "tier": 1,
+      "domain": "land",
+      "placement": "cluster",
+      "prefers": [],
+      "states": {
+        "active": 0.35,
+        "abandoned": 0.5,
+        "ruined": 0.15
+      },
+      "occupants": {
+        "builders": 0.35,
+        "none": 0.5,
+        "nature": 0.15
+      },
+      "names": [
+        "the cell above {near}",
+        "the {adj} cell"
+      ],
+      "reason": "Far enough from the house to be alone, near enough to be fed."
+    }
+  ],
+  "succession": {
+    "note": "What moves into a place after the builders leave, applied only to sites already in an abandoned-like state and only once at least one age has passed. This is where dungeons come from: no archetype is called a dungeon, and none needs to be.",
+    "extractive": {
+      "chance": 0.45,
+      "occupants": {
+        "monsters": 0.45,
+        "squatters": 0.3,
+        "beasts": 0.15,
+        "undead": 0.1
+      },
+      "note": "Worked out, propped up, and then taken by whatever found the entrance."
+    },
+    "fortification": {
+      "chance": 0.4,
+      "occupants": {
+        "squatters": 0.4,
+        "monsters": 0.35,
+        "beasts": 0.25
+      },
+      "note": "Walls outlive garrisons, and walls are worth having."
+    },
+    "funerary": {
+      "chance": 0.35,
+      "occupants": {
+        "undead": 0.55,
+        "squatters": 0.2,
+        "beasts": 0.15,
+        "cult": 0.1
+      },
+      "note": "Breached, and then not empty."
+    },
+    "sacred": {
+      "chance": 0.4,
+      "occupants": {
+        "cult": 0.4,
+        "squatters": 0.3,
+        "monsters": 0.2,
+        "nature": 0.1
+      },
+      "note": "A roof and an altar attract a different congregation."
+    },
+    "subterranean": {
+      "chance": 0.3,
+      "occupants": {
+        "beasts": 0.45,
+        "monsters": 0.4,
+        "squatters": 0.15
+      },
+      "note": "Nothing has to move in; something usually does."
+    },
+    "arcane": {
+      "chance": 0.5,
+      "occupants": {
+        "monsters": 0.35,
+        "cult": 0.3,
+        "undead": 0.25,
+        "fae": 0.1
+      },
+      "note": "Whatever was being worked on is still there."
+    },
+    "curiosity": {
+      "chance": 0.35,
+      "occupants": {
+        "squatters": 0.4,
+        "beasts": 0.3,
+        "nature": 0.2,
+        "undead": 0.1
+      },
+      "note": "Somebody always finds a use for a standing roof."
+    },
+    "drowned": {
+      "chance": 0.25,
+      "occupants": {
+        "monsters": 0.6,
+        "undead": 0.4
+      },
+      "note": "What lives there now got there by water."
+    },
+    "wayside": {
+      "chance": 0.3,
+      "occupants": {
+        "squatters": 0.6,
+        "beasts": 0.25,
+        "monsters": 0.15
+      },
+      "note": "An empty house on a road does not stay empty."
+    }
+  },
+  "chains": [
+    {
+      "id": "road_waystones",
+      "name": "Waystone line",
+      "archetype": "waystone",
+      "along": "road",
+      "interval_m": 2200,
+      "reason": "A road nobody has counted out is a road nobody has walked often."
+    },
+    {
+      "id": "march_stones",
+      "name": "March stones",
+      "archetype": "boundary_stone",
+      "along": "frontier",
+      "interval_m": 3400,
+      "reason": "A border is only a line because somebody put stones along it."
+    },
+    {
+      "id": "beacon_line",
+      "name": "Beacon line",
+      "archetype": "beacon_tower",
+      "along": "road",
+      "interval_m": 9000,
+      "line_of_sight": true,
+      "reason": "Each one sited so the next can see it; a beacon that stands alone is only a tower."
+    },
+    {
+      "id": "pilgrim_road",
+      "name": "Pilgrim stations",
+      "archetype": "pilgrim_station",
+      "along": "approach",
+      "anchor_family": "sacred",
+      "anchor_tier": 2,
+      "interval_m": 2600,
+      "reason": "Spaced along the last approach, because the arrival is the point and the walk is the rest of it.",
+      "max_chains": 3
+    }
+  ],
+  "clusters": [
+    {
+      "id": "siege_works",
+      "name": "Siege works",
+      "archetype": "siege_camp",
+      "anchor_families": [
+        "fortification"
+      ],
+      "anchor_states": [
+        "ruined"
+      ],
+      "count": [
+        1,
+        2
+      ],
+      "offset_m": [
+        1100,
+        2400
+      ],
+      "chance": 0.55,
+      "reason": "Somebody was outside these walls long enough to build."
+    },
+    {
+      "id": "mine_village",
+      "name": "Mine village",
+      "archetype": "miners_cottages",
+      "anchor_kinds": [
+        "iron_mine",
+        "silver_mine",
+        "gem_mine",
+        "salt_mine"
+      ],
+      "count": [
+        1,
+        2
+      ],
+      "offset_m": [
+        600,
+        1600
+      ],
+      "chance": 0.7,
+      "reason": "Nobody walks far to a shift; the village is always within sight of the head."
+    },
+    {
+      "id": "barrow_ring",
+      "name": "Barrow ring",
+      "archetype": "barrow",
+      "anchor_kinds": [
+        "necropolis",
+        "barrow_field"
+      ],
+      "count": [
+        2,
+        4
+      ],
+      "offset_m": [
+        900,
+        2600
+      ],
+      "chance": 0.8,
+      "reason": "The big tombs drew the smaller ones around them for generations."
+    },
+    {
+      "id": "hermit_cells",
+      "name": "Hermit cells",
+      "archetype": "hermit_cell",
+      "anchor_kinds": [
+        "monastery"
+      ],
+      "count": [
+        1,
+        3
+      ],
+      "offset_m": [
+        1200,
+        3200
+      ],
+      "chance": 0.6,
+      "reason": "A house of people who wanted quiet attracts people who wanted more of it."
+    }
+  ]
+}
