@@ -12,6 +12,7 @@ import copy
 import json
 import math
 import os
+import pathlib
 import unittest
 from unittest.mock import patch
 
@@ -863,6 +864,74 @@ def _flat_ground(world_dict, plan):
                           readers.size(world_dict), readers.radius_m(world_dict))
 
 
+class SchemaCoverage(unittest.TestCase):
+    """Both directions: the schema declares what the block emits, and vice versa.
+
+    Validation alone is one-way. An undeclared field passes every validator in this repo while
+    being invisible to any consumer building against the published contract - which is exactly
+    what happened when the `environment` block was added to the record and not to the schema.
+    """
+
+    SCHEMAS = pathlib.Path(__file__).resolve().parents[2] / 'Contracts' / 'schemas'
+
+    @classmethod
+    def setUpClass(cls):
+        cls.world = world()
+        cls.world['key_locations'] = key_locations.generate(cls.world)
+        cls.plans = key_locations.attach_plans(cls.world)
+
+    def schema(self, name):
+        return json.loads((self.SCHEMAS / name).read_text(encoding='utf-8'))
+
+    def assertDeclares(self, record, node, where):
+        """Every key on a record is a declared property of the object schema describing it."""
+        declared = set(node.get('properties') or {})
+        self.assertTrue(declared, f'{where}: schema declares no properties')
+        undeclared = set(record) - declared
+        self.assertEqual(undeclared, set(),
+                         f'{where} emits {sorted(undeclared)}, which no consumer can see in the contract')
+
+    def test_the_locations_schema_declares_every_field_a_site_carries(self):
+        site_schema = self.schema('key-locations.schema.json')['properties']['sites']['items']
+        for site in self.block_sites():
+            self.assertDeclares(site, site_schema, 'site')
+            for key in ('origin', 'links', 'environment'):
+                self.assertDeclares(site[key], site_schema['properties'][key], f'site.{key}')
+            if site['interior']:
+                self.assertDeclares(site['interior'], site_schema['properties']['interior'], 'site.interior')
+            if site['succession']:
+                self.assertDeclares(site['succession'], site_schema['properties']['succession'], 'site.succession')
+
+    def test_the_plans_schema_declares_every_field_a_plan_carries(self):
+        plan_schema = self.schema('key-location-plans.schema.json')['properties']['plans']['items']
+        for plan in self.plans['plans']:
+            self.assertDeclares(plan, plan_schema, 'plan')
+            self.assertDeclares(plan['origin'], plan_schema['properties']['origin'], 'plan.origin')
+            terrain_schema = plan_schema['properties']['terrain']
+            self.assertDeclares(plan['terrain'], terrain_schema, 'plan.terrain')
+            self.assertDeclares(plan['terrain']['surface'], terrain_schema['properties']['surface'],
+                                'plan.terrain.surface')
+            for entry in plan['terrain']['shaping']:
+                self.assertDeclares(entry, terrain_schema['properties']['shaping']['items'],
+                                    'plan.terrain.shaping[]')
+            for plot in plan['plots']:
+                self.assertDeclares(plot, plan_schema['properties']['plots']['items'], 'plan.plots[]')
+
+    def test_required_fields_are_actually_always_present(self):
+        """A required field that is sometimes absent is a contract nobody can rely on."""
+        site_schema = self.schema('key-locations.schema.json')['properties']['sites']['items']
+        for site in self.block_sites():
+            for key in site_schema['required']:
+                self.assertIn(key, site, f'site is missing required {key}')
+        plan_schema = self.schema('key-location-plans.schema.json')['properties']['plans']['items']
+        for plan in self.plans['plans']:
+            for key in plan_schema['required']:
+                self.assertIn(key, plan, f'plan is missing required {key}')
+
+    def block_sites(self):
+        return self.world['key_locations']['sites']
+
+
 class Isolation(unittest.TestCase):
     def test_attach_reports_failure_instead_of_raising_and_honours_the_switch(self):
         with patch.dict(os.environ, {key_locations.ENV_SWITCH: '0'}):
@@ -902,6 +971,62 @@ class Isolation(unittest.TestCase):
         self.assertIn('key locations', lines[0])
         self.assertEqual(key_locations.summary_lines({'status': 'failed', 'error': 'x'}),
                          ['key locations failed: x'])
+
+
+class NaturalBiomeIdTests(unittest.TestCase):
+    """`natural_biome` is a catalogue ID, not an array offset, and the id space is sparse.
+
+    The world states the rule itself in ``terrain.biome_contract``: *"biome and
+    natural_biome are natural catalogue IDs, never array offsets; biome_variant is a
+    magical catalogue index or -1."* Keying the natural map by list position satisfied ids
+    0..8 -- which are contiguous -- and silently lost every id above them.
+    """
+
+    def catalogue(self):
+        from icarus_sim.terrain_biome_catalogue import natural_catalogue
+        return natural_catalogue()
+
+    def test_every_natural_id_resolves_to_a_name(self):
+        catalogue = self.catalogue()
+        names = key_locations._biome_names(
+            {'terrain': {'natural_biomes': catalogue, 'magical_biomes': []}})
+        unresolved = [entry['id'] for entry in catalogue
+                      if names['natural'].get(entry['id']) is None]
+        self.assertEqual(unresolved, [], 'every catalogue id must name its ground')
+
+    def test_the_id_space_is_sparse_and_reaches_past_the_list_length(self):
+        """The property that made the offset reading wrong, pinned so it cannot drift back."""
+        ids = sorted(entry['id'] for entry in self.catalogue())
+        self.assertEqual(ids, [0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 15, 16, 17])
+        self.assertGreater(max(ids), len(ids) - 1,
+                           'ids run past the last list position, so position is not id')
+
+    def test_the_cold_and_wet_biomes_are_the_ones_that_were_lost(self):
+        """Named explicitly: these four resolved to None before the fix."""
+        catalogue = self.catalogue()
+        names = key_locations._biome_names(
+            {'terrain': {'natural_biomes': catalogue, 'magical_biomes': []}})
+        self.assertEqual(names['natural'][13], 'Marsh')
+        self.assertEqual(names['natural'][15], 'Boreal forest')
+        self.assertEqual(names['natural'][16], 'Cold tundra')
+        self.assertEqual(names['natural'][17], 'Persistent land ice')
+
+    def test_the_variant_map_stays_an_index(self):
+        """The two maps are keyed differently on purpose; only the natural one was wrong."""
+        variants = [{'asset_id': f'a{i}', 'name': f'n{i}'} for i in range(4)]
+        names = key_locations._biome_names(
+            {'terrain': {'natural_biomes': self.catalogue(), 'magical_biomes': variants}})
+        self.assertEqual(names['variant_name'][0], 'n0')
+        self.assertEqual(names['variant_name'][3], 'n3')
+
+    def test_the_schema_bound_admits_the_whole_id_space(self):
+        """A 0-12 maximum rejected valid output, which is how this surfaced."""
+        root = pathlib.Path(__file__).resolve().parents[2]
+        schema = json.loads((root / 'Contracts' / 'schemas'
+                             / 'key-locations.schema.json').read_text(encoding='utf-8'))
+        bound = (schema['properties']['sites']['items']['properties']
+                 ['environment']['properties']['natural_biome'])
+        self.assertGreaterEqual(bound['maximum'], max(e['id'] for e in self.catalogue()))
 
 
 if __name__ == '__main__':

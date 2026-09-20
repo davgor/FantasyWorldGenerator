@@ -66,7 +66,7 @@ Every identity in the exhaustive asset list has an Unreal registry row: object p
 
 Python can already write world JSON. That is not Unreal setup. ML-03 must close all three:
 
-1. `.uplugin` (`FantasyWorldGenerator`) and an in-process native generate API. `Core/` today is the counter only; world genesis is in scope ([ML-03d](../board/backlog/ML-03d.md)).
+1. `.uplugin` (`FantasyWorldGenerator`) and an in-process native generate API. `Core/` carries the bounded counter kernel and a native world generator that is compared against the Python reference layer by layer; what remains open is the generic plugin, the installed consumer and the cooked loop ([ML-03d](../board/backlog/ML-03d.md)). See [`Core/README.md`](../Core/README.md) for what is verified and what is present but unreached by any test.
 2. UnrealWorldGen importer: Z-up / centimetre mapping in this document, Landscape, asset-ID registry ([ML-03e](../board/backlog/ML-03e.md)).
 3. Packaged Win64 generate → materialize loop with an exact package digest (ML-03e). Editor PIE does not close the epic.
 
@@ -118,4 +118,4 @@ The module compiles under UnrealBuildTool for the Win64 game target in the sibli
 4. Materialize settlements, structures, roads, and nest anchors on the sampled surface without adding unsupported inhabitants or resources.
 5. Store generator version, seed, resolved configuration, source digest, importer version, and cooked package digest with the created world.
 
-A bounded headless C++ counter core is available in `Core/` and the `.uplugin` tree exists but is uncompiled; native world generate, the importer, and the cooked loop are the open ML-03 push-to-Unreal items, not out-of-epic work.
+`Core/` carries a bounded headless C++ counter core and a native world generator verified against the Python reference; the `.uplugin` tree exists and a headless game target builds. The generic plugin, the installed Unreal 5.8.2 consumer, the importer and the cooked generate → materialize loop are the open ML-03 push-to-Unreal items, not out-of-epic work.

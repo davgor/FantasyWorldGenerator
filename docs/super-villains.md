@@ -51,6 +51,26 @@ So a region is anchored to the **nearest ley node**, whose ids persist and are o
 
 The band to stay sits below the band to rise. That hysteresis is what makes a reign long once established and stops anything flickering across the line. When a villain falls, the region keeps a fraction of its tier rather than resetting: the concentration **releases** rather than vanishing, which is the successor squabble.
 
+### What a fall leaves behind
+
+Two records, because they answer two questions.
+
+**The roster stays honest.** A fallen villain is kept in `villains.people` with `status: 'fallen'` and a `fell_age`, so `people` becomes the list of everyone who ever held a region rather than a list of who holds one now.
+
+**The mark is the durable one.** A villain that actually did something to the world gets a record in `villains.fallen`, in the same shape a ruined city gets one in `ruins`: an id derived from its uid, `fell_age`, `born_age` and `reigned_ages`, the parts of its life worth carrying (`school`, `growth`, `held_nodes`, `claims`, `well`, `god`, its log) and a `left` block naming the ruins it caused, the claims it staked, the well it sank and the nodes it held. `tier` and `reach_m` are deliberately absent: both describe a grip it no longer has.
+
+**"If it indeed left a mark" is a condition, not a formality.** A villain that reached the band, took no city, staked no claim and sank no well did not mark the world, and gets no record. What it leaves is what it always left — the decayed tier the region keeps, which is the successor squabble. Inventing a monument for it would make the record of the dead less useful, not more.
+
+The mark carries **no `asset_id`**, unlike a ruin. A ruin is a thing standing on the ground and needs a marker in the exhaustive asset list. A fallen villain's holdings are already placed — its wells are ley nodes, its claims are claims — so an asset here would be an identity the catalogue has to carry with nothing standing at it.
+
+`villains.fallen` is appended and never pruned, exactly as `ruins` is. There is no retention horizon and that is not a new policy: it is the one the world already runs for its dead cities. The world has a finite population, so its dead are a knowable set rather than an unbounded stream — which is the argument for recording them properly rather than the argument against.
+
+That makes `people` a list of everyone who ever held a region, not a list of who holds one now. **Every reader that means "who stands right now" must say so** — `terrain_villains.standing()` is the predicate, and absent status reads as standing so older records still resolve. This is the same shape `heroes.people` uses for `legend` and `npcs.people` uses for `dead`: one list, a status field, and the reader filters.
+
+The ground a villain took does **not** revert. Its claims stay on the map and keep steering key-location placement and the nomad cultist gate, because held ground outlives its holder. Its own seat position does not: the claim persists, the person does not stand there any more.
+
+How *hard* a fallen villain's claims still press is a separate question from whether they persist, and it is deliberately a number — `influence` on the claim, `FALLEN_CLAIM_INFLUENCE` in the module — rather than a boolean. Today it is `1.0`, which makes retention the only behavioural change. The argument for decaying it is the one `FRAGMENT_SHARE` already makes for tier: a region's grip fades when its holder goes, and a world that never decays it eventually places by who *ever* held power rather than by who holds it. That decision belongs with whoever settles the tick cadence and has not been made.
+
 ## Growth decides how it is fought
 
 The pressure that raised a villain decides how its reach expands, and therefore the counter-play:

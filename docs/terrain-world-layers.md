@@ -2,7 +2,7 @@
 
 ## Recipe 3: staged construction and two ages
 
-The lab now defaults to recipe **3**, generation algorithm **16**, with sixteen stages. Launch with `python3 tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
+The lab now defaults to recipe **3**, generation algorithm **16**, with sixteen stages. Launch with `python tools/terrain_lab.py --serve`. `--phase` stops computation at a stage; Previous/Next inspects saved states without regeneration:
 
 1. Plate layout
 2. Tectonic relief
@@ -98,7 +98,7 @@ Behavioral coverage checks partial-stage equivalence, replay, finite JSON, seams
 
 ## Surface systems
 
-The sections below describe the surface systems used by recipe 3. The separate nine-stage world recipe is retired. Launch `python3 tools/terrain_lab.py --serve` and open the reported loopback URL.
+The sections below describe the surface systems used by recipe 3. The separate nine-stage world recipe is retired. Launch `python tools/terrain_lab.py --serve` and open the reported loopback URL.
 
 ## Generation and controls
 

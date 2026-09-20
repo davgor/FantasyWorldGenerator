@@ -259,5 +259,52 @@ class CleanseTests(unittest.TestCase):
                                         'target': {'god_id': 'god_radiant'}})
 
 
+class CorruptionLegacyTests(unittest.TestCase):
+    """A city unmade by a walking god names the god as the source of its scar.
+
+    This costs no world: it is why the four lines that build it were lifted out of
+    `corrupt`, where proving anything about them needed a villain world and a hidden god
+    that happened to hold rot or void.
+    """
+
+    CITY = {'uid': 'city', 'population_profile': 'human_heartland', 'city_class': 'medium'}
+
+    def potencies(self, **values):
+        from icarus_sim.terrain_leyline_history import SCHOOLS
+        return {school: values.get(school, 0.) for school in SCHOOLS}
+
+    def test_the_god_is_the_source_even_though_no_branch_names_the_cause(self):
+        """The region held umbral; the ruin must not say umbral chose this."""
+        for school, cause in (('rot', 'rot_plague'), ('void', 'void_unmade')):
+            with self.subTest(school=school):
+                legacy = corruption.corruption_legacy(
+                    self.CITY, cause, self.potencies(umbral=.9), school)
+                self.assertEqual(legacy['school'], school)
+                self.assertEqual(legacy['basis'], 'source',
+                                 'a walking god is the source, not the region')
+
+    def test_the_scar_still_follows_the_city_class(self):
+        """Only school and basis are stated here; intensity stays ruin_legacy's."""
+        for city_class, expected in (('small', 1.5), ('medium', 2.5), ('capital', 3.5)):
+            with self.subTest(city_class=city_class):
+                city = {**self.CITY, 'city_class': city_class}
+                legacy = corruption.corruption_legacy(city, 'void_unmade', self.potencies(), 'void')
+                self.assertEqual(legacy['intensity'], expected)
+
+    def test_a_hidden_school_never_arrives_by_any_other_route(self):
+        """The guard that makes the basis matter: nothing else can attribute one.
+
+        `ruin_legacy` resolves a hidden school only if it is handed one, and the two
+        corruption causes match no branch, so without this helper's explicit statement
+        the ruin would carry a region or culture basis over a school neither holds.
+        """
+        from icarus_sim.terrain_ruins import ruin_legacy
+        unattributed = ruin_legacy(self.CITY, 'void_unmade', self.potencies(umbral=.9),
+                                   villain_school='void')
+        self.assertNotEqual(unattributed['school'], 'void',
+                            'villain_school is inert for a cause that is not a villain')
+        self.assertEqual(unattributed['basis'], 'region')
+
+
 if __name__ == '__main__':
     unittest.main()

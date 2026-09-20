@@ -2,7 +2,7 @@
 
 Current lab default: [recipe 2 staged history](terrain-world-layers.md) adds sixteen inspectable stages, deep-time tectonic deformation, eight independent leylines, natural/magical biome catalogues, and two civilization ages. Recipe 0/1 behavior below remains available explicitly.
 
-Current contract: [recipe 3 and explicit biome states](terrain-world-layers.md). Launch `python3 tools/terrain_lab.py --serve`. Recipes 1/2 and legacy biome/save compatibility are retired. The mathematical development notes below are historical evidence; old numeric biome examples, generator versions and seed-calibration figures are not current interchange guidance. Standalone geometry experiments remain available, using the current biome rules.
+Current contract: [recipe 3 and explicit biome states](terrain-world-layers.md). Launch `python tools/terrain_lab.py --serve`. Recipes 1/2 and legacy biome/save compatibility are retired. The mathematical development notes below are historical evidence; old numeric biome examples, generator versions and seed-calibration figures are not current interchange guidance. Standalone geometry experiments remain available, using the current biome rules.
 
 Unreal port note: the Python/browser lab was originally copied from IcarusAI and is now extended by the layered-world recipe. The
 sections below retain the source experiment's chronological history; later

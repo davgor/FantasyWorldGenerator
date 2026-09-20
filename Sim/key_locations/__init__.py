@@ -133,9 +133,17 @@ def _biome_names(world):
     The world publishes all 13 natural biomes and all 156 magical variants with their names
     and asset ids, so a consumer never has to import the generator's catalogue to say what
     ground a location stands on. That is why this reads the world rather than `icarus_sim`.
+
+    The two maps are keyed differently, and that is the world's own rule rather than a
+    choice made here. `terrain.biome_contract` states it: *"biome and natural_biome are
+    natural catalogue IDs, never array offsets; biome_variant is a magical catalogue index
+    or -1."* `NATURAL_BIOMES` is sparse -- 0..8, then 13, 15, 16, 17 -- so keying the
+    natural map by position silently lost marsh, boreal forest, cold tundra and persistent
+    land ice, which resolved to `None`, while positions 9..12 held names no layer value can
+    ask for. Ids 0..8 came out right only because they happen to be contiguous.
     """
     terrain = world.get('terrain') or {}
-    natural = {i: b.get('name') for i, b in enumerate(terrain.get('natural_biomes') or [])}
+    natural = {b.get('id'): b.get('name') for b in (terrain.get('natural_biomes') or [])}
     variants = terrain.get('magical_biomes') or []
     return {
         'natural': natural,

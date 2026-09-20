@@ -175,7 +175,7 @@ alone because refactoring verified code mid-port is the wrong order:
   digit algorithm. Both pass their oracles. This belongs in `Core/globe.hpp` beside
   `Sum`, `python_hypot` and `python_mod` as one shared primitive.
 - `Core/README.md` lists ported modules and names none of the ten added here.
-- `Core/cityplanner.cpp:759-763` hardcodes `neighbour_half` as an if/else chain that
+- `Core/cityplanner.cpp:802-805` hardcodes `neighbour_half` as an if/else chain that
   throws on an unknown `city_class`. It will throw the moment a new settlement tier
   appears — a hard coupling point with the tier workstream.
 

@@ -213,6 +213,7 @@ def _key_location_part_assets() -> list[dict[str, Any]]:
             "part_kind": part["kind"],
             "dimensions_m": part["dimensions_m"],
             "plot_m": part["plot_m"],
+            "shaping": part.get("shaping"),
             "rendering": "Labeled footprint; production art remains unassigned.",
             "catalogue_revision": document["revision"],
             "recipe_version": 3,

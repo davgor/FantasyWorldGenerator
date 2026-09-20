@@ -188,6 +188,9 @@ def ground(result, cfg, radius, points):
         if where:
             shrines.append((where, site.get('id', ''), site))
     claims = []
+    # Deliberately not filtered to standing villains: held ground outlives its holder, so
+    # a cult raised on a claim does not disband because the villain that staked it fell.
+    # The holder record reached through `claim['villain']` may therefore be fallen.
     for villain in (result.get('villains', {}).get('people', []) or []):
         for claim in villain.get('claims', []) or []:
             where = _where(claim, points, n)
@@ -274,7 +277,11 @@ def _gate_cultists(cell, g, rule, result):
         strength = 1.
     elif claim is not None and claim_span <= rule['claim_reach_spacings'] * g['spacing']:
         school = claim['villain'].get('school')
-        strength = max(1., float(claim['villain'].get('tier', 1.)))
+        # Scaled by the claim's own influence, which is 1.0 for a living holder and the
+        # fallen-claim value once its holder goes. Reading it off the claim keeps the
+        # decay question in one place instead of in every consumer.
+        strength = (max(1., float(claim['villain'].get('tier', 1.)))
+                    * float(claim['claim'].get('influence', 1.)))
         evidence = {'claim_id': claim['claim']['id'], 'villain_uid': claim['villain']['uid'],
                     'claim_distance_m': claim_span}
     if not school:

@@ -18,6 +18,12 @@ particular year being bad, and nothing in the generator currently distinguishes 
 from another. Building a trigger before that exists would mean inventing a calendar inside
 the creature pass.
 
+**Blocked on `TIME-ADVANCE.md`** (scoped 2026-09-19). That card supplies the year boundary
+this one is waiting for: a `world_clock` block carrying an authoritative day, and a Season
+band that steps seasonal food and forage on an absolute year index. Kept as a separate
+card on purpose - the clock lands and is proven first, then this is rewired to it, rather
+than coupling a creature feature's delivery to an infrastructure ticket.
+
 ## Proposed mechanism, once years exist
 
 Compare a year's forage at the group's start node against the local mean. Erupt when it

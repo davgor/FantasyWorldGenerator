@@ -35,7 +35,7 @@ Turn route-defence fortress pins into metre-scale modular castles with fine wall
 
 ## Acceptance and evidence
 
-Behavioral tests for replay, joins, approach gates, independence, stage export, age identity and asset coverage. `python3 tools/validate_repo.py`.
+Behavioral tests for replay, joins, approach gates, independence, stage export, age identity and asset coverage. `python tools/validate_repo.py`.
 
 ## Documentation impact
 

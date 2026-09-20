@@ -1,4 +1,4 @@
-# 017 — Private source-inclusive package policy
+# 022 — Private source-inclusive package policy
 
 On 2026-09-16 the user delegated the package-license choice and selected Unreal 5.8.2, which is not installed on this machine. The working distribution policy is private and owner-controlled, recorded in the root `LICENSE`. This supports the intended use across the owner's own producer/game projects without making an open-source or public-redistribution grant. The policy applies only to original material the owner controls; it does not clear inherited third-party provenance.
 

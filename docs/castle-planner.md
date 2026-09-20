@@ -37,4 +37,4 @@ Click a fortress card under “Inspect hamlets and fortresses”, or a fortress 
 
 ## Verification
 
-`Sim/tests/test_castle_planner.py` and `test_castle_geometry.py` cover replay, join rejection, closed walkways, approach gates, independence from `city_plans`, final-stage visibility, age identity rejection and asset coverage. Run `python3 tools/validate_repo.py` before release.
+`Sim/tests/test_castle_planner.py` and `test_castle_geometry.py` cover replay, join rejection, closed walkways, approach gates, independence from `city_plans`, final-stage visibility, age identity rejection and asset coverage. Run `python tools/validate_repo.py` before release.

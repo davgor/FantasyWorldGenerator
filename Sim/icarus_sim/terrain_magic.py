@@ -37,6 +37,17 @@ def college_eligible(density,hazard,limit,slope,temp,fresh,flood,suitability,wat
 
 
 def add_magic(result,cfg):
+    # Dead writer. Imported by terrain_leyline_history and called from nowhere: no call
+    # site, no string dispatch, no non-Python caller. generate_networks is the sole
+    # writer of result['magic'] and emits version 4.
+    #
+    # Do not connect this. It does not merge, it REPLACES the whole block with a
+    # version-1 body that has no school_order and no twelve-school contract, so
+    # whichever of the two ran second would silently discard the other's block
+    # entirely. Delete it or leave it; wiring it back in is the one move that breaks
+    # worlds, and it is the move a tidiness pass makes because an imported-unused
+    # symbol reads like an oversight. See docs/conformance/version-bindings.json and
+    # board/backlog/MAGIC-ADD-MAGIC-DEAD-WRITER.md.
     if not cfg.magic_enabled or cfg.phase<6 or not result.get('climate'):return result
     started=perf_counter();rng=random.Random(child_seed(cfg.seed,'leylines'));nodes=[]
     # Separate from settlements and plate seeds. Minimum angular spacing avoids degenerate arcs.

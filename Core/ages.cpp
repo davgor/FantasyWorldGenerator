@@ -146,7 +146,8 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
             // A city whose ground a school already held leaves a key point behind it.
             // The victor's own magic scars the ground it took.
             const RuinLegacy legacy=ruin_legacy(city_class,city.population_profile,ruin.cause,potency,
-                                                std::string(),war.victor_civilization_id,std::string());
+                                                std::string(),war.victor_civilization_id,std::string(),
+                                                std::string());
             ruin.new_node_school=legacy.school;
             ruin.legacy_intensity=legacy.intensity;
             ruin.legacy_basis=legacy.basis;
@@ -205,7 +206,7 @@ PopulatedWorld advance_age(WorldEnvelope& world,const Catalogues& catalogues,
         ruin.probability=chance;
         ruin.roll=draw;
         const RuinLegacy legacy=ruin_legacy(city_class,city.population_profile,chosen->kind,potency,
-                                            chosen->family,std::string(),std::string());
+                                            chosen->family,std::string(),std::string(),std::string());
         ruin.new_node_school=legacy.school;
         ruin.legacy_intensity=legacy.intensity;
         ruin.legacy_basis=legacy.basis;

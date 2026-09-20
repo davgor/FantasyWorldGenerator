@@ -41,4 +41,4 @@ Click a hamlet card under “Inspect hamlets and fortresses”, or a nearby map/
 
 ## Verification
 
-`Sim/tests/test_hamlet_planner.py` covers replay, pass order, role filters, rural ID exclusivity, support-road gates, nearby-window packing, coastal flood_risk, final-stage visibility, age identity rejection and asset coverage. Run `python3 tools/validate_repo.py` before release.
+`Sim/tests/test_hamlet_planner.py` covers replay, pass order, role filters, rural ID exclusivity, support-road gates, nearby-window packing, coastal flood_risk, final-stage visibility, age identity rejection and asset coverage. Run `python tools/validate_repo.py` before release.

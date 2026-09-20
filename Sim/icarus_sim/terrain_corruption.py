@@ -135,7 +135,10 @@ def validate_corruption(body):
     villain_uid = body.get('villain_uid')
     if villain_uid is not None and not isinstance(villain_uid, str):
         raise ValueError('villain_uid must be a string')
-    people = world.get('villains', {}).get('people', [])
+    # Standing only: a god reaches for someone who holds ground, and `people` now keeps
+    # the fallen too. A world whose only villain has fallen has none to corrupt.
+    from .terrain_villains import standing
+    people = standing(world.get('villains', {}).get('people', []))
     if not people:
         raise ValueError('Corruption needs a super villain to seat; this world has none')
     if villain_uid is not None and not any(p['uid'] == villain_uid for p in people):
@@ -156,9 +159,11 @@ def _host(world, villain_uid):
     excluding them made every seated villain ineligible the moment they started sinking
     wells, because sinking a well binds them to their school's god.
     """
-    people = [p for p in world['villains']['people'] if not p.get('corrupted')]
+    from .terrain_villains import standing
+    candidates = standing(world['villains']['people'])
+    people = [p for p in candidates if not p.get('corrupted')]
     if villain_uid is not None:
-        return next((p for p in world['villains']['people'] if p['uid'] == villain_uid), None)
+        return next((p for p in candidates if p['uid'] == villain_uid), None)
     return max(people, key=lambda p: (p['tier'], p['uid'])) if people else None
 
 
@@ -211,9 +216,29 @@ def _failure_mode(result, god, host, reach, age):
     return survivors, touched, ruined
 
 
+def corruption_legacy(city, cause, potencies, school):
+    """The key point a city unmade by a walking god leaves behind.
+
+    `cause` is `rot_plague` or `void_unmade`, and no `source_school` branch names either,
+    so `ruin_legacy` is asked only for the class intensity: the god is the source and the
+    school and basis are stated here rather than resolved.
+
+    This used to pass the god's school to `ruin_legacy` as `villain_school` and then
+    overwrite `school` on the way out. Only a `villain`-prefixed cause ever reads that
+    parameter, so the argument did nothing and the returned `basis` stayed `region` - the
+    ruin claimed the region's dominant magic had chosen a hidden school, which the region
+    can never hold: hidden schools are locked to zero occurrence and this API is the only
+    thing that ever puts a node in one.
+    """
+    from .terrain_ruins import ruin_legacy
+    legacy = ruin_legacy(city, cause, potencies)
+    legacy['school'] = school
+    legacy['basis'] = 'source'
+    return legacy
+
+
 def corrupt(result, cfg, god, host, encounters, variation, index, age):
     from .terrain_history import RUIN_KEYS, rebuild_tail, city_potencies
-    from .terrain_ruins import ruin_legacy
     import random
     rng = random.Random(child_seed(cfg.seed, f'corruption-{index}-{god["id"]}', variation))
     nodes = _cluster(result, cfg, god, host, rng, index)
@@ -227,8 +252,7 @@ def corrupt(result, cfg, god, host, encounters, variation, index, age):
     made = []
     for city, cause, share in ruined:
         potencies = city_potencies(city, result['layers'])
-        legacy = ruin_legacy(city, cause, potencies, villain_school=god['school'])
-        legacy['school'] = god['school']
+        legacy = corruption_legacy(city, cause, potencies, god['school'])
         record = {k: copy.deepcopy(city[k]) for k in RUIN_KEYS if k in city}
         record.update(id='ruin-' + city['uid'], kind='ruins', destroyed_age=age,
                       asset_id='marker.city_ruins', cause=cause,

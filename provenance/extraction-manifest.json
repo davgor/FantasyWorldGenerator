@@ -27,10 +27,19 @@
       "source": "Sim/README.md",
       "source_sha256": "90fc2015017127ff207bc55e1a1ea00f07864f0efb743cb99da1ea98eabf693f",
       "destination": "Sim/README.md",
-      "destination_sha256": "0a32f4b0388625260cd476479645d0d37ad00c484f4a0e93242a29d70b5c3bfc",
+      "destination_sha256": "38a8e04eda49440c39389cecae8d3e42a968b2f1f470372a90102ed91eee58cc",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
-      "modification": "Standalone commands, supported Python baseline, and future-ticket references replace source-monorepo instructions."
+      "modification": "Standalone commands, supported Python baseline, and future-ticket references replace source-monorepo instructions.",
+      "revisions": [
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "0a32f4b0388625260cd476479645d0d37ad00c484f4a0e93242a29d70b5c3bfc",
+          "destination_sha256": "38a8e04eda49440c39389cecae8d3e42a968b2f1f470372a90102ed91eee58cc",
+          "decision": "board/in-progress/CONFORMANCE-DOCS.md",
+          "reason": "Corrected the mandated interpreter invocation from python3 to python. The python3 name resolves to the Microsoft Store alias stub on the development machine and has never launched; fifteen completed tickets record the failure. No behavior, contract or schema is affected."
+        }
+      ]
     },
     {
       "source": "Sim/icarus_sim/__init__.py",
@@ -159,7 +168,7 @@
       "source": "Sim/icarus_sim/terrain_climate.py",
       "source_sha256": "7319f488ccf76c6eafa708f93a4174c73128d335984425a720ef7a5ae12bca5c",
       "destination": "Sim/icarus_sim/terrain_climate.py",
-      "destination_sha256": "e6de5b05e03c4197e41ac4d978532972eb3a0c5a7248fcea4bb65c9bb6fbb732",
+      "destination_sha256": "d53f6667e24fb27893896ac084c14246cb678356aa9c96308465c5235be47de7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -176,6 +185,12 @@
           "destination_sha256": "e6de5b05e03c4197e41ac4d978532972eb3a0c5a7248fcea4bb65c9bb6fbb732",
           "decision": "docs/unified-world-scene.md",
           "reason": "Reviewed committed algorithm-16 climate_wetness extraction and warm-temperature evaporation proxy; covered by test_world_debug.py. Correct stale pre-final-edit destination hash from 4ea7169."
+        },
+        {
+          "date": "2026-09-20",
+          "previous_destination_sha256": "e6de5b05e03c4197e41ac4d978532972eb3a0c5a7248fcea4bb65c9bb6fbb732",
+          "destination_sha256": "d53f6667e24fb27893896ac084c14246cb678356aa9c96308465c5235be47de7",
+          "reason": "Compute the transport convergence residual on the final rain pass only. Nothing feeds it back into the transport and only the last value is reported, so the preceding passes built a whole-grid subtract-and-max and discarded it: 47 of 48 at the default rain_passes. Returned humidity, rain, uplift and residual are bit-identical; no draw order, iteration order or accumulation order changes."
         }
       ]
     },
@@ -345,7 +360,7 @@
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "511153e273db915c39ac05a4036c2591e59e56c9c4196aa7406e373d99b3d456",
+      "destination_sha256": "599d2a1b567eb35e97b8831b19f83f25b72063bbce06136b4df5b87d39d7f9d3",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -377,6 +392,13 @@
           "destination_sha256": "511153e273db915c39ac05a4036c2591e59e56c9c4196aa7406e373d99b3d456",
           "decision": "docs/unified-world-scene.md",
           "reason": "Algorithm16 unified scene, diagnostic lab, sky suspension, regional colleges, aridity proxy and ley alignments."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "511153e273db915c39ac05a4036c2591e59e56c9c4196aa7406e373d99b3d456",
+          "destination_sha256": "599d2a1b567eb35e97b8831b19f83f25b72063bbce06136b4df5b87d39d7f9d3",
+          "decision": "board/in-progress/CONFORMANCE-DOCS.md",
+          "reason": "Comment only, no behavior change. add_magic is a dead writer of result['magic']: imported by terrain_leyline_history and called from nowhere, with no call site, no string dispatch and no non-Python caller. generate_networks is the sole writer and emits version 4. The comment warns against connecting it, because it replaces rather than merges the block and an imported-unused symbol invites exactly that tidy-up."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -414,7 +436,7 @@
           "date": "2026-09-19",
           "previous_destination_sha256": "92fb62a711172a1f6408d9a2851307533f0aed4612b29b347d7f3fc0de4bfab8",
           "destination_sha256": "8b2a551068e6fab29139f0548fd65a0bdbaf176258478ba39cc0e73ab01f21a1",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Creature movement classes: every profile declares `movement` (nester | migratory | irruptive | follower | drifter), defaulting to nester so no existing creature changes behaviour, and seventeen creatures are added that only exist because movement does -- wandering dead with no grave to return to, irruptive swarms out of marginal ground, followers that derive their route from a host, migratory herds, and a barrow wight added deliberately as the stationary contrast. The undead split follows a rule rather than a tag: an undead with a grave nests at it, an undead without one wanders. Profiles 663 -> 680. Behavior reviewed is the movement field and the added rows; coverage is Sim/tests/test_creature_movement.py, which asserts structural placeability rather than observed placement. Documented in docs/nomads.md."
         }
       ],
@@ -867,7 +889,7 @@
           "date": "2026-09-19",
           "previous_destination_sha256": "1885a7c3d10dc5aa53b83857939edae9d18ea6d919c371177aaeaad0f47a7bc3",
           "destination_sha256": "bf9392fb5254b78afd0c9868ac51bebb9608a20326a4c182a530d6852e1fa888",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Nomads: four registry options -- nomad_occurrence, nomad_density (bands per thousand square kilometres of habitable land, so the count follows the ground rather than the raster), nomad_variation for independent reroll, and beast_movement_share to thin the travelling creature groups. No per-classification multipliers: the six gates already decide what a start point can raise, and a knob nothing reads is worse than no knob. Behavior reviewed is the option declarations; coverage is Sim/tests/test_terrain_nomads.py and docs/nomads.md."
         }
       ]
@@ -1296,7 +1318,7 @@
           "date": "2026-09-19",
           "previous_destination_sha256": "2e3e38aee1caa3e97d892c654056eab248b4101b0baa9deb63f906abfac5ab60",
           "destination_sha256": "40cca868c0ff90d56d068a74c03395766eaa7c2dd58c98a94fab2f18b8065c3b",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Creature catalogue: the seventeen creatures added by the movement roster pass, so the prose catalogue and terrain_nest_profiles name the same set both ways as test_terrain_nests::test_catalogue_coverage requires. 663 -> 680 entries. Paired with the terrain_nest_profiles.json revision of the same date."
         }
       ],
@@ -1629,7 +1651,7 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "1c7748409c589826c735ff05a812595206197c66e0efb93029c8e9e675ed8ac8",
+      "destination_sha256": "1ba58d79c7de2d3f6310172ebcdf01007024ae9aa1f68108510f1167baea4ab3",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -1669,6 +1691,13 @@
           "destination_sha256": "1c7748409c589826c735ff05a812595206197c66e0efb93029c8e9e675ed8ac8",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "1c7748409c589826c735ff05a812595206197c66e0efb93029c8e9e675ed8ac8",
+          "destination_sha256": "1ba58d79c7de2d3f6310172ebcdf01007024ae9aa1f68108510f1167baea4ab3",
+          "decision": "board/in-progress/CONFORMANCE-DOCS.md",
+          "reason": "Corrected the mandated interpreter invocation from python3 to python. The python3 name resolves to the Microsoft Store alias stub on the development machine and has never launched; fifteen completed tickets record the failure. No behavior, contract or schema is affected."
         }
       ]
     },
@@ -1676,7 +1705,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "b8bfc7ea4ceb3642daa8da90e8fee7f654facfd558dadafb5bab6711922f722d",
+      "destination_sha256": "67b56bbed5e1b368a2d787cbae99a3e232067d0dddad61b5cf5268159258112d",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -1876,6 +1905,13 @@
           "destination_sha256": "b8bfc7ea4ceb3642daa8da90e8fee7f654facfd558dadafb5bab6711922f722d",
           "decision": "board/in-progress/SUPER-VILLAINS.md",
           "reason": "User-authorized twelve-school taxonomy: document the four hidden Outside schools, the appended catalogue positions 104-155 that leave every recorded biome_variant index meaning what it meant, and that generation can never raise a hidden school."
+        },
+        {
+          "date": "2026-09-19",
+          "previous_destination_sha256": "b8bfc7ea4ceb3642daa8da90e8fee7f654facfd558dadafb5bab6711922f722d",
+          "destination_sha256": "67b56bbed5e1b368a2d787cbae99a3e232067d0dddad61b5cf5268159258112d",
+          "decision": "board/in-progress/CONFORMANCE-DOCS.md",
+          "reason": "Corrected the mandated interpreter invocation from python3 to python. The python3 name resolves to the Microsoft Store alias stub on the development machine and has never launched; fifteen completed tickets record the failure. No behavior, contract or schema is affected."
         }
       ]
     },
@@ -2071,21 +2107,21 @@
           "date": "2026-09-19",
           "previous_destination_sha256": "5cc8e485dbc8d938d940fe5b29b32aab7d3e16fda882fd16ad84a30c20a9636d",
           "destination_sha256": "b301373e763097f590978011e6267804a7a8bb3f330de4c89879b00f547dbacc",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Nomads: list `nomads` in historyStateKeys so the lab's stage scrubber clears it the way the Python STATE_KEYS tuple does, and travelling bands do not appear at stages before the simulation completed. materialize_stage builds from everything NOT in that list, so omitting the entry does not raise -- it silently shows the final bands at every earlier stage. Behavior reviewed is the single historyStateKeys entry; its coverage is the nomads stage-isolation assertion in tests/test_world_schema_conformance.py."
         },
         {
           "date": "2026-09-19",
           "previous_destination_sha256": "b301373e763097f590978011e6267804a7a8bb3f330de4c89879b00f547dbacc",
           "destination_sha256": "327cc311c07849670f224d46591bead30b17fef8de6e4360ad49643fdc28e317",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Nomads: list `beast_movements` and `encounters` in historyStateKeys alongside `nomads`, so the lab's stage scrubber clears all three the way the Python STATE_KEYS tuple does. materialize_stage builds from everything NOT in that list, so an omitted entry does not raise -- it silently shows the final value at every earlier stage. Behavior reviewed is the two added entries; coverage is the stage-isolation assertions in tests/test_world_schema_conformance.py."
         },
         {
           "date": "2026-09-19",
           "previous_destination_sha256": "327cc311c07849670f224d46591bead30b17fef8de6e4360ad49643fdc28e317",
           "destination_sha256": "764dbd6dcca566e0f7112fa14b7bb79b716380300a0eb9625e8011f91985ec94",
-          "decision": "board/in-progress/NOMADS.md",
+          "decision": "board/done/NOMADS.md",
           "reason": "Nomads: list `pending_ley_edits` and `settlement_candidates` in historyStateKeys with the other nomad blocks, so the stage scrubber clears them rather than showing their final value at every earlier stage. Both are written by the nomad write-back pass at stage sixteen."
         },
         {

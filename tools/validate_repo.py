@@ -56,6 +56,12 @@ def checks(env) -> None:
     documented_catalogue = ROOT / "Contracts/catalogues/world-assets.json"
     if packaged_catalogue.read_bytes() != documented_catalogue.read_bytes():
         raise ValueError("packaged and canonical world asset requirements differ")
+    # The catalogue exists as three byte-identical copies. Only two of the pairs were
+    # compared, so the documentation copy could drift from the contract unnoticed while
+    # every check stayed green.
+    catalogue_mirror = ROOT / "docs/catalogue/world-assets/manifest.json"
+    if catalogue_mirror.read_bytes() != documented_catalogue.read_bytes():
+        raise ValueError("documented catalogue mirror and canonical world assets differ")
     # The Unreal asset registry is generated from the exhaustive catalogue, so a
     # new identity must not reach a consumer without a binding slot.
     run(sys.executable, "tools/build_asset_registry.py", "--check", env=env)
@@ -63,6 +69,10 @@ def checks(env) -> None:
     # never reaches the generator would otherwise pass unnoticed.
     run(sys.executable, "tools/export_catalogues.py", "--check", env=env)
     run(sys.executable, "tools/verify_provenance.py", env=env)
+    # Documents describing the product must point at things that exist and state
+    # versions the code agrees with. Structural only: it cannot tell whether a record
+    # is true, and a green run is not documentation review.
+    run(sys.executable, "tools/docs_check.py", env=env)
     run(sys.executable, "-m", "compileall", "-q", "Sim/icarus_sim", "Sim/fantasy_world_generator", "tools", env=env)
 
 

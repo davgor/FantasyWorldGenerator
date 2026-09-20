@@ -108,7 +108,8 @@
           "asset_id",
           "reason",
           "interior",
-          "succession"
+          "succession",
+          "environment"
         ],
         "properties": {
           "id": {
@@ -467,6 +468,81 @@
               "cluster"
             ],
             "description": "How this location was positioned. \"node\" sites sit on a sphere-grid node and no two of them ever share one. \"path\" members belong to a chain and stand at interpolated points along a road, a frontier or an approach - a waystone every 2 km cannot be node-snapped on a 12 km raster - and \"cluster\" members stand at a real offset from an anchor. Both of the latter may share a node with each other; their node is for reading layers, not identity."
+          },
+          "environment": {
+            "type": "object",
+            "required": [
+              "natural_biome",
+              "natural_biome_name",
+              "biome_variant",
+              "variant_asset_id",
+              "variant_name",
+              "temperature_c",
+              "moisture",
+              "slope",
+              "coastal"
+            ],
+            "description": "The ground this location stands on, for whoever has to dress it. All of it is in the layers already; it is recorded here so an art pipeline never has to re-sample a raster it otherwise never touches. The same karst cave is a different art set in tundra and in rainforest.",
+            "properties": {
+              "natural_biome": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 17,
+                "description": "Natural catalogue ID from terrain.natural_biomes, per terrain.biome_contract: an id, never an array offset. The id space is sparse - 0-8, 13, 15, 16, 17 - so a 0-12 bound rejected marsh, boreal forest, cold tundra and persistent land ice. Decides the ground set."
+              },
+              "natural_biome_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "biome_variant": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 155,
+                "description": "Index into terrain.magical_biomes where the ground is magically mutated, null where it is not. Overrides the natural biome for dressing."
+              },
+              "variant_asset_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "e.g. terrain.mutation.desert.umbral."
+              },
+              "variant_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "temperature_c": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "moisture": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "slope": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "coastal": {
+                "type": "boolean"
+              }
+            }
           }
         }
       }

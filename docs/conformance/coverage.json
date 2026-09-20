@@ -1,0 +1,680 @@
+{
+  "schema": 1,
+  "note": "Seeded once on 2026-09-19 from the tree at that moment, and never re-seeded. A module created after that day is in none of these lists, so the first run that sees it fails COVERAGE. The uncovered list may shrink and may not grow.",
+  "exempt": [
+    {
+      "module": "Sim/fantasy_world_generator/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 4 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/heritage/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 26 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/heritage/policies/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 1 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/hero_generator/policies/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 1 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/icarus_sim/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 1 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/key_locations/core/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 5 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/npc_roster/policies/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 1 line(s), defines no function or class."
+    },
+    {
+      "module": "Sim/story_web/policies/__init__.py",
+      "reason": "re-export",
+      "note": "Package marker; 1 line(s), defines no function or class."
+    }
+  ],
+  "uncovered": [
+    {
+      "module": "Sim/fantasy_world_generator/__main__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/asset_list.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/capabilities.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/cli.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/coordinates.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/counter_kernel.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/hero_guild.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/kernel_contract.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/kernel_numeric.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/fantasy_world_generator/taxonomy.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/heritage/derive.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/heritage/naming.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/heritage/phonemes.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/heritage/policy.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/__init__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/alignment.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/archetypes.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/faces.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/facts.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/fame.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/features.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/history.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/hooks.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/naming.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/persona.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/policy.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/realms.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/seeds.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/sites.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/__init__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/cities.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/countryside.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/guilds.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/magic.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/ports.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/ruins.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/hero_generator/wells/shrines.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/castle_geometry.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/castle_planner.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/city_fortifications.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/city_geometry.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/city_planner.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/city_shapes.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/civilization_registry.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/founding.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/hamlet_planner.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_area.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_astrology.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_beast_movement.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_biome_catalogue.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_biomes.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_civilizations.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_climate.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_corruption.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_detail.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_ecology.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_encounters.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_erosion.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_globe.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_history.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_humans.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_lab.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_leyline_history.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_magic.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_metrics.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_nests.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_patch.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_profiles.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_recipes.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_religion.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_ruins.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_scale.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_seasons.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_seed.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_settlements.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_society.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_tectonics.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_villains.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_visitation.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_wars.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_water.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/terrain_world.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/world_debug.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/icarus_sim/world_scene.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/__init__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/catalogue.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/composition.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/exterior.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/fields.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/grid.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/interiors.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/naming.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/placement.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/shaping.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/succession.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/core/world.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/exteriors.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/key_locations/seeds.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/npc_roster/__init__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/npc_roster/naming.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/npc_roster/policy.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/npc_roster/seeds.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/npc_roster/sites.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/__init__.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/bind.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/facts.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/policy.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/predicates.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/report.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/seeds.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/threads.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Sim/story_web/weights.py",
+      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
+    },
+    {
+      "module": "Core/ages",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/astrology",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/biomes",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/castlegeometry",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/castleplanner",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/catalogue",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/cityfortifications",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/citygeometry",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/cityplan",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/cityplanner",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/cityshapes",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/climate",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/config",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/counter",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/ecology",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/founding",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/frame",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/genesis",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/globe",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/hamletplanner",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/history",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/humans",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/hydrology",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/json",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/layers",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/legacy",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/magic",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/nests",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/numeric",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/profiles",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/pyrandom",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/registry",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/roads",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/routing",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/ruins",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/scene",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/scenebuildings",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/sceneframe",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/settlementpresets",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/settlements",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/society",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/tectonics",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/warhistory",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/wars",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/wire",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    },
+    {
+      "module": "Core/world",
+      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+    }
+  ]
+}

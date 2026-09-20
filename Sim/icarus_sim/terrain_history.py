@@ -211,7 +211,10 @@ def add_threat_assessments(result,evaluated_after,age=None,spacing=None):
     layers=result['layers']
     cities=sorted(result.get('settlements',{}).get('sites',[]),key=lambda s:str(s.get('uid',s['id'])))
     spacing=spacing if spacing is not None else (result.get('config') or {}).get('settlement_spacing')
-    villains=[v for v in result.get('villains',{}).get('people',[]) if v.get('reach_m')]
+    # `reach_m` is refreshed before the fall is decided, so a fallen villain still carries
+    # a live-looking reach and would feed the war outlook without the standing filter.
+    from .terrain_villains import standing as standing_villains
+    villains=[v for v in standing_villains(result.get('villains',{}).get('people',[])) if v.get('reach_m')]
     outlook=war_outlook(cities,result.get('humans',{}).get('cores',[]),result.get('roads',{}).get('routes',[]),radius,spacing,age,villains) if spacing else {}
     reports=[assess_city_threat(city,layers,nests,radius,outlook.get(city['uid'])) for city in cities]
     result['threat_assessments']={
@@ -378,7 +381,8 @@ def age_transition(result,cfg,age,moon_day=None):
         # Built after the rebuild, on settled ground: a well joins the holdings a
         # villain actually has this age, and a claim names the peoples actually near it.
         from .terrain_villains import build as build_villain_works
-        works=build_villain_works(result,cfg,age,result['villains']['people'])
+        from .terrain_villains import standing as standing_villains
+        works=build_villain_works(result,cfg,age,standing_villains(result['villains']['people']))
         if works:
             evaluate_networks(result,cfg);add_biome_variants(result,cfg)
             result['villains']['works']=works
@@ -739,7 +743,11 @@ def advance_age_request(body):
         if 'new_node' in edit and 'intensity' in edit:raise ValueError('Put new-node intensity inside new_node')
         school=edit['school']
         result['magic']['networks'][school]=edit_network(result['magic']['networks'][school],**{k:v for k,v in edit.items() if k!='school'})
-    validate_age_world(result)
+    # Without edits, result is a deepcopy of a world validate_age_world has just accepted
+    # and the check is a pure function of content, so re-running it serialises the whole
+    # world a second time to reach the answer already in cfg. Edits mutate magic.networks,
+    # so an edited world still pays for the full re-check.
+    if edits:validate_age_world(result)
     started=perf_counter()
     evaluate_networks(result,cfg);refresh_environment(result,cfg);add_biome_variants(result,cfg);refresh_astrology(result,cfg)
     start_age=len(result['history']['ages'])
@@ -747,8 +755,15 @@ def advance_age_request(body):
     result['history']['replay']='Persist this returned world for subsequent calls. Config reproduces genesis; operation history records subsequent advances and player leyline edits.'
     for age in range(start_age+1,start_age+steps+1):
         baseline=world if age==start_age+1 else result
-        previous_layers=copy.deepcopy(baseline['layers'])
-        previous_state={k:copy.deepcopy(baseline.get(k)) for k in STATE_KEYS}
+        # Only the build_stages snapshot below reads these, and a live world carries no
+        # snapshots: the CLI drops them before any consumer sees the document. Copied
+        # unconditionally, they were a full copy of every layer grid plus one per
+        # STATE_KEY -- allocated, never read and freed, on every age of every advance a
+        # game makes. Presence of build_stages cannot change inside this loop, so the
+        # guard is the same condition the snapshot already tests.
+        snapshotting='build_stages' in result
+        previous_layers=copy.deepcopy(baseline['layers']) if snapshotting else {}
+        previous_state={k:copy.deepcopy(baseline.get(k)) for k in STATE_KEYS} if snapshotting else {}
         result.pop('city_plans',None)
         result.pop('hamlet_plans',None)
         result.pop('castle_plans',None)

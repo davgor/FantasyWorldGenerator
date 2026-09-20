@@ -94,10 +94,21 @@ def villain_holdings(world):
 
     ``villains.works`` records only that a well or claim happened; the positions live on the
     villains themselves and on their claims, so both are read here.
+
+    ``villains.people`` holds the fallen as well as the living, so the two are read
+    differently and the difference is the point. A fallen villain no longer stands anywhere,
+    so its own position is dropped. Its **claims are kept**: ground a villain took stays
+    taken, and the places that grew around it do not become unremarkable because it died.
+    That asymmetry is a decision, not an oversight -- see
+    ``board/backlog/VILLAIN-FALL-UNRECORDED.md``.
+
+    The status test is inlined rather than imported: this is a leaf package and never
+    imports ``icarus_sim``. Absent status reads as standing, matching
+    ``terrain_villains.is_standing``.
     """
     result = []
     for villain in world.get('villains', {}).get('people', []):
-        if villain.get('direction'):
+        if villain.get('direction') and (villain.get('status') or 'living') == 'living':
             result.append(villain)
         for claim in villain.get('claims', []):
             if claim.get('direction'):

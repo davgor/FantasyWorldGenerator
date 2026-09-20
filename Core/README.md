@@ -39,7 +39,10 @@ surface. It is the Unreal generate API: no engine type, no interpreter, no file.
   identity resolves or reports an explicit reason.
 
 `tests/test_native_world.py` compares all of it against the Python reference world.
-Settlements, roads, city plans and nest anchors are not ported yet.
+Settlements, roads, city plans and nest anchors are ported and compared: the
+`cityplans`, `humans` and `nests` driver operations each have a parity test. The
+schematic planner stack that draws streets, walls and plots is a separate matter
+described under [what it covers today](#reusing-this-core-in-another-game).
 There are no Unreal, Python-runtime, third-party JSON/crypto library or game-asset
 dependencies. Original project source follows the root private distribution policy.
 The public semantic boundary is [`Contracts/kernel-v1.md`](../Contracts/kernel-v1.md).
@@ -106,7 +109,7 @@ this project does not claim cryptographic-module certification or authentication
 From the repository root:
 
 ```sh
-PYTHONPATH=Sim python3 -m unittest discover -s tests -p 'test_native_*.py' -v
+PYTHONPATH=Sim python -m unittest discover -s tests -p 'test_native_*.py' -v
 ```
 
 The typed harness still checks shared independently authored counter fixtures.
@@ -124,7 +127,7 @@ a valid recipe-3 request is accepted, and the retired recipe, out-of-range seeds
 an oversized grid and a non-globe shape are refused with the failure envelope.
 
 ```sh
-python3 -m unittest tests.test_native_genesis -v
+python -m unittest tests.test_native_genesis -v
 ```
 
 `tests/native_cxx.py` selects `clang++`, `g++` or MSVC `cl.exe` (through
@@ -150,7 +153,7 @@ qualification report from this machine.
 ## Reproducible source proof bundle
 
 ```sh
-python3 tools/package_native.py --output-dir Artifacts/native
+python tools/package_native.py --output-dir Artifacts/native
 ```
 
 This creates `fantasy-world-generator-native-source-<full SHA-256>.zip` with fixed ZIP metadata,
@@ -164,7 +167,7 @@ Extract into an empty directory outside this checkout, then run its included
 script with Python 3.9+ and a C++17-capable `clang++` or `g++`:
 
 ```sh
-python3 tools/qualify_native.py --output-dir build/qualification
+python tools/qualify_native.py --output-dir build/qualification
 ```
 
 The script verifies every allowed source hash before and after compiling/running,
@@ -182,9 +185,12 @@ ML-03b covers wire/numeric conformance; ML-03c covers this source proof bundle a
 isolated headless consumer. ML-03 remains open for the generic `.uplugin`, an
 installed Unreal 5.8.2 consumer, editor/cooked execution, shipping-platform and
 engine-CI qualification, and an immutable runtime artifact channel. The native
-world generate API is likewise only started: request validation and the Unreal
-centimetre frame exist, and generation, surface sampling and Landscape do not. The
-Python producer's qualified native/Unreal capability requests remain unsupported.
+world generate API is further along: request validation, the Unreal centimetre
+frame, world generation and surface sampling all exist and are compared against the
+reference by the `world` and `samples` driver operations. Landscape does not exist
+and is not planned; [decision 019](../docs/decisions/019-runtime-surface-not-landscape.md)
+records why the runtime surface replaces it. The Python producer's qualified
+native/Unreal capability requests remain unsupported.
 
 ## Reusing this core in another game
 
@@ -218,6 +224,19 @@ streets or walls, because the reference derives those in its city-planner stage.
 behind. A game can build on what is here — every field listed above is compared against
 the Python reference, most of them bit-for-bit — as long as it does not assume a
 finished history.
+
+**What is present but unverified.** The schematic planner stack is in this tree and
+compiles: `cityplanner`, `hamletplanner`, `castleplanner`, `castlegeometry`,
+`cityfortifications`, `citygeometry`, `cityshapes`, `settlementpresets`, `sceneframe`
+and `scenebuildings`, roughly ten thousand lines. Every one of them is in the `SOURCES`
+tuple of `tests/test_native_world.py`, so they build under `-Werror` and link into the
+parity binary. None of them is reached by a test. They are callable only through
+`plan_settlement_buildings` in `scene.cpp`, which is callable only through the
+`scenebuildings` operation at `Core/tests/world_driver.cpp:452`, and no test invokes
+that operation. Their standing is: compiles, links, and is called from a path nothing
+drives. Nothing here has been compared against `Sim/icarus_sim/city_planner.py`,
+`hamlet_planner.py` or `castle_planner.py`. `cityplan` is the exception and is genuinely
+exercised — the tested `cityplans` operation calls its `plan_cities`.
 
 Five things are still missing before calling it a package, and none of them require
 the layering to change:

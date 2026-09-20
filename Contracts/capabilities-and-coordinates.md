@@ -7,7 +7,7 @@ ML-01b adds an independently versioned capability descriptor and a pure coordina
 The canonical machine-readable descriptor is [`Sim/fantasy_world_generator/capabilities.json`](../Sim/fantasy_world_generator/capabilities.json), included in the wheel. Export it using:
 
 ```sh
-PYTHONPATH=Sim python3 -m fantasy_world_generator capabilities --output capabilities.json
+PYTHONPATH=Sim python -m fantasy_world_generator capabilities --output capabilities.json
 ```
 
 `--version` selects the descriptor version and defaults to 1. Unsupported versions fail before creating or overwriting the output. The reference artifact workflow includes this descriptor under `contracts/capabilities.json`.

@@ -24,6 +24,17 @@ FALLOFF = 1.5               # reach multiples at which a villain's pressure is s
 VILLAIN_WEIGHT = .5         # its share of a city's fate lottery at the seat, at tier one
 STALLED_TIER = .999         # where a pretender sits when the ceiling is full
 FRAGMENT_SHARE = .35        # the tier a region keeps when its villain falls
+# How hard a fallen villain's claims still press on the world. Ground it took stays
+# taken -- that is a decision, not a default -- but how *strongly* taken is a separate
+# question from whether the record persists, and it is deliberately a number rather
+# than a boolean so it can decay without reopening the consumers.
+#
+# 1.0 is today's answer and is not an argued one: it is the value that makes retention
+# the only change. The case for decaying it is the same case FRAGMENT_SHARE already
+# makes for tier -- a region's grip fades when its holder goes -- and over long spans
+# a world that never decays it places by who *ever* held power rather than who holds
+# it. Owned by whoever settles the tick cadence; see VILLAIN-FALL-UNRECORDED.md.
+FALLEN_CLAIM_INFLUENCE = 1.
 
 # Which pressure raised them decides how their reach grows, and therefore how they are
 # fought. The sim owns this field; the hero generator reads it and picks the matching
@@ -33,16 +44,36 @@ GROWTH_BY_PRESSURE = {'war': 'devouring', 'nest': 'spreading', 'ley': 'hoarding'
 DEFAULT_GROWTH = 'usurping'
 
 
+def is_standing(villain):
+    """True while a villain still holds its region.
+
+    `people` holds the fallen as well as the living, the way `heroes.people` holds
+    legends and `npcs.people` holds the dead: one list, a status field, and the reader
+    filters. Every consumer that means "who stands right now" must say so, because the
+    list stopped answering that question by construction when the fallen began staying
+    in it.
+
+    Absent status reads as living: a record written before the fall was recorded at all
+    described someone who stood.
+    """
+    return (villain.get('status') or 'living') == 'living'
+
+
+def standing(people):
+    """Only the villains that still hold their region."""
+    return [v for v in (people or []) if is_standing(v)]
+
+
 def turmoil(report):
     """What a city contributes to its region concentrating, in 0..1.
 
     Standing threat plus the forward-looking outlook, because a region about to fight is
     concentrating as surely as one that already has.
     """
-    standing = float(report.get('regional_threat') or 0.)
+    standing_threat = float(report.get('regional_threat') or 0.)
     risk = float(report.get('war_risk') or 0.)
     hunger = float(report.get('war_hunger') or 0.)
-    return max(0., min(1., standing + RISK_WEIGHT * risk + HUNGER_WEIGHT * hunger))
+    return max(0., min(1., standing_threat + RISK_WEIGHT * risk + HUNGER_WEIGHT * hunger))
 
 
 def dominant_pressure(reports):
@@ -137,33 +168,97 @@ def _held_node(result, seat, radius):
     return (best[1], best[2]) if best else (None, None)
 
 
+# What a fallen villain carries out of its reign, chosen the way RUIN_KEYS chooses what a
+# ruined city carries: identity, where it stood, and what it was -- not its live state.
+# `tier` and `reach_m` are deliberately absent; both describe a grip it no longer has.
+MARK_KEYS = ('uid', 'region', 'born_age', 'seat_uid', 'node', 'direction', 'school',
+             'growth', 'held_nodes', 'claims', 'well', 'god', 'log')
+
+
+def marks_left(result, villain):
+    """What a villain actually did to the world, as the world itself recorded it.
+
+    Read back out of `ruins` rather than accumulated on the villain, for the same reason
+    the region is anchored to a ley node: anything hung on a live record is lost the moment
+    that record is rebuilt, and ruins are already durable and already carry the attribution.
+    """
+    uid = villain['uid']
+    ruined = [r['id'] for r in (result.get('ruins') or [])
+              if (r.get('evidence') or {}).get('villain_uid') == uid]
+    claims = [c['id'] for c in (villain.get('claims') or [])]
+    well = (villain.get('well') or {}).get('node')
+    return {'ruins': sorted(ruined), 'claims': sorted(claims),
+            'well': well, 'held_nodes': sorted(villain.get('held_nodes') or [])}
+
+
+def fallen_mark(result, villain, age):
+    """The durable record of a reign, or None when there is nothing to record.
+
+    "If they indeed left a mark" is a real condition, not a formality. A villain that
+    reached the band, held nothing, took no city and sank no well did not mark the world,
+    and inventing a monument for it would make the record of the dead less useful rather
+    than more. What that villain leaves is what it always left: the decayed tier the region
+    keeps, which is the successor squabble.
+    """
+    left = marks_left(result, villain)
+    if not (left['ruins'] or left['claims'] or left['well']):
+        return None
+    mark = {k: copy.deepcopy(villain[k]) for k in MARK_KEYS if k in villain}
+    # `or age` would be wrong here: age 0 is falsy, and the first age is exactly when a
+    # villain is most likely to have risen. A villain seated at age 0 and fallen at age 3
+    # reigned 3 ages, not 0.
+    born = villain.get('born_age')
+    born = age if born is None else int(born)
+    mark.update(id='fallen-' + villain['uid'], kind='fallen_villains',
+                fell_age=age, born_age=born, reigned_ages=max(0, age - born),
+                tier_at_fall=round(float(villain.get('tier') or 0.), 9),
+                left=left)
+    # No asset_id, unlike a ruin. A ruin is a thing standing on the ground and needs a
+    # marker in the exhaustive asset list; a fallen villain is a record about ground that
+    # other records already hold -- its wells are ley nodes and its claims are claims, both
+    # already placed. Giving it an asset would add an identity the catalogue must carry for
+    # nothing to stand at.
+    return mark
+
 def advance(result, cfg, age, rise, hold, density):
     """Accumulate each region's tier, then seat, hold or unseat its villain.
 
-    Returns the living cast. A region's tier is the thing that persists; a villain is the
+    Returns the standing cast. A region's tier is the thing that persists; a villain is the
     name the world puts on a region that has concentrated past the band.
+
+    `block['people']` holds the fallen as well, with `status: 'fallen'` and a `fell_age`.
+    They are kept and never pruned: a world that forgets what stood in it cannot be asked
+    about its own history. Read them through `standing()` whenever the question is who
+    holds ground now.
     """
     if rise <= 0. and 'villains' not in result:
         # Zero raises none, and a world that has never had one carries no block at all:
         # the option is invisible in the output, not merely inert in it. A world that was
         # built with villains keeps its record even if the rate is later turned down.
         return []
-    block = result.setdefault('villains', {'version': VERSION, 'people': [], 'tiers': {}, 'outlook': []})
+    block = result.setdefault('villains', {'version': VERSION, 'people': [], 'tiers': {}, 'outlook': [],
+                                           'fallen': []})
+    # A world built before the durable list existed still advances into one.
+    block.setdefault('fallen', [])
     tiers = dict(block.get('tiers') or {})
-    living = {v['region']: dict(v) for v in block.get('people', [])}
+    # Only the standing are candidates to hold, fall or be counted against the ceiling.
+    # Without this filter a fallen villain is reloaded as living and rises from the dead.
+    living = {v['region']: dict(v) for v in standing(block.get('people', []))}
+    fallen = [dict(v) for v in block.get('people', []) if not is_standing(v)]
+    marks = []
     reports_by_uid = {r['city_uid']: r for r in result.get('threat_assessments', {}).get('cities', [])}
     radius = result['effective_config']['globe_radius']
     spacing = cfg.settlement_spacing
     region_list = regions(result, radius, reports_by_uid)
     limit = ceiling(len(region_list), density)
-    standing = sum(1 for v in living.values() if v['tier'] >= SUPER_TIER)
+    seated_count = sum(1 for v in living.values() if v['tier'] >= SUPER_TIER)
 
     for region in region_list:
         rid = region['anchor']
         pressed = concentration(region, reports_by_uid)
         tier = tiers.get(rid, 0.) + rise * pressed
         villain = living.get(rid)
-        if tier >= SUPER_TIER and villain is None and standing >= limit:
+        if tier >= SUPER_TIER and villain is None and seated_count >= limit:
             # Pretenders stall at the line: the ceiling stops a rise, not an existence.
             tier = min(tier, STALLED_TIER)
         tiers[rid] = tier
@@ -181,7 +276,7 @@ def advance(result, cfg, age, rise, hold, density):
                     'growth': GROWTH_BY_PRESSURE.get(pressure, DEFAULT_GROWTH),
                     'status': 'living', 'log': [{'age': age, 'event': 'rose', 'concentration': round(pressed, 6)}],
                 }
-                standing += 1
+                seated_count += 1
         else:
             villain['tier'] = tier
             villain['reach_m'] = tier * REACH_SPACINGS_PER_TIER * spacing
@@ -189,17 +284,47 @@ def advance(result, cfg, age, rise, hold, density):
                 # Hysteresis: the band to stay is below the band to rise, so a reign is
                 # long once established and nothing flickers across the line.
                 villain['status'] = 'fallen'
+                villain['fell_age'] = age
                 villain['log'].append({'age': age, 'event': 'fell', 'concentration': round(pressed, 6)})
                 tiers[rid] = tier * FRAGMENT_SHARE
-                living.pop(rid)
-                standing -= 1
+                # Out of the standing set, into the record. This line used to be
+                # `living.pop(rid)` alone, which threw away the status and the log entry
+                # written immediately above it.
+                # The claims are stamped with the holder's state as it changes, so a
+                # consumer reads how hard a claim presses off the claim itself and needs
+                # neither this module nor a join against the holder. That matters because
+                # `key_locations` is a leaf package and cannot import any of this.
+                for claim in villain.get('claims', []):
+                    claim['holder_status'] = 'fallen'
+                    claim['holder_fell_age'] = age
+                    claim['influence'] = FALLEN_CLAIM_INFLUENCE
+                # The mark is taken before the roster entry leaves the standing set, so it
+                # reads the villain as it was at the end of its reign rather than after.
+                mark = fallen_mark(result, villain, age)
+                if mark is not None:
+                    marks.append(mark)
+                fallen.append(living.pop(rid))
+                seated_count -= 1
             else:
                 living[rid] = villain
 
     block['version'] = VERSION
     block['tiers'] = {k: round(v, 9) for k, v in sorted(tiers.items())}
-    block['people'] = [living[k] for k in sorted(living)]
-    return block['people']
+    # Appended and never pruned, exactly as `ruins` is. The world has a finite
+    # population, so its dead are a knowable set rather than an unbounded stream --
+    # which is the argument for keeping them properly, not the argument against.
+    block['fallen'] = list(block.get('fallen') or []) + sorted(marks, key=lambda m: m['id'])
+    # The living keep their existing order, by region anchor, so a world in which nobody
+    # has fallen serialises exactly as it did before the fallen were kept at all. The
+    # fallen are appended in the order they fell, ties by uid: a region can hold both a
+    # fallen villain and the successor that replaced it, so region is no longer unique.
+    block['people'] = ([living[k] for k in sorted(living)]
+                       + sorted(fallen, key=lambda v: (v.get('fell_age', -1), v['uid'])))
+    # The standing cast, not the block. This return flows into resolve_wars, whose
+    # `_villain_pressure` reads `reach_m` with no status test of its own, and a fallen
+    # villain still carries the reach it had when it fell. Returning the block here
+    # would press cities together on behalf of someone who no longer stands.
+    return standing(block['people'])
 
 
 def causes(villains, city, radius):
@@ -208,7 +333,11 @@ def causes(villains, city, radius):
     Appended, never inserted: the selector walk in city_fate is order-sensitive.
     """
     out = []
-    for villain in villains:
+    for villain in standing(villains):
+        # The tier test below also excludes the fallen, because a villain falls under
+        # `hold` and `hold` is under SUPER_TIER -- but that is a coupling between two
+        # constants, not a rule. A fallen villain reaching this lottery would move every
+        # world, so the rule is stated rather than relied upon.
         if villain['tier'] < SUPER_TIER or not villain.get('reach_m'):
             continue
         angle = math.acos(max(-1., min(1., sum(a * b for a, b in zip(city['direction'], villain['direction'])))))
@@ -237,7 +366,7 @@ def outlook(result, cfg, rise, density):
     reports_by_uid = {r['city_uid']: r for r in result.get('threat_assessments', {}).get('cities', [])}
     block = result.get('villains', {})
     tiers = block.get('tiers') or {}
-    seated = {v['region'] for v in block.get('people', [])}
+    seated = {v['region'] for v in standing(block.get('people', []))}
     region_list = regions(result, result['effective_config']['globe_radius'], reports_by_uid)
     limit = ceiling(len(region_list), density)
     rows = []
@@ -337,7 +466,9 @@ def claim_settlements(result, cfg, villain, age):
              # Mixed by construction: a villain takes whoever is close, not whoever
              # shares its blood, which is what makes its holdings look wrong to everyone.
              'factions': sorted(set(mix)), 'drawn_from': [uid for _, uid, _ in near[:MIXED_FACTIONS]],
-             'well': (villain.get('well') or {}).get('node')}
+             'well': (villain.get('well') or {}).get('node'),
+             # Stated on both sides so a reader never has to treat absence as a state.
+             'holder_status': 'living', 'influence': 1.}
     villain.setdefault('claims', [])
     if not any(c['id'] == claim['id'] for c in villain['claims']):
         villain['claims'].append(claim)
@@ -347,7 +478,7 @@ def claim_settlements(result, cfg, villain, age):
 def build(result, cfg, age, villains):
     """Everything a seated villain puts on the ground this age."""
     built = []
-    for villain in villains:
+    for villain in standing(villains):
         if villain['tier'] < SUPER_TIER:
             continue
         if not villain.get('god') and villain.get('school'):

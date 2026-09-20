@@ -1,5 +1,6 @@
 """Recipe 2 magic: independent editable networks and deterministic local competition."""
 import copy
+import heapq
 import math
 import random
 from dataclasses import replace
@@ -158,11 +159,14 @@ def edit_network(network, *, node_id=None, line_id=None, intensity=None, new_nod
 
 
 def dominant_school(potencies, threshold=.35, margin=.08):
-    ranked = sorted(potencies, key=lambda n: (-potencies[n], n))
+    # Only the top two of twelve are ever read, so a partial selection replaces a full
+    # sort: this runs once per cell. (-potency, name) tuples compare exactly as the old
+    # sort key did, and no float is added or reordered -- these are comparisons only.
+    ranked = heapq.nsmallest(2, ((-v, k) for k, v in potencies.items()))
     if not ranked:
         return None
-    winner = ranked[0]
-    runner = potencies[ranked[1]] if len(ranked) > 1 else 0
+    winner = ranked[0][1]
+    runner = -ranked[1][0] if len(ranked) > 1 else 0
     return winner if potencies[winner] >= threshold and potencies[winner] - runner >= margin else None
 
 
@@ -266,20 +270,37 @@ def evaluate_networks(result, cfg):
     vectors = [direction(x, z, n) for x, z in points]
     feeds = hidden_feeds(result, magic, vectors, radius)
     powers = {}
+    exp, acos = math.exp, math.acos
     for name, net in magic['networks'].items():
-        frames = [arc_frame(net['nodes'][e['from']]['direction'], net['nodes'][e['to']]['direction']) for e in net['edges']]
+        nodes, edges = net['nodes'], net['edges']
+        width, strength = net['width_m'], net['strength']
         feed = feeds.get(name)
+        # A school with no nodes and no lines sums to integer zero for every point, so
+        # every point gets the identical value -- and that value is NEGATIVE zero, since
+        # -math.expm1(-0) is -0.0 and the sign survives the multiply. It is written as
+        # the same expression rather than a literal so it cannot drift from the loop. The
+        # four hidden schools take this path in every generated world: their occurrence is
+        # locked at zero, so generation never raises one.
+        if not nodes and not edges and feed is None:
+            powers[name] = [strength * -math.expm1(-0)] * len(vectors)
+            continue
+        # Per-point invariants hoisted out of a loop that runs once per cell per school:
+        # at size 513 that is 263k iterations x twelve schools. Values and their order of
+        # accumulation are untouched -- k is the same ((intensity*(a+b))/2) the inline
+        # expression built, and both sums still run over the same sequence.
+        node_terms = [(node['intensity'], node['direction']) for node in nodes]
+        edge_terms = [(e['intensity'] * (nodes[e['from']]['intensity'] + nodes[e['to']]['intensity']) / 2,
+                       arc_frame(nodes[e['from']]['direction'], nodes[e['to']]['direction'])) for e in edges]
         power = []
         for i, p in enumerate(vectors):
-            total = sum(node['intensity'] * math.exp(-(radius * math.acos(max(-1., min(1., sum(a*b for a,b in zip(p,node['direction']))))) / net['width_m'])**2)
-                        for node in net['nodes'])
-            total += sum(e['intensity'] * (net['nodes'][e['from']]['intensity'] + net['nodes'][e['to']]['intensity']) / 2 *
-                         math.exp(-(radius * distance_to_frame(p, frame) / net['width_m'])**2)
-                         for e, frame in zip(net['edges'], frames))
+            total = sum(intensity * exp(-(radius * acos(max(-1., min(1., sum(a*b for a,b in zip(p,point))))) / width)**2)
+                        for intensity, point in node_terms)
+            total += sum(k * exp(-(radius * distance_to_frame(p, frame) / width)**2)
+                         for k, frame in edge_terms)
             # Applied before saturation, so a well-fed field still tops out at strength.
             if feed is not None:
                 total *= feed[i]
-            power.append(net['strength'] * -math.expm1(-total))
+            power.append(strength * -math.expm1(-total))
         powers[name] = power
     rot = magic['networks'].get('rot')
     if rot is not None and rot['nodes']:
@@ -291,16 +312,23 @@ def evaluate_networks(result, cfg):
         l['ley_' + name] = node_grid(power, points, n)
         l['instability_' + name] = node_grid([min(1., v*net['instability']) for v in power], points, n)
     density, hazard, growth, opposition, winners = [], [], [], [], []
+    # The grids, their names and the index of each school are fixed for the whole sweep.
+    # Rebuilt per point they were twelve string concatenations, twelve dict lookups and a
+    # fresh list(SCHOOLS) whose .index() then scanned it -- per cell, 263k times at 513.
+    school_names = list(SCHOOLS)
+    school_index = {name: i for i, name in enumerate(school_names)}
+    ley_grids = [l['ley_' + name] for name in school_names]
+    instability_grids = [l['instability_' + name] for name in school_names]
     for x,z in points:
-        p = {name: l['ley_' + name][z][x] for name in SCHOOLS}
+        p = {name: grid[z][x] for name, grid in zip(school_names, ley_grids)}
         total = sum(p.values())
         conflict = min(p['radiant'], p['infernal']) + min(p['weave'], p['umbral']) + min(p['fire'], p['water'])
         density.append(-math.expm1(-total))
         opposition.append(min(1., conflict))
-        hazard.append(min(1., sum(l['instability_'+name][z][x] for name in SCHOOLS)*.3 + conflict*.2))
+        hazard.append(min(1., sum(grid[z][x] for grid in instability_grids)*.3 + conflict*.2))
         growth.append((p['earth'] + .6*p['radiant'] + .5*p['weave'] + .4*p['water']) / max(total, 1e-12))
         winner = dominant_school(p)
-        winners.append(list(SCHOOLS).index(winner) if winner else -1)
+        winners.append(school_index[winner] if winner else -1)
     for key, vals in [('magic_density', density), ('magic_hazard', hazard), ('magic_growth', growth),
                       ('magic_opposition', opposition), ('dominant_magic', winners)]:
         l[key] = node_grid(vals, points, n)

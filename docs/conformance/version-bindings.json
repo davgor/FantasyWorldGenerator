@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "note": "Binds a documented version integer to the code that emits it. A document states a version with a <!-- conformance:version id=N --> marker and never in prose, because several historical sentences in the canonical documents cite old versions correctly and a prose scrape cannot tell the difference. Resolver kinds: constant, cxx-constexpr, emitted-key, returned-key. An emitted-key binding is additionally scanned for across every module under Sim/, so a second site writing the same block with a different integer is reported rather than guessed at.",
+  "bindings": [
+    {
+      "id": "magic",
+      "label": "magic schema",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_leyline_history.py", "block": "magic", "key": "version", "line": 119},
+      "shadowed_by": ["Sim/icarus_sim/terrain_magic.py"],
+      "shadow_note": "terrain_magic.add_magic writes magic version 1 and terrain_leyline_history.generate_networks writes version 4. Neither merges; each replaces the whole block. The arbitration is not path-dependent: add_magic is imported at terrain_leyline_history.py:10 and is called from nowhere in the repository, so the version 1 write is unreachable and generate_networks is the sole writer. Established three ways rather than one, because a call-site walk alone does not prove a Python symbol unreachable: an AST walk matching func.id and func.attr across every module under Sim/ finds no call site; 'add_magic' appears as a string constant nowhere, so no getattr or string-keyed dispatch reaches it; and no .html, .js, .json or .md file in the repository names it apart from this note, so the browser lab does not drive it either. That is no plausible route rather than no possible route — a runtime-assembled name would evade all three. The suppression rests on reachability, not on ordering. If anything ever wires add_magic into a generation path this binding is wrong, and the two writers need arbitration before that happens; see the warning comment at the def and board/backlog/MAGIC-ADD-MAGIC-DEAD-WRITER.md.",
+      "claims": ["docs/terrain-world-layers.md", "Contracts/README.md"]
+    },
+    {
+      "id": "history",
+      "label": "history schema",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_history.py", "block": "history", "key": "version", "line": 513},
+      "claims": ["docs/terrain-world-layers.md", "Contracts/README.md"]
+    },
+    {
+      "id": "settlements",
+      "label": "settlements schema",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_settlements.py", "block": "settlements", "key": "version", "line": 949},
+      "claims": ["docs/terrain-world-layers.md", "Contracts/README.md"]
+    },
+    {
+      "id": "humans",
+      "label": "rural and humans report",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_humans.py", "block": "humans", "key": "version", "line": 232},
+      "claims": ["docs/terrain-world-layers.md"]
+    },
+    {
+      "id": "terrain",
+      "label": "terrain schema",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_biomes.py", "block": "terrain", "key": "version", "line": 90},
+      "claims": ["docs/terrain-world-layers.md", "Contracts/README.md"]
+    },
+    {
+      "id": "population-budget",
+      "label": "population budget schema",
+      "code": {"kind": "emitted-key", "file": "Sim/icarus_sim/terrain_settlements.py", "block": "population_budget", "key": "version", "line": 866},
+      "claims": ["docs/terrain-math-lab.md"]
+    },
+    {
+      "id": "civilization-report",
+      "label": "civilization report",
+      "code": {"kind": "returned-key", "file": "Sim/icarus_sim/terrain_civilizations.py", "function": "civilization_report", "key": "version"},
+      "claims": ["docs/civilizations.md", "Contracts/README.md"]
+    },
+    {
+      "id": "threat-assessment",
+      "label": "regional threat assessments",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/terrain_history.py", "name": "THREAT_ASSESSMENT_VERSION"},
+      "claims": ["docs/terrain-world-layers.md"]
+    },
+    {
+      "id": "city-planner",
+      "label": "city planner version",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/city_planner.py", "name": "VERSION"},
+      "mirror": {"kind": "cxx-constexpr", "file": "Core/cityplanner.hpp", "name": "planner_version"},
+      "claims": ["docs/city-planner.md"]
+    },
+    {
+      "id": "hamlet-planner",
+      "label": "hamlet planner version",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/hamlet_planner.py", "name": "VERSION"},
+      "mirror": {"kind": "cxx-constexpr", "file": "Core/hamletplanner.hpp", "name": "planner_version"},
+      "claims": ["docs/hamlet-planner.md"]
+    },
+    {
+      "id": "castle-planner",
+      "label": "castle planner version",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/castle_planner.py", "name": "VERSION"},
+      "mirror": {"kind": "cxx-constexpr", "file": "Core/castleplanner.hpp", "name": "planner_version"},
+      "claims": ["docs/castle-planner.md"]
+    },
+    {
+      "id": "asset-list",
+      "label": "asset-list schema",
+      "code": {"kind": "constant", "file": "Sim/fantasy_world_generator/asset_list.py", "name": "SCHEMA_VERSION"},
+      "claims": ["docs/publishing.md", "Contracts/README.md"]
+    },
+    {
+      "id": "nomads",
+      "label": "nomads block",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/terrain_nomads.py", "name": "VERSION"},
+      "claims": ["docs/nomads.md"]
+    },
+    {
+      "id": "nomad-api",
+      "label": "nomad request API",
+      "code": {"kind": "constant", "file": "Sim/icarus_sim/terrain_nomad_api.py", "name": "API_VERSION"},
+      "claims": ["docs/nomads.md"]
+    }
+  ]
+}

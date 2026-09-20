@@ -18,14 +18,17 @@ def transport_moisture(height,water,upstream,passes,strength):
     rise=[max(0,height[i]-sum(height[j]*w for j,w in stencil)) for i,stencil in enumerate(upstream)]
     loss=[min(.85,.06+strength*v/150) for v in rise]
     residual=0.
-    for _ in range(passes):
+    for index in range(passes):
         following=[];rain=[]
         for i,stencil in enumerate(upstream):
             incoming=sum(humidity[j]*w for j,w in stencil)
             available=incoming+.45*(1-incoming) if water[i] else incoming
             rain.append(available*loss[i])
             following.append(available-rain[-1])
-        residual=max(abs(a-b) for a,b in zip(following,humidity))
+        # Only the final pass's residual is reported and nothing feeds it back into the
+        # transport, so computing it on every pass was a whole-grid subtract-and-max
+        # built and discarded: 47 of the 48 passes at the default rain_passes.
+        if index==passes-1:residual=max(abs(a-b) for a,b in zip(following,humidity))
         humidity=following
     return {'humidity':humidity,'rain':rain,'uplift':rise,'residual':residual}
 

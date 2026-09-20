@@ -8,11 +8,11 @@ Owner: local agent. Status: complete.
 
 Scope: preconfigured requirements, not coordinate placement or replacement of the current runtime layout engine. Preserve existing unrelated edits; no commits or Unreal changes.
 
-Tests were added and observed failing before implementation. Acceptance A1–A3 verified; evidence under Artifacts/city-presets.
+Tests were added and observed failing before implementation. Acceptance A1â€“A3 verified; evidence under Artifacts/city-presets.
 
 ## Verified outcome
 
-All 10 entities have three explicit independent blocks (30 presets). Small presets have 28–30 instances, medium 57–62, capitals 82–87 before prerequisite filtering. Streets, drains and defenses use route/perimeter sizing. Shared measurements are provisional, including nonhuman reuse of the historical human.* library; entity lists and names remain independent.
+All 10 entities have three explicit independent blocks (30 presets). Small presets have 28â€“30 instances, medium 57â€“62, capitals 82â€“87 before prerequisite filtering. Streets, drains and defenses use route/perimeter sizing. Shared measurements are provisional, including nonhuman reuse of the historical human.* library; entity lists and names remain independent.
 
 147 simulation tests and 15 repository tests passed (162 total), including reproducible showcase export. Asset output equals the previous export; no new runtime asset states or catalogue drift. Lab smoke, compileall and git diff checks passed. Registry schema 2 / revision 2 is explicit; old registry hashes require regeneration before age advancement.
 

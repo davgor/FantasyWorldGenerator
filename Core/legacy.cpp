@@ -29,11 +29,16 @@ std::string lookup(const std::map<std::string,std::string>& table,const std::str
 }
 // The school the destroyer itself leaves behind, or empty when it has no magic of its own.
 std::string source_school(const std::string& cause,const std::array<double,school_count>& potency,
-                          const std::string& nest_family,const std::string& victor_culture,const std::string& god_school) {
+                          const std::string& nest_family,const std::string& victor_culture,
+                          const std::string& god_school,const std::string& villain_school) {
     for(std::size_t index=0;index<school_count;++index)
         if(cause==school_names()[index]) return cause;
     if(cause=="self_magic") return "weave";
     if(starts_with(cause,"divine")) return god_school;
+    // A villain scars the ground with whatever it holds. Holding nothing, it falls
+    // through to the region and then the culture, exactly as an unmagical cause does.
+    // Ordered after divine and before war_, as terrain_ruins.source_school orders it.
+    if(starts_with(cause,"villain")) return villain_school;
     if(starts_with(cause,"war_")) return lookup(culture_school(),victor_culture);
     const std::string school=lookup(nest_family_school(),nest_family);
     if(school=="primordial") {
@@ -49,9 +54,10 @@ std::string source_school(const std::string& cause,const std::array<double,schoo
 
 RuinLegacy ruin_legacy(const std::string& city_class,const std::string& population_profile,const std::string& cause,
                        const std::array<double,school_count>& potency,const std::string& nest_family,
-                       const std::string& victor_culture,const std::string& god_school) {
+                       const std::string& victor_culture,const std::string& god_school,
+                       const std::string& villain_school) {
     RuinLegacy legacy;
-    legacy.school=source_school(cause,potency,nest_family,victor_culture,god_school);
+    legacy.school=source_school(cause,potency,nest_family,victor_culture,god_school,villain_school);
     legacy.basis="source";
     if(legacy.school.empty()) {
         const std::int64_t dominant=dominant_school(potency);

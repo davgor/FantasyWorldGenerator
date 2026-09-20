@@ -126,7 +126,47 @@ class NativeWorldTests(unittest.TestCase):
                 {'seed': seed, 'recipe_version': 3, 'overrides': {'size': size}})
         return cls._oracle[(seed, size)]
 
+    # Operations that build a world from a seed and a size, and therefore need the same
+    # world shape the oracle resolved. The rest read a catalogue or do frame arithmetic.
+    WORLD_OPERATIONS = ('world', 'stage9', 'fields', 'cityplans', 'humans', 'nests', 'ages', 'samples')
+
+    # The shape parameters `Core/config.hpp` holds as raw authoring constants and recipe 3
+    # resolves per world. `world_scale` is NOT among them: recipe 3 resolves it to Core's
+    # own default, and passing it through `set:` aborts the driver (see the card).
+    SHAPE_KEYS = ('globe_radius', 'tectonic_relief', 'amplitude', 'wavelength', 'orogeny',
+                  'belt_width', 'plate_count', 'crust_bias', 'mountain_detail', 'sea_level',
+                  'settlement_spacing', 'support_reach', 'temperature_offset', 'moisture_bias',
+                  'erosion_passes', 'erosion_strength')
+    # Deliberately absent, having been checked rather than assumed: `ley_width` (180),
+    # `ley_nodes` (10), `magic_instability` (.45), `rain_passes` (48) and `wind_bearing` (90)
+    # are resolved by recipe 3 to exactly the values `Core/config.hpp` already holds, and
+    # `override_bounds()` does not name them, so passing them would be noise at best.
+    # `world_scale` is resolved to Core's own default too, and passing it aborts the driver.
+    #
+    # `support_reach` is passed but is OUTSIDE Core's own `override_bounds()` entry of
+    # [100, 10000]: recipe 3 resolves 17938.9 at this seed, because reaches are absolute
+    # metres authored for the 11.15 km reference world and must grow with the world. The
+    # driver's `set:` channel does not consult those bounds, so this works here -- but the
+    # JSON request path at Core/genesis.cpp:104-107 would reject the same value.
+
+    @classmethod
+    def shape(cls, seed, size):
+        """`set:` overrides carrying the oracle's resolved world shape to the driver.
+
+        Without these the driver builds from `Core/config.hpp`'s authoring defaults -- a
+        design radius of 10000 against the recipe's 179388.9 at this seed -- so the two
+        sides generate different worlds and every metric layer disagrees while every
+        dimensionless one matches exactly. That signature is what made a harness gap look
+        like a numeric divergence in the core.
+        """
+        config = cls.oracle(seed, size).get('config', {})
+        return [f'set:{key}={config[key]!r}' for key in cls.SHAPE_KEYS
+                if isinstance(config.get(key), (int, float)) and not isinstance(config.get(key), bool)]
+
     def native(self, *arguments, stdin=''):
+        arguments = list(arguments)
+        if arguments and arguments[0] in self.WORLD_OPERATIONS:
+            arguments += self.shape(PARITY_SEED, PARITY_SIZE)
         result = subprocess.run([str(self.binary), *[str(v) for v in arguments]], input=stdin,
                                 capture_output=True, text=True, timeout=900)
         self.assertEqual(result.returncode, 0, result.stderr[-4000:])

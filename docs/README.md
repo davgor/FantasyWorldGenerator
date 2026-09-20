@@ -1,5 +1,6 @@
 # Documentation map
 
+- [Conformance records](conformance/README.md) are the present-tense breakdown of what this product does: every module claimed by exactly one record, stating what it produces, what it emits, at what version, and what proves it. Start there to learn what exists; the documents below explain why it behaves as it does. `board/` is the change log.
 - [Repository plan](../PLAN.md) is the canonical roadmap, ownership, package, and acceptance handoff.
 - [Simulation and world layers](terrain-world-layers.md) is the canonical generator behavior contract.
 - [Unified globe scene](unified-world-scene.md) defines leyline variation, city/world junctions and global placements.
@@ -38,3 +39,23 @@
 - [Capabilities and coordinates](../Contracts/capabilities-and-coordinates.md) defines producer negotiation, physical units, globe/local projections and portable coordinate fixtures.
 - [Kernel contracts](../Contracts/kernel-v1.md) defines exact numeric/identity/failure rules and the bounded counter proof, separate from generated worlds.
 - [Ticket board](../board/README.md) identifies active and queued implementation work.
+
+## Decision records
+
+Why a choice was made, and what it ruled out. Two of these are also indexed above where
+they double as the canonical description of a subsystem.
+
+- [001 Reference and facade boundary](decisions/001-reference-and-facade-boundary.md) — keeping the extracted Python oracle behind a new publishing facade.
+- [002 Export artifact is not a runtime package](decisions/002-export-artifact-is-not-runtime-package.md)
+- [014 MathLab biome gate](decisions/014-mathlab-biome-gate.md)
+- [015 Explicit biome states](decisions/015-explicit-biome-states.md) — retiring legacy biome and save compatibility.
+- [016 Standalone civilizations](decisions/016-standalone-civilizations.md)
+- [017 Civilization master registry](decisions/017-civilization-master-registry.md) — the one a bare "decision 017" means.
+- [018 UnrealWorldGen dev consumer](decisions/018-unrealworldgen-dev-consumer.md)
+- [019 Runtime surface, not Landscape](decisions/019-runtime-surface-not-landscape.md) — why no `ALandscape` actor exists.
+- [020 Authoring catalogues ship as data](decisions/020-authoring-catalogues-ship-as-data.md)
+- [021 Heritage chain](decisions/021-heritage-chain.md)
+- [022 Private source-inclusive package policy](decisions/022-private-package-distribution.md) — renumbered from a second 017; earlier references to "decision 017" for distribution mean this one.
+
+Numbers 003 to 013 were allocated in the source repository and did not come across with
+the extraction. The gap is inherited, not a set of missing records.

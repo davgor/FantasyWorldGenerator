@@ -16,17 +16,17 @@ The repository contains the standalone world generator, portable contract fixtur
 
 ## Staged world lab
 
-Run `python3 tools/terrain_lab.py --serve` for the sixteen-stage recipe 3 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. Old recipe/save compatibility is retired: regenerate worlds for the natural-core and explicit magical-state contract. [Behavior and replay contract](docs/terrain-world-layers.md).
+Run `python tools/terrain_lab.py --serve` for the sixteen-stage recipe 3 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. Old recipe/save compatibility is retired: regenerate worlds for the natural-core and explicit magical-state contract. [Behavior and replay contract](docs/terrain-world-layers.md).
 
 ## Local validation
 
 Python 3.9+ and the standard library are sufficient for the reference tests. Packaging uses `setuptools`.
 
 ```bash
-python3 tools/validate_repo.py
-PYTHONPATH=Sim python3 -m fantasy_world_generator generate --seed 42 --size 33 --output Artifacts/world.json
-PYTHONPATH=Sim python3 -m fantasy_world_generator asset-list --output Artifacts/fantasy-world-assets.json
-PYTHONPATH=Sim python3 -m fantasy_world_generator capabilities --output Artifacts/capabilities.json
+python tools/validate_repo.py
+PYTHONPATH=Sim python -m fantasy_world_generator generate --seed 42 --size 33 --output Artifacts/world.json
+PYTHONPATH=Sim python -m fantasy_world_generator asset-list --output Artifacts/fantasy-world-assets.json
+PYTHONPATH=Sim python -m fantasy_world_generator capabilities --output Artifacts/capabilities.json
 ```
 
 `validate_repo.py` runs every stage by default; `--stage checks|sim-tests|repo-tests|artifacts`
