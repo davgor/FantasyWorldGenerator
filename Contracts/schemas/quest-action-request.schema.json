@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/quest-action-request.schema.json",
+  "title": "Take or abandon quests in an existing recipe 3 world",
+  "description": "The body of POST /world/quest. A playing session tells the world what its party did with an offer; the world does not invent it. `quest_id` is the hook id the `quests` block keys on, which only exists once the world has been advanced by at least one day. `day` defaults to the world clock's current day. Actions apply in request order, so a batch that takes and then abandons one quest ends abandoned.",
+  "type": "object",
+  "required": ["api_version", "world"],
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"const": 1},
+    "world": {"type": "object", "required": ["config", "quests"]},
+    "actions": {
+      "type": "array",
+      "maxItems": 1024,
+      "description": "The same capacity bound advance-time puts on `resolutions`.",
+      "items": {
+        "type": "object",
+        "required": ["quest_id", "action"],
+        "additionalProperties": false,
+        "properties": {
+          "quest_id": {"type": "string", "minLength": 1},
+          "action": {"enum": ["take", "abandon"]},
+          "day": {
+            "type": "number",
+            "minimum": 0,
+            "description": "A day on the moon calendar, at or after founding year 0. Omitted means the world clock's current day. Taking an offer after its `expires_day` is refused: the world has already let it lapse."
+          }
+        }
+      }
+    }
+  }
+}

@@ -92,6 +92,11 @@ def network_geometry(seed, count):
 
 def generate_networks(result, cfg):
     from .terrain_world import options
+    # Deliberately a statement of its own rather than a name added to the module-level
+    # terrain_magic import above: that line also carries add_magic, a dead second writer
+    # of this block that must stay uncalled, and nothing should give a later reader a
+    # reason to reopen it. See the warning at terrain_magic.add_magic.
+    from .terrain_magic import pending_college_diagnostics
     o = options(cfg)
     # Authored school widths are a reach on the reference world (design radius 10000 at
     # the recipe scale, 1774.4 m physical). Magic has to cover the same share of the
@@ -118,7 +123,8 @@ def generate_networks(result, cfg):
                           'instability': o[name + '_instability'], 'nodes': nodes, 'edges': edges,
                           'distribution':distribution if enabled else None}
     result['magic'] = {'version': 4, 'school_order': list(SCHOOLS), 'groups': list(dict.fromkeys(v[0] for v in SCHOOLS.values())),
-                       'networks': networks, 'colleges': [], 'enabled': bool(cfg.magic_enabled),
+                       'networks': networks, 'colleges': [], 'diagnostics': pending_college_diagnostics(cfg.college_count),
+                       'enabled': bool(cfg.magic_enabled),
                        'mutation_threshold': .35, 'dominance_margin': .08,
                        'method': 'Eight known schools as independently seeded sacred alignments with uneven clusters, scattered outliers and variable connectivity, plus four hidden schools that generation never raises: their occurrence is locked at zero and only the corruption API places a node in one. Node and line intensities are editable; '
                                  'overlapping raw potency is preserved. Mutation requires potency >= 0.35 '

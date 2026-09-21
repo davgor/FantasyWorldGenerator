@@ -13,6 +13,28 @@ tickets: []
 
 # Conformance: template
 
+## Front matter, and what the checker does with each key
+
+Every key above is read by `tools/docs_check.py`. None of them is decoration and none is
+free text you can leave approximate.
+
+| Key | Checked as |
+|---|---|
+| `conformance` | must be `1`; this gate reads schema 1 |
+| `record` | must equal the filename stem, so a record cited by name is findable by it |
+| `tier` | must be one of `DECLARED`, `REACHABLE`, `EXERCISED`, `PARITY` — the closed vocabulary in [README](README.md#evidence-tiers). Nothing else is a tier |
+| `summary` | must be present and non-empty |
+| `modules` | each must exist, and exactly one record may claim each one |
+| `emits[].schema` | must exist, or be written `none` or a parenthesised phrase saying plainly that there is none |
+| `versions[].id` | must name a binding in `version-bindings.json`, and `assert:` must equal the integer that binding resolves from the code |
+| `proof[].path` | must exist **and** be a file one of the three suites discovers: `Sim/tests/test_*.py`, `tests/test_*.py`, `tests/consumer_*.py` |
+| `proof[].establishes` | must be present; a proof citation that does not say what it proves is a filename |
+| `tickets`, `decisions` | warn when a path does not resolve — cards move between folders and a hard failure would punish the move |
+
+Write `key: []` for an empty list. A continuation line under a `- ` item belongs to that
+item, so `schema:`, `assert:` and `establishes:` go one indent deeper than the `- ` they
+qualify, and nothing else does.
+
 Copy this file, rename it to the capability's noun, and delete every instruction line.
 Keep the nine headings, in this order, in every record. A heading with nothing under it
 is a finding, not a placeholder — if a section genuinely does not apply, say so in one
@@ -61,9 +83,10 @@ against the code, written as `<!-- conformance:version <id>=<n> -->`. Add the bi
 
 ## Proven by
 
-Test file, and in one clause what it establishes. Anything claimed above tier
-`DECLARED` must cite `file::test_name` and the checker resolves it. Do not cite a suite
-that merely compiles or imports the code.
+Test file, and in one clause what it establishes. Anything claimed above tier `DECLARED`
+must cite the file under `proof:`. The checker resolves that the file exists and that a
+suite discovers it; it does not run the test and it does not read this clause. Do not cite
+a suite that merely compiles or imports the code.
 
 ## Why it works this way
 

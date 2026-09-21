@@ -200,7 +200,7 @@ Two shapes, and they are not equally expensive:
 unreachable, and stop commissioning `terrain.biome.001` / `terrain.biome.006` art. Zero contract
 impact, no world invalidation, and it still captures the wasted-art saving that motivated the
 finding. This **does not** have to wait for
-[PRODUCT-WORLD-DISPOSABILITY-DECISION](../backlog/PRODUCT-WORLD-DISPOSABILITY-DECISION.md).
+[PRODUCT-WORLD-DISPOSABILITY-DECISION](PRODUCT-WORLD-DISPOSABILITY-DECISION.md).
 As shipped the identities are marked `unreachable` rather than removed, for the reason given in
 the Resolution section above.
 
@@ -273,7 +273,7 @@ The correct generalisation is the one `5 exposed_rock` now demonstrates, and it 
 the one this section originally drew: check a suspected dead biome against a **freshly generated
 world on the current scale**, because an artifact on disk records the scale it was made at, and a
 world document does not stop being readable when the planet under it changes size. The rock case
-is recorded at [BIOME-EXPOSED-ROCK-NEEDS-RELIEF](../backlog/BIOME-EXPOSED-ROCK-NEEDS-RELIEF.md),
+is recorded at [BIOME-EXPOSED-ROCK-NEEDS-RELIEF](../retired/BIOME-EXPOSED-ROCK-NEEDS-RELIEF.md),
 with the mechanism, both falsification probes, and the measurement showing that the obvious knob
 makes every other raster worse. The same run is the evidence for this card's own claim: zero
 cells of 1 or 6 in either layer, and `terrain['biomes']` still advertising all thirteen ids.

@@ -55,7 +55,7 @@ ORIGIN_CAMP_KIND = {'survivors': 'base', 'deserters': 'lair', 'cultists': 'shrin
 def policy():
     """The balance table, validated on load so a malformed row fails at import."""
     doc = json.loads(Path(__file__).with_name('nomads.json').read_text(encoding='utf-8'))
-    if doc.get('version') != 1:
+    if doc.get('version') != 2:
         raise ValueError('Unsupported nomad policy version')
     classes = doc.get('classifications')
     if not isinstance(classes, dict) or set(classes) != set(CLASSIFICATIONS):
@@ -70,6 +70,20 @@ def policy():
             raise ValueError('Nomad speed must be positive: ' + name)
         if not isinstance(entry.get('gate'), dict):
             raise ValueError('Nomad classification needs a gate: ' + name)
+    split = doc.get('fission')
+    if not isinstance(split, dict):
+        raise ValueError('Nomad policy must define a fission section')
+    if not set(split.get('classifications') or ()) <= set(CLASSIFICATIONS):
+        raise ValueError('Fission names a classification that does not exist')
+    share_low, share_high = split['child_share']
+    if not 0 < share_low <= share_high < 1:
+        raise ValueError('Fission child share must be an ordered fraction below one')
+    for name in split['classifications']:
+        # The capacity curve runs from the gate's own forage floor to this number, so a
+        # rich_forage at or below the floor would divide by zero-width and make every
+        # band of that class either always or never over capacity.
+        if not split.get('rich_forage', 0) > classes[name]['gate'].get('min_forage', 0.):
+            raise ValueError('Fission rich_forage must exceed the gate forage floor: ' + name)
     return doc
 
 

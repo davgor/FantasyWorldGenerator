@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/read-blocks.schema.json",
+  "title": "Read: blocks",
+  "description": "Which blocks one world carries, each one's declared version and its encoded size. Answered by POST /world/blocks (Sim/icarus_sim/terrain_read.blocks_request). A read document, never a world and never a handle: reads produce no version. The read documents are schema'd rather than the blocks they describe - seven of the 49 blocks in terrain_history.STATE_KEYS have a schema file of their own and the rest reach world-output.schema.json as a declared property, which board/backlog/PRODUCT-BLOCK-REGISTRY.md owns and this boundary makes visible rather than fixes.",
+  "type": "object",
+  "required": ["schema", "schema_version", "read", "api_version", "source", "blocks",
+               "total_bytes", "unregistered", "absent", "unencodable", "registered_count",
+               "state_keys", "encoding"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.read.blocks" },
+    "schema_version": { "const": 1 },
+    "read": { "const": "blocks" },
+    "api_version": { "const": 1 },
+    "source": { "$ref": "#/$defs/source" },
+    "blocks": {
+      "type": "array",
+      "description": "One row per top-level key the world carries, sorted by name - the order the transfer bytes are written in. Built by walking the world, never by walking the registry: a report derived from terrain_history.STATE_KEYS would omit a block the world carries and the registry does not, which is the materialize_stage failure mode docs/conformance/nomads.md documents.",
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Sum of every encodable block's bytes. Larger than what crosses to a host, because the transfer form also drops build_stages and every nested timing_ms."
+    },
+    "unregistered": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Keys this world carries that terrain_history.STATE_KEYS does not list. Not an error: config, layers, timing_ms, build_stages, generator_version, recipe, warnings and the per-call report blocks are all legitimately unregistered. A block that looks like state and appears here is the thing to look at."
+    },
+    "absent": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Registered blocks this world does not carry. world_clock and quests are absent from every world that has never been advanced."
+    },
+    "unencodable": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Blocks JSON cannot carry, which in practice means a non-finite float. A world holding one can never be named by a host, and naming the block is more use than failing the report."
+    },
+    "registered_count": { "type": "integer", "minimum": 0 },
+    "state_keys": { "type": "integer", "minimum": 1, "description": "len(terrain_history.STATE_KEYS) in the running generator." },
+    "encoding": { "type": "string" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "description": "Which world answered, read straight off the document. Not a handle: naming a world by its content is the host's job and stays on the far side of the boundary.",
+      "required": ["generator_version", "seed", "size", "phase", "day", "age"],
+      "properties": {
+        "generator_version": { "type": ["integer", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "size": { "type": ["integer", "null"] },
+        "phase": { "type": ["integer", "null"] },
+        "day": { "type": ["number", "null"], "description": "world_clock.day, or null on a world that has never been advanced." },
+        "age": { "type": ["integer", "null"] }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": ["name", "registered", "version", "type", "count", "bytes", "encodable"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "registered": { "type": "boolean", "description": "Listed in terrain_history.STATE_KEYS, so carried across an age boundary and snapshotted into build_stages." },
+        "version": { "type": ["integer", "null"], "description": "block['version'], only where the block declares an integer one. Never inferred." },
+        "type": { "enum": ["object", "array", "string", "number", "boolean", "null"] },
+        "count": { "type": ["integer", "null"], "description": "Members for an object or an array; null for a scalar." },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "encodable": { "type": "boolean" }
+      }
+    }
+  }
+}

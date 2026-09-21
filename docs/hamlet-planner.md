@@ -1,6 +1,6 @@
 # Final-world hamlet planner
 
-Hamlet planner version 2 runs after stage 16 (and after the last requested age transition), immediately after the [city planner](city-planner.md). Earlier simulation snapshots do not contain hamlet plans. It adds the optional, independently versioned `hamlet_plans` world-output section so Unreal and lab consumers can tinker with rural layouts without depending on `city_plans`.
+Hamlet planner version 3 runs after stage 16 (and after the last requested age transition), immediately after the [city planner](city-planner.md). Earlier simulation snapshots do not contain hamlet plans. It adds the optional, independently versioned `hamlet_plans` world-output section so Unreal and lab consumers can tinker with rural layouts without depending on `city_plans`.
 
 Planner identity includes the linked civilization/building registry hash. Age advancement rejects mismatched identities.
 
@@ -30,6 +30,8 @@ The provisional window is about 200 metres across (100 m half-extent). Neighbour
 Streets grow as a 4-metre least-cost tree **inside the ellipse**, with a rural branch floor of 2 instead of the city 12-district floor. Required gates come from the hamlet's `access_nodes` path toward its parent city when that crossing lies in the ellipse. Regional MST edges are not invented here. See [unified globe scene](unified-world-scene.md) for tagged `settlement_kind: hamlet` globe exports.
 
 Standing water and local slopes above 25 degrees still block cells. Coarse regional `flood_risk` does **not** empty a hamlet: coastal support pins often sit on flood_risk=1 cells that are otherwise dry at schematic scale. River channels remain reserved through the water sampler's 12 m setback.
+
+Version 3 applies that rule to the road-access gate as well. The cell mask had excluded the regional proxy since version 1, but the gate deciding whether a plot reaches a street still required `flood <= 0.65` from a sampler field that meant the regional layer whenever no river was near, so on a flood_risk=1 cell the mask admitted the ground and the gate then refused every plot on it. The shared sampler now returns `channel` and `flood_risk` as separate fields and both tests read `channel`. See [city planner](city-planner.md) 7, which carries the measurements.
 
 ## Catalogue
 

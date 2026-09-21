@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/read-near.schema.json",
+  "title": "Read: near",
+  "description": "What is at, or within a radius of, one terrain node. Answered by POST /world/near (Sim/icarus_sim/terrain_read.near_request). Distances are great-circle metres on effective_config.globe_radius, measured with the expression terrain_erosion.sphere_grid uses for a node's neighbours. Two things standing on one node are at distance exactly zero, read off the node the writer stored rather than off an arc length.",
+  "type": "object",
+  "required": ["schema", "schema_version", "read", "api_version", "source", "node", "radius_m",
+               "radius_ceiling_m", "row_ceiling", "rows", "cell", "near", "joins"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.read.near" },
+    "schema_version": { "const": 1 },
+    "read": { "const": "near" },
+    "api_version": { "const": 1 },
+    "source": { "$ref": "#/$defs/source" },
+    "node": { "type": "integer", "minimum": 0, "description": "The terrain node asked about. Nodes are numbered 0..n-1 over terrain_erosion.sphere_grid's point list and are the one identifier in this tree that does not renumber at an age boundary." },
+    "radius_m": { "type": "number", "minimum": 0 },
+    "radius_ceiling_m": { "type": "number", "description": "Half this world's globe radius, the same relative bound terrain_patch puts on a patch span. A larger radius_m is refused as refused_by_world." },
+    "row_ceiling": { "type": "integer", "description": "Rows past which the read refuses with STATE_CAPACITY rather than truncating. A truncated answer to 'what is near here' is a wrong answer that looks complete." },
+    "rows": { "type": "integer", "minimum": 0, "description": "Total rows across every category." },
+    "cell": {
+      "type": "object",
+      "required": ["node", "x", "z", "direction", "layers"],
+      "properties": {
+        "node": { "type": "integer" },
+        "x": { "type": "integer" },
+        "z": { "type": "integer" },
+        "direction": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "layers": { "type": "object", "description": "Every layer field at this cell, by the layer's own name, as an exact read of layers[name][z][x]. Never recomputed: a re-derived field drifts from the generator by a float." }
+      }
+    },
+    "near": {
+      "type": "object",
+      "description": "Rows by category, each ordered by distance and then by the order its writer produced it.",
+      "required": ["settlements", "hamlets", "fortresses", "key_locations", "beast_nests", "ley_nodes", "encounters"],
+      "additionalProperties": false,
+      "properties": {
+        "settlements": { "type": "array", "items": { "type": "object" } },
+        "hamlets": { "type": "array", "items": { "type": "object" } },
+        "fortresses": { "type": "array", "items": { "type": "object" } },
+        "key_locations": { "type": "array", "items": { "type": "object" } },
+        "beast_nests": { "type": "array", "items": { "type": "object" } },
+        "ley_nodes": { "type": "array", "items": { "type": "object" }, "description": "magic.networks[school].nodes[]. A ley node carries a direction and no terrain node, so its node field is null." },
+        "encounters": { "type": "array", "items": { "$ref": "#/$defs/encounter" } }
+      }
+    },
+    "joins": { "type": "array", "items": { "$ref": "#/$defs/join" } }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["generator_version", "seed", "size", "phase", "day", "age"],
+      "properties": {
+        "generator_version": { "type": ["integer", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "size": { "type": ["integer", "null"] },
+        "phase": { "type": ["integer", "null"] },
+        "day": { "type": ["number", "null"] },
+        "age": { "type": ["integer", "null"] }
+      }
+    },
+    "encounter": {
+      "type": "object",
+      "description": "One occupancy row and the travelling group it belongs to, resolved through encounters.by_node -> encounters.occupancy[].entry -> encounters.entries[], which is the index terrain_encounters built for exactly this question.",
+      "required": ["occupancy", "node", "camp_id", "group_uid", "distance_m"],
+      "properties": {
+        "occupancy": { "type": "integer", "description": "Index into encounters.occupancy, so a caller can go back to the writer's own row." },
+        "node": { "type": "integer" },
+        "camp_id": { "type": ["string", "integer", "null"] },
+        "camp_kind": { "type": ["string", "null"] },
+        "from_day": { "type": ["number", "null"], "description": "Null on a stranded group: 'here, always', not 'here, never'." },
+        "to_day": { "type": ["number", "null"] },
+        "months": { "type": "array", "items": { "type": "integer" } },
+        "group_uid": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"], "enum": ["nomads", "beast_movements", null] },
+        "group_kind": { "type": ["string", "null"] },
+        "disposition": { "type": ["string", "null"] },
+        "threat_tier": { "type": ["integer", "null"], "description": "Danger on the creature-tier rubric, one to five. Not the key-location tier, which is physical scale." },
+        "size": { "type": ["integer", "number", "null"] },
+        "distance_m": { "type": "number" }
+      }
+    },
+    "join": {
+      "type": "object",
+      "description": "A join this read resolved, naming the site that writes the field it was resolved against. Resolving a join is writing a second implementation of it, so the mirror is checkable rather than asserted.",
+      "required": ["name", "from", "to", "writer"],
+      "properties": {
+        "name": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "writer": { "type": "string" }
+      }
+    }
+  }
+}

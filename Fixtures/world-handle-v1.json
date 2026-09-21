@@ -1,0 +1,194 @@
+{
+  "fixture": "world-handle",
+  "version": 1,
+  "note": "Parity cases for the world-handle rule. Regenerate with tools/build_world_handle_fixture.py. A second implementation should match transfer_bytes first and the handle second; matching the digest while missing the bytes means agreeing by luck.",
+  "rule": {
+    "algorithm": "sha256",
+    "prefix": "w_",
+    "digits": 16,
+    "drop_top_level": [
+      "build_stages"
+    ],
+    "drop_any_depth": [
+      "timing_ms"
+    ],
+    "encoding": "JSON with sorted keys, separators ',' and ':', no whitespace, UTF-8, non-ASCII unescaped, NaN and Infinity rejected",
+    "float_format": "Python repr, which is what json.dumps writes: the shortest decimal that reads back as the same double, laid out CPython's way. Scientific when the decimal point position is at or below -4 or above 16, positional otherwise; a positional result always carries a fractional part; negative zero keeps its sign; an exponent is written with a sign and at least two digits. So 1e+16 and 1e-05 and 1000000000000000.0 and 1.0 and -0.0, all pinned by the 'floats' case.",
+    "float_format_implementations": [
+      "Core/castlegeometry.cpp python_repr (std::to_chars shortest)",
+      "Core/cityshapes.cpp py_repr (precision search)"
+    ],
+    "float_format_note": "Two native implementations of this rule already exist and agree. A host porting the handle should reuse one of them: a third implementation of one rule is how they start disagreeing."
+  },
+  "cases": [
+    {
+      "name": "empty",
+      "document": {},
+      "transfer_bytes": "{}",
+      "transfer_length": 2,
+      "handle": "w_44136fa355b3678a"
+    },
+    {
+      "name": "scalars",
+      "document": {
+        "a": 1,
+        "b": "two",
+        "c": true,
+        "d": null
+      },
+      "transfer_bytes": "{\"a\":1,\"b\":\"two\",\"c\":true,\"d\":null}",
+      "transfer_length": 35,
+      "handle": "w_eb2c149467b56cfa"
+    },
+    {
+      "name": "key order",
+      "document": {
+        "z": 1,
+        "m": {
+          "y": 2,
+          "b": 3
+        },
+        "a": 4
+      },
+      "transfer_bytes": "{\"a\":4,\"m\":{\"b\":3,\"y\":2},\"z\":1}",
+      "transfer_length": 31,
+      "handle": "w_b06bcab80fb55fe8"
+    },
+    {
+      "name": "timing at depth",
+      "document": {
+        "a": 1,
+        "timing_ms": {
+          "total": 3.5
+        },
+        "b": {
+          "timing_ms": 9,
+          "c": [
+            {
+              "timing_ms": 1,
+              "d": 2
+            }
+          ]
+        }
+      },
+      "transfer_bytes": "{\"a\":1,\"b\":{\"c\":[{\"d\":2}]}}",
+      "transfer_length": 27,
+      "handle": "w_ef0265c5e90b5a85"
+    },
+    {
+      "name": "build stages",
+      "document": {
+        "a": 1,
+        "build_stages": [
+          {
+            "state": {
+              "layers": [
+                1,
+                2,
+                3
+              ]
+            }
+          }
+        ]
+      },
+      "transfer_bytes": "{\"a\":1}",
+      "transfer_length": 7,
+      "handle": "w_015abd7f5cc57a2d"
+    },
+    {
+      "name": "nested build stages",
+      "document": {
+        "a": {
+          "build_stages": [
+            1
+          ]
+        }
+      },
+      "transfer_bytes": "{\"a\":{\"build_stages\":[1]}}",
+      "transfer_length": 26,
+      "handle": "w_8726962d0bf60230"
+    },
+    {
+      "name": "non-ascii",
+      "document": {
+        "name": "Ceskykrumlov — Květná 街"
+      },
+      "transfer_bytes": "{\"name\":\"Ceskykrumlov — Květná 街\"}",
+      "transfer_length": 40,
+      "handle": "w_fa4bfecb48c47054"
+    },
+    {
+      "name": "floats",
+      "document": {
+        "whole": 1.0,
+        "negative zero": -0.0,
+        "repr": 0.30000000000000004,
+        "below the high threshold": 1000000000000000.0,
+        "at the high threshold": 1e+16,
+        "above the low threshold": 0.0001,
+        "at the low threshold": 1e-05
+      },
+      "transfer_bytes": "{\"above the low threshold\":0.0001,\"at the high threshold\":1e+16,\"at the low threshold\":1e-05,\"below the high threshold\":1000000000000000.0,\"negative zero\":-0.0,\"repr\":0.30000000000000004,\"whole\":1.0}",
+      "transfer_length": 199,
+      "handle": "w_bfac9caa11355f8b"
+    },
+    {
+      "name": "nesting",
+      "document": {
+        "a": [
+          [],
+          [
+            {}
+          ],
+          [
+            {
+              "b": [
+                1,
+                [
+                  2,
+                  [
+                    3
+                  ]
+                ]
+              ]
+            }
+          ]
+        ]
+      },
+      "transfer_bytes": "{\"a\":[[],[{}],[{\"b\":[1,[2,[3]]]}]]}",
+      "transfer_length": 35,
+      "handle": "w_fa287b40234ab4ff"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "nan",
+      "document_note": "nan",
+      "why": "NaN is not JSON; a world carrying one must fail at the boundary rather than travel",
+      "raises": "ValueError"
+    },
+    {
+      "name": "infinity",
+      "document_note": "infinity",
+      "why": "same rule as NaN",
+      "raises": "ValueError"
+    }
+  ],
+  "world": {
+    "request": {
+      "recipe_version": 3,
+      "seed": 42,
+      "overrides": {
+        "size": 17,
+        "phase": 4
+      }
+    },
+    "handle": "w_b38f2e3e7a94c790",
+    "transfer_length": 148572,
+    "generator_version": 16,
+    "profiling_is_invisible": {
+      "note": "The same request generated with build_stages and timings must produce the same handle; that is what makes the name a function of the world rather than of the run.",
+      "handle_with_profiling": "w_b38f2e3e7a94c790"
+    }
+  }
+}

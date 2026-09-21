@@ -55,19 +55,22 @@ class CountrysideWellTests(unittest.TestCase):
         world = countryside_world()
         block = hero_generator.generate(world, cast_fixture.certain())
         self.assertEqual(block['status'], 'ok')
-        reeve = by_uid(block, 'hero-reeve-hamlet-0')
-        self.assertEqual((reeve['role'], reeve['well'], reeve['home']['name'], reeve['presence']), ('reeve', 'hamlets', 'Alder City', {'site_kind': 'hamlet', 'uid': 'hamlet-0', 'situation': 'reeve'}))
+        # Keyed on the terrain node, not the ordinal site id: `hamlet-0` stands on node 150 and
+        # `fortress-0` on node 13, and only the node survives an age advance. See SiteAnchorTests.
+        reeve = by_uid(block, 'hero-reeve-hamlet-node-150')
+        self.assertEqual((reeve['role'], reeve['well'], reeve['home']['name'], reeve['presence']), ('reeve', 'hamlets', 'Alder City', {'site_kind': 'hamlet', 'uid': 'hamlet-node-150', 'situation': 'reeve'}))
         self.assertTrue({'role:reeve', 'hamlet:farming', 'hamlet:starving', 'hamlet:threatened', 'seat:none'} <= set(reeve['selectable']), reeve['selectable'])
-        self.assertEqual(reeve['claim'], {'verb': 'protect', 'target_uid': 'hamlet-0', 'target_name': 'the farmstead below Alder'})
-        self.assertEqual(reeve['deeds'], [{'event_kind': 'hamlet', 'event_id': 'hamlet-0', 'age': 2, 'role': 'keeper'}])
+        self.assertEqual(reeve['claim'], {'verb': 'protect', 'target_uid': 'hamlet-node-150', 'target_name': 'the farmstead below Alder'})
+        self.assertEqual(reeve['deeds'], [{'event_kind': 'hamlet', 'event_id': 'hamlet-node-150', 'age': 2, 'role': 'keeper'}])
         self.assertIn('ashen wyrm', reeve['log'][0]['text'].lower())
         self.assertIn('granary is short', reeve['situation'])
-        quarry = by_uid(block, 'hero-reeve-hamlet-1')
+        quarry = by_uid(block, 'hero-reeve-hamlet-node-1')
         self.assertTrue({'hamlet:resource'} <= set(quarry['selectable']))
         self.assertNotIn('hamlet:starving', quarry['selectable'])
         self.assertNotIn('hamlet:threatened', quarry['selectable'], 'Dunlin is far from the wyrm on the grid')
-        self.assertFalse([p for p in block['people'] if p['uid'] in ('hero-reeve-coastal-0-0', 'hero-reeve-hamlet-9')], 'harbours are ports; orphan hamlets are skipped')
-        castellan = by_uid(block, 'hero-castellan-fortress-0')
+        # The harbour stands on node 12 and the orphan hamlet on node 5; neither precipitates.
+        self.assertFalse([p for p in block['people'] if p['uid'] in ('hero-reeve-hamlet-node-12', 'hero-reeve-hamlet-node-5')], 'harbours are ports; orphan hamlets are skipped')
+        castellan = by_uid(block, 'hero-castellan-fortress-node-13')
         self.assertTrue({'role:castellan', 'order:member', 'warden:post', 'fortress:pressed'} <= set(castellan['selectable']))
         self.assertEqual(castellan['claim']['verb'], 'hold')
         self.assertEqual(castellan['presence']['site_kind'], 'fortress')
@@ -122,8 +125,8 @@ class CountrysideWellTests(unittest.TestCase):
         world = countryside_world()
         block = hero_generator.generate(world, load_all())
         rolls = {r['candidate_uid']: r for r in block['rolls']}
-        self.assertGreater(rolls['hero-reeve-hamlet-0']['chance'], rolls['hero-reeve-hamlet-1']['chance'], 'a starving, threatened hamlet is likelier to have a named reeve')
-        self.assertGreater(rolls['hero-castellan-fortress-0']['chance'], 0.35, 'war pressure and defence raise the castellan')
+        self.assertGreater(rolls['hero-reeve-hamlet-node-150']['chance'], rolls['hero-reeve-hamlet-node-1']['chance'], 'a starving, threatened hamlet is likelier to have a named reeve')
+        self.assertGreater(rolls['hero-castellan-fortress-node-13']['chance'], 0.35, 'war pressure and defence raise the castellan')
         self.assertLessEqual(max(r['chance'] for r in rolls.values()), .95)
 
     def test_story_web_weaves_the_countryside_onto_its_own_spokes(self):
@@ -132,16 +135,96 @@ class CountrysideWellTests(unittest.TestCase):
         world['heroes'] = hero_generator.generate(world, cast_fixture.certain())
         block = story_web.generate(world)
         webs = {w['uid']: w for w in block['webs']}
-        reeve_spokes = [s['trope_id'] for s in webs['hero-reeve-hamlet-0']['spokes']]
-        self.assertIn(webs['hero-reeve-hamlet-0']['offered'], ('the_famine', 'the_hunt'), 'a starving hamlet hunted by a wyrm')
+        reeve_spokes = [s['trope_id'] for s in webs['hero-reeve-hamlet-node-150']['spokes']]
+        self.assertIn(webs['hero-reeve-hamlet-node-150']['offered'], ('the_famine', 'the_hunt'), 'a starving hamlet hunted by a wyrm')
         self.assertTrue({'the_famine', 'the_hunt'} <= set(reeve_spokes), reeve_spokes)
-        self.assertEqual(webs['hero-reeve-hamlet-1']['offered'], 'the_founding', 'a fed, unthreatened quarry camp can grow')
-        self.assertIn(webs['hero-castellan-fortress-0']['offered'], ('the_siege', 'the_wardens_line', 'the_vow'))
+        self.assertEqual(webs['hero-reeve-hamlet-node-1']['offered'], 'the_founding', 'a fed, unthreatened quarry camp can grow')
+        self.assertIn(webs['hero-castellan-fortress-node-13']['offered'], ('the_siege', 'the_wardens_line', 'the_vow'))
         self.assertIn('the_skim', [s['trope_id'] for s in webs['hero-harbourmaster-coastal-0-0']['spokes']])
         keeper_uid = next(u for u in webs if 'keeper' in u)
         self.assertIn(webs[keeper_uid]['offered'], ('the_vow', 'the_blight', 'crusade'))
         cult_uid = next(u for u in webs if u.startswith('hero-heresiarch-cult'))
         self.assertIn('the_schism', [s['trope_id'] for s in webs[cult_uid]['spokes']])
+
+
+class SiteAnchorTests(unittest.TestCase):
+    """A reeve and a castellan are anchored on the terrain node, in every field that carries it.
+
+    `humans.hamlets[].id` and `humans.fortresses[].id` are ordinals -- the position in a list
+    `terrain_humans` re-sorts by defence score at every age boundary -- so a person built on one
+    is renamed by an advance that did not touch their ground. `Sim/tests/test_site_id_stability.py`
+    pins the consequence across an advance; these pin the shape on one world, for both roles, and
+    against the key space `npc_roster` already writes.
+    """
+
+    ANCHORED_FIELDS = ('uid', 'presence.uid', 'claim.target_uid', 'deeds[0].event_id')
+
+    def carried(self, person):
+        return {'uid': person['uid'], 'presence.uid': person['presence']['uid'],
+                'claim.target_uid': person['claim']['target_uid'],
+                'deeds[0].event_id': person['deeds'][0]['event_id']}
+
+    def test_no_countryside_field_carries_the_ordinal_site_id(self):
+        """All four together. Repairing `uid` alone leaves three ways to join the wrong row."""
+        world = countryside_world()
+        block = hero_generator.generate(world, cast_fixture.certain())
+        ordinals = {str(site['id']) for key in ('hamlets', 'fortresses')
+                    for site in world['humans'][key]}
+        offenders = {}
+        for person in block['people']:
+            if person['well'] not in ('hamlets', 'fortresses'):
+                continue
+            for field, value in self.carried(person).items():
+                tail = str(value).rsplit('hero-' + person['role'] + '-', 1)[-1]
+                if tail in ordinals:
+                    offenders[(person['role'], field)] = value
+        self.assertEqual(offenders, {},
+                         'these fields still carry an ordinal that renumbers every age: '
+                         f'{sorted(offenders.items())}')
+
+    def test_both_roles_key_on_the_node_with_the_anchor_spelled_out(self):
+        world = countryside_world()
+        block = hero_generator.generate(world, cast_fixture.certain())
+        hamlet = next(h for h in world['humans']['hamlets'] if h['id'] == 'hamlet-0')
+        fortress = world['humans']['fortresses'][0]
+        reeve = by_uid(block, f"hero-reeve-hamlet-node-{hamlet['node']}")
+        castellan = by_uid(block, f"hero-castellan-fortress-node-{fortress['node']}")
+        self.assertEqual(self.carried(reeve),
+                         {'uid': f"hero-reeve-hamlet-node-{hamlet['node']}",
+                          'presence.uid': f"hamlet-node-{hamlet['node']}",
+                          'claim.target_uid': f"hamlet-node-{hamlet['node']}",
+                          'deeds[0].event_id': f"hamlet-node-{hamlet['node']}"})
+        self.assertEqual(self.carried(castellan),
+                         {'uid': f"hero-castellan-fortress-node-{fortress['node']}",
+                          'presence.uid': f"fortress-node-{fortress['node']}",
+                          'claim.target_uid': f"fortress-node-{fortress['node']}",
+                          'deeds[0].event_id': f"fortress-node-{fortress['node']}"})
+
+    def test_the_cast_anchor_is_the_key_npc_roster_already_writes(self):
+        """The two key spaces join, which is the point of the change and not a coincidence.
+
+        `npc_roster/sites.py` keys non-city sites `fortress-node-<n>` and documents the cast as
+        the package that does not. This calls the roster's own row builder rather than restating
+        its format, so a change to either spelling fails here instead of drifting apart quietly.
+        """
+        from npc_roster import sites as roster_sites
+        world = countryside_world()
+        world['hamlet_plans'] = {'hamlets': [
+            {'hamlet_id': h['id'], 'node': h['node'], 'x': h['x'], 'z': h['z'],
+             'core_id': h['core_id'], 'role': h.get('role'), 'status': 'ok', 'plots': []}
+            for h in world['humans']['hamlets']]}
+        world['castle_plans'] = {'castles': [
+            {'fortress_id': f['id'], 'x': f['x'], 'z': f['z'], 'status': 'ok', 'plots': []}
+            for f in world['humans']['fortresses']]}
+        rows, _notes = roster_sites.collect(world)
+        roster_uids = {row['uid'] for row in rows}
+        block = hero_generator.generate(world, cast_fixture.certain())
+        presences = {p['presence']['uid'] for p in block['people']
+                     if p['well'] in ('hamlets', 'fortresses')}
+        self.assertTrue(presences, 'no countryside person to check')
+        self.assertEqual(presences - roster_uids, set(),
+                         'a cast presence that names no roster site is the join the two packages '
+                         'have never been able to make')
 
 
 if __name__ == '__main__':

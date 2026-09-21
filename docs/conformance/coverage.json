@@ -197,19 +197,11 @@
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
-      "module": "Sim/icarus_sim/castle_planner.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
       "module": "Sim/icarus_sim/city_fortifications.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
       "module": "Sim/icarus_sim/city_geometry.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
-      "module": "Sim/icarus_sim/city_planner.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
@@ -222,10 +214,6 @@
     },
     {
       "module": "Sim/icarus_sim/founding.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
-      "module": "Sim/icarus_sim/hamlet_planner.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
@@ -269,10 +257,6 @@
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
-      "module": "Sim/icarus_sim/terrain_encounters.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
       "module": "Sim/icarus_sim/terrain_erosion.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
@@ -305,10 +289,6 @@
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
-      "module": "Sim/icarus_sim/terrain_nests.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
       "module": "Sim/icarus_sim/terrain_patch.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
@@ -338,10 +318,6 @@
     },
     {
       "module": "Sim/icarus_sim/terrain_seed.py",
-      "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
-    },
-    {
-      "module": "Sim/icarus_sim/terrain_settlements.py",
       "ticket": "board/in-progress/CONFORMANCE-DOCS.md"
     },
     {
@@ -494,187 +470,187 @@
     },
     {
       "module": "Core/ages",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/astrology",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/biomes",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/castlegeometry",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/castleplanner",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/catalogue",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/cityfortifications",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/citygeometry",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/cityplan",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/cityplanner",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/cityshapes",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/climate",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/config",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/counter",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/ecology",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/founding",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/frame",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/genesis",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/globe",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/hamletplanner",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/history",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/humans",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/hydrology",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/json",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/layers",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/legacy",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/magic",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/nests",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/numeric",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/profiles",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/pyrandom",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/registry",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/roads",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/routing",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/ruins",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/scene",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/scenebuildings",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/sceneframe",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/settlementpresets",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/settlements",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/society",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/tectonics",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/warhistory",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/wars",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/wire",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     },
     {
       "module": "Core/world",
-      "ticket": "board/backlog/UNREAL-IMPORT-CONFORMANCE.md"
+      "ticket": "board/retired/UNREAL-IMPORT-CONFORMANCE.md"
     }
   ]
 }

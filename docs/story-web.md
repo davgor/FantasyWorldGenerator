@@ -54,6 +54,22 @@ cast's final age, which The Spoils, The Veteran, The Peace and The Pursuit read;
 `world:other_realm`, `world:dread_living`, `world:realm_has_sovereign`, `world:realm_tyrant`.
 The full vocabulary is `story_web.facts.FACTS`; the catalogue lint rejects any other token.
 
+> **`villain:prior_age` is not a super villain, and it is the one fact in this vocabulary whose
+> name means something else elsewhere.** A **super villain** is a *field* in the world model —
+> a continuous tier, a reach in metres, a seat, held ley nodes — at most one per cultural region,
+> owned by `icarus_sim.terrain_villains` and published in the `villains` block under
+> [its own schema](../Contracts/schemas/villains.schema.json); see
+> [super villains](super-villains.md). The fact used by The Reclamation and listed in
+> `weights.json` as gainable is a **feature on an ordinary person**, inherited verbatim from
+> `hero_generator`: a pretender whose civilization founded a city again after they were born.
+> This block never reads the `villains` block at all.
+>
+> It is *unrelated* in both directions, and the direction that bites is reading it as evidence
+> that a super villain stood somewhere in a prior age. That question has a real answer —
+> `villains.fallen` — and this fact is what someone asking it finds first. A fact a runtime can
+> *add* to somebody could not be a villain's tier in any case.
+> `Sim/tests/test_villain_vocabulary.py` holds this paragraph in place.
+
 ## Acts, options and threads
 
 Each trope has exactly three acts. An act has one **prompt** (the ask, in character, with
@@ -101,7 +117,8 @@ story_web: {version 1, status ok|failed, error?, policy_revision {tropes, constr
 ## Determinism, isolation and the switch
 
 There are no draws in assignment; the only seeded value is the initiative stagger,
-`child_seed(world seed, 'web-initiative-' + uid)`, byte-for-byte the generator's helper.
+`child_seed(world seed, 'web-initiative-' + uid)`, from the shared `world_geometry` package and
+pinned to the generator's helper by `Sim/tests/test_world_geometry.py`.
 `terrain_history._attach_story_web` is the only call site (stage 16 and after the last age
 of an age-API step, immediately after `_attach_heroes`). It pops any previous block and
 calls `story_web.attach`, which never raises: a failing revision yields

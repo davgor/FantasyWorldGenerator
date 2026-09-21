@@ -25,6 +25,13 @@ HERO_FEATURES = frozenset({
     'seat:college', 'college:destroyed', 'keypoint:ruin_born', 'school:dark', 'stake:none', 'seat:none',
     'fame:renowned', 'fame:legendary',
     'dread:person_shaped', 'order:member', 'order:remnant', 'order:against_dark',
+    # `villain:prior_age` has nothing to do with `icarus_sim.terrain_villains`. That module owns
+    # the word in the world model -- a field with a continuous tier, a reach in metres, a seat and
+    # held ley nodes, published in the `villains` block under its own schema. This is a fact about
+    # an ordinary person: a pretender whose people founded a city again after they were born.
+    # `weights.json` additionally lists it as gainable, so a runtime can add it to somebody, which
+    # a super villain's tier is not. Reading it as evidence that a super villain stood here in a
+    # prior age is the wrong join; `villains.fallen` answers that and this does not.
     'deed:credited_not_actual', 'deed:dark_nest', 'villain:prior_age', 'stake:regained',
     'ley:tainted_home', 'rival:spared', 'realm:cold_conflicts_2', 'realm:tyrant', 'stakes:2', 'seat:trade',
     'routes:2', 'mentor:successor', 'heir:unclaimed', 'council:outranks_sovereign',

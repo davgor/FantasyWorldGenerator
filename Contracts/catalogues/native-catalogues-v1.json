@@ -3407,7 +3407,7 @@
   "hill_dwarf",
   "frosthold_dwarf"
  ],
- "content_sha256": "624b1f7573d78cacaf28a5f88cd26682b83f3919efb5dc5a969496e37cccd3cd",
+ "content_sha256": "cad6b417500d1cf1e096f5dbac04cf62e57212b4846f5e4d9ffd76d25fcb6445",
  "defaults": {
   "aggregate_profile_id": "mixed",
   "profile_id": "human_heartland",
@@ -12451,8 +12451,8 @@
    "tier": 2,
    "weights": {
     "ley_infernal": 2,
-    "mountain": 2,
-    "volcanic": 2
+    "moisture": 2,
+    "mountain": 2
    }
   },
   {
@@ -26382,8 +26382,7 @@
    ],
    "tier": 3,
    "weights": {
-    "fishing_productivity": 2,
-    "reef": 2
+    "fishing_productivity": 2
    }
   },
   {

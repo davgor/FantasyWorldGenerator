@@ -220,7 +220,7 @@ war history on both sides and the same extra fortresses a veteran city asks for,
 which cities a war removes decides every later stage of that world. It does **not** include plot geometry: a planned
 building is a reserved grid node with an identity, not a footprint, and there are no
 streets or walls, because the reference derives those in its city-planner stage.
-[ML-03d](../board/backlog/ML-03d.md) records the dependency chain those stages sit
+[ML-03d](../board/retired/ML-03d.md) records the dependency chain those stages sit
 behind. A game can build on what is here — every field listed above is compared against
 the Python reference, most of them bit-for-bit — as long as it does not assume a
 finished history.

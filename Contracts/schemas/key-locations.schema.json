@@ -10,7 +10,8 @@
   ],
   "properties": {
     "version": {
-      "const": 1
+      "const": 2,
+      "description": "2: a percentile requirement whose resolved cut admits every cell in the archetype's own domain is refused, so no site is emitted through a gate that enforced nothing. Sites disappear across this boundary that a version-1 consumer saw; the counts are not comparable."
     },
     "status": {
       "enum": [
@@ -662,7 +663,7 @@
     },
     "diagnostics": {
       "type": "array",
-      "description": "One row per archetype, including those that placed nothing and why. A world with no volcanism reports the gap rather than approximating around it.",
+      "description": "One row per *pass*, not one per archetype - an archetype declaring also_scatters produces two - including the passes that placed nothing and why. A world with no volcanism reports the gap rather than approximating around it. Four gap reasons point at four different people: the world never generated the layer; this world has no cells of that domain; the layer is identically constant across the domain, which is a catalogue fault no seed or raster can rescue; and the percentile resolved to a cut admitting the whole domain, which is a distribution too piled up at one end for a nearest-rank cut to divide.",
       "items": {
         "type": "object",
         "required": [

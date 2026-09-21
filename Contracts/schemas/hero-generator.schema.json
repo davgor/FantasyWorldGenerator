@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Hero generator cast v1",
-  "description": "The `heroes` block a finished world carries: people, dreads, realms, camps, relics, quest hooks, bonds, mantles and the precipitation roll ledger (including the hamlet, fortress, port and shrine wells) precipitated from the exported history. Structural envelope; deed ids, fame arithmetic and archetype preconditions are validated by the package's own tests. A failed block carries only version, status and error.",
+  "title": "Hero generator cast v2",
+  "description": "The `heroes` block a finished world carries: people, dreads, realms, camps, relics, quest hooks, bonds, mantles and the precipitation roll ledger (including the hamlet, fortress, port and shrine wells) precipitated from the exported history. Structural envelope; deed ids, fame arithmetic and archetype preconditions are validated by the package's own tests. A failed block carries only version, status and error. Version 2 carries the quest contract on every hook -- anchor, verb, difficulty and the node a player stands on -- and no hook names a reward at any version.",
   "type": "object",
   "required": [
     "version",
@@ -9,7 +9,7 @@
   ],
   "properties": {
     "version": {
-      "const": 1
+      "const": 2
     },
     "status": {
       "enum": [
@@ -172,6 +172,13 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/roll"
+      }
+    },
+    "diagnostics": {
+      "description": "One row per role declared in the wells policy, sorted by role, whether it placed anybody or not. A role that precipitated nobody says why, and says it in a way that separates the two zeros: `candidates` 0 means no candidate was ever built (the world holds none of the records the well reads), while `candidates` above 0 with `placed` 0 means every candidate rolled and lost. `camp` is the one role whose output is not a member of the cast: it precipitates into `camps`, not `people`.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/diagnostic"
       }
     }
   },
@@ -484,10 +491,15 @@
           ]
         },
         "status": {
+          "description": "Whether this person is still in the world. `living` and `legend` are this block's own words for it and no other block uses the same pair -- npcs say `alive`/`dead`, villains say `living`/`fallen` -- so `liveness` beside this enum is the published translation and is what a cross-block predicate reads. Absent reads as `present`, because a record written before a package recorded departure described someone who stood. The running half of the same rule is Sim/icarus_sim/terrain_liveness.py; the two are compared by tests/test_status_vocabulary.py rather than one being derived from the other.",
           "enum": [
             "living",
             "legend"
-          ]
+          ],
+          "liveness": {
+            "living": "present",
+            "legend": "gone"
+          }
         },
         "name": {
           "type": "string"
@@ -727,10 +739,15 @@
           ]
         },
         "status": {
+          "description": "Whether this person is still in the world. `living` and `legend` are this block's own words for it and no other block uses the same pair -- npcs say `alive`/`dead`, villains say `living`/`fallen` -- so `liveness` beside this enum is the published translation and is what a cross-block predicate reads. Absent reads as `present`, because a record written before a package recorded departure described someone who stood. The running half of the same rule is Sim/icarus_sim/terrain_liveness.py; the two are compared by tests/test_status_vocabulary.py rather than one being derived from the other.",
           "enum": [
             "living",
             "legend"
-          ]
+          ],
+          "liveness": {
+            "living": "present",
+            "legend": "gone"
+          }
         },
         "presence": {
           "$ref": "#/$defs/presence"
@@ -890,6 +907,47 @@
         "vacant_since_age": {
           "type": "integer",
           "minimum": 0
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "placed",
+        "candidates",
+        "sources",
+        "source_kind",
+        "reason"
+      ],
+      "properties": {
+        "role": {
+          "description": "A key of the wells policy's `precipitation` table. The table is the policy's own list, so a role that stops firing cannot drop out of the report by dropping out of the output.",
+          "type": "string"
+        },
+        "placed": {
+          "description": "How many of this role precipitated. For every role but `camp` these are records in `people` or `dreads`.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "candidates": {
+          "description": "How many candidates were built and rolled. Equals the rows in `rolls` for this role, counting a diaspora's prophet, exile and founder together.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "sources": {
+          "description": "How many world records the well iterated before any roll. Greater than `candidates` when the well walked records that did not qualify, and zero when the world holds none of them at all.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_kind": {
+          "description": "What `sources` counted, in words, so the number is readable without opening the well.",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Why the counts are what they are. Always present, whether or not anybody placed.",
+          "type": "string"
         }
       }
     },
@@ -1144,6 +1202,7 @@
     },
     "quest_hook": {
       "type": "object",
+      "description": "One offer. The quest contract is `target`/`target_node` (the anchor), `verb` (what the player does) and `difficulty` (how hard it is, 1-5 on the creature-tier rubric). There is deliberately no reward, loot or xp field at any version: the generator emits a difficulty and the consuming game prices it.",
       "required": [
         "hook_id",
         "giver_uid",
@@ -1151,7 +1210,11 @@
         "stated_purpose",
         "actual_effect",
         "unwitting",
-        "target"
+        "target",
+        "verb",
+        "difficulty",
+        "target_node",
+        "unsited_reason"
       ],
       "properties": {
         "hook_id": {
@@ -1210,7 +1273,49 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The id of the thing the effect names: a uid, a ley node id, or a nest id."
+        },
+        "verb": {
+          "enum": [
+            "reclaim",
+            "recover",
+            "defend",
+            "slay",
+            "trade",
+            "tend",
+            "convert",
+            "supply",
+            "cleanse",
+            "investigate"
+          ],
+          "description": "What the player does, from the same closed vocabulary npc_roster tags its posts with (npcs.verbs), so a hero-given hook and a post-given offer are the same kind of thing to a consumer. A ley effect carries no action of its own: deepening a node is tend and thinning one is cleanse."
+        },
+        "difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "How hard it is, on the creature-tier rubric this repository already publishes for beast_nests: 1 harmless, 2 can hurt you, 3 kills the careless, 4 kills the prepared, 5 a campaign threat. Derived as clamp(1, 5, floor(opposition + pressure + 0.5)) where opposition is what stands at the target (a lair's own tier, a ley node's own intensity, or a floor by what the place is) and pressure is 0.25 per tier of the worst nest whose declared range reaches the target's ground, capped at 1.0 and never applied to a nest target. It is a danger band, not an encounter simulation, and it is not a party-relative budget."
+        },
+        "target_node": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The terrain node a player stands on to do this, or null when the target has no footprint anywhere in the world. A ley key point, whose id is a ruin id plus -key, stands at that ruin; a bare ley node is a direction and an intensity and stands nowhere."
+        },
+        "unsited_reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "ley_node_has_no_site",
+            "target_not_found",
+            "target_has_no_node",
+            null
+          ],
+          "description": "Why there is no target_node, or null when there is one. hero_generator.hooks.UNSITED_REASONS is the one home of this list."
         }
       }
     },

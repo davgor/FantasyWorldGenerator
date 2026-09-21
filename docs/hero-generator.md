@@ -86,6 +86,26 @@ Seated people (sovereigns, warlords) are finished first; the civilizations they 
 Tyrants mark everyone unseated there `realm:tyrant`, so Rebels can only exist under a Tyrant.
 Councillors also gain `ally` bonds to their sovereign.
 
+> **`villain:prior_age` is not a super villain.** The word `villain` names two unrelated things
+> across package boundaries, and this is the one that is only a metaphor. A **super villain** is a
+> *field* — a continuous tier, a reach in metres, a seat, held ley nodes — at most one per cultural
+> region, owned by `icarus_sim.terrain_villains` and published in the `villains` block under
+> [its own schema](../Contracts/schemas/villains.schema.json); see
+> [super villains](super-villains.md). `villain:prior_age` is a **feature token on an ordinary
+> person**: a pretender whose civilization founded a city again after they were born, so their
+> claim was overtaken while they lived. It carries no tier, no reach, no region and no seat, and a
+> world can be full of people holding it with an empty `villains` block.
+>
+> Two joins a consumer will reach for and both are wrong. Filtering `selectable` for
+> `villain:prior_age` to find "people connected to a super villain" returns dispossessed
+> claimants, silently and with no error. Reading it as evidence that a super villain stood here in
+> a prior age is worse, because that question has a real answer elsewhere — `villains.fallen` —
+> and this token sits exactly where someone would go looking for it.
+>
+> The one field name the two share is `tier`, and it means two things: `notable`/`renowned`/
+> `legendary` here, a continuous number convertible to metres there.
+> `Sim/tests/test_villain_vocabulary.py` holds this paragraph and its two counterparts in place.
+
 ## Camps, relics and placement
 
 Every ruin rolls for a **Camp** (`camp-<city uid>`, chance 0.3 + class bonus): squatters
@@ -119,6 +139,69 @@ stated purpose says what the effect does. For a two-faced person the stated purp
 from the public face and `unwitting` is true: "cleanse the shrine; something there is
 poisoning the valley" for an effect that weakens a radiant node. Which nodes are named is
 read from the world, never authored.
+
+### The quest contract: anchor, verb, difficulty
+
+<!-- conformance:version heroes=2 -->
+A hook is the closest thing this generator emits to a quest, and at `heroes` version 2 it
+carries the whole contract. **The generator emits an anchor, a verb and a difficulty; the
+consuming game prices the reward.** There is no `reward`, `loot` or `xp` field, and the
+schema's hook object is the place to check that rather than this sentence.
+
+- **`verb`** — what the player does, from the ten-word vocabulary `npc_roster` tags its
+  posts with (`npcs.verbs`): `reclaim`, `recover`, `defend`, `slay`, `trade`, `tend`,
+  `convert`, `supply`, `cleanse`, `investigate`. A hero-given hook and a post-given offer
+  are therefore the same kind of thing to a consumer. A ley effect carries no action of its
+  own, so its verb is the sign of its `intensity_delta`: deepening a node is `tend`,
+  thinning one is `cleanse`. The vocabulary lives in `hero_generator.hooks.VERBS`;
+  `hero_generator` may not import a sibling package, so the list is declared in both places
+  and `test_hero_generator.py::QuestContractTests` is what keeps the two copies one list.
+- **`difficulty`** — an integer 1–5 on the creature-tier rubric `beast_nests` already
+  publishes: 1 harmless, 2 can hurt you, 3 kills the careless, 4 kills the prepared, 5 a
+  campaign threat. Derived, never invented:
+
+      difficulty = clamp(1, 5, floor(opposition + pressure + 0.5))
+
+  **Opposition** is what stands at the target and is the only term that can reach 5 on its
+  own — a lair answers with its own `tier`, a ley node with its own `intensity`
+  (`ley_floor + ley_intensity_weight × intensity`), and every other kind takes a floor from
+  `wells.json` `quests.opposition`: 2 for ground somebody holds (ruin, relic, city, hamlet,
+  fortress, port) and 1 for an errand (shrine, college). **Pressure** is the danger the
+  world already records around it — `pressure_per_tier` per tier of the worst nest whose
+  own declared `range_m` reaches the target's ground, capped at `pressure_cap`. It is
+  measured in grid metres (`spacing_m` per node), the same measure the countryside well
+  uses to decide whether a hamlet is threatened, and it is never applied to a nest target,
+  whose tier is already the whole answer. Banding is `floor(x + 0.5)` rather than `round`,
+  because CPython rounds halves to even.
+- **`target_node`** — the terrain node a player stands on, or `null` with an
+  `unsited_reason` saying why there is none. A **ley key point**, whose id is a ruin's id
+  plus `-key`, stands at that ruin and is sited there; a **bare ley node** is a direction
+  and an intensity inside `magic.networks.<school>.nodes[]` with no footprint anywhere in
+  the world, and is reported `ley_node_has_no_site` rather than given an invented position.
+  The other two reasons, `target_not_found` and `target_has_no_node`, say the world moved
+  out from under the hook, which is a world change rather than a defect.
+  `hero_generator.hooks.UNSITED_REASONS` is the one home of that list.
+
+`target` is the id of whatever the effect names and is no longer null on a slay hook: a
+nest effect carries `nest_id`, and reading only `uid` or `node_id` left every one of them
+pointing at nothing.
+
+Measured on seed 42 size 17, generator 16: 46 hooks, difficulty 1×3 / 2×29 / 3×13 / 4×1,
+42 sited and 4 `ley_node_has_no_site`. Nothing reaches 5 on that world because nothing on
+it targets a lair; the equation reaches 5 only through a tier-5 nest. These are current
+counts for one seed at one size, not invariants. Calibration across seeds belongs to the
+quest package when it is built, which is where a difficulty *breakdown* belongs too: a
+hook publishes one integer and no arithmetic to audit it by.
+
+**Difficulty is not emitted into the `quests` block.** That block is the time capability's
+lifecycle over these hooks and carries the contract's anchor and verb only; see
+[time-advance](conformance/time-advance.md). A consumer wanting a priced offer joins
+`quests.quests[].quest_id` to `heroes.quest_hooks[].hook_id`.
+
+Adding these four fields changes the `heroes` bytes of every world, so **saved worlds must
+be regenerated** — routine under
+[023 worlds are disposable](decisions/023-world-compatibility-policy.md), and the
+regeneration statement this record owes.
 
 **Realms** are the road-linked culture groups (`humans.cultures`) named for their capital
 (`realm-<culture id>`, "Realm of Alder"). `sovereign_uid` stays null until the cities well.
@@ -176,7 +259,7 @@ or a Lawful Evil autocrat.
 ## Export
 
 ```
-heroes: {version 1, status ok|failed, error?, policy_revision {archetypes, axis_overlays, alignment, names, wells},
+heroes: {version 2, status ok|failed, error?, policy_revision {archetypes, axis_overlays, alignment, names, wells},
   final_age, summary {living, legends, dreads, realms, orgs, camps, hooks, candidates, precipitated},
   people[] {uid, role: pretender|warlord|magister|domain_holder|sovereign|council|champion|prophet|heresiarch|exile|founder,
             well: ruins|magic|cities|guilds, status, name, epithet, display_name, race_id, civilization_id, realm_uid,
@@ -193,14 +276,45 @@ heroes: {version 1, status ok|failed, error?, policy_revision {archetypes, axis_
   rolls[] {candidate_uid, kind: heir|warlord|dread|domain_holder|magister|college_magister|camp, event_id, age, chance, roll, precipitated},
   camps[] {uid, ruin_uid, name, node, x, z, direction, origin, civilization_id, since_age, leader_uid?},
   relics[] {uid, kind, name, origin_event, resting_at, holder_uid, school},
-  quest_hooks[] {hook_id, giver_uid, offered_from_face, stated_purpose, actual_effect {kind, uid|node_id, action|school+intensity_delta}, unwitting, target},
-  orgs[] {uid, kind: order|dynasty|council|remnant, name, home, members[], charter}, method, limits}
+  quest_hooks[] {hook_id, giver_uid, offered_from_face, stated_purpose, actual_effect {kind, uid|node_id|nest_id, action|school+intensity_delta}, unwitting,
+                 target, verb, difficulty (1-5), target_node, unsited_reason},
+  orgs[] {uid, kind: order|dynasty|council|remnant, name, home, members[], charter},
+  diagnostics[] {role, placed, candidates, sources, source_kind, reason}, method, limits}
 ```
+
+## Diagnostics: why a role is empty
+
+Every role declared in `policies/wells.json`'s `precipitation` table gets a row in
+`diagnostics`, sorted by role, whether it placed anybody or not — the shape `key_locations`
+publishes for its archetypes, and what `PRODUCT-REACHABILITY-REPORT` asks every catalogue for.
+The table is the **policy's** list, not the output's, so a role that stops firing cannot fall out
+of the report by falling out of the block.
+
+**The two zeros are different facts and the row separates them.** `candidates: 0` means no
+candidate was ever built — the world holds none of the records that well reads — and `reason`
+names what was missing. `candidates` above zero with `placed: 0` means every candidate was built,
+rolled and lost, and `reason` gives the best chance that was offered. Before this, both read as a
+silent `0` in `summary` and a consumer could not tell either from "the role is not implemented".
+
+`sources` is the population the well iterated before any roll, and `source_kind` says in words
+what was counted, so the number is readable without opening the well. It exceeds `candidates`
+wherever the well walked records that did not qualify — 35 living cities read for 2 champions,
+because only two stand within a dangerous nest's reach.
+
+On seed 42 at size 33 the Dread row reads **`no ruins a beast destroyed in this world, so nothing
+rolled`**: all 39 ruins there fell to war, water or air, so the antagonist role never built a
+candidate and never appeared in `rolls` at all. `magister`, `college_magister` and `cult` are
+empty for the same kind of reason and say so; `diaspora` is the other zero — one candidate rolled
+at a chance of 0.7 and lost.
+
+One row is not a person. **`camp` precipitates a place**: its `placed` counts rows in `camps`,
+not in `people`.
 
 ## Determinism, isolation and the switch
 
-Every draw is `child_seed(world seed, 'hero-<purpose>-' + uid)`; the helper is a byte-for-byte
-copy of the generator's and a test pins them together. The same world under the same policy
+Every draw is `child_seed(world seed, 'hero-<purpose>-' + uid)`; the helper comes from
+`world_geometry`, a package of pure arithmetic shared by every reader, and
+`Sim/tests/test_world_geometry.py` pins it to the generator's. The same world under the same policy
 revisions yields the same block; a policy edit changes `heroes` and nothing else, because
 the core never reads the block back.
 
@@ -230,11 +344,22 @@ a site the world already placed; each rolls once against `policies/wells.json`.
 
 | Site (export field) | Precipitates | uid | Facts it sets | Claim |
 |---|---|---|---|---|
-| a hamlet (`humans.hamlets`, not a harbour) | a **Reeve** | `hero-reeve-<hamlet id>` | `role:reeve`, `hamlet:farming` or `hamlet:resource`, `hamlet:starving` when its core runs a food deficit, `hamlet:threatened` when a dangerous nest is within `reach_factor` of its range on the grid | `protect` the hamlet |
-| a fortress (`humans.fortresses`) | a **Castellan** | `hero-castellan-<fortress id>` | `role:castellan`, `order:member`, `warden:post`, `fortress:pressed` when the core city carries war pressure | `hold` the fortress |
+| a hamlet (`humans.hamlets`, not a harbour) | a **Reeve** | `hero-reeve-hamlet-node-<n>` | `role:reeve`, `hamlet:farming` or `hamlet:resource`, `hamlet:starving` when its core runs a food deficit, `hamlet:threatened` when a dangerous nest is within `reach_factor` of its range on the grid | `protect` the hamlet |
+| a fortress (`humans.fortresses`) | a **Castellan** | `hero-castellan-fortress-node-<n>` | `role:castellan`, `order:member`, `warden:post`, `fortress:pressed` when the core city carries war pressure | `hold` the fortress |
 | a port (`fisheries.ports`) | a **Harbourmaster** | `hero-harbourmaster-<port id>` | `role:harbourmaster`, `seat:trade`, `port:terminal`, `routes:2` when sea routes touch it | `exploit` the harbour |
 | a shrine (`religion.sites`, kind `shrine`) | a **Keeper** | `hero-keeper-<site id>` | `role:keeper`, `shrine:ruin` | `hold` the shrine |
 | a cult (`religion.sites`, kind `cult`) | a **Heresiarch** | `hero-heresiarch-<site id>` | `role:heresiarch`, `shrine:cult`, `school:dark` when born under a surge | `convert` the nearest living city |
+
+**A reeve and a castellan are keyed on their terrain node, not on the site's id.**
+`humans.hamlets[].id` and `humans.fortresses[].id` are ordinals — the position in a list
+`terrain_humans` re-sorts by defence score at every age boundary — so a person built on one is
+renamed by an advance that did not touch their ground, and the old uid goes on resolving to a
+real person at a real fortress that is not the one the consumer meant. The node does not
+renumber, and the key spells the anchor out (`fortress-node-13`, never `fortress-13`) so it
+cannot be confused with the ordinal space. All four places the anchor is spent carry the same
+key — `uid`, `presence.uid`, `claim.target_uid` and `deeds[].event_id` — because repairing one
+leaves three ways to join the wrong row. This is the spelling `npc_roster` already writes for
+the same sites, so a cast presence at a hamlet or a fortress *is* a roster site uid.
 
 Hamlets and fortresses have no globe direction, so nest reach is measured on the node grid
 in metres (`spacing_m` per node). Names come from the core city ("the farmstead below
@@ -251,7 +376,14 @@ Oathbound or Zealot. Fame adds a small site weight (hamlet and shrine 0.5, fortr
 
 An artistic reading of exported history, not a demographic claim. Council seats are a
 policy table by city class, not the placed rosters; claims and hooks are exported intent
-and nothing acts on them. Small worlds place no colleges, so college heads appear
-only at larger sizes. Names are syllable draws
+and nothing acts on them. `difficulty` is a danger band derived from creature tier, ley
+intensity and what a place is — not a simulation of an encounter, not a creature count, not
+a party-relative budget, and not a promise the quest is completable. No hook names a reward
+at any version: the consuming game is what turns the number into treasure. Small worlds place no colleges, so college heads appear
+only at larger sizes — and `diagnostics` now says which of those a given world is, rather than
+leaving a `0` for a consumer to guess at. What `diagnostics` does **not** establish is whether a
+zero is *correct*: it reports that no ruin named a beast, not whether a world of that size and
+age ought to have produced one. A role gated on something that never fires would report
+faithfully and look exactly like a world that simply lacks the ground. Names are syllable draws
 with deed epithets, not linguistically modelled. The native core does not port this
 package; it runs on the core's JSON output like any other consumer.

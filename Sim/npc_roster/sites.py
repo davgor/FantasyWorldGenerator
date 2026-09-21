@@ -15,10 +15,17 @@ anchors villains to ley nodes for exactly this reason. Nodes are unique within a
 hamlet and a fortress can share one, so the kind is part of the key. The ordinal plan ids are
 kept on the row as convenience fields and are documented as never being identity.
 
-The keys spell the anchor out -- ``hamlet-node-1062``, not ``hamlet-1062`` -- because the cast
-package builds ``hero-castellan-fortress-36`` on the *ordinal* id, and two keys that read alike
-and mean different things is how a consumer joins the wrong rows without an error. A reader who
-sees ``-node-`` cannot mistake which space the number lives in.
+The keys spell the anchor out -- ``hamlet-node-1062``, not ``hamlet-1062`` -- because two keys
+that read alike and mean different things is how a consumer joins the wrong rows without an
+error. A reader who sees ``-node-`` cannot mistake which space the number lives in.
+
+The cast package used to be the counter-example: it built ``hero-castellan-fortress-36`` on the
+*ordinal* id, so its ``presence.uid`` and this block's site ``uid`` named the same fortress in
+two number spaces that could not be joined. It no longer does.
+``hero_generator.wells.countryside.anchor`` now writes this same spelling, so a cast presence at
+a hamlet or a fortress **is** a site uid here, and ``places()`` below is no longer the only
+bridge between them. ``places()`` stays: the cast also stands at ports, ruins, shrines, camps
+and nests whose ids belong to other blocks and are not keyed this way.
 
 For the same reason nothing here reads ``culture_id``: those ids rehash every age. The stable
 handle for a people is ``civilization_id``.
@@ -153,7 +160,15 @@ def _disambiguate(rows):
 
 
 def _short_name(core):
-    """`Alder City (Age 2)` reads as `Alder` inside a small site's name."""
+    """`Bargdorn (Age 2)` reads as `Bargdorn` inside a small site's name.
+
+    The `(Age N)` split is live. The ` City` strip beside it is not:
+    `heritage.settlement_name` replaced the round-robin that appended it, so on a
+    generated world that replace is the identity. It still fires on the synthetic world in
+    `tests/test_npc_roster.py` and on `Fixtures/npc-roster-v1.json`, which name their
+    cities in the retired convention, so removing it renames the derived sites there.
+    Tracked on board/backlog/CONTENT-CITY-SUFFIX-DEAD-READERS.md.
+    """
     name = (core.get('name') or '').replace(' City', '')
     return name.split(' (Age ', 1)[0].strip()
 
@@ -167,9 +182,10 @@ def places(world):
     """Every exported record that names a place, indexed by its own id, with its node.
 
     The cast stands at fortresses, hamlets, ports, ruins, shrines and camps whose ids belong to
-    those blocks, not to this one -- a castellan's `presence_uid` is `fortress-36`, the ordinal,
-    while this package keys the same fortress `fortress-node-1062`. Neither side can join the
-    other, and a consumer holding only the block cannot resolve the difference at all.
+    those blocks, not to this one. Hamlets and fortresses now agree -- the cast writes
+    `fortress-node-1062` for the fortress this package keys `fortress-node-1062` -- but a port,
+    a ruin, a shrine, a camp, a college and a nest are still named in their own block's id
+    space, and a consumer holding only the roster block cannot resolve those at all.
 
     So the coordinates are resolved here, where the whole world is in hand, and carried on the
     record. That is the point: a person posted to a remote fortress otherwise falls back to

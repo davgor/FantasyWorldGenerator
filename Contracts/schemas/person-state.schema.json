@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/person-state.schema.json",
+  "title": "person_state report v1",
+  "description": "The `person_state` block a world carries after POST /world/person-state: the report for the call just made, not accumulated state. It is overwritten by the next such call; history.operations is where the sequence is recorded. A change asking for the state a record already reads as is reported with `changed: false`, writes nothing, and records no operation -- an absent status reads as present, so stamping one in would move the bytes of a document whose reproducibility is a contract.",
+  "type": "object",
+  "required": ["api_version", "applied", "changes", "notes"],
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"const": 1},
+    "applied": {"type": "integer", "minimum": 0},
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "What this call deliberately did not do, stated at the call that caused it rather than left for a consumer to discover from behaviour."
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["uid", "block", "from_status", "to_status", "token", "day", "reason", "changed"],
+        "additionalProperties": false,
+        "properties": {
+          "uid": {"type": "string", "minLength": 1},
+          "block": {
+            "enum": ["heroes", "dreads", "npcs", "villains"],
+            "description": "Which person list the uid resolved to. `dreads` is the antagonist cast inside the heroes block; it is a different list, not a different vocabulary."
+          },
+          "from_status": {"enum": ["present", "gone"]},
+          "to_status": {"enum": ["present", "gone"]},
+          "token": {
+            "enum": ["living", "legend", "alive", "dead", "fallen"],
+            "description": "The block's own word for `to_status`, which is what was written into the record. Every value here is one a block already used; this route publishes no new word."
+          },
+          "day": {"type": "number", "minimum": 0},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 200},
+          "changed": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

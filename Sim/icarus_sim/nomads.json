@@ -1,10 +1,21 @@
 {
-  "version": 1,
-  "notes": "Balance table for terrain_nomads. Every reach is a multiple of settlement spacing, never a metre constant, so a wider world does not turn a local band into a regional one. Speeds are absolute metres per day because a walking pace is a property of the traveller, not of the world. Gates are hard: a classification whose preconditions fail is ineligible outright, and a candidate that satisfies none produces no band at all. Thresholds are tuned so each hard gate admits a minority of land: most ground raises nobody, and a cult needs genuinely charged sacred ground rather than any ley whisper.",
+  "version": 2,
+  "notes": "Balance table for terrain_nomads. Every reach is a multiple of settlement spacing, never a metre constant, so a wider world does not turn a local band into a regional one. Speeds are absolute metres per day because a walking pace is a property of the traveller, not of the world. Gates are hard: a classification whose preconditions fail is ineligible outright, and a candidate that satisfies none produces no band at all. Thresholds are tuned so each hard gate admits a minority of land: most ground raises nobody, and a cult needs genuinely charged sacred ground rather than any ley whisper. Version 2 adds the `fission` section; nothing in `candidate` or `classifications` moved with it.",
   "candidate": {
     "density_per_1000km2": 18.0,
     "settlement_clearance_spacings": 0.3,
     "min_suitability": 0.12
+  },
+  "fission": {
+    "notes": "Segmentary lineage: a clan splits when its head count passes what the ground its round actually walks will carry, and the daughter segment takes part of the inherited range. Deliberately dimensionless -- capacity is read off the classification's own authored `size` band rather than as head per square kilometre, because an absolute figure reads the raster instead of the land: a cell is 52 km2 at raster 17 against 13 km2 at raster 33, and the same clan would then outgrow the same ground at one resolution and not at the other. rich_forage is the round forage at which a round carries the top of that size band; it is calibrated rather than derived. A routed herding round runs 0.32 to 0.57 on seed 42 at size 33 -- well above the gate's 0.07 start-cell floor, because the route pass picks the best ground in reach -- and 0.55 seats a child for 27 percent of routed herders across six sampled populations, against 9 percent at 0.50 and 45 percent at 0.60.",
+    "classifications": [
+      "wanderers"
+    ],
+    "rich_forage": 0.55,
+    "child_share": [
+      0.3,
+      0.45
+    ]
   },
   "classifications": {
     "survivors": {

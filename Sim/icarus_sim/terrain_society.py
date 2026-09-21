@@ -153,7 +153,12 @@ def add_world_society(result,cfg):
         result['regions']['landmarks'].append({'id':f'witch-hut-{i}','kind':'witch_hut','x':x,'z':z,'layer':'surface',
             'intensity':l['zone_witch_huts'][z][x],'conventional_suitability':l['suitability'][z][x],
             'reason':'Umbral influence, isolation and low conventional settlement suitability.'})
-    ports=[];occupied={s['node'] for s in sites+result['humans']['hamlets']};ground_candidates=[i for i,v in enumerate(harbor) if v>.1]
+    # Fortresses belong in this set as much as cities and hamlets do. Leaving them out
+    # let a harbour be founded on a node a fort already held -- 28 of 56 forts in a
+    # seed-42 size-33 world shared their exact node with a coastal hamlet, which draws as
+    # one icon on top of another and means two settlements occupy one place.
+    occupied={s['node'] for s in sites+result['humans']['hamlets']+result['humans']['fortresses']}
+    ports=[];ground_candidates=[i for i,v in enumerate(harbor) if v>.1]
     for site in sites:
         site['layer']='surface';site['mobility']='settled';profile=get_profile(site['population_profile'])
         risk=vals('magic_risk_'+site['population_profile']) if 'magic_risk_'+site['population_profile'] in l else hazard

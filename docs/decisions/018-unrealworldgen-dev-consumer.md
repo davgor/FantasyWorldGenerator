@@ -18,7 +18,7 @@ A sidecar, an editor-only Landscape, a Y-up copy of source axes, a coarse-grid h
 
 ## Consequences
 
-- [ML-03d](../../board/backlog/ML-03d.md) owns native **world** generate (not counter-only), sampling, axis fixtures, and registry schema/coverage tests.
-- [ML-03e](../../board/backlog/ML-03e.md) owns the `.uplugin`, UnrealWorldGen importer/hub, representative registry swaps, and cooked Win64 generate → materialize digest.
+- [ML-03d](../../board/retired/ML-03d.md) owns native **world** generate (not counter-only), sampling, axis fixtures, and registry schema/coverage tests.
+- [ML-03e](../../board/retired/ML-03e.md) owns the `.uplugin`, UnrealWorldGen importer/hub, representative registry swaps, and cooked Win64 generate → materialize digest.
 - `unreal_cooked_runtime` stays unavailable until the packaged digest exists. Closing ML-03e is that consumer proof; an immutable hosted channel / CI cook remains parent ML-03 if not yet automated.
 - Decision 002 still applies to `fantasy-world-generator-reference`.

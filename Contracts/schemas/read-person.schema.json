@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/read-person.schema.json",
+  "title": "Read: person",
+  "description": "One hero, dread, NPC or villain by uid, with liveness resolved through the one predicate. Answered by POST /world/person (Sim/icarus_sim/terrain_read.person_request). Four blocks answer 'is this person still here' in three vocabularies and status means two different things at two depths of one block; a caller must never have to know which applies to the record it just received.",
+  "type": "object",
+  "required": ["schema", "schema_version", "read", "api_version", "source", "block", "person",
+               "liveness", "anchor"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.read.person" },
+    "schema_version": { "const": 1 },
+    "read": { "const": "person" },
+    "api_version": { "const": 1 },
+    "source": { "$ref": "#/$defs/source" },
+    "block": {
+      "enum": ["heroes", "dreads", "npcs", "villains"],
+      "description": "The list this record came from, which is what terrain_liveness dispatches on. dreads is the antagonist cast inside the heroes block and shares its vocabulary."
+    },
+    "person": { "type": "object", "description": "The generator's own record, verbatim. Fields are the writing package's and are not restated here." },
+    "liveness": {
+      "enum": ["present", "gone"],
+      "description": "terrain_liveness.liveness(record, block). An absent status reads as present: a record written before its package recorded departure described someone who stood."
+    },
+    "anchor": {
+      "type": "object",
+      "description": "Where this person stands, spelled out as a terrain node wherever one is knowable, because everything else about a person's placement renumbers or is in another package's namespace.",
+      "required": ["node", "source", "uid", "unresolved_uid"],
+      "additionalProperties": false,
+      "properties": {
+        "node": { "type": ["integer", "null"] },
+        "source": {
+          "type": ["string", "null"],
+          "description": "The field the node was read from: villains.people[].node, npcs.people[].presence_node, npcs.sites[].node, or settlements.sites[].uid / ruins[].uid for a cast record resolved through its presence or its home. A ruined city keeps its uid and its node when it moves to ruins, so a presence naming a dead city still places."
+        },
+        "uid": { "type": ["string", "null"], "description": "The place uid the anchor was resolved through, where one was used." },
+        "unresolved_uid": {
+          "type": ["string", "null"],
+          "description": "A presence naming somewhere no block here has a row for - a camp, college, port, shrine or nest. Reported rather than approximated by the home, because the home is a real place and the wrong one."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["generator_version", "seed", "size", "phase", "day", "age"],
+      "properties": {
+        "generator_version": { "type": ["integer", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "size": { "type": ["integer", "null"] },
+        "phase": { "type": ["integer", "null"] },
+        "day": { "type": ["number", "null"] },
+        "age": { "type": ["integer", "null"] }
+      }
+    }
+  }
+}

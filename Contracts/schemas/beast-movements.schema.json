@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Beast movements v1",
-  "description": "The `beast_movements` block: creatures whose species declares a movement class other than nester, and the circuits they walk. Groups share the shape of nomads.groups deliberately, so an encounter index or a time mover reads both with one code path. Structural envelope only; movement-class authoring is validated by Sim/tests/test_creature_movement.py.",
+  "title": "Beast movements v2",
+  "description": "The `beast_movements` block: creatures whose species declares a movement class other than nester, and the circuits they walk. Groups share the shape of nomads.groups deliberately, so an encounter index or a time mover reads both with one code path. Structural envelope only; movement-class authoring is validated by Sim/tests/test_creature_movement.py and the irruption trigger by Sim/tests/test_beast_movements.py. Version 2 gave irruptions a condition in time: under version 1 every irruptive group marched in every year, so the block was a fixed roster of swarms a consumer could cache against the world's identity. It is now a function of the year on `world_clock` and changes from year to year.",
   "type": "object",
   "required": [
     "version",
@@ -9,12 +9,15 @@
     "counts",
     "routed",
     "stranded",
+    "solitary",
+    "year",
+    "year_forage_factor",
     "method",
     "limits"
   ],
   "properties": {
     "version": {
-      "const": 1
+      "const": 2
     },
     "routed": {
       "type": "integer",
@@ -24,6 +27,20 @@
       "type": "integer",
       "minimum": 0,
       "description": "Groups whose circuit could not be built. Reported and kept with their start camp rather than dropped, so a quiet world is distinguishable from a broken pass."
+    },
+    "solitary": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Irruptive groups in the solitary phase this year: sparse, holding their start camp, and not marching. A different fact from `stranded`, which is a route that could not be built. `routed + stranded + solitary` accounts for every group."
+    },
+    "year": {
+      "type": "integer",
+      "description": "The absolute year the block was built for, from `world_clock.day`, or the world's founding year when it carries no clock yet."
+    },
+    "year_forage_factor": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "This year's forage against an ordinary year's: one draw for the whole world, keyed on the genesis seed and the absolute year so a monthly tick cannot re-roll it. Below one is a lean year and more swarms march."
     },
     "considered": {
       "type": "integer",
@@ -163,9 +180,11 @@
             ]
           },
           "route_status": {
+            "description": "`routed` walks a circuit. `stranded` could not build one -- no reachable ground to move to. `solitary` is irruptive-only and is a normal state rather than a failure: a swarm that is not swarming this year, holding one base camp so the encounter index can still place it.",
             "enum": [
               "routed",
-              "stranded"
+              "stranded",
+              "solitary"
             ]
           },
           "round_length_m": {

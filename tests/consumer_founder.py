@@ -29,7 +29,7 @@ from icarus_sim.terrain_settlement_api import found_settlement_request
 
 TOOLS = {
     "found_settlement": lambda world, args: found_settlement_request(
-        dict(args, world=world, api_version=1)),
+        dict(args, world=world, api_version=2)),
 }
 
 
@@ -46,7 +46,13 @@ def a_legal_node(world):
     layers = world["layers"]
     civilization = world["settlements"]["sites"][0]["population_profile"]
 
+    # Every kind counts, not only cities: no two settlements of any kind may share a node,
+    # which `test_no_two_settlements_share_a_node_in_a_finished_world` pins across a
+    # finished world and the call now refuses at the founding rather than an age later.
+    humans = world.get("humans") or {}
     taken = {s["node"] for s in world["settlements"]["sites"]}
+    taken |= {h["node"] for h in humans.get("hamlets", [])}
+    taken |= {f["node"] for f in humans.get("fortresses", [])}
     taken |= {r["node"] for r in (world.get("ruins") or [])
               if isinstance(r, dict) and "node" in r}
 
@@ -63,6 +69,36 @@ def a_legal_node(world):
             continue
         return node, civilization
     raise AssertionError("no legal node in this world; the gates or the world changed")
+
+
+def a_legal_rural_node(world):
+    """Dry land no settlement of any kind already stands on.
+
+    Rural kinds are not held to the city spacing -- a hamlet exists to be close to one --
+    so the gates are the ground itself plus the node not being taken.
+    """
+    config = world["config"]
+    radius = world["effective_config"]["globe_radius"]
+    points, _areas, _ = sphere_grid(config["size"], radius)
+    layers = world["layers"]
+    civilization = world["settlements"]["sites"][0]["population_profile"]
+
+    humans = world.get("humans") or {}
+    taken = {s["node"] for s in world["settlements"]["sites"]}
+    taken |= {h["node"] for h in humans.get("hamlets", [])}
+    taken |= {f["node"] for f in humans.get("fortresses", [])}
+    taken |= {r["node"] for r in (world.get("ruins") or [])
+              if isinstance(r, dict) and "node" in r}
+
+    for node, (x, z) in enumerate(points):
+        if node in taken or layers["water_type"][z][x]:
+            continue
+        if int(layers.get("natural_biome", [[0]])[z][x]) == 17:
+            continue
+        if layers["suitability_" + civilization][z][x] <= 0:
+            continue
+        return node, civilization
+    raise AssertionError("no legal rural node in this world; the gates or the world changed")
 
 
 class FounderRefusalTests(unittest.TestCase):
@@ -115,7 +151,7 @@ class FounderRefusalTests(unittest.TestCase):
         layers = self.world["layers"]
         water = next(n for n, (x, z) in enumerate(points) if layers["water_type"][z][x])
         try:
-            found_settlement_request({"api_version": 1, "world": self.world, "node": water,
+            found_settlement_request({"api_version": 2, "world": self.world, "node": water,
                                       "civilization_id": self.civilization})
             self.fail("founding on water was accepted")
         except Exception as exc:
@@ -131,7 +167,7 @@ class FounderTests(unittest.TestCase):
         cls.world = support.persisted(support.base_world())
         cls.node, cls.civilization = a_legal_node(cls.world)
         cls.founded = found_settlement_request({
-            "api_version": 1, "world": cls.world, "node": cls.node,
+            "api_version": 2, "world": cls.world, "node": cls.node,
             "civilization_id": cls.civilization, "name": "Player Town",
             "population_estimate": 400})
         cls.recorder = support.Recorder("founder")
@@ -208,6 +244,126 @@ class FounderTests(unittest.TestCase):
         self.recorder.recorded("sites after one age",
                                {"before": len(self.founded["settlements"]["sites"]),
                                 "after": len(advanced["settlements"]["sites"])})
+
+
+class FounderKindTests(unittest.TestCase):
+    """A hamlet and a fortress the player raised, in the blocks that already hold them.
+
+    The requirement is that they are indistinguishable in kind from generated ones, so the
+    assertions are about where the row lands and what names it -- not about the call
+    returning. `humans.hamlets[].id` and `humans.fortresses[].id` are ordinals that
+    renumber at every age boundary, so a player keep would change name under its owner if
+    it were keyed that way. The node-and-kind key `npc_roster` already mints is the handle.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.world = support.persisted(support.base_world())
+        cls.node, cls.civilization = a_legal_rural_node(cls.world)
+        cls.founded = found_settlement_request({
+            "api_version": 2, "world": cls.world, "node": cls.node, "kind": "hamlet",
+            "civilization_id": cls.civilization, "name": "Player Farmstead"})
+
+    def test_a_player_hamlet_lands_in_the_block_that_already_holds_hamlets(self):
+        """Not a parallel block. A consumer asking "is there a town here" reads one place."""
+        self.assertNotIn("player_settlements", self.founded)
+        rows = [h for h in self.founded["humans"]["hamlets"] if h["node"] == self.node]
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["kind"], "hamlet")
+        self.assertEqual(rows[0]["founded_by"], "player")
+
+    def test_a_rural_site_is_keyed_on_its_node_and_kind(self):
+        row = next(h for h in self.founded["humans"]["hamlets"] if h["node"] == self.node)
+        self.assertEqual(row["uid"], "hamlet-node-%d" % self.node)
+        self.assertEqual(self.founded["settlement_founding"]["uid"], row["uid"])
+        self.assertTrue(row["id"].startswith("hamlet-"),
+                        "the ordinal id keeps the space it always had")
+
+    def test_the_caller_is_told_which_kind_was_founded(self):
+        report = self.founded["settlement_founding"]
+        self.assertEqual(report["kind"], "hamlet")
+        operation = self.founded["history"]["operations"][-1]
+        self.assertEqual(operation["kind"], "founding")
+        self.assertEqual(operation["settlement_kind"], "hamlet")
+
+    def test_village_is_refused_by_name(self):
+        """It is not a settlement kind anywhere in the tree, and a caller asking for one
+        should be told the vocabulary rather than handed a city."""
+        try:
+            found_settlement_request({
+                "api_version": 2, "world": self.world, "node": self.node,
+                "kind": "village", "civilization_id": self.civilization})
+            self.fail("village was accepted as a settlement kind")
+        except Exception as exc:
+            document = exc.document()
+            self.assertEqual(document["field"], "kind")
+
+    def test_a_rural_node_that_is_already_taken_is_refused(self):
+        taken = self.world["settlements"]["sites"][0]["node"]
+        try:
+            found_settlement_request({
+                "api_version": 2, "world": self.world, "node": taken, "kind": "fortress",
+                "civilization_id": self.civilization})
+            self.fail("a node that already holds a city accepted a fortress")
+        except Exception as exc:
+            self.assertEqual(exc.document()["expected"], {"refused_by": "world state"})
+
+
+class FounderRuralRebuildTests(unittest.TestCase):
+    """`add_humans` re-derives the rural layer from scratch. A player keep must survive it."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.world = support.persisted(support.base_world())
+        cls.node, cls.civilization = a_legal_rural_node(cls.world)
+        cls.founded = found_settlement_request({
+            "api_version": 2, "world": cls.world, "node": cls.node, "kind": "fortress",
+            "civilization_id": cls.civilization, "name": "Player Keep",
+            "rebuild": "humans"})
+
+    def test_the_players_fortress_survives_the_rural_rebuild(self):
+        rows = [f for f in self.founded["humans"]["fortresses"] if f["node"] == self.node]
+        self.assertEqual(len(rows), 1, "the rebuild dropped the player's fortress")
+        self.assertEqual(rows[0]["uid"], "fortress-node-%d" % self.node)
+        self.assertEqual(rows[0]["founded_by"], "player")
+
+    def test_no_generated_rural_site_was_placed_on_top_of_it(self):
+        nodes = [h["node"] for h in self.founded["humans"]["hamlets"]]
+        nodes += [f["node"] for f in self.founded["humans"]["fortresses"]]
+        self.assertEqual(len(nodes), len(set(nodes)),
+                         "two rural sites share a node after the rebuild")
+
+    def test_the_world_still_validates_with_a_player_fortress_in_it(self):
+        validate_age_world(self.founded)
+
+
+class FounderLayoutTests(unittest.TestCase):
+    """`layout: "player"` means the generator does not pack this city."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.world = support.persisted(support.base_world())
+        cls.node, cls.civilization = a_legal_node(cls.world)
+        cls.founded = found_settlement_request({
+            "api_version": 2, "world": cls.world, "node": cls.node,
+            "civilization_id": cls.civilization, "name": "Authored Town",
+            "layout": "player", "population_estimate": 400})
+
+    def test_the_site_carries_an_authored_layout_rather_than_a_planned_one(self):
+        site = self.founded["settlements"]["sites"][-1]
+        self.assertEqual(site["founded_by"], "player")
+        self.assertEqual(site["city_layout"]["layout_profile_id"], "player")
+        self.assertEqual(site["city_layout"]["population_estimate"], 400)
+        self.assertNotIn("buildings", site["city_layout"])
+
+    def test_the_plan_the_generator_writes_for_it_says_unbuildable_with_a_reason(self):
+        from icarus_sim.city_planner import plan_city
+        site = self.founded["settlements"]["sites"][-1]
+        plan = plan_city(self.founded, site)
+        self.assertEqual(plan["status"], "unbuildable")
+        self.assertEqual(plan["plots"], [])
+        self.assertEqual(plan["authored_by"], "player")
+        self.assertTrue(any("player" in row["reason"] for row in plan["unplaced"]))
 
 
 if __name__ == "__main__":

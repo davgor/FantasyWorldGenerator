@@ -311,7 +311,11 @@
             "alive",
             "dead"
           ],
-          "description": "Birth state. Alive for every staffed post; dead only for a cast member the hero generator has passed into legend. Never mutated here - a runtime copies the block into its own save and flips it there. A person whose site was ruined by an age advance stops appearing rather than turning dead, so absence means gone."
+          "description": "Birth state. Alive for every staffed post; dead only for a cast member the hero generator has passed into legend. Never mutated here - a runtime copies the block into its own save and flips it there. A person whose site was ruined by an age advance stops appearing rather than turning dead, so absence means gone. `alive`/`dead` are THIS BLOCK's words: heroes say `living`/`legend` and villains say `living`/`fallen`, and the fold-in at Sim/npc_roster/__init__.py translates a hero's `living` into `alive` by hand. `liveness` beside this enum is that translation, published, so a consumer joining a cast to a roster does not have to rediscover it. Absent reads as `present`.",
+          "liveness": {
+            "alive": "present",
+            "dead": "gone"
+          }
         },
         "important": {
           "type": "boolean",

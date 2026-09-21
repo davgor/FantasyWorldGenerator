@@ -430,6 +430,30 @@ class NameTests(unittest.TestCase):
         for names in by_people.values():
             self.assertTrue(all(name and name[0].isupper() for name in names), names)
 
+    def test_a_roster_repeats_names_the_way_a_population_does(self):
+        """Thirteen thousand people drawn uniformly from 88 names left nobody common and
+        nobody rare. A roster is where that shows, so the concentration is asserted through
+        the call a roster actually makes rather than only on the stock underneath it."""
+        draw = npc_roster.rng(42, 'npc-name-concentration')
+        counts = {}
+        for _ in range(4000):
+            name = npc_roster.name_for('human_heartland', 'human', draw)
+            counts[name] = counts.get(name, 0) + 1
+        shares = sorted((value / 4000 for value in counts.values()), reverse=True)
+        self.assertGreater(shares[0], 0.30, shares[:5])
+        self.assertGreater(sum(shares[:5]), 0.70, shares[:5])
+
+    def test_a_roster_carries_names_almost_nobody_else_has(self):
+        """The tail: without it no name in a world can read as unusual."""
+        import heritage
+        stock = heritage.name_stock(heritage.resolve('dwarf', 'dwarf'), heritage.lexicon())
+        common = {name for name, _ in stock['common']}
+        draw = npc_roster.rng(42, 'npc-name-tail')
+        drawn = [npc_roster.name_for('dwarf', 'dwarf', draw) for _ in range(4000)]
+        outside = [name for name in drawn if name not in common]
+        self.assertTrue(outside)
+        self.assertLess(len(outside) / len(drawn), 0.06)
+
     def test_an_unresolvable_people_leaves_its_people_unnamed_rather_than_human(self):
         """The same rule the schema already states for parent_race_id: a guessed parent is a
         wrong tongue, so a name drawn from one is worse than no name at all."""

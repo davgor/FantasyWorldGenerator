@@ -16,11 +16,14 @@ own home. Here the word means the product conforming to its own description.
 ## Scope
 
 Every module under `Sim/` is claimed by exactly one record. The 46 `Core/` stems are not
-covered yet: the native port is being redone for the Unreal import and these records are
-its acceptance spec, so native records are written against the new port rather than the
-current one. They are parked in `coverage.json` against
-[UNREAL-IMPORT-CONFORMANCE](../../board/backlog/UNREAL-IMPORT-CONFORMANCE.md) so the gap is a
-declared debt with a ticket rather than a silent omission.
+covered, and will not be until the native port is scoped again. Under
+[027 The native port is deferred to a full redo](../decisions/027-native-port-deferred-to-a-full-redo.md)
+the port happens at the end of the project as a full rewrite, so a record written against the
+current `Core/` would describe a tree that is not the one that gets ported. They stay in
+`coverage.json`'s `uncovered` allowlist as a **deliberate permanent exclusion**, not as a debt
+with a ticket: the ticket that used to own it,
+[UNREAL-IMPORT-CONFORMANCE](../../board/retired/UNREAL-IMPORT-CONFORMANCE.md), is retired. These
+Python records remain the acceptance spec for whoever scopes the port.
 
 ## What a record contains
 
@@ -71,7 +74,14 @@ table in `PLAN.md` and the adversarial-review section every board ticket must ha
 ## Evidence tiers
 
 A record's tier is the floor of what it claims, not the ceiling. Anything above
-`DECLARED` must cite `file::test_name`, and the checker resolves the citation.
+`DECLARED` must cite the file that establishes it, under `proof:`.
+
+This table is the closed vocabulary, and `tools/docs_check.py` reads it: a `tier` that is
+not one of these four words is a hard failure naming the word. The four are restated in
+`TIERS` in the checker, so a fifth tier has to be added in both places or it is refused.
+What the checker resolves is the `proof[].path` — that the file exists and that it is a
+file one of the three suites discovers. It does not resolve a `::test_name`, does not run
+the test, and does not read what `establishes:` says. Existence is not exercise.
 
 | Tier | May assert | Established by |
 |---|---|---|
@@ -154,6 +164,20 @@ own file. This exists for a real case: `terrain_magic.py` writes `magic` version
 and `terrain_leyline_history.py` later overwrites the whole block with version 4. A scan
 confined to the declared file would never see the disagreement.
 
+A record may also state the integer in its own front matter, under `versions:`, and that
+list is checked against the same binding. It used to be checked against nothing: version
+enforcement ran only off the markers in prose, so a record's own `versions:` could assert
+any integer it liked and stay green.
+
+A binding is not only for a schema version. A published **bound** takes one too, and a
+bound usually has a second statement of itself in the guard that enforces it — the grid
+ceiling is declared in the registry's `bounds` table and restated four hundred lines below
+by the call that refuses an oversized world. The `tuple-bound` and `call-arg` resolvers
+read each side independently and a `mirror` reports them when they disagree, so one fact
+written twice cannot drift the way the Python and native grid ceilings did. Deriving the
+guard from the table is still better than checking two statements agree; where that has
+not been done, the binding says so.
+
 ## Working in a shared tree
 
 Other sessions edit this repository at the same time. Two techniques are rules here, not
@@ -174,8 +198,36 @@ note it and move on.
 ## What a green check does not prove
 
 `tools/docs_check.py` establishes that documents are readable, that their links resolve,
-that every module is claimed exactly once, and that every version marker matches the
-code. It establishes nothing about whether a record is true. A record can pass every
-check here and describe behaviour the product no longer has.
+that every module is claimed exactly once, that every version marker matches the code,
+and — since 2026-09-21 — that the rest of a record's front matter resolves: every
+`emits[].schema` and `proof[].path` is a file that exists, every proof path is a file one
+of the three suites discovers, every `versions[].assert` equals the integer the code
+emits, and `tier` is one of the four declared words.
+
+It establishes nothing about whether a record is true. A record can pass every check here
+and describe behaviour the product no longer has. In particular it does not run a proof
+test, does not check that the test passes, and does not read what `establishes:` claims.
+**Existence is not exercise.**
+
+### And it says what it did not read
+
+Every run prints the documents it did not examine and the frozen documents it read but
+did not link-, citation- or version-check, because the failure this gate is most prone to
+is not a wrong answer but an unasked question. `board/retired/` was created on 2026-09-21
+and named in neither glob list: four cards moved into it, six sibling-relative links
+inside them died, and the run stayed green because the folder was never scanned. The only
+symptom was the document count falling from 208 to 204, and that was rationalised rather
+than investigated. **A checker that cannot see a folder cannot fail on it.**
+
+Every markdown file in the repository now has to match `ACTIVE_GLOBS`, `FROZEN_GLOBS` or
+`UNCHECKED_GLOBS`, and the last of those carries a written reason per glob and is printed
+on every run. A new folder fails loudly instead of passing silently. The other direction
+is checked too: a glob that matches no document warns, because a folder that moved leaves
+its glob behind and takes its documents out of the gate without a finding.
+
+Note which list `board/retired/` went into. Freezing it would have suppressed exactly the
+link check that catches a card changing folder, because a frozen document hits a
+`continue` inside the link check — so the class of rot that was missed would have become
+permanently invisible instead of merely invisible once.
 
 It is a structural gate. Do not cite it as documentation review.

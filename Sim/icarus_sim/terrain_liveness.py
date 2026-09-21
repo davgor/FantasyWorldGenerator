@@ -39,9 +39,42 @@ PRESENT_STATUS = {
     'villains': 'living',
 }
 
+# The value each block writes for a person who is no longer here. Three words for one
+# event, two of them carrying a judgement the third does not, and that is the published
+# surface rather than a choice made here: `tests/test_status_vocabulary.py` enumerates it.
+#
+# This table exists so that a *writer* has one place to ask which word a block uses. The
+# only translation between two published contracts in this repository is a hand-written
+# expression inside `Sim/npc_roster/__init__.py`, which maps a hero's `living` to a roster
+# record's `alive`. That expression cannot be replaced by a call: the leaf packages are
+# forbidden from importing the generator (`npc_roster/policy.py` states the rule, and
+# `hero_generator/seeds.py` duplicates `child_seed` rather than break it). So the mapping is
+# published here and `Sim/tests/test_person_state.py` binds the roster's copy to it, the
+# same shape `test_npc_roster` uses for that package's `posts.json` snapshot.
+GONE_STATUS = {
+    'heroes': 'legend',
+    'dreads': 'legend',
+    'npcs': 'dead',
+    'villains': 'fallen',
+}
+
 # Keys that only ever appear on a block, never on a person. Used to catch the depth
 # confusion loudly instead of answering a question about the wrong object.
 BLOCK_ONLY_KEYS = ('people', 'quest_hooks', 'policy_revision')
+
+
+def token(block, state):
+    """The word `block` writes for `'present'` or `'gone'`. The published translation.
+
+    The inverse of `liveness`, and deliberately the only one: a writer that picked a word
+    by matching on a string would put `dead` on a hero or `legend` on an npc, and both
+    read back through `liveness` as the wrong answer rather than as an error.
+    """
+    if block not in PRESENT_STATUS:
+        raise ValueError('Unknown liveness block: ' + repr(block))
+    if state not in (PRESENT, GONE):
+        raise ValueError('Unknown liveness state: ' + repr(state))
+    return PRESENT_STATUS[block] if state == PRESENT else GONE_STATUS[block]
 
 
 def liveness(record, block):

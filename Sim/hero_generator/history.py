@@ -68,7 +68,16 @@ def nearest_city(target, candidates, globe_radius):
 
 
 def short_name(name):
-    """`Ivy City (Age 2)` reads as `Ivy (Age 2)` in a realm name or an epithet."""
+    """Cuts a ` City` the live generator never writes; see CONTENT-CITY-SUFFIX-DEAD-READERS.
+
+    `heritage.settlement_name` replaced the round-robin that appended ` City`, so on any
+    generated world this is the identity. It still fires on the synthetic worlds in
+    `tests/test_hero_generator.py` and on `Fixtures/hero-generator-v1.json`, both of which
+    name their cities in the retired convention, so removing the strip renames every
+    derived string there. That is why it is still here: the removal is a fixture change,
+    not a one-line change, and it is tracked on
+    board/backlog/CONTENT-CITY-SUFFIX-DEAD-READERS.md.
+    """
     return name.replace(' City', '')
 
 

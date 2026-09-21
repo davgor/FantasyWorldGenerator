@@ -9,6 +9,22 @@ from ..history import cities, final_age, parent_race, ruins, short_name
 from . import chance, roll
 
 DEED_KEEPER = 'keeper'
+# The cause a city that destroyed itself in a magical experiment carries, and the id its ruin's
+# leyline key point takes. Both are named once, here, because the diagnostics in
+# `hero_generator.__init__` report how many of each the world held and a second copy of either
+# would answer a slightly different question than the well it is supposed to describe.
+SELF_MAGIC_CAUSE = 'self_magic'
+
+
+def key_point_id(ruin):
+    """The leyline node a ruin seeds, in whichever school its legacy chose."""
+    return ruin['id'] + '-key'
+
+
+def key_points(world):
+    """Every node id standing in a ley network, for `key_point_id` to be looked up against."""
+    networks = (world.get('magic') or {}).get('networks') or {}
+    return {n['id'] for net in networks.values() for n in net.get('nodes', [])}
 
 
 def candidates(world, realm_of_city, seed, policy):
@@ -20,13 +36,13 @@ def candidates(world, realm_of_city, seed, policy):
     rules = policy['precipitation']
     people, rolls = [], []
     for ruin in ruins(world):
-        key_id = ruin['id'] + '-key'
+        key_id = key_point_id(ruin)
         if key_id in nodes:
             school, node = nodes[key_id]
             person = _domain_holder(world, ruin, school, node, final, dark)
             if roll(person, 'domain_holder', chance(policy, rules['domain_holder']['base'] + rules['domain_holder']['per_intensity'] * node.get('intensity', 0.)), seed, rolls):
                 people.append(person)
-        if ruin.get('cause') == 'self_magic':
+        if ruin.get('cause') == SELF_MAGIC_CAUSE:
             person = _ruin_magister(world, ruin, ruin.get('new_node_school') or 'weave', key_id if key_id in nodes else None, final, dark)
             if roll(person, 'magister', chance(policy, rules['magister']['base']), seed, rolls):
                 people.append(person)

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Encounters v1",
-  "description": "The `encounters` block: an index of what travelling thing is near here, at this time of year, and what it is. An index, not a quest generator -- no objectives, stakes, rewards or difficulty, because the consumer that would define them does not exist yet. What it guarantees is that the question is answerable in one lookup rather than a scan over every leg of every group.",
+  "title": "Encounters v2",
+  "description": "The `encounters` block: an index of what travelling thing is near here, at this time of year, and what it is. An index, not a quest generator -- no objectives, stakes, rewards or difficulty, because the consumer that would define them does not exist yet. What it guarantees is that the question is answerable in one lookup rather than a scan over every leg of every group. Version 2 put the answer's own description on the entry: `domain`, `class` and `airborne`. Under version 1 an entry said only which species it was, so \"what is near here, on foot\" could not be asked of the index -- it meant joining back through beast_movements to beast_nests to drop the water, which on a world three quarters ocean is most of the index.",
   "type": "object",
   "required": [
     "version",
@@ -14,7 +14,7 @@
   ],
   "properties": {
     "version": {
-      "const": 1
+      "const": 2
     },
     "method": {
       "type": "string"
@@ -32,7 +32,10 @@
           "kind",
           "disposition",
           "threat_tier",
-          "size"
+          "size",
+          "domain",
+          "class",
+          "airborne"
         ],
         "properties": {
           "group_uid": {
@@ -98,6 +101,26 @@
           "column_length_m": {
             "type": "number",
             "minimum": 0
+          },
+          "domain": {
+            "enum": [
+              "land",
+              "ocean",
+              "lake"
+            ],
+            "description": "Where the group lives, on the word key_locations uses for the same idea. A shore species is `land`: the shore medium is refused every water cell, so a traveller can walk to the colony. Flying is not a domain, so `domain == \"land\"` means reachable on foot."
+          },
+          "class": {
+            "enum": [
+              "animal",
+              "monster",
+              "people"
+            ],
+            "description": "What kind of thing it is, on the word wildlife and beast_nests already use. A nomad band is `people`. `kind` is already spent on the species id or the band classification, and the class was lost at the entry."
+          },
+          "airborne": {
+            "type": "boolean",
+            "description": "The species flies. Kept separate from `domain` so a land query does not silently drop roosts a traveller can reach."
           }
         }
       }

@@ -272,7 +272,7 @@
       "source": "Sim/icarus_sim/terrain_humans.py",
       "source_sha256": "70f26d1dd70137abfd3601e31809b112628d5b672ab62fc46501c6a251272eff",
       "destination": "Sim/icarus_sim/terrain_humans.py",
-      "destination_sha256": "4491cd755a49480cd82876a476ce5565f971fc87f61f2e215c139e3bb83b6698",
+      "destination_sha256": "b35bada7a9ce754b39d0615510bf079e5f78434970f0208ba4a37f01d7606e63",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -319,6 +319,34 @@
           "destination_sha256": "4491cd755a49480cd82876a476ce5565f971fc87f61f2e215c139e3bb83b6698",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "4491cd755a49480cd82876a476ce5565f971fc87f61f2e215c139e3bb83b6698",
+          "destination_sha256": "5cfc0874b6396dfa91b4325a82425ec7d4a5ae83c3c2ca9f2972ddbc8aa1a981",
+          "decision": "docs/city-planner.md",
+          "reason": "Planner flood semantics and harbour siting: the coarse regional `flood_risk` layer no longer masks individual cells in the city, castle and hamlet planners, which had made 23 of 35 cities and 34 of 56 castles unbuildable; the sampler splits it from the local river `channel` mask, which still blocks. Coastal harbours no longer found on a node a fortress holds. City planner 6->7, castle 1->2, hamlet 2->3, rural report 8->9; worlds built before this must be regenerated. Mirrored in Core/, uncompiled on this machine. See board/done/LAB-PLANNER-FLOOD.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "5cfc0874b6396dfa91b4325a82425ec7d4a5ae83c3c2ca9f2972ddbc8aa1a981",
+          "destination_sha256": "5b7865241bafb2eccac35cecda5629acda99eefda3a04bda8a3f6c17e09b8f86",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Player-founded settlements extended past cities: hamlets and fortresses become founded kinds keyed on the terrain node and kind, and a player's layout survives the generator's city_layout and city_plans rebuild. previous_destination_sha256 is taken from this entry's own preceding revision row rather than from a hash of the file on disk, because four sessions hold uncommitted bytes in this tree and a disk hash would claim all of them as this revision's work."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "5b7865241bafb2eccac35cecda5629acda99eefda3a04bda8a3f6c17e09b8f86",
+          "destination_sha256": "6ee47c95903d2a544a6f75b88645fc9108b8cd5eade898a905f2bb565b7d3ea5",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Rural report and founded-kind carry-back, under the 2026-09-21 backlog pass."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "6ee47c95903d2a544a6f75b88645fc9108b8cd5eade898a905f2bb565b7d3ea5",
+          "destination_sha256": "b35bada7a9ce754b39d0615510bf079e5f78434970f0208ba4a37f01d7606e63",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Rural report and founded-kind carry-back, under the 2026-09-21 backlog pass."
         }
       ]
     },
@@ -386,7 +414,7 @@
       "source": "Sim/icarus_sim/terrain_magic.py",
       "source_sha256": "6f8c7c862629676bf6e425f181ff837a5e2ef35c97bc1eb776bf40068b4786bb",
       "destination": "Sim/icarus_sim/terrain_magic.py",
-      "destination_sha256": "599d2a1b567eb35e97b8831b19f83f25b72063bbce06136b4df5b87d39d7f9d3",
+      "destination_sha256": "f8145d01da3f8c5a29b664368ce985709c26be2dd878ffbae7f3acd29c86027d",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -425,6 +453,13 @@
           "destination_sha256": "599d2a1b567eb35e97b8831b19f83f25b72063bbce06136b4df5b87d39d7f9d3",
           "decision": "board/in-progress/CONFORMANCE-DOCS.md",
           "reason": "Comment only, no behavior change. add_magic is a dead writer of result['magic']: imported by terrain_leyline_history and called from nowhere, with no call site, no string dispatch and no non-Python caller. generate_networks is the sole writer and emits version 4. The comment warns against connecting it, because it replaces rather than merges the block and an imported-unused symbol invites exactly that tidy-up."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "599d2a1b567eb35e97b8831b19f83f25b72063bbce06136b4df5b87d39d7f9d3",
+          "destination_sha256": "f8145d01da3f8c5a29b664368ce985709c26be2dd878ffbae7f3acd29c86027d",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -433,7 +468,7 @@
       "source": "Sim/icarus_sim/terrain_nest_profiles.json",
       "source_sha256": "031cc969a0154c73ffdd416a433c5b141bf1de3ce00d8640669df5d7195a23d6",
       "destination": "Sim/icarus_sim/terrain_nest_profiles.json",
-      "destination_sha256": "6117298f42d82a50fe0d441419d6cbb891d1e145b76bb0b37d46d9fb56b70f05",
+      "destination_sha256": "e3cf612c1a6a676a7afa89cc64181dae1679d7ef51cd531a0e4b536ed5ef83f4",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -471,6 +506,20 @@
           "destination_sha256": "6117298f42d82a50fe0d441419d6cbb891d1e145b76bb0b37d46d9fb56b70f05",
           "decision": "board/done/BESTIARY-MONSTERS-BIOME-BLIND.md",
           "reason": "Three user rulings land in the creature catalogue. 3.0: biome 17 land ice is added to ten animal role tables, each weight strictly below that role's cold_tundra, so the one biome with no animals gains them -- apex_predator and marine_mammal are included because the biome gate in _place runs before suitability, so a shore species does NOT reach the ice through the coast gate as the card assumed. 0.4: every monster gains a per-species biome_weights table naming every live biome, so biome identity steers monsters for the first time; an absent key means excluded, so naming all of them is what keeps the map populated. 0.5: monsters gain a `likeness` naming the real animal whose skeleton and gait they are built on, with `likeness_traits` from a closed seventeen-term vocabulary and an optional `likeness_secondary` for a grafted second animal, so the asset and animation generators have a rig source. Seed-affecting by design; ruling 0.1 makes worlds disposable. No animal was renamed or reclassified: this world's fauna is Earth's."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "6117298f42d82a50fe0d441419d6cbb891d1e145b76bb0b37d46d9fb56b70f05",
+          "destination_sha256": "092ac5e4a424c5167dd8458ca792706b61de39cf8982bf6ba4435b5ef4b71448",
+          "decision": "docs/key-locations.md",
+          "reason": "Creature catalogue retune: brimstone-bats reaches the 0.3 suitability floor, and the monster tier distribution is re-derived. previous_destination_sha256 comes from this entry's own preceding revision row rather than a disk hash, because several sessions hold uncommitted bytes in this tree."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "092ac5e4a424c5167dd8458ca792706b61de39cf8982bf6ba4435b5ef4b71448",
+          "destination_sha256": "e3cf612c1a6a676a7afa89cc64181dae1679d7ef51cd531a0e4b536ed5ef83f4",
+          "decision": "docs/key-locations.md",
+          "reason": "Creature catalogue retune under the 2026-09-21 backlog pass: suitability floors and the monster tier distribution. See board/done for the cards."
         }
       ],
       "modification": "Diverged from the pinned extraction; see revisions."
@@ -479,7 +528,7 @@
       "source": "Sim/icarus_sim/terrain_nests.py",
       "source_sha256": "2013d0a101a16c22bac7f3ad83e3e6f3a2bcf9071f2fbf711b4361c53fac421c",
       "destination": "Sim/icarus_sim/terrain_nests.py",
-      "destination_sha256": "0122625f0b159af7ebed265b500f76e8b43e513989eac50bec9b919409e694a1",
+      "destination_sha256": "039acff455363ff0a791ce167af6f634b70017fbb8059a45684f166b81668797",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator simulation source with local performance work",
       "revisions": [
@@ -501,8 +550,36 @@
           "date": "2026-09-20",
           "previous_destination_sha256": "26cd15c23d11878d4f9a42f47f77ba35a2c1035e8f2f718fa0febf334b29bd47",
           "destination_sha256": "0122625f0b159af7ebed265b500f76e8b43e513989eac50bec9b919409e694a1",
-          "decision": "board/backlog/CONTENT-NO-DIFFICULTY-GRADIENT.md",
+          "decision": "board/done/CONTENT-NO-DIFFICULTY-GRADIENT.md",
           "reason": "A continuous distance factor is multiplied into the placement rate beside the existing binary settlement clearance, so danger ramps with distance from people instead of stepping. A clearance is a cutoff and makes a hole, not a ramp, at any resolution; the span is scaled by circumference through terrain_scale.reach_scale rather than being another absolute metre constant, and a floor keeps every species placeable somewhere. Validation also now refuses a monster with no biome_weights, matching the require added to Core/profiles.cpp. Ported to Core/nests.cpp term for term in the same change."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "0122625f0b159af7ebed265b500f76e8b43e513989eac50bec9b919409e694a1",
+          "destination_sha256": "3360718c14301b8f447ace64ca839ace26013f396c29eaed895485755de957f7",
+          "decision": "docs/key-locations.md",
+          "reason": "Monster nest placement: the tier distribution is re-derived toward a pyramid, and the pairwise dominance predicate that was 86 percent of add_nests is restructured (dominance calls 916.7M to 149.3M, scan steps 729.8M to 13.1M at size 17). Behavior and cost both move; worlds built before this must be regenerated."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "3360718c14301b8f447ace64ca839ace26013f396c29eaed895485755de957f7",
+          "destination_sha256": "c5af625157f10ee25c0ef7314d352b6b085285d532fd2b7303115ba353aa286a",
+          "decision": "docs/key-locations.md",
+          "reason": "Monster nest placement and the pairwise dominance predicate, under the 2026-09-21 backlog pass."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "c5af625157f10ee25c0ef7314d352b6b085285d532fd2b7303115ba353aa286a",
+          "destination_sha256": "7e1ee27a003f6a94fdd18796d8ea39e008940c9217f5b473313cdbe4b2632e6f",
+          "decision": "docs/key-locations.md",
+          "reason": "Monster nest placement and the pairwise dominance predicate, under the 2026-09-21 backlog pass."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "7e1ee27a003f6a94fdd18796d8ea39e008940c9217f5b473313cdbe4b2632e6f",
+          "destination_sha256": "039acff455363ff0a791ce167af6f634b70017fbb8059a45684f166b81668797",
+          "decision": "docs/performance.md",
+          "reason": "Placement cost only; output is byte-identical. Three indexes replace three flat scans in add_nests. (1) nearest_settled computes the distance to the nearest settled thing as an argmax over the dot product rather than a min over acos, which is the same float by monotonicity and lets a latitude-sorted walk stop early. (2) The medium and biome gates are resolved once per distinct (medium, biome) pair -- about a dozen per world -- instead of once per cell per species. (3) The territory test consults the candidate's own cell first and then only the grid rows its reach can cross, bounded by latitude difference being a lower bound on great-circle angle, and a cell does not re-ask a species it has already refused. Measured seed 42, phase 12 worlds, Windows 11 / 24-core / CPython 3.12.10, box at 6% load: add_nests falls 4.43 s to 0.35 s at size 33, 10.37 s to 1.21 s at size 65 and 27.19 s to 4.75 s at size 129. The wildlife and beast_nests blocks were captured before and after at all three sizes and compare byte for byte, floats by repr, so no world moves and no version changes. The module docstring also retracts the claim that the spacing test only ever compares a cell against itself; see board/backlog/NEST-SAME-CELL-CLAIM-IS-FALSE.md."
         }
       ],
       "modification": "Hot-path optimization only; no behavioral change. Original extraction source hash retained."
@@ -670,7 +747,7 @@
       "source": "Sim/icarus_sim/terrain_settlements.py",
       "source_sha256": "f113daddc2457d013201013a5fb82f253efe14eeb224be89e8d68de04a7ca26a",
       "destination": "Sim/icarus_sim/terrain_settlements.py",
-      "destination_sha256": "2277f19243d568bc5a55fb2e9ddf5c0c4b5449a39b20f944744f3c240358c2f9",
+      "destination_sha256": "7e3ebe20126290138892acf783390ac46a8f2cf9c0866f28f15a244a561c4098",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -764,6 +841,27 @@
           "previous_destination_sha256": "2837f4147aa29d5805463397aace6f99243c1742ab2dc07f4271e16042b6d6e0",
           "destination_sha256": "2277f19243d568bc5a55fb2e9ddf5c0c4b5449a39b20f944744f3c240358c2f9",
           "reason": "Name settlements from each people's own language instead of a 24-word English list indexed by founding order. The index was the defect: names[k%24] renamed every later city when one was founded earlier, and could not survive an age advance without the downstream copy-back. Naming now keys on the node and its coordinates, runs in node order so collision redraws are canonical, and returns a gloss beside each name. The native mirror in Core/scene.cpp still holds the old list and is deferred to the native port phase, so city names differ between the reference and the port until then."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "2277f19243d568bc5a55fb2e9ddf5c0c4b5449a39b20f944744f3c240358c2f9",
+          "destination_sha256": "e4eb5d79695b8dc566c181fb2300ce0bc01f72fbb14a576778dc70c01eb6c287",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Settlement layout and population reporting reconciled under one settlements version bump, so no two emitted population fields measure different axes without the axis in the name."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "e4eb5d79695b8dc566c181fb2300ce0bc01f72fbb14a576778dc70c01eb6c287",
+          "destination_sha256": "61908c95a84aa272206957bc474e17f3aa6392851fdb11d9ae4e755b99745607",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Settlement layout, population reporting and founded kinds, under the 2026-09-21 backlog pass."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "61908c95a84aa272206957bc474e17f3aa6392851fdb11d9ae4e755b99745607",
+          "destination_sha256": "7e3ebe20126290138892acf783390ac46a8f2cf9c0866f28f15a244a561c4098",
+          "decision": "docs/conformance/settlement-founding.md",
+          "reason": "Settlement layout, population reporting and founded kinds, under the 2026-09-21 backlog pass."
         }
       ]
     },
@@ -771,7 +869,7 @@
       "source": "Sim/icarus_sim/terrain_society.py",
       "source_sha256": "cab671a79e79b4f6c8101f6b7041991fdc2f5b2458da41479d294419834089b1",
       "destination": "Sim/icarus_sim/terrain_society.py",
-      "destination_sha256": "20cc11f705be6ce4f2bfcc6ec4deab214c7f1d90672939281967c5848c564241",
+      "destination_sha256": "fb9675f9fff20825645a41d4983e10b8553eaa008b929f530fe4e19c56dbd005",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -810,6 +908,13 @@
           "destination_sha256": "20cc11f705be6ce4f2bfcc6ec4deab214c7f1d90672939281967c5848c564241",
           "decision": "docs/terrain-math-lab.md",
           "reason": "Output-preserving performance work: passable() inlined into the sea-route cost closure, which the routing search calls tens of millions of times per world. Identical comparisons in identical short-circuit order."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "20cc11f705be6ce4f2bfcc6ec4deab214c7f1d90672939281967c5848c564241",
+          "destination_sha256": "fb9675f9fff20825645a41d4983e10b8553eaa008b929f530fe4e19c56dbd005",
+          "decision": "docs/city-planner.md",
+          "reason": "Planner flood semantics and harbour siting: the coarse regional `flood_risk` layer no longer masks individual cells in the city, castle and hamlet planners, which had made 23 of 35 cities and 34 of 56 castles unbuildable; the sampler splits it from the local river `channel` mask, which still blocks. Coastal harbours no longer found on a node a fortress holds. City planner 6->7, castle 1->2, hamlet 2->3, rural report 8->9; worlds built before this must be regenerated. Mirrored in Core/, uncompiled on this machine. See board/done/LAB-PLANNER-FLOOD.md."
         }
       ],
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained."
@@ -844,7 +949,7 @@
       "source": "Sim/icarus_sim/terrain_world.py",
       "source_sha256": "6d1508721e0bf38931aadf4c40f99ef5a3f779ac025036ebee1026515ff67787",
       "destination": "Sim/icarus_sim/terrain_world.py",
-      "destination_sha256": "4e921da08e81de4343c21cba3f3ebbbeeaca55fc8a49c5d740c7b3610b7e5729",
+      "destination_sha256": "e917e17cd01a56e89ee91aaec61823bc457dc6eefb252b24911d4ee7f1df6f3c",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revision": "revisions/recipe-2-history.json",
@@ -989,6 +1094,13 @@
           "destination_sha256": "4e921da08e81de4343c21cba3f3ebbbeeaca55fc8a49c5d740c7b3610b7e5729",
           "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
           "reason": "Replace the request boundary's bare ValueErrors with the versioned fantasy-world-generator.failure envelope at schema 2, carrying the field, the received value, the violated bound or choice list and a next value to try. RequestError subclasses ValueError so every existing handler is unaffected. No control renamed, no bound changed, no accepted request behaves differently."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "4e921da08e81de4343c21cba3f3ebbbeeaca55fc8a49c5d740c7b3610b7e5729",
+          "destination_sha256": "e917e17cd01a56e89ee91aaec61823bc457dc6eefb252b24911d4ee7f1df6f3c",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "World-scale constants and the parameter registry, under the 2026-09-21 backlog pass."
         }
       ]
     },
@@ -1012,7 +1124,7 @@
       "source": "Sim/tests/test_terrain_city_layout.py",
       "source_sha256": "bb1f6104af1e67a71e24b5cfe63a6e2e336c1628f5ef3e4f1826d3864d8303cc",
       "destination": "Sim/tests/test_terrain_city_layout.py",
-      "destination_sha256": "de29b7257cf02078ab52daf65c6f756c9b22c639513966878565b50e3f5c1da7",
+      "destination_sha256": "656ea6905fb23771789ae9a3902ab26ff1fedd51ca8120cddae4e5a172d182bd",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1065,6 +1177,20 @@
           "destination_sha256": "de29b7257cf02078ab52daf65c6f756c9b22c639513966878565b50e3f5c1da7",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Age-transition wars: contested neighbours fight over ground and road-linked supply, named civil, regional or international by the relationship between the participants. The loser becomes a ruin that names the war and may leave a leyline key point where a school already held its ground; both sides record the war, survivors carry it across the rebuild, and a veteran city raises the fortress demand, its own ceiling and its regional threat. Settlement schema 15, history 2, rural report 8, threat assessment 2."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "de29b7257cf02078ab52daf65c6f756c9b22c639513966878565b50e3f5c1da7",
+          "destination_sha256": "9ceff7cfcd0317a00a0c425eaabadcf598306a827c824dc9944bf1aa56ce0948",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "9ceff7cfcd0317a00a0c425eaabadcf598306a827c824dc9944bf1aa56ce0948",
+          "destination_sha256": "656ea6905fb23771789ae9a3902ab26ff1fedd51ca8120cddae4e5a172d182bd",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -1089,7 +1215,7 @@
       "source": "Sim/tests/test_terrain_humans.py",
       "source_sha256": "b7fe9cda56a759968c770529bdaee967ff426aa86ef62e9bb5aec1f17fcfe5df",
       "destination": "Sim/tests/test_terrain_humans.py",
-      "destination_sha256": "fd9b773e1d50b7fe8a7c37301068f21796832b9529df9473809657c2e6c3ae50",
+      "destination_sha256": "ee865daef575ba3585b78ed0534f0167b3fafaba44c0096004bb1bbfbdcbbbe7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1107,6 +1233,20 @@
           "destination_sha256": "fd9b773e1d50b7fe8a7c37301068f21796832b9529df9473809657c2e6c3ae50",
           "decision": "docs/terrain-world-layers.md",
           "reason": "Route defence is read from the world instead of a constant: road length / support reach plus distinct river crossings, ceilinged by the city count, with fortress_count demoted to a caller's maximum whose default no longer binds. Retires the static four fortresses every world size used to get; rural report 7 and its fortress_demand record, with age advancement refusing older reports."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "fd9b773e1d50b7fe8a7c37301068f21796832b9529df9473809657c2e6c3ae50",
+          "destination_sha256": "4f0916435474628a644a650a6c4a2ceef139f517bc5069730da399f572cd205d",
+          "decision": "docs/city-planner.md",
+          "reason": "Planner flood semantics and harbour siting: the coarse regional `flood_risk` layer no longer masks individual cells in the city, castle and hamlet planners, which had made 23 of 35 cities and 34 of 56 castles unbuildable; the sampler splits it from the local river `channel` mask, which still blocks. Coastal harbours no longer found on a node a fortress holds. City planner 6->7, castle 1->2, hamlet 2->3, rural report 8->9; worlds built before this must be regenerated. Mirrored in Core/, uncompiled on this machine. See board/done/LAB-PLANNER-FLOOD.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "4f0916435474628a644a650a6c4a2ceef139f517bc5069730da399f572cd205d",
+          "destination_sha256": "ee865daef575ba3585b78ed0534f0167b3fafaba44c0096004bb1bbfbdcbbbe7",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
         }
       ],
       "modification": "Standalone civilization contract; see decision 016 and revision record."
@@ -1151,7 +1291,7 @@
       "source": "Sim/tests/test_terrain_nests.py",
       "source_sha256": "7a10d98b8b7cab9e00054c8aca9a00a56a4b5c794d986ca2dc8ace495f3428f1",
       "destination": "Sim/tests/test_terrain_nests.py",
-      "destination_sha256": "d6e711c1207d77166d18b7b3674c29a0dd19afc2d52f05a30138357f5041c8c8",
+      "destination_sha256": "b680eab3e3b8389419f50ceb244ea0ba49a039f5a45d14163de022029610e2c7",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1188,6 +1328,20 @@
           "destination_sha256": "d6e711c1207d77166d18b7b3674c29a0dd19afc2d52f05a30138357f5041c8c8",
           "decision": "board/done/BESTIARY-MONSTERS-BIOME-BLIND.md",
           "reason": "Covers the rulings landed in terrain_nest_profiles.json and terrain_nests.py: every monster names every live biome, every likeness resolves to a real animal profile, and the danger ramp is monotone in tier."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "d6e711c1207d77166d18b7b3674c29a0dd19afc2d52f05a30138357f5041c8c8",
+          "destination_sha256": "c50d434c04b1dea9c12626e9df7fc0be290f644ba32317c3fe0599c00aae51e1",
+          "decision": "docs/key-locations.md",
+          "reason": "Monster nest placement: the tier distribution is re-derived toward a pyramid, and the pairwise dominance predicate that was 86 percent of add_nests is restructured (dominance calls 916.7M to 149.3M, scan steps 729.8M to 13.1M at size 17). Behavior and cost both move; worlds built before this must be regenerated."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "c50d434c04b1dea9c12626e9df7fc0be290f644ba32317c3fe0599c00aae51e1",
+          "destination_sha256": "b680eab3e3b8389419f50ceb244ea0ba49a039f5a45d14163de022029610e2c7",
+          "decision": "docs/performance.md",
+          "reason": "Adds TerritoryAcrossCellsTests: three unit tests on _blocked covering territory that crosses cells, which no existing test reached. Both worlds the suite builds are size 33 and neither produces a single cross-cell refusal, so a same-cell-only territory rule passed the whole suite when it was tried deliberately. The new tests pin that a neighbour in a tight polar ring holds ground, that the row band does not reach past what territory can cross, and that the band is taken over the widest territory in the bucket rather than the candidate's own; two of the three go red against the same-cell rule. No existing test changed and no generated world moves."
         }
       ],
       "modification": "Recipe 3 explicit-state migration; see revision record and decision 015. Original extraction source hash retained."
@@ -1196,7 +1350,7 @@
       "source": "Sim/tests/test_terrain_patch.py",
       "source_sha256": "bdc5d457d5d21ef5f8ecd169c762b707872660b0480a87f4fe9c11845036e8d4",
       "destination": "Sim/tests/test_terrain_patch.py",
-      "destination_sha256": "cb03e3bb514d9bf231a90dbb58480a1a9f62316d287de6a7416e2cfa907652de",
+      "destination_sha256": "ca32e70106cce3bd747e3516f94fa6e1bf0d5881c7644d20edcf1450651b17e1",
       "status": "modified",
       "reason": "Reference implementation, regression fixture, or inherited capability requirement",
       "revisions": [
@@ -1205,6 +1359,13 @@
           "previous_destination_sha256": "bdc5d457d5d21ef5f8ecd169c762b707872660b0480a87f4fe9c11845036e8d4",
           "destination_sha256": "cb03e3bb514d9bf231a90dbb58480a1a9f62316d287de6a7416e2cfa907652de",
           "reason": "Move the patch-rejection sentinel from 1025 to 1026. 1025 was chosen as an obviously-too-large grid; raising the world ceiling to 1025 made it legal, so the test stopped proving a rejection and instead generated a full 1025-grid world before failing to raise -- 48 s in a file that ran six tests in 0.108 s. The sentinel must stay one above the ceiling, not a fixed number."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "cb03e3bb514d9bf231a90dbb58480a1a9f62316d287de6a7416e2cfa907652de",
+          "destination_sha256": "ca32e70106cce3bd747e3516f94fa6e1bf0d5881c7644d20edcf1450651b17e1",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "SDET-CEILING-SENTINELS: the grid-ceiling sentinel is derived from registry(3)['size']['max'] + 1 rather than written out as 1026, so it follows the bound instead of silently ceasing to test the rejection the day the registry moves. Test-only; no generated output changes. previous_destination_sha256 is taken from this entry's own preceding revision row rather than a disk hash, because several sessions hold uncommitted bytes in this tree."
         }
       ],
       "modification": "Patch-rejection sentinel moved from 1025 to 1026 when the world grid ceiling rose to 1025; see revision record. Original extraction source hash retained."
@@ -1772,7 +1933,7 @@
       "source": "docs/terrain-math-lab.md",
       "source_sha256": "ef1489aa9f9e164dbfc1a19ef2972fd30180112d83b8908706da5ce8f9021987",
       "destination": "docs/terrain-math-lab.md",
-      "destination_sha256": "ff9f66a9028e8ee61b96f96d46589cb8699cdd243282e9dfd8bc462cb61e551e",
+      "destination_sha256": "f91ac02fcfbe144f62689673d3913699cfd8fc5b49bb28b72e13decf7f77fff8",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "modification": "Civilization registry migration; see decision 017. Original extraction source hash retained.",
@@ -1832,6 +1993,27 @@
           "destination_sha256": "ff9f66a9028e8ee61b96f96d46589cb8699cdd243282e9dfd8bc462cb61e551e",
           "decision": "board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md",
           "reason": "Prose-only repair of the river-threshold paragraph: a sentence spliced in by the 2026-09-20 revision left a run-on line in an otherwise wrapped document."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "ff9f66a9028e8ee61b96f96d46589cb8699cdd243282e9dfd8bc462cb61e551e",
+          "destination_sha256": "3ef8b649e01d011b52fd5912cf1f83f37fb1ee1122bedb24c57cad3ab3e4e60e",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab sample: `/` serves the committed Fixtures/sample-world-v1.json instead of generating a world per page load, Run simulation replaces Generate random world and reports the measured wall time of the whole run, and the ruin and fortress map pins are redrawn to the scale and palette the other markers use. Presentation and tooling only; no generated-world contract, schema or seed behavior changed. See board/done/LAB-SAMPLE.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "3ef8b649e01d011b52fd5912cf1f83f37fb1ee1122bedb24c57cad3ab3e4e60e",
+          "destination_sha256": "2bafea92e4900df50cd16b5465bf2de0aa333faeec60c04ed28921d5ca66b09c",
+          "decision": "docs/city-planner.md",
+          "reason": "Planner flood semantics and harbour siting: the coarse regional `flood_risk` layer no longer masks individual cells in the city, castle and hamlet planners, which had made 23 of 35 cities and 34 of 56 castles unbuildable; the sampler splits it from the local river `channel` mask, which still blocks. Coastal harbours no longer found on a node a fortress holds. City planner 6->7, castle 1->2, hamlet 2->3, rural report 8->9; worlds built before this must be regenerated. Mirrored in Core/, uncompiled on this machine. See board/done/LAB-PLANNER-FLOOD.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "2bafea92e4900df50cd16b5465bf2de0aa333faeec60c04ed28921d5ca66b09c",
+          "destination_sha256": "f91ac02fcfbe144f62689673d3913699cfd8fc5b49bb28b72e13decf7f77fff8",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Retraction: the lab sample is built with timings stripped, the exporter's default, and tools/build_sample_world.py --check is an exact byte comparison again. It had been built with --include-timings and the check weakened to compare modulo timings, on a derivation from TIME-PERSISTED-WORLD-CANNOT-ADVANCE that was never tested and is false: terrain_history.adopt_world guards timing_ms at the request-API boundary, and a stripped world advances across advance-age and all three advance-time bands. See board/done/LAB-SAMPLE.md."
         }
       ]
     },
@@ -1839,7 +2021,7 @@
       "source": "docs/terrain-world-layers.md",
       "source_sha256": "98e31d12ef071dea38cb677187f6cc25e720993d5bfdcfca4cd3f6638296d028",
       "destination": "docs/terrain-world-layers.md",
-      "destination_sha256": "7289f2698b95963542c1869f4091a01a48c4785a5a128c145fb9ea9ed5ff8715",
+      "destination_sha256": "8d3d1075480183088c4a742ab1869b0ee7b47bf00f6f168559a3ad434a4b1890",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2059,6 +2241,27 @@
           "destination_sha256": "7289f2698b95963542c1869f4091a01a48c4785a5a128c145fb9ea9ed5ff8715",
           "decision": "board/backlog/SCALE-METRE-CONSTANTS-COLLAPSE.md",
           "reason": "Three factual corrections, no behaviour. The islander paragraph carried the same overstated every-raster claim as terrain_ecology.py. The habitat paragraph still said the 21 feeding roles supply the biome table every animal uses, which stopped being the whole story when every monster gained its own per-species biome_weights, and its catalogue counts were stale. Re-counted against the live catalogue."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "7289f2698b95963542c1869f4091a01a48c4785a5a128c145fb9ea9ed5ff8715",
+          "destination_sha256": "c9dfeeb92a2f89a7a3488667e6ad72da429f5e39d72d78c35af0c40f7e064af1",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab sample: `/` serves the committed Fixtures/sample-world-v1.json instead of generating a world per page load, Run simulation replaces Generate random world and reports the measured wall time of the whole run, and the ruin and fortress map pins are redrawn to the scale and palette the other markers use. Presentation and tooling only; no generated-world contract, schema or seed behavior changed. See board/done/LAB-SAMPLE.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "c9dfeeb92a2f89a7a3488667e6ad72da429f5e39d72d78c35af0c40f7e064af1",
+          "destination_sha256": "72d7163547e371ca73d00ef4272d334db02dd0ab4fc4f915a66e8d7e7a39fe51",
+          "decision": "docs/city-planner.md",
+          "reason": "Planner flood semantics and harbour siting: the coarse regional `flood_risk` layer no longer masks individual cells in the city, castle and hamlet planners, which had made 23 of 35 cities and 34 of 56 castles unbuildable; the sampler splits it from the local river `channel` mask, which still blocks. Coastal harbours no longer found on a node a fortress holds. City planner 6->7, castle 1->2, hamlet 2->3, rural report 8->9; worlds built before this must be regenerated. Mirrored in Core/, uncompiled on this machine. See board/done/LAB-PLANNER-FLOOD.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "72d7163547e371ca73d00ef4272d334db02dd0ab4fc4f915a66e8d7e7a39fe51",
+          "destination_sha256": "8d3d1075480183088c4a742ab1869b0ee7b47bf00f6f168559a3ad434a4b1890",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
         }
       ]
     },
@@ -2118,7 +2321,7 @@
       "source": "tools/terrain_lab.html",
       "source_sha256": "9832c7a6f52c48de3a48e09a9daa283911a6546e4ce8cda9c56457ee45a3f2ce",
       "destination": "tools/terrain_lab.html",
-      "destination_sha256": "2071109630b957e00e75853e31d45e059c513032eba2e1fc2992ba2e73838be3",
+      "destination_sha256": "e1e13102a93c35aa21c3120cac1857999e8b0d458aebffdaf13c6ff54af54d82",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2284,6 +2487,13 @@
           "destination_sha256": "2071109630b957e00e75853e31d45e059c513032eba2e1fc2992ba2e73838be3",
           "decision": "docs/time-advance.md",
           "reason": "Register world_clock and quests in the lab stage viewer key list, mirroring the same addition to terrain_history.STATE_KEYS. materialize_stage and the lab both build an earlier stage from every key NOT in their list, so a new top-level state block omitted from them is silently shown at every stage rather than raising -- the failure docs/conformance/nomads.md already documents for this list."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "2071109630b957e00e75853e31d45e059c513032eba2e1fc2992ba2e73838be3",
+          "destination_sha256": "e1e13102a93c35aa21c3120cac1857999e8b0d458aebffdaf13c6ff54af54d82",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab sample: `/` serves the committed Fixtures/sample-world-v1.json instead of generating a world per page load, Run simulation replaces Generate random world and reports the measured wall time of the whole run, and the ruin and fortress map pins are redrawn to the scale and palette the other markers use. Presentation and tooling only; no generated-world contract, schema or seed behavior changed. See board/done/LAB-SAMPLE.md."
         }
       ]
     },
@@ -2291,7 +2501,7 @@
       "source": "tools/terrain_lab.py",
       "source_sha256": "81415f764e6d307c54b4ba64fbd29b8de44d7aec1926bfe4384b4c8982e7ed6e",
       "destination": "tools/terrain_lab.py",
-      "destination_sha256": "b70190bec5fd9eb1b0f462c332dfbd6a057b4bc9d8d7307dded7c8df13a3f6ca",
+      "destination_sha256": "8c848b2aefda97badd88e7e0ae31bbfacb6551c216a3f196084612e0a3f7f89f",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2357,6 +2567,34 @@
           "destination_sha256": "b70190bec5fd9eb1b0f462c332dfbd6a057b4bc9d8d7307dded7c8df13a3f6ca",
           "decision": "docs/decisions/025-controls-are-a-machine-contract.md",
           "reason": "Route the settlement founding API. Dispatch only; the handler validates and refuses in terrain_settlement_api, not here."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "b70190bec5fd9eb1b0f462c332dfbd6a057b4bc9d8d7307dded7c8df13a3f6ca",
+          "destination_sha256": "f34e629a69db9e536da72ad70e48bcccc5d51cfeccb0f8a8ce7e02dfb1a1cddb",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab sample: `/` serves the committed Fixtures/sample-world-v1.json instead of generating a world per page load, Run simulation replaces Generate random world and reports the measured wall time of the whole run, and the ruin and fortress map pins are redrawn to the scale and palette the other markers use. Presentation and tooling only; no generated-world contract, schema or seed behavior changed. See board/done/LAB-SAMPLE.md. The recorded bytes for tools/terrain_lab.py also carry the /world/blocks, /near, /place, /person and /quests read endpoints landed by a concurrent session in the same working tree; that work is not part of this revision and carries its own documentation."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "f34e629a69db9e536da72ad70e48bcccc5d51cfeccb0f8a8ce7e02dfb1a1cddb",
+          "destination_sha256": "bfcc23217e0c4d57ac13e5b31f6f80958b252cfe86af1eadbb45add920a0b49a",
+          "decision": "docs/conformance/read-surface.md",
+          "reason": "Route the bounded read surface: POST /world/blocks, /world/near, /world/place, /world/person and /world/quests dispatch to terrain_read.READS, in the 256 MB body bucket because each read takes a whole world in. Dispatch only. Split out of the preceding lab-sample revision, which had absorbed these bytes when the manifest was regenerated from disk; the split point was recovered by reverting each session edit in memory and checked against the hash of this file captured before these routes landed."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "bfcc23217e0c4d57ac13e5b31f6f80958b252cfe86af1eadbb45add920a0b49a",
+          "destination_sha256": "688343e7e3898a78cc539536f40caa48aa6d5d71775f55035b9dbf1f5ae13df7",
+          "decision": "docs/conformance/actor-scale-writes.md",
+          "reason": "Route the actor-scale writes: POST /world/quest dispatches to terrain_quest_api.quest_request and POST /world/person-state to terrain_person_api.person_state_request, both in the 256 MB body bucket because both carry a whole world in. Dispatch only; validation and refusal live in those modules. /world/quest is a write and /world/quests is the read surface route, and they stay distinct strings."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "688343e7e3898a78cc539536f40caa48aa6d5d71775f55035b9dbf1f5ae13df7",
+          "destination_sha256": "8c848b2aefda97badd88e7e0ae31bbfacb6551c216a3f196084612e0a3f7f89f",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab presentation: the simulation controls move above the layout, the atlas fortress pin becomes the crenellated keep the globe already used, and the served page is threaded and answers HEAD. See board/done/LAB-SAMPLE.md."
         }
       ]
     },
@@ -2364,7 +2602,7 @@
       "source": "tools/terrain_world.js",
       "source_sha256": "c1b1faf42712771845e6b69617012b44bff5a2851adbae78e2b3adcf60432429",
       "destination": "tools/terrain_world.js",
-      "destination_sha256": "6d3d3e428fe83bb49e582dcb7b0ef0d118b140c56d86fd51513e1e680d600829",
+      "destination_sha256": "cfb10b38b66f09e45a10967a2d75828d210b27f2569ef184dd0396f3707a98ab",
       "status": "modified",
       "reason": "Canonical FantasyWorldGenerator documentation, dependency, or historical evidence",
       "revision": "revisions/recipe-2-history.json",
@@ -2487,6 +2725,27 @@
           "destination_sha256": "6d3d3e428fe83bb49e582dcb7b0ef0d118b140c56d86fd51513e1e680d600829",
           "decision": "docs/key-locations.md",
           "reason": "Key location chains: a chain and cluster count in the panel summary, and each chain drawn as a connected run on the atlas rather than loose glyphs, with seam-crossing segments broken so a run does not draw back across the map. Documented in docs/key-locations.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "6d3d3e428fe83bb49e582dcb7b0ef0d118b140c56d86fd51513e1e680d600829",
+          "destination_sha256": "a9211334f60c893e5e5a5884edd723edb750daa9a1b3751ccf08d38fa465ba23",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab sample: `/` serves the committed Fixtures/sample-world-v1.json instead of generating a world per page load, Run simulation replaces Generate random world and reports the measured wall time of the whole run, and the ruin and fortress map pins are redrawn to the scale and palette the other markers use. Presentation and tooling only; no generated-world contract, schema or seed behavior changed. See board/done/LAB-SAMPLE.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "a9211334f60c893e5e5a5884edd723edb750daa9a1b3751ccf08d38fa465ba23",
+          "destination_sha256": "aeaf9eca75a45068e391cc5ea7b323dd25fd23b8be0de4d17e2ccad3b4cac644",
+          "decision": "docs/terrain-math-lab.md",
+          "reason": "Lab presentation: the simulation controls move above the layout, the atlas fortress pin becomes the crenellated keep the globe already used, and the served page is threaded and answers HEAD. See board/done/LAB-SAMPLE.md."
+        },
+        {
+          "date": "2026-09-21",
+          "previous_destination_sha256": "aeaf9eca75a45068e391cc5ea7b323dd25fd23b8be0de4d17e2ccad3b4cac644",
+          "destination_sha256": "cfb10b38b66f09e45a10967a2d75828d210b27f2569ef184dd0396f3707a98ab",
+          "decision": "docs/terrain-world-layers.md",
+          "reason": "Changed by the 2026-09-21 backlog completion pass; see board/done for the card covering this file."
         }
       ]
     }

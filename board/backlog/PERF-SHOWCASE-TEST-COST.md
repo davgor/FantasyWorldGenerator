@@ -1,6 +1,16 @@
 # PERF-SHOWCASE-TEST-COST — one test method generates six worlds, and the guard that would stop it runs last
 
-Owner: none. State: backlog, unowned. Found by the code red team auditing `233182e`
+Owner: none. State: **backlog — two of three fixes landed, the falsification is still unrun.**
+
+> **Swept 2026-09-21 at `4778a3e`.** Fix **3** (compare digests, not bytes) and fix **1** (move
+> the size guard inside the generation loop) are both landed, with tests that failed first and
+> that cost no world generation to run. Fix **2** (shrink the reproducibility input) was
+> **rejected and deliberately not stacked** on fix 1 — it is the only one of the three that gives
+> up a stated guarantee. **The card stays open for one reason: the falsification did not finish**,
+> twice, so whether this is a cost card or a breakage card is still formally undecided. See
+> [Falsification](#falsification).
+
+Found by the code red team auditing `233182e`
 ([review](../../docs/reviews/233182e-code-red-team.md), M5) and held off the board while that
 lens's filing hold stood; filed 2026-09-20 once the user lifted it. A constraint rather than a
 defect, with one open question that would make it a defect — see Falsification.
@@ -91,6 +101,29 @@ stacked without deciding what coverage is being given up.
 rather than in the second pass at `tools/export_showcase.py:71-78`. A short move that saves two
 thirds of a doomed run and makes the refusal arrive at the world that caused it.
 
+> **LANDED 2026-09-21, and it is the one of the two alternatives that was chosen.** The guard is
+> now a `page_size_verdict(megabytes)` returning `'refuse'`, `'warn'` or `'ok'`, called inside
+> the generation loop immediately after each page's bytes exist. The second pass over
+> `manifest['worlds']` is gone. The bounds are unchanged — refuse at 100 MB, warn at 50 — and
+> they are now named constants rather than literals repeated between the check and its message.
+>
+> **Fix 2 was rejected, and the two were explicitly not stacked**, which this card asks for. Fix
+> 1 changes only *when* the refusal arrives and gives up no coverage. Fix 2 gives up a stated
+> guarantee: the test would stop asserting that the **published** configuration is reproducible,
+> which is a weaker claim than the one it makes today. With fix 1 and fix 3 both landed, the
+> remaining cost is the six generations themselves, and paying for them buys a real guarantee
+> about the artifact that actually ships. That is the conservative reading and the owner can
+> reverse it by taking fix 2 as well — at which point the cost recorded in this card is what it
+> would be trading for.
+>
+> Two tests, both cheap enough to run without generating a world, and both failing first: the
+> boundary test (`AttributeError: module ... has no attribute 'page_size_verdict'`) and a
+> structural test that the guard is called from inside the loop over `WORLDS`
+> (`AssertionError: 'page_size_verdict' not found in {'print', 'generate_request',
+> 'omit_timings', 'dict', 'len'}`). The second is the one that matters: it is what stops the
+> guard drifting back out into a second pass, and it is checked by AST rather than by provoking
+> an oversized world, because provoking one costs exactly what this card is about.
+
 **2. Shrink the reproducibility input.** One world at a smaller size proves the exporter is
 deterministic just as well as three at 65, while the published bundle stays at 65. **State the
 cost plainly if this is chosen:** the test would stop asserting that the *published*
@@ -100,6 +133,23 @@ configuration is reproducible, which is a weaker claim than the one it makes tod
 contents. Comparing SHA-256 hex strings instead drops the test process's own peak to nothing and
 weakens no assertion — the test already computes a SHA-256 of each payload at
 `tests/test_showcase.py:39`. This is free and should land regardless of the other two.
+
+> **LANDED 2026-09-21.** `bundle_digests(directory)` in `tests/test_showcase.py` returns
+> `{filename: sha256hex}`, reading each file in 1 MiB blocks so no payload is ever resident, and
+> the comparison is now between two dicts of digests. The assertions that follow it needed the
+> payloads, so they re-read them **from disk one page at a time** instead of from a dict holding
+> all five: the first bundle is still sitting in the temporary directory, and holding it in
+> memory to re-read it was never necessary.
+>
+> Peak in the test process for the comparison goes from two complete bundles held at once to one
+> 1 MiB block. Nothing is weakened: a single changed byte, a missing file and an extra file are
+> each pinned by a test, and the chunked digest is pinned equal to a whole-file
+> `hashlib.sha256`, so a block-boundary bug cannot hide.
+>
+> Those three checks live in a new `BundleDigestTests` class that generates **no worlds**, which
+> is the point — the property that the comparison is sound is now provable without paying the
+> six generations that `ShowcaseTests` costs. Before the change they failed with
+> `NameError: name 'bundle_digests' is not defined`.
 
 ## Acceptance and evidence
 
@@ -117,7 +167,7 @@ generation from rendering would make the fix targetable; nobody has taken one.
   apart, and nothing here separates them. PERF-ADD-NESTS-DOMINATES profiled generation at size
   17; nobody has profiled the renderer at any size.
 - **That size 65 is the driver.** It is the obvious suspect and
-  [PERF-CITY-COUNT-TRACKS-RASTER](PERF-CITY-COUNT-TRACKS-RASTER.md) supplies a mechanism, but
+  [PERF-CITY-COUNT-TRACKS-RASTER](../backlog/PERF-CITY-COUNT-TRACKS-RASTER.md) supplies a mechanism, but
   this card measured neither, and an extrapolation from a neighbouring card is not a measurement.
 - **That the test is red today.** See below. It is currently unknown, and that is the point.
 
@@ -136,10 +186,38 @@ decides it — and decides whether this is a cost card or a breakage card. If ev
 100 MB, the "currently red" reading is dead and this stays a cost card. If any page is over, the
 fix is urgent and the first proposal above is the one to land.
 
+> **Attempted twice on 2026-09-21 and NOT SETTLED. This is the one item of this card the sweep
+> could not close, and it is stated here rather than in a footnote.**
+>
+> The experiment run was the per-world half of the exporter — same recipe, same overrides, same
+> `report(world, live=False)`, releasing each page before the next — which is half the test's
+> cost because it skips the second pass the determinism check needs. It still did not finish.
+>
+> - **Attempt 1** was abandoned after ~25 minutes when it became clear it had imported
+>   `terrain_settlements` before another session added a constant `city_planner` needs, so it was
+>   going to die at `fill_cities` after paying for a world. Killed by PID.
+> - **Attempt 2** ran the phase-16 import chain up front to fail fast, and was still inside its
+>   **first** size-65 world after 385 CPU-seconds on a machine at 100% with 42 python processes.
+>
+> **A provenance trap worth recording, because it would have made the answer wrong rather than
+> late.** Attempt 2 started at 02:12 and `terrain_nests.py` was restructured at 02:14, which
+> changed generated content substantially — the same world carries 411 monster lairs after the
+> change against 256 before. Page size follows content, so attempt 2's byte counts would have
+> described a generator that no longer exists, and would have *understated* current pages.
+> Byte counts are immune to contention; they are not immune to the tree moving underneath them.
+>
+> **What is still known, and it is not nothing.** Five recorded runs put pages at 37.7-51.7 MB,
+> and the arithmetic in this section already favours the six-page reading (mean 56.4 MB, under
+> the refusal) over the three-page one (113 MB, over it). Reaching 100 MB from ~50 needs a
+> doubling, and the nest change is a fraction of a page. **The cost reading remains much the more
+> likely and it is still not measured.** Whoever picks this up needs one quiet machine and about
+> ten minutes — and should re-read the digest of `terrain_nests.py` before and after, because
+> this is the second card tonight whose numbers moved because that file did.
+
 ## Not owned
 
 Pre-existing. Interrupting this test is what produced
-[PERF-SUITE-RUNNER-ORPHANS-CHILD](PERF-SUITE-RUNNER-ORPHANS-CHILD.md); the two findings were
+[PERF-SUITE-RUNNER-ORPHANS-CHILD](../done/PERF-SUITE-RUNNER-ORPHANS-CHILD.md); the two findings were
 observed together and are separate cards because the orphaning is not specific to the showcase.
 
 ## Handoff
@@ -147,3 +225,40 @@ observed together and are separate cards because the orphaning is not specific t
 Converted from M5 of [233182e-code-red-team](../../docs/reviews/233182e-code-red-team.md). The
 six-generation structure, the three-times-per-CI-run cost, the guard-runs-last shape and the five
 recorded runs were established here; the three headline figures were relayed.
+
+## The falsification ran 2026-09-21 — it is a BREAKAGE card, not a cost card
+
+The card says its falsification run "decides whether this is a cost card or a breakage card".
+It has now run, and the answer is breakage: **`export_showcase.py` cannot produce a publishable
+bundle at all.**
+
+    $ PYTHONPATH=Sim python tools/export_showcase.py --source . --output <tmp> --allow-dirty
+    crossroads 312965123 bytes
+    export_showcase.py: error: crossroads.html is 313.0 MB; GitHub rejects files at 100 MB.
+    exit 2
+
+**313 MB against a 100 MB hard limit, on the first page generated.** The exporter refuses and
+stops, which is the size guard working — fix 1 moved it inside the generation loop, so it now
+fails on page one instead of after generating every world. That is the whole benefit of fix 1,
+demonstrated: the old shape did all the work first and refused afterwards.
+
+**This is not new tonight, and the card already half-knew it.** The guard and its 100 MB bound
+are byte-identical to HEAD — `git diff tools/export_showcase.py` shows only the guard's *position*
+moved, nothing about what is embedded. The card's own investigation recorded a reading of "a page
+near 113 MB, **above the 100 MB refusal**, which would mean the exporter is refusing", and could
+not decide between that and a 56.4 MB mean. The first reading was right.
+
+**The 41,806,542-byte `crossroads` figure in this card is superseded** and should not be requoted.
+The grid is `size: 65` (`export_showcase.py:74`, unchanged), so a page carries a size-65 world
+with `build_stages` — and `build_stages` is roughly two thirds of a world document.
+
+**What this means for the card's three fixes.** Fix 3 (SHA-256 digests) and fix 1 (guard inside
+the loop) have landed and are correct. Neither makes the bundle publishable, because the
+deliverable was never reachable: no arrangement of digests or guard placement gets a 313 MB page
+under 100 MB. The remaining question is the one the guard's own error message asks — **reduce the
+showcase grid size, or stop embedding `build_stages` in the bundle** — and that is a product
+decision about what the showcase is for, not a performance fix.
+
+`tests/test_showcase.py::test_bundle_is_fresh_reproducible_and_traceable` errors for this reason
+and will keep erroring until that decision is taken. It is not a flaky test and not a regression
+from the 2026-09-21 sweep.

@@ -45,29 +45,35 @@
     },
     "rolls": {
       "type": "array",
-      "description": "Every candidate start point considered, precipitated or not. Diagnostic rather than content: it answers 'why is there a cult here' and, just as importantly, 'why is there nothing here'. A consumer building encounters should read groups, not this.",
+      "description": "Every candidate start point considered, precipitated or not. Diagnostic rather than content: it answers 'why is there a cult here' and, just as importantly, 'why is there nothing here'. A consumer building encounters should read groups, not this. A band raised by lineage fission or by the request API has no roll, so this is not a complete index of groups and never was.",
       "items": {
         "$ref": "#/$defs/roll"
       }
     },
     "routes": {
       "type": "object",
-      "description": "Summary of the route pass. Present once routes have been built.",
+      "description": "Summary of the route pass. Present once routes have been built. Version 2 is where lineage fission landed: under version 1 `parent_uid` was null on every band and `fission` never appeared as a branch, and the v1 `limits` sentence said so, so a consumer that had read those as guarantees must re-read this block rather than assume. Version 3 changed no field and no enum, and a version 2 document still validates: what moved is the guarantee. Under 2 a merchant leg could run to one and a half day-marches -- measured at 1.171 -- because the cut declined to split a remainder of half a march or less and absorbed it backwards. At 3 the cut closes at the last node inside `day_march_m`, so no merchant leg exceeds one march; legs are shorter and there are more of them, and a consumer that sized a day's travel off the longest leg or counted a route's stations reads different numbers.",
       "required": [
         "version",
         "routed",
         "stranded",
+        "fissioned",
         "day_march_m",
         "method",
         "limits"
       ],
       "properties": {
         "version": {
-          "const": 1
+          "const": 3
         },
         "routed": {
           "type": "integer",
           "minimum": 0
+        },
+        "fissioned": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Daughter clans seated by lineage fission, counted inside `routed`. Bounded by construction: fission runs once when a band is placed, at most one child per band, and a child never splits."
         },
         "stranded": {
           "type": "integer",
@@ -189,7 +195,7 @@
             "string",
             "null"
           ],
-          "description": "The band this one split from, once lineage fission exists in the route pass."
+          "description": "The band this one split from, set by lineage fission in the route pass and null for a band the point process placed. A child is NOT recorded in `rolls`: `rolls` answers what the point process considered at a candidate point, and a child was never considered -- it descends. So the durable invariant is that every band either names a roll or names a parent that does."
         },
         "origin": {
           "type": "object",
@@ -366,7 +372,7 @@
                 "$ref": "#/$defs/day"
               },
               "branch": {
-                "description": "trunk is the annual round; base_limb is the transhumance split where part of the group holds a base while the herd moves; fission is a child clan inheriting part of the parent range; spur is a short out-and-back raid or shrine visit.",
+                "description": "trunk is the annual round; base_limb is the transhumance split where part of the group holds a base while the herd moves; fission is a child clan inheriting part of the parent range; spur is a short out-and-back raid or shrine visit. A `fission` leg is the only one whose `to` names a camp of a DIFFERENT band -- the start camp of the band in `parent_uid` -- because it joins two rounds rather than sitting inside one. It also carries no `depart_day` or `arrive_day`: the split happened once and is not part of anybody's year, and it is excluded from `round_length_m` for the same reason.",
                 "enum": [
                   "trunk",
                   "base_limb",

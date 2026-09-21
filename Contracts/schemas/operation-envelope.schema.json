@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Operation envelope v1",
+  "description": "What a host returns for one world operation: the name of the version it produced, the version it came from, which blocks moved, the operations record every mutator appends, and the producing API's own report where it writes one. Never the world itself -- a world is 2-100 MB and a caller with a finite context drives it by name. Reads produce no version and therefore no envelope; they answer with their own document. Emitted by fantasy_world_generator.world_handle.envelope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "operation",
+    "handle",
+    "parent",
+    "generator_version",
+    "changed",
+    "operation_record",
+    "report"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fantasy-world-generator.operation"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "operation": {
+      "description": "The verb. `depart` has no route of its own: it is `summon` with `depart: true`, and it is a separate operation because it produces a different version.",
+      "enum": [
+        "generate",
+        "advance-age",
+        "advance-time",
+        "summon",
+        "depart",
+        "corrupt",
+        "cleanse",
+        "nomad",
+        "found-settlement"
+      ]
+    },
+    "handle": {
+      "description": "The version this call produced. `w_` followed by the first 16 hex digits of sha256 over the transfer bytes.",
+      "type": "string",
+      "pattern": "^w_[0-9a-f]{16}$"
+    },
+    "parent": {
+      "description": "The version this call was given, or null for a root. A parent stays valid after its child exists: a version is immutable and a mutation produces a child rather than moving a slot.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^w_[0-9a-f]{16}$"
+    },
+    "generator_version": {
+      "description": "The generation algorithm that produced this version. A store holding a version whose value no longer matches the running generator refuses it rather than migrating it; worlds are disposable until the first player-facing release. See decision 023.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "changed": {
+      "description": "Dotted paths, to two levels, whose contents differ from the parent. Empty for a root, because nothing can differ from a world that did not exist. Two levels is the granularity the scripted consumer personas already assert on, so an envelope and a reference trajectory name blocks the same way.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "operation_record": {
+      "description": "The final `history.operations` entry. This is the only per-call account that always exists: all eight version-producing APIs append one, and four of them stamp no report block at all. Null only for a root.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "report": {
+      "description": "The producing API's own report block, verbatim, where it writes one: `time_advance`, `corruption`, `cleanse` or `settlement_founding`. Null for the four verbs that write none. The envelope wraps this rather than restating it, the way the failure envelope carries API-specific detail inside a uniform outer shape.",
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,6 +1,85 @@
 # SCALE-METRE-CONSTANTS-COLLAPSE — absolute metres authored for an 11.15 km world, still in the code at 200 km
 
-Owner: none. State: two members fixed in the working tree, five open. Raised by the
+> **THE REACH CLAMP LANDED 2026-09-21. Five members remain open and this card stays in the
+> backlog for them.**
+>
+> Owner ruling, 2026-09-21: **the reach clamp only.** The three `min(ceiling, raw*factor)`
+> reach keys in `Sim/icarus_sim/terrain_world.py` are now the raise-don't-clamp shape the
+> card asked for — a request that resolves a reach past `REACH_MAX_M` is refused with
+> `STATE_CAPACITY`, naming the key, the width, the value it resolved and the width at which
+> that key binds, exactly as `river_threshold_km2` already was. The recommendation at the
+> foot of this block is what was taken, and for the reason it gives: it is the only member
+> that changes no world anyone has generated.
+>
+> Re-measured before the change, unchanged by it: `culture_link_cost` binds at
+> **619.3867570441671 km** and resolves **96870.0078224655 m** at the 600 km large preset,
+> 3.13% of headroom; `support_reach` binds at **1114.8961626795008 km**;
+> `settlement_spacing` at **2477.5470281766684 km**. Below those widths `min(ceiling, v)`
+> returns `v` itself, so the three presets resolve bit-for-bit what they resolved before:
+> no generated world moves, and `Sim/tests/test_terrain_scale.ReachCeilingTests` asserts
+> that as float identity rather than as a tolerance.
+>
+> One test moved with it. `RiverThresholdBoundTests.test_too_wide_a_world_raises_rather_than_clamping`
+> generates at 5757.2 km, which is past all three reach binding widths, and the reach block
+> runs first — so it now pins the three reaches by override to keep the river bound the one
+> under test. Same assertion, same width, the subject made explicit.
+>
+> **The other five members were deliberately not touched**: `terrain_biomes.py:14,32`,
+> `terrain_settlements.py:746`, `terrain_recipes.py:57`, `terrain_world.py:40` nest
+> clearance, and `water_reach` in `civilizations.json`. They are seed-affecting retunes
+> outside the authorising ruling and the cost table below stands for them unchanged.
+>
+> **BLOCKED 2026-09-21, not stalled. Premises re-measured and every one of them still
+> reproduces; every remaining member lives in a provenance-pinned file.**
+>
+> Re-measured rather than re-read, 2026-09-21:
+>
+> | claim | card says | measured |
+> |---|---|---|
+> | `culture_link_cost` ceiling binds at | 619.4 km | **619.39 km** |
+> | resolves at the 600 km large preset to | 96870 m | **96870.01 m**, 3.13% of headroom |
+> | `support_reach` ceiling binds at | 1114.9 km | **1114.90 km** |
+> | `settlement_spacing` ceiling binds at | 2477.5 km | **2477.55 km** |
+> | 180 m wetland margin against a cell edge | 0 of 1888 at size 17 | cell step at 200 km size 17 is **12500 m**, 69x the margin; at the 11.15 km reference it is **696.8 m**, still 3.9x |
+>
+> Nothing has moved. `AGE_YEARS` going from 100 to 5000 today does not touch any figure
+> here: none of these is a count, a cost or a cadence — they are lengths and areas measured
+> against a circumference, and the world's width has not changed.
+>
+> **Why nothing landed.** Each of the six open members, and the precedent's own live clamp,
+> is a literal inside a file listed in `provenance/extraction-manifest.json`:
+>
+> | member | file | manifest status |
+> |---|---|---|
+> | ~~the three reach keys' `min(100000., raw[key]*factor)` clamp~~ **LANDED 2026-09-21** | `Sim/icarus_sim/terrain_world.py` | pinned; revision row owed to the coordinator |
+> | 180 m wetland margin | `Sim/icarus_sim/terrain_biomes.py:14,32` | modified |
+> | `nest_settlement_clearance` 250 m default | `Sim/icarus_sim/terrain_world.py:40` | modified |
+> | `exp(-distance/80)` flood decay | `Sim/icarus_sim/terrain_settlements.py:746` | modified |
+> | `derive_water`'s `max(.01, min(1, area/110))` | `Sim/icarus_sim/terrain_recipes.py:57` | modified |
+> | `water_reach` 400–650 m across 13 profiles | `Sim/icarus_sim/civilizations.json` (validated by pinned `terrain_profiles.py`) | unpinned, but seed-affecting |
+>
+> Editing a pinned file needs a revision row in the extraction manifest, which is owned and
+> serialised by the coordinator; editing one without the row turns `verify_provenance` red
+> for every concurrent session, and the manifest has already been corrupted once by two
+> sessions racing on it. The `water_reach` member is not pinned but is a **seed-affecting
+> retune of thirteen population profiles**, which the card itself places outside the ruling
+> that authorised the river half, and which would additionally stale the 162 MB
+> `Fixtures/sample-world-v1.json`.
+>
+> **Nothing was invented to fill the gap.** No detector was added in an unpinned module,
+> because a detector with no caller is the unreachable code this card already condemned
+> once, and a test asserting the collapse is fixed would be red on arrival. The honest
+> deliverable from this lane is the measurement above and the file-by-file cost below it.
+>
+> **The one recommendation this lane would make to whoever unblocks it:** take the reach
+> clamp first, and take it alone. It is the only member that is *not* seed-affecting for
+> any world anyone has generated — `culture_link_cost` at the 600 km preset resolves
+> 96870.01 m, below the 100000 m ceiling, so removing the clamp changes nothing below
+> 619.39 km and changes only worlds nobody has built above it. Every other member changes
+> a world that exists.
+
+Owner: none. State: **five members open**, all in pinned files; three fixed in the working
+tree (the island floor, `river_threshold_km2`, and the reach clamp as of 2026-09-21). Raised by the
 published-layer regression lane under user ruling 2.0, 2026-09-20; a sixth member found
 and carded by the regression follow-up lane the same day.
 
@@ -57,6 +136,14 @@ circumference and the bound, so the same class does not recur in the code added 
 three reach keys were left alone because changing them is a seed-affecting retune outside the
 ruling that authorised this one — but they should be converted to the same raise-don't-clamp shape
 in whichever change next touches them.
+
+**Converted 2026-09-21 under the owner's reach-clamp-only ruling.** `REACH_MAX_M` now sits beside
+`RIVER_THRESHOLD_MAX_KM2`, and the binding width is derived per key from its own reference-world
+base rather than written as a constant, because the three bases differ. It turned out **not** to be
+a seed-affecting retune after all, which is why it could be taken alone: the clamp never bound on
+any width the presets reach, so every world below 619.39 km resolves the identical float it did
+before. What changed is what a world above that width does — it is refused, naming the key, instead
+of silently freezing that reach.
 
 ### The 180 m wetland margin is the sharpest open one
 
@@ -242,3 +329,31 @@ relative term grows past the absolute one.
 Worlds are disposable until the first player-facing consumer ships, so fixing these is a retune,
 not a migration.
 [023-world-compatibility-policy.md](../../docs/decisions/023-world-compatibility-policy.md)
+
+## The river layer thins as the raster refines — measured 2026-09-21, routed here from key locations
+
+`CONTENT-ARCHETYPE-FIELD-DOMAIN-MISMATCH` surfaced a member that belongs to this card rather
+than to that one, and it is the sharpest evidence yet that these constants do not follow the
+world. Measured on seed 42, `recipe_version` 3, phase 16, 200 km preset, at three rasters:
+
+| | size 17 (47 land cells) | size 33 (268) | size 65 (1,174) |
+|---|---|---|---|
+| land cells where `river` is zero | 49% | 92% | **97%** |
+
+At size 65 the river layer marks **31 of 1,174** land cells. A percentile gate cannot stand on
+a field that is zero almost everywhere, so `ford`, `ferry_crossing`, `bridge` and `toll_station`
+are refused at 33 and 65 and would be refused at any finer raster. Before the refusal rule
+landed, `bridge` was placing 5 sites at size 33 and 6 at 65 **through a river term resolving to
+zero** — content placed by a gate that was not gating.
+
+The direction is what matters: it **gets worse as the raster refines**, which is the signature
+of a threshold denominated in something that is not tracking the world. That is this card's
+subject, not the catalogue's. The wayside archetypes cannot be fixed in the catalogue, because
+there is no authored constant that makes a 31-cell river layer support a top-45-per-cent cut.
+
+Companion finding, recorded where it was found rather than duplicated here: `peat_cuttings`
+requires `wetland_distance`, **a layer nothing in this repository writes** — it exists only in
+a docstring asserting the world publishes it and in a test fixture that does. It fails closed,
+so it is absent content rather than wrong content, and reviving it is a decision about what
+marsh means here. See retired [BIOME-MARSH-IS-THE-RIVER-MASK](../retired/BIOME-MARSH-IS-THE-RIVER-MASK.md),
+which measured that marsh is the river mask and was deliberately not applied.

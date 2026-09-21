@@ -36,9 +36,19 @@ SEASON_DAYS = DAYS_PER_YEAR / 4.                       # 90
 # and the age lottery samples `int(founding.end_year) * 360` for its moon day -- so
 # nothing in the generator said how long one lasts. A tick cannot route a long span into
 # an age advance without an answer, so this is that answer, and it is new contract rather
-# than a discovered constant: an age is a century.
-AGE_YEARS = 100.
-AGE_DAYS = AGE_YEARS * DAYS_PER_YEAR                   # 36000
+# than a discovered constant: **an age is five thousand years**
+# (`docs/decisions/028-an-age-is-five-thousand-years.md`).
+#
+# It is load-bearing in two places outside this line, and both move with it or break
+# silently. `terrain_time` takes the age transition's own ley band to the power of
+# `1 / AGE_YEARS`, so a year-step composes over one whole age to the band the age boundary
+# itself applies -- hard-code that exponent and a longer age drains the magic layer to zero
+# through ordinary ticking with every individual step inside its stated bounds. And `band`
+# returns `AGE` at `AGE_DAYS`, so what counts as a tick rather than an age advance moves
+# with it: a century is a `LONG` tick, one fiftieth of an age, and moves the living layer
+# only.
+AGE_YEARS = 5000.
+AGE_DAYS = AGE_YEARS * DAYS_PER_YEAR                   # 1800000
 
 INSTANT = 'instant'
 DAY = 'day'
@@ -210,6 +220,72 @@ def steps(now, days, allowed=None):
     return out
 
 
+def by_cadence(now, days):
+    """How many steps each cadence would run in `(now, now + days]`, counted not built.
+
+    `crossings` returns a `range`, and `len` on a range is O(1), so the whole span is
+    priced without allocating a tuple per step. That matters at the top of the band: a
+    span just under an age is 1.8 million steps, and the guard in `terrain_time` has to
+    answer *before* that list exists rather than after it.
+
+    Cadences that contribute nothing are absent, exactly as they are when the counts are
+    tallied from `steps`.
+    """
+    if days < 0:
+        raise ValueError('days must be >= 0')
+    counts = {}
+    for name in CADENCE_PERIOD:
+        count = len(crossings(name, now, days))
+        if name in COALESCED:
+            count = min(count, 1)
+        if count:
+            counts[name] = count
+    return dict(sorted(counts.items()))
+
+
+def work(now, days):
+    """How much work a span would execute: the number of steps, without building them.
+
+    The honest unit for a cost ceiling, because a step is what costs. It must answer
+    exactly the question `steps` answers, and `WorkCeilingTests` asserts that against the
+    enumerator itself rather than against a formula, because a counter that answers a
+    slightly different question than the thing it stands in for is the near-miss that
+    keeps being mistaken here for an answer.
+
+    Steps are a proxy for cost and not cost: a coalesced pass runs once per call however
+    many crossings it had, while a daily quest sweep runs every day, so two spans with
+    equal counts can differ by orders of magnitude. The ceiling that reads this says so.
+    """
+    return sum(by_cadence(now, days).values())
+
+
+def longest_span(now, limit):
+    """The longest span in days, from `now`, whose work is at most `limit` steps.
+
+    A cost ceiling counts steps, but a caller asks in days or years, so a refusal that
+    only named the step limit would be telling them to clamp a field they never sent.
+    `work` is non-decreasing in `days` -- a longer window contains every crossing a
+    shorter one did -- so the answer is a bisection over whole days, and the whole search
+    allocates nothing.
+
+    Whole days, and rounded down: the answer is a span that is certainly permitted rather
+    than the exact boundary, so a caller that sends it back is not refused again by a
+    fraction of a day.
+    """
+    if limit < 0:
+        raise ValueError('limit must be >= 0')
+    low, high = 0, int(AGE_DAYS)
+    if work(now, float(high)) <= limit:
+        return float(high)
+    while low < high:
+        middle = (low + high + 1) // 2
+        if work(now, float(middle)) <= limit:
+            low = middle
+        else:
+            high = middle - 1
+    return float(low)
+
+
 def plan(now, days):
     """A description of what a span would do, without doing any of it.
 
@@ -217,10 +293,7 @@ def plan(now, days):
     answer what a request would cost before it commits to paying it.
     """
     which = band(days)
-    executed = steps(now, days)
-    counts = {}
-    for _, name, _ in executed:
-        counts[name] = counts.get(name, 0) + 1
+    counts = by_cadence(now, days)
     return {'band': which, 'elapsed_days': days, 'from_day': now, 'to_day': now + days,
             'ages': ages_for(days) if which == AGE else 0,
-            'steps': len(executed), 'by_cadence': dict(sorted(counts.items()))}
+            'steps': sum(counts.values()), 'by_cadence': counts}

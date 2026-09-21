@@ -21,9 +21,85 @@ ROOT = Path(__file__).resolve().parents[1]
 STAGES = ("checks", "sim-tests", "repo-tests", "consumers", "artifacts")
 
 
+def reap(process) -> None:
+    """Stop `process` AND everything it spawned, matching only PIDs descended from it.
+
+    `process.terminate()` reaches exactly the process this parent holds a handle to and
+    nothing underneath it. On this tree that is never the process worth killing, for two
+    compounding reasons, both measured on 2026-09-21 rather than reasoned:
+
+    * `sys.executable` here is a ~5 MB `Scripts/python.exe` shim that spawns the real
+      `Python312/python.exe`. `Popen` hands back the shim's PID; the work runs in a
+      different process. Terminating the shim does take its own worker with it -- that
+      part was checked twice and holds -- so this is not the leak by itself.
+    * `--stage repo-tests` is three deep: this spawns `unittest discover`, inside which
+      `tests/test_showcase.py` spawns the showcase exporter. A probe mirroring that chain
+      terminated the top handle and found the GRANDCHILD still running, twice. It is
+      hard-killed level 2 that never gets to run its own cleanup, so cleanup written at
+      every level cannot close this; only walking the tree can.
+
+    Windows walks the tree with `taskkill /T`, and it must run BEFORE the handle dies:
+    once the intermediate process is gone its descendants are re-parented and no longer
+    reachable from this PID. `terminate()` on Windows is already `TerminateProcess`, so
+    leading with the tree kill gives up no graceful shutdown that existed.
+
+    POSIX keeps the single-child `terminate` -> bounded `wait` -> `kill` sequence. There
+    is no shim there and the grandchild case is left OPEN rather than fixed: closing it
+    means `start_new_session=True` plus `killpg`, which detaches the child from the
+    terminal's signal group, and that trade could not be tested on this machine. See
+    board/done/PERF-SUITE-RUNNER-ORPHANS-CHILD.md.
+    """
+    if process.poll() is not None:
+        return
+    if os.name == "nt":
+        # By PID, never by image name. The process list on this tree is full of other
+        # sessions' work and `taskkill /IM python.exe` would destroy a peer's run.
+        #
+        # Everything here runs in a `finally`, usually while a KeyboardInterrupt is in
+        # flight. An exception raised from this block would REPLACE that interrupt, so a
+        # missing taskkill or a slow one must not become the error the operator sees --
+        # fall through to the direct-child kill instead, which is worse but not silent.
+        try:
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(process.pid)],
+                           capture_output=True, timeout=60)
+        except (OSError, subprocess.SubprocessError):
+            pass
+    else:
+        process.terminate()
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
+    except OSError:
+        pass
+
+
 def run(*command: str, env=None) -> None:
-    print("+", " ".join(command), flush=True)
-    subprocess.run(command, cwd=ROOT, env=env, check=True)
+    """Run `command` to completion, naming the child's PID, and never outlive it.
+
+    `subprocess.run(..., check=True)` is shorter and it is NOT the leak it looks like:
+    CPython's `run` wraps `communicate` in a bare `except:` that calls `process.kill()`,
+    so a Ctrl-C or any other exception in this process already reaps the direct child.
+    Two things it cannot do, and both matter here.
+
+    It cannot say WHICH child: it returns a `CompletedProcess`, which carries no PID. When
+    this process is hard-killed -- which no parent can intercept, and which is how a
+    stopped background task actually ends -- the descendants survive holding a world each,
+    and on a tree shared by five sessions an anonymous survivor cannot be killed safely.
+    Printing the PID is what makes one safe to kill, and printing it requires holding the
+    `Popen`.
+
+    And it cannot reach past the direct child, which is where the real leak is. See `reap`.
+    """
+    process = subprocess.Popen(command, cwd=ROOT, env=env)
+    print("+ [pid %d] %s" % (process.pid, " ".join(command)), flush=True)
+    try:
+        code = process.wait()
+    finally:
+        reap(process)
+    if code:
+        raise subprocess.CalledProcessError(code, command)
 
 
 def environment() -> dict:
@@ -37,7 +113,7 @@ def environment() -> dict:
 # `tests/test_world_schema_conformance.py` and `Contracts/schemas/world-output.schema.json`
 # so the gate, the suite and the contract fail together instead of disagreeing.
 #
-# Declared below `run` on purpose: board/backlog/PERF-SUITE-RUNNER-ORPHANS-CHILD.md cites
+# Declared below `run` on purpose: board/done/PERF-SUITE-RUNNER-ORPHANS-CHILD.md cites
 # `run` by line number, and tools/docs_check.py's CITE rule checks the cited line, so a
 # constant inserted above it silently retargets somebody else's citation.
 VERSIONED_SECTIONS = ("terrain", "settlements", "civilizations", "city_plans", "hamlet_plans",
@@ -98,7 +174,14 @@ def rejection_fixtures() -> None:
     options = option_registry()
     legal = []
     for path in sorted((ROOT / "Fixtures").glob("*.json")):
-        document = json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        # A rejection fixture declares its cases in "invalid_*" fields, so a file carrying
+        # none of them cannot contribute one. Checked as text first because Fixtures/ now
+        # also holds the lab's 162 MB sample world, and parsing it here would cost seconds
+        # and hundreds of megabytes to reach the same `continue`.
+        if '"invalid_' not in text:
+            continue
+        document = json.loads(text)
         if not isinstance(document, dict):
             continue
         for field, entries in document.items():
@@ -233,6 +316,12 @@ def repo_tests(env) -> None:
 
 
 def artifacts(env) -> None:
+    # The lab serves a committed world instead of generating one per page load, so the
+    # sample is now a generated file like the catalogues -- and the only gate that can
+    # catch a recipe change it no longer matches is a rebuild. That costs a full world
+    # (about 80 s at the pinned size), which is why it sits in this stage and not in
+    # `checks`. Ahead of smoke_lab, which serves the file this proves is current.
+    run(sys.executable, "tools/build_sample_world.py", "--check", env=env)
     run(sys.executable, "tools/smoke_lab.py", env=env)
     with tempfile.TemporaryDirectory() as directory:
         first = Path(directory) / "first.json"

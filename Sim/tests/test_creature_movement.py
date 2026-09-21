@@ -142,10 +142,14 @@ class MovementPlacementTests(unittest.TestCase):
             return 'weights never reach the suitability floor'
         return 'biome weight is zero wherever it scores'
 
-    # `brimstone-bats` wants mountain, volcanic ground and an infernal ley all at once, and
-    # the three together do not clear the floor anywhere. Pre-existing, not from this pass,
-    # and recorded rather than silently tolerated so the assertion below stays meaningful.
-    KNOWN_UNDERWEIGHTED = ('brimstone-bats',)
+    # Empty, and it should stay empty. It held `brimstone-bats`, which wanted mountain,
+    # volcanic ground and an infernal ley all at once: `volcanic` is min 0.00 / mean 0.00 /
+    # max 0.15 over the land of every world measured, so a third of the score came from a
+    # field that is effectively zero and the other two thirds could not carry it over the
+    # floor. The same failure shape as the seven creatures that leaned on `ley_rot` -- a
+    # weight on something that is never there -- but on a live layer rather than a dormant
+    # one, which is why `test_no_creature_scores_only_on_dormant_layers` did not see it.
+    KNOWN_UNDERWEIGHTED = ()
 
     def test_no_creature_passes_its_gates_and_still_cannot_score(self):
         """The one failure mode that is genuinely an authoring defect.

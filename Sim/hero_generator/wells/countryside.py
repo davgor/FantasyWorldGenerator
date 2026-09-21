@@ -15,6 +15,37 @@ from .guilds import _dangerous
 ROLE_WORD = {'farming': 'farmstead', 'resource': 'quarry camp', 'coastal': 'fishing village'}
 
 
+def anchor(site, kind):
+    """The handle a countryside person is keyed on: the terrain node, spelled out.
+
+    ``humans.hamlets[].id`` and ``humans.fortresses[].id`` are **ordinals**.
+    ``terrain_humans.record()`` builds ``f'{kind}-{number}'`` where the number is the position
+    in the accepted list, and fortresses are accepted in descending ``defence_score`` over a
+    ``strategic`` map rebuilt from the road graph every age. Cities die, roads move and war
+    history reweights the score, so both the membership and the ordering change at every age
+    boundary: ``fortress-36`` names different ground after an advance, and the person built on
+    it is renamed although nothing about their ground changed. Worse, the old uid still
+    resolves -- to a real person at a real fortress, and the wrong one, with no error.
+
+    The terrain node does not renumber. ``-node-`` is written into the key rather than left
+    implicit because ``fortress-13`` and ``fortress-node-13`` would otherwise read alike and
+    mean different things, which is how a consumer joins the wrong rows without an error. This
+    is the spelling ``npc_roster/sites.py`` already uses for the same sites, so the two key
+    spaces join for the first time; ``terrain_villains`` anchors a villain to a ley node id for
+    the same reason.
+
+    The kind is part of the key because a hamlet and a fortress can share a node. On the seed-42
+    size-33 sample world no fortress currently shares one with a hamlet (0 of 56), but 18 nodes
+    are shared across the two kinds on the size-65 sample, so the prefix is load-bearing at
+    other sizes even where it looks redundant at this one.
+
+    A site with no ``node`` keeps its ordinal id: there is nothing stabler to key it on, and a
+    world whose small-site records have lost their node is broken upstream of this package.
+    """
+    node = site.get('node')
+    return f'{kind}-node-{node}' if node is not None else str(site.get('id'))
+
+
 def _city_ref(city):
     return {'kind': 'city', 'uid': city['uid'], 'name': city['name']}
 
@@ -90,14 +121,17 @@ def _reeve(world, hamlet, city, core, realm_of_city, final, nest):
         features.add('hamlet:starving')
     if nest is not None:
         features.add('hamlet:threatened')
-    return {'uid': 'hero-reeve-' + hamlet['id'], 'role': 'reeve', 'well': 'hamlets',
+    # All four uses of the anchor, together. Repairing one leaves three ways to join the wrong
+    # row, and three of them are the ones a story layer, a quest and a save file reach for.
+    key = anchor(hamlet, 'hamlet')
+    return {'uid': 'hero-reeve-' + key, 'role': 'reeve', 'well': 'hamlets',
             'civilization_id': city['civilization_id'], 'race_id': parent_race(world, city), 'born_age': max(1, final),
             'status': 'living', 'home': _city_ref(city), 'site_name': name,
-            'presence': {'site_kind': 'hamlet', 'uid': hamlet['id'], 'situation': 'reeve'},
+            'presence': {'site_kind': 'hamlet', 'uid': key, 'situation': 'reeve'},
             'realm_uid': (realm_of_city.get(city['uid']) or {}).get('uid'),
             'nest_id': nest['id'] if nest else None, 'nest_name': nest.get('name') if nest else None,
-            'deeds': [{'event_kind': 'hamlet', 'event_id': hamlet['id'], 'age': max(1, final), 'role': 'keeper'}],
-            'claim': {'verb': 'protect', 'target_uid': hamlet['id'], 'target_name': name},
+            'deeds': [{'event_kind': 'hamlet', 'event_id': key, 'age': max(1, final), 'role': 'keeper'}],
+            'claim': {'verb': 'protect', 'target_uid': key, 'target_name': name},
             'features': features}
 
 
@@ -106,11 +140,12 @@ def _castellan(world, fortress, city, realm_of_city, final, pressed):
     features = {'role:castellan', 'order:member', 'warden:post'}
     if pressed:
         features.add('fortress:pressed')
-    return {'uid': 'hero-castellan-' + fortress['id'], 'role': 'castellan', 'well': 'fortresses',
+    key = anchor(fortress, 'fortress')
+    return {'uid': 'hero-castellan-' + key, 'role': 'castellan', 'well': 'fortresses',
             'civilization_id': city['civilization_id'], 'race_id': parent_race(world, city), 'born_age': max(1, final),
             'status': 'living', 'home': _city_ref(city), 'site_name': name,
-            'presence': {'site_kind': 'fortress', 'uid': fortress['id'], 'situation': 'garrison'},
+            'presence': {'site_kind': 'fortress', 'uid': key, 'situation': 'garrison'},
             'realm_uid': (realm_of_city.get(city['uid']) or {}).get('uid'),
-            'deeds': [{'event_kind': 'fortress', 'event_id': fortress['id'], 'age': max(1, final), 'role': 'keeper'}],
-            'claim': {'verb': 'hold', 'target_uid': fortress['id'], 'target_name': name},
+            'deeds': [{'event_kind': 'fortress', 'event_id': key, 'age': max(1, final), 'role': 'keeper'}],
+            'claim': {'verb': 'hold', 'target_uid': key, 'target_name': name},
             'features': features}

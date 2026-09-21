@@ -48,7 +48,7 @@ def qualify(root,output):
     if not compiler:raise ValueError('C++17 compiler required; native qualification cannot be skipped')
     flags=shlex.split(os.environ.get('FANTASY_WORLD_GENERATOR_CXXFLAGS',''))
     if sys.platform=='darwin':
-        sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True).strip()
+        sdk=subprocess.check_output(['xcrun','--show-sdk-path'],text=True,timeout=60).strip()
         headers=Path(sdk)/'usr/include/c++/v1'
         if headers.is_dir():flags+=['-isystem',str(headers)]
     def build(name,sources):
@@ -108,7 +108,7 @@ def qualify(root,output):
     if verify_sources(root)!=manifest_hash:raise ValueError('source manifest changed during qualification')
     return dict(schema='fantasy-world-generator.native-qualification',schema_version=1,status='passed',
                 manifest_sha256=manifest_hash,unreal_qualified=False,
-                compiler=subprocess.check_output([compiler,'--version'],text=True).strip(),
+                compiler=subprocess.check_output([compiler,'--version'],text=True,timeout=60).strip(),
                 platform=platform.system(),architecture=platform.machine(),compiler_flags=['-std=c++17','-Wall','-Wextra','-Werror','-pedantic',*flags],
                 checks=checks,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
                 genesis_binary_sha256=hashlib.sha256(genesis.read_bytes()).hexdigest())

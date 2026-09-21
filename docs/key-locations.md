@@ -105,6 +105,43 @@ nothing, with a diagnostic naming the field and the domain. This is the same lin
 `normalisers` already draws for scoring — a constant field carries no information about where
 to put anything — applied to the harder question of whether a cell may stand at all.
 
+**And no variation is only the degenerate case. The rule is about the outcome: a percentile
+term whose resolved cut admits every cell in the domain is refused too.** A field that varies
+reaches the same place two other ways, and both are measured rather than imagined. *Saturated*:
+`river` read a flat 1.0 on land before the river-threshold fix, so every cell was a river.
+*Sparse*: it now reads zero on 23 of 47 land cells at size 17 and **246 of 268** at size 33, and
+because `percentile` is nearest-rank the `above_percentile 0.55` cut over a field that is zero on
+92 per cent of the domain lands **on** zero — so every cell clears it again. Zero variance,
+saturation and sparsity are three routes to one place, which is why the test is not *"does the
+field vary"* but *"does the resolved term separate the domain"*.
+
+So a percentile here means **the top N per cent, and it has to be a genuine top**. An absolute
+floor beside it is unaffected: the admission is tested against the *resolved* rule, floor
+included, so a floor that still bites keeps the term alive, which is exactly the job the
+`floor_rule` note gives a floor. An archetype declaring no `requires` at all is untouched — the
+chain and cluster furniture stands anywhere by declaration, and this is a rule about a percentile
+that stopped discriminating, not about a wide gate.
+
+**What that costs, because it is a cost.** On seed 42 at phase 16, archetypes that stop placing:
+**14 at size 17, 18 at size 33, 5 at size 65**; totals 100 → 94, 243 → 241 and 487 → 479, the small
+nets being the node budget handing the freed ground to something else rather than the change being
+small — at 65 the refused archetypes were carrying 24 sites and the world ends 8 down.
+
+**The count falls with the raster and the reason is worth knowing.** Thirteen of the fourteen at
+size 17 and thirteen of the eighteen at 33 are `settlement_distance`, which reads zero wherever a
+settlement stands: **41 of 47** land cells at size 17, **189 of 268** at 33, but only **323 of
+1,174** at 65, because the world stands 41, 213 and 408 settlements on them and the share that
+*is* settlement falls from 87 per cent to 71 to 28. So most of this is a coarse-raster artefact
+that resolves by itself at size 65, and it is not a catalogue fault.
+
+**What does not resolve is `river`.** Zero on 49 per cent of land at size 17, 92 at 33 and 97 at
+65, so `ford`, `ferry_crossing`, `bridge` and `toll_station` are refused at both finer rasters and
+would be at any finer one. `bridge` was placing 5 sites at size 33 and 6 at 65 through a term that
+had stopped filtering, with `ford` at 10 and `ferry_crossing` and `toll_station` at 3 each —
+the wrong-content case this rule exists for. `tar_pit` is `deposition`, refused at every raster.
+Nothing is re-gated to work around any of it: a term that stopped separating is a fact about the
+world's distribution, and tuning the catalogue around it would hide the finding.
+
 The corollary is a rule about the catalogue rather than about any world: **a `requires` term
 must name a layer that carries data inside the archetype's own `domain`.** Three archetypes
 did not. `salt_mine` and `salt_pans` were `domain: land` gated on `salinity`, and
@@ -223,9 +260,12 @@ ground on a size-257 world from 1.5% of land to 3.4% and still admit exactly one
 is per-run and the threshold is permanent.
 
 Seed 42 on a 200 km world at phase 16, counting only the scattered locations and not the chained
-waystone runs: **22 at size 17, 100 at size 33 and 287 at size 65** — 13, 25 and 26 of them tier
-2, and 2 tier-3 wonders at every raster. Totals including chains and clusters are 111, 255 and
-491. These counts move
+waystone runs: **13 at size 17, 92 at size 33 and 257 at size 65** — 7, 19 and 25 of them tier 2,
+and 2 tier-3 wonders at every raster. Totals including chains and clusters are **94, 241 and 479**.
+Re-measured on 2026-09-21 against worlds generated that day; the previous reading here (22, 100 and
+287 scattered, 111, 255 and 491 total) was taken before `AGE_YEARS` moved to 5000, before four
+planner versions moved, and before the saturated-percentile refusal, so it is three changes away
+and not a comparison. Sizes 129 and 257 were not measured. These counts move
 with the terrain the world grows underneath them — the river-threshold scaling fix alone moved
 every size-17 figure on this page — so treat them as a reading rather than a contract; the
 invariant is the ratio, not the number. **And they are a reading of a specific world.** The lab's
@@ -540,9 +580,12 @@ or absent, and `tests/test_native_world.py` stays green unchanged. **There is no
 a client doing in-process native generation will not have this block, and would need either
 the Python export or a port funded as its own ticket.
 
-Determinism: every draw is `child_seed(world seed, 'keyloc-…')`. The package carries its own
-copy of that helper and of the sphere-grid geometry, because it never imports `icarus_sim`;
-both are pinned against the originals by test, so a change on either side fails loudly
+Determinism: every draw is `child_seed(world seed, 'keyloc-…')`. That helper and the
+sphere-grid geometry come from `world_geometry`, a package of pure arithmetic that imports
+`math`, `hashlib` and `random` and nothing else — so this package still never imports
+`icarus_sim`, and `key_locations.seeds` and `key_locations.core.grid` are re-export shims with
+no arithmetic of their own. `Sim/tests/test_world_geometry.py` pins the shared implementation
+against the generator's originals at five raster sizes, so a change on either side fails loudly
 instead of silently forking the replay contract.
 
 ## Output
@@ -565,7 +608,22 @@ drowns a location or destroys the culture that justified it, the location legiti
 to exist. Treat a dangling key as *the place is gone*, not as renumbering.
 
 Every archetype appears in `sites` or in `diagnostics` with a reason, so a world that grew
-none of something says why.
+none of something says why. `diagnostics` is one row per **pass**, not one per archetype — an
+archetype declaring `also_scatters` gets two, one from the scatter pass and one from its chain
+or cluster — so a reader keyed on the archetype id silently keeps whichever came last and the
+rows will not sum to `len(sites)`. **The `sites` array is the ground truth.**
+
+Four gap reasons, pointing at four different people. *The world never generated the layer* is a
+world stopped at too early a phase. *This world has no cells of that domain* is a world with no
+lakes. *The layer is identically constant across the domain* is a catalogue fault that no seed,
+raster or threshold can rescue. *The percentile resolved to a cut admitting the whole domain* is
+none of those: the field carries data and the distribution is simply too piled up at one end for
+a nearest-rank cut to divide it, and the row names the layer, the percentile and the share it let
+through so the reader is not sent looking at the catalogue for a world's problem.
+
+The block is at **version 2**. Version 1 emitted sites through gates that admitted their whole
+domain; a consumer diffing counts across that boundary is comparing two contracts, not two
+worlds.
 
 ## Limits
 

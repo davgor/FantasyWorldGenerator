@@ -18,7 +18,12 @@ The shapes are not interchangeable and none of them is a loop for its own sake:
 
 Branches are typed rather than decorative. `trunk` is the annual round; `base_limb` is the
 transhumance split where part of the group holds a base while the herd moves; `spur` is a
-short out-and-back. `fission` is reserved for the lineage split that is not built yet.
+short out-and-back. `fission` joins a daughter clan's round to its parent's.
+
+Lineage fission runs here rather than in the placement pass, and it runs **once, at
+placement**, not once an age. It needs the round: the trigger is the clan's head count
+against the forage the ground it actually walks will carry, and that ground does not exist
+until the circuit is built. See `apply_fission` for why the cadence was settled that way.
 
 Days are integers in [0, DAYS_PER_YEAR) and the seasonal phase **inverts across the
 equator**, so a southern clan winters on the opposite half of the year. Getting that wrong
@@ -39,7 +44,22 @@ from .terrain_astrology import DAYS_PER_YEAR
 from .terrain_nests import habitat_cells, distance, clamp
 from .terrain_settlements import shortest_paths
 from .terrain_society import trace
-from .terrain_nomads import policy, population_of, ruggedness, VERSION as NOMAD_VERSION
+from .terrain_nomads import (CLASSIFICATIONS, GATES, ORIGIN_CAMP_KIND, ground, policy,
+                             population_of, ruggedness, seasonal_swing,
+                             VERSION as NOMAD_VERSION)
+
+# The route pass's own version, separate from the `nomads` block's. It moved to 2 when
+# lineage fission landed: a consumer reading routes v1 could rely on `parent_uid` being
+# null on every band and on `fission` never appearing as a branch, and the v1 `limits`
+# sentence said so in as many words. Neither holds now.
+#
+# It moved to 3 on 2026-09-21 when `_subdivide` began cutting before the day's march is
+# exceeded rather than after. Nothing about a leg's shape changed; what changed is the
+# guarantee. Under 2 a caravan leg could reach 1.5 day-marches -- measured at 1.171 on seed
+# 42 size 33 -- so a consumer that sized a day's travel off the longest leg, or counted the
+# stations on a route, gets different numbers at 3. Legs are shorter, there are more of
+# them, and no merchant leg exceeds one march.
+ROUTES_VERSION = 3
 
 # Midsummer in the northern hemisphere, as a fraction of the year. The south is half a
 # year away. Anchoring on a fraction rather than a day keeps this correct if the calendar
@@ -327,6 +347,29 @@ def _subdivide(band, camps, legs, cells, radius, day_march):
     a day apart precisely so a laden train never had to spend a night in the unmonitored
     gap between nodes. A leg that survives uncut is one a caravan can walk between dawn and
     dusk, so it needs no station.
+
+    **No segment exceeds one day's march** -- owner ruling, 2026-09-21, on
+    NOMAD-SUBDIVIDE-DROPS-THE-LAST-CUT. The rejected reading was that the bound is wrong
+    and a herder day is elastic, so a short tail may be absorbed into the previous day; it
+    is not obviously wrong, and the reason it lost is that a station exists to stop a train
+    sleeping in the gap, which a 1.5-day segment does not do at any elasticity.
+
+    The cut therefore closes at `a`, the last node the day's walk reaches, rather than at
+    `b`, the first node past it. Cutting on the crossing overshoots by up to one graph step
+    -- 6250 m at size 33, 17.9% of the march -- which would still break the assertion it is
+    meant to satisfy. The old tail condition `remaining > day_march * .5` was worse than
+    either: it declined to cut whenever the remainder was half a march or less, so the
+    remainder was absorbed backwards and a segment could reach 1.5 marches. Measured on
+    seed 42 size 33, leg `nomad-2-723-camp-3 -> camp-4`: 11 steps, cumulative 34730.3 m at
+    the tenth node and 40980.3 m at the eleventh, so the only crossing left 3125 m to run
+    and no cut fired at all. It is emitted whole at 1.171 day-marches.
+
+    What this cannot fix, and the reason the `len(nodes) < 3` short circuit stays: a leg
+    with no intermediate node has nowhere to stand a station, and neither has a single hop
+    inside a longer leg. A graph step wider than a day's march is emitted over-long by
+    construction. It does not arise at any raster the generator ships -- the step is
+    12500 m at size 17 and 6250 m at size 33 against a 35000 m march -- and it is a
+    property of the route graph, not of this cut.
     """
     out_camps = list(camps)
     out_legs = []
@@ -340,24 +383,28 @@ def _subdivide(band, camps, legs, cells, radius, day_march):
         segment = [nodes[0]]
         for a, b in zip(nodes, nodes[1:]):
             step = distance(cells[a]['direction'], cells[b]['direction'], radius)
-            run += step
-            segment.append(b)
-            remaining = leg['length_m'] - run
-            if run >= day_march and remaining > day_march * .5:
-                station = _camp(band, len(out_camps), b, cells, 'station')
+            if run > 0. and run + step > day_march:
+                # Stop where the day stopped. `run > 0.` is not defensive: at the head of a
+                # segment there is no earlier node to fall back to, so a single over-long
+                # hop is walked rather than refused.
+                station = _camp(band, len(out_camps), a, cells, 'station')
                 out_camps.append(station)
                 out_legs.append({'from': cut_from, 'to': station['id'], 'nodes': segment,
                                  'length_m': run, 'depart_day': None, 'arrive_day': None,
                                  'branch': leg['branch']})
                 cut_from = station['id']
-                segment = [b]
+                segment = [a]
                 run = 0.
-        if len(segment) > 1:
-            out_legs.append({'from': cut_from, 'to': leg['to'], 'nodes': segment,
-                             'length_m': run, 'depart_day': None, 'arrive_day': None,
-                             'branch': leg['branch']})
-        elif out_legs:
-            out_legs[-1]['to'] = leg['to']
+            run += step
+            segment.append(b)
+        # The tail always holds at least one step: the cut closes at `a` and `b` is
+        # appended after it, so the last node is never a cut point. The old shape cut at
+        # `b` and could therefore end with a one-node tail, which is what the removed
+        # `elif out_legs: out_legs[-1]['to'] = leg['to']` branch repaired. It is
+        # unreachable under this cut, so it is gone rather than left to be trusted.
+        out_legs.append({'from': cut_from, 'to': leg['to'], 'nodes': segment,
+                         'length_m': run, 'depart_day': None, 'arrive_day': None,
+                         'branch': leg['branch']})
     return out_camps, out_legs
 
 
@@ -422,6 +469,203 @@ def _assign_days(band, camps, legs, ctx):
             camp['arrive_day'] = (leg['depart_day'] - held) % DAYS_PER_YEAR
 
 
+def round_forage(band, cells):
+    """Mean forage over the cells the band's round actually holds.
+
+    The round rather than the start cell, because the route pass picks the best ground in
+    reach: a clan's start point says where it was raised and its camps say what it eats.
+    Measured on seed 42 at size 33, a routed herding round runs 0.32 to 0.57 while the
+    wanderer gate's floor at the start cell is 0.07 -- the two are not the same quantity
+    and a capacity read off the floor would never bind.
+    """
+    total = 0.
+    camps = band.get('camps') or []
+    for camp in camps:
+        fields = cells[camp['node']]['fields']
+        total += max(fields.get('food_potential', 0.), fields.get('natural_food_potential', 0.))
+    return total / len(camps) if camps else 0.
+
+
+def round_capacity(band, pol, forage):
+    """How many head that round carries, in the units the policy already speaks.
+
+    **Dimensionless on purpose.** The obvious model -- head per square kilometre of forage
+    -- reads the raster rather than the land, exactly as the placement rate would have if
+    clearance had been a rejection instead of a rate: a cell is 52 km2 at raster 17 against
+    13 km2 at raster 33, so the same clan on the same ground would outgrow it at one
+    resolution and not the other. The authored `size` band is already this module's
+    statement of how large a band of a given kind gets, so the round's forage picks a point
+    on it: a round at the gate's forage floor carries the bottom of the band, a round at
+    `rich_forage` carries the top.
+    """
+    rule = pol['classifications'][band['classification']]
+    low, high = rule['size']
+    floor = rule['gate'].get('min_forage', 0.)
+    rich = pol['fission']['rich_forage']
+    return low + (high - low) * clamp((forage - floor) / (rich - floor))
+
+
+def _legs_for(band, camps, order, parent, ctx, cells, radius, paths):
+    """Trace each ordered camp pair into a walked leg. One body, three callers."""
+    legs = []
+    for a, b, branch in order:
+        src, dst = camps[a], camps[b]
+        if src['node'] == dst['node']:
+            continue
+        nodes = trace(parent, band['node'], dst['node']) if src['node'] == band['node'] else []
+        if not nodes:
+            sub_d, sub_p = paths(src['node'])
+            nodes = trace(sub_p, src['node'], dst['node'])
+        if not nodes:
+            continue
+        length = 0.
+        for i in range(len(nodes) - 1):
+            length += distance(cells[nodes[i]]['direction'], cells[nodes[i + 1]]['direction'], radius)
+        legs.append({'from': src['id'], 'to': dst['id'], 'nodes': nodes,
+                     'length_m': length, 'depart_day': None, 'arrive_day': None,
+                     'branch': branch})
+    return legs
+
+
+def _inheritable(band):
+    """The camps of the parent's round a daughter segment could take over.
+
+    Its own start camp is not one of them: a split that leaves the child standing where the
+    parent already stands has divided nothing. Summer pasture first, because high open
+    ground in the warm months is what a herd that has outgrown its range competes for.
+    """
+    rest = [camp for camp in band['camps'] if camp['node'] != band['node']]
+    return sorted(rest, key=lambda camp: (camp['kind'] != 'summer', camp['id']))
+
+
+def apply_fission(result, cfg, block, ctx, cells, radius, paths, rng_seed):
+    """Split a clan that outgrew its round, and seat the child on ground the parent held.
+
+    **Once at placement, not once an age. This was an open design question and the answer
+    is recorded here so it can be reversed knowingly.** Both readings were on the table:
+    splitting once when the band is raised, or splitting again at every age transition so a
+    clan's descent is legible in the record. The second was rejected for three reasons and
+    the first two are the load-bearing ones.
+
+      1. *Nothing kills a band.* Per-age fission grows the population every age with no
+         term removing anyone, so band count rises without a ceiling. Once at placement is
+         bounded by construction: at most one child per placed band, and a child never
+         splits, so a world holds fewer than twice the bands it placed.
+      2. *A band does not survive an age anyway.* `add_nomads` replaces the whole block at
+         every age turn, deliberately -- an aged world reclassifies against the world it
+         actually has, because a carried band would name ruins that had moved and refuges
+         that no longer stood. There is no surviving parent at an age boundary to split
+         from, so "fission per age" would have meant inventing a lineage across a gap the
+         generator does not model.
+      3. *An age is five thousand years* (decision 028, ruled 2026-09-21, the same day this
+         was built). A rule that fires once per age fires once per two hundred generations
+         of herders, which is not a demographic model of anything. The cadence argument
+         that made per-age look attractive was written when an age was a century.
+
+    What is given up by choosing this: a clan's history across ages is not legible, and no
+    band has a grandchild. Reversing the ruling means keeping bands across an age turn
+    first, and then this needs the ceiling and the death term point 1 names.
+
+    Idempotent by construction, because it has to be: this pass runs again on every
+    `nomad_request` and on the monthly route cadence of a time advance. Every child is
+    discarded and re-derived from the surviving parents rather than added to the set, so
+    calling it twice is calling it once.
+    """
+    pol = ctx['pol']
+    rule = pol['fission']
+    kinds = set(rule['classifications'])
+    parents = [band for band in block['groups'] if not band.get('parent_uid')]
+    candidates = [band for band in parents
+                  if band['classification'] in kinds and band.get('route_status') == 'routed'
+                  and band['size'] > round_capacity(band, pol, round_forage(band, cells))]
+    if not candidates:
+        return []
+    # The real gate, not a restatement of it. A child is only seated on ground that would
+    # raise a band of its kind on its own merits, so every precondition the classification
+    # tests assert of a placed band holds of a daughter band too.
+    g = ground(result, cfg, radius, ctx['points'])
+    taken = {band['uid'] for band in block['groups']}
+    born = []
+    for band in candidates:
+        rng = random.Random(child_seed(cfg.seed, 'nomad-fission-' + band['uid'], rng_seed))
+        low, high = pol['classifications'][band['classification']]['size']
+        share_low, share_high = rule['child_share']
+        size = int(min(high, max(low, round(band['size'] * rng.uniform(share_low, share_high)))))
+        child = None
+        for inherited in _inheritable(band):
+            node = inherited['node']
+            cell = cells[node]
+            cell['swing'] = seasonal_swing(result, cell['x'], cell['z'])
+            verdict = GATES[band['classification']](
+                cell, g, pol['classifications'][band['classification']]['gate'], result)
+            if verdict is None:
+                continue
+            _, why = verdict
+            uid = 'nomad-%d-%d' % (band['origin']['age'], node)
+            suffix = 0
+            while uid in taken:
+                suffix += 1
+                uid = 'nomad-%d-%d-%d' % (band['origin']['age'], node, suffix)
+            crule = pol['classifications'][band['classification']]
+            child = {
+                'uid': uid, 'classification': band['classification'], 'parent_uid': band['uid'],
+                'origin': dict(band['origin']),
+                'god_id': why.get('god_id'), 'school': why.get('school'),
+                'node': node, 'x': cell['x'], 'z': cell['z'],
+                'direction': list(cell['direction']), 'biome': cell['biome'],
+                'size': size, 'speed_m_per_day': float(crule['speed_m_per_day']),
+                'column_length_m': round(size * crule['column_length_per_head_m'], 6),
+                'disposition': crule['disposition'], 'seeks': list(crule['seeks']),
+                'carries': list(crule['carries']),
+                'camps': [{'id': uid + '-camp-0', 'node': node,
+                           'direction': list(cell['direction']),
+                           'kind': ORIGIN_CAMP_KIND[band['classification']],
+                           'arrive_day': None, 'depart_day': None}],
+                'legs': [], 'basis': dict(why, inherited_camp=inherited['id']),
+                'route_status': 'stranded',
+            }
+            built = BUILDERS[child['classification']](child, ctx)
+            if not built:
+                # A segment with nowhere of its own to winter has not split, it has
+                # starved. Refused rather than recorded as a stranded child.
+                child = None
+                continue
+            camps, order, parent, _ = built
+            legs = _legs_for(child, camps, order, parent, ctx, cells, radius, paths)
+            if not legs:
+                child = None
+                continue
+            _assign_days(child, camps, legs, ctx)
+            # The move that founded the child, appended after its round is scheduled and
+            # deliberately carrying no day window: it happened once, so it is not a leg of
+            # anybody's year, and giving it one would put the child at its parent's camp
+            # every spring. `to` names a camp of the band in `parent_uid`; that is what
+            # makes the branch a join between two rounds rather than one inside a round.
+            _, back = paths(child['node'])
+            joined = trace(back, child['node'], band['node'])
+            if len(joined) < 2:
+                child = None
+                continue
+            span = 0.
+            for i in range(len(joined) - 1):
+                span += distance(cells[joined[i]]['direction'], cells[joined[i + 1]]['direction'], radius)
+            child['camps'] = camps
+            child['legs'] = legs + [{'from': camps[0]['id'], 'to': band['camps'][0]['id'],
+                                     'nodes': joined, 'length_m': span,
+                                     'depart_day': None, 'arrive_day': None,
+                                     'branch': 'fission'}]
+            child['route_status'] = 'routed'
+            # The annual round only. The fission leg is not walked every year, so counting
+            # it would tell a time mover the clan travels further than it does.
+            child['round_length_m'] = round(sum(leg['length_m'] for leg in legs), 6)
+            break
+        if child is None:
+            continue
+        taken.add(child['uid'])
+        born.append(child)
+    return born
+
+
 def add_nomad_routes(result, cfg):
     """Give every placed band the circuit its classification implies."""
     block = result.get('nomads')
@@ -477,9 +721,15 @@ def add_nomad_routes(result, cfg):
         return None
 
     ctx = {'cells': cells, 'cfg': cfg, 'pol': pol, 'spacing': spacing, 'paths': paths,
+           'points': points,
            'sites': result.get('settlements', {}).get('sites', []),
            'hamlets': result.get('humans', {}).get('hamlets', []),
            'ley': ley, 'nearest_node': nearest_node, 'war_direction': war_direction}
+
+    # Daughter clans are derived from the parents below, never carried in. This pass runs
+    # again on every `nomad_request` and on a monthly route cadence, so a fission step that
+    # added to the set instead of replacing it would breed a new generation per call.
+    block['groups'] = [band for band in block['groups'] if not band.get('parent_uid')]
 
     routed = stranded = 0
     for band in block['groups']:
@@ -492,23 +742,7 @@ def add_nomad_routes(result, cfg):
             stranded += 1
             continue
         camps, order, parent, distances = built
-        legs = []
-        for a, b, branch in order:
-            src, dst = camps[a], camps[b]
-            if src['node'] == dst['node']:
-                continue
-            nodes = trace(parent, band['node'], dst['node']) if src['node'] == band['node'] else []
-            if not nodes:
-                sub_d, sub_p = paths(src['node'])
-                nodes = trace(sub_p, src['node'], dst['node'])
-            if not nodes:
-                continue
-            length = 0.
-            for i in range(len(nodes) - 1):
-                length += distance(cells[nodes[i]]['direction'], cells[nodes[i + 1]]['direction'], radius)
-            legs.append({'from': src['id'], 'to': dst['id'], 'nodes': nodes,
-                         'length_m': length, 'depart_day': None, 'arrive_day': None,
-                         'branch': branch})
+        legs = _legs_for(band, camps, order, parent, ctx, cells, radius, paths)
         if not legs:
             band['route_status'] = 'stranded'
             stranded += 1
@@ -522,8 +756,22 @@ def add_nomad_routes(result, cfg):
         band['round_length_m'] = round(sum(l['length_m'] for l in legs), 6)
         routed += 1
 
+    born = apply_fission(result, cfg, block, ctx, cells, radius, paths,
+                         int(o.get('nomad_variation', 0)))
+    if born:
+        block['groups'] = sorted(block['groups'] + born, key=lambda band: band['uid'])
+        routed += len(born)
+    # Recomputed from the band set rather than carried, because three callers add to it --
+    # placement, the request API and fission -- and a tally that is only ever incremented
+    # cannot survive a pass that removes anybody.
+    counts = {name: 0 for name in CLASSIFICATIONS}
+    for band in block['groups']:
+        counts[band['classification']] = counts.get(band['classification'], 0) + 1
+    block['counts'] = counts
+
     block['routes'] = {
-        'version': 1, 'routed': routed, 'stranded': stranded,
+        'version': ROUTES_VERSION, 'routed': routed, 'stranded': stranded,
+        'fissioned': len(born),
         'day_march_m': DAY_MARCH_M,
         'method': 'Each classification builds the circuit its behaviour implies -- a two-move seasonal round '
                   'for herders, a market chain subdivided by day marches for caravans, a closed circuit over one '
@@ -531,8 +779,18 @@ def add_nomad_routes(result, cfg):
                   'terminating move for the bands running from something. Legs are traced with Dijkstra over a '
                   'walking cost that permits fords and steeper ground than a road, and prefers forage. Day windows '
                   'come from leg length over speed, anchored so a winter camp holds midwinter; the seasonal phase '
-                  'inverts across the equator.',
-        'limits': 'Lineage fission is not built, so no band has a child and `fission` never appears as a branch. '
+                  'inverts across the equator. A clan whose head count passes what its own round carries then '
+                  'splits: the daughter takes a camp of the parent, names it in parent_uid, and a fission leg '
+                  'joins the two rounds. Capacity is read off the classification\'s authored size band by the '
+                  'forage of the round, never as head per square kilometre, so it does not move with the raster.',
+        'limits': 'Fission runs once, when a band is placed, and never again -- at most one child per band, and a '
+                  'child does not split. That is a ceiling rather than a model: nothing kills a band, and a band '
+                  'does not survive an age turn either, because add_nomads replaces the block wholesale. So a '
+                  'clan has no legible descent across ages and no band has a grandchild. The fission leg carries '
+                  'no day window: it happened once and is not part of anybody\'s year, and its `to` names a camp '
+                  'of the band in parent_uid rather than one of the child\'s own. A fissioned parent keeps its own '
+                  'head count, because this pass has no demographic model and rewriting a placed band\'s size from '
+                  'here would make the authored size band a fiction. '
                   'Circuits are static: a band walks the same round every year and nothing re-routes it when the '
                   'world changes underneath. Rest is split evenly across camps rather than earned from forage, so '
                   'a rich camp holds no longer than a poor one. A band whose circuit could not be built carries '

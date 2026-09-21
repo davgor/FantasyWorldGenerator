@@ -260,3 +260,190 @@ def name_table(resolved):
         codas = codas + ['', '']
     return {'onsets': sorted(set(onsets)), 'nuclei': list(vowels), 'codas': sorted(set(codas)),
             'third_syllable_chance': genome['rates']['third_syllable']}
+
+
+# --- The stock: which of those names a people actually uses, and how often ----------------
+#
+# `person_name` says what a tongue can build. It does not say what a people calls its
+# children, and drawing uniformly from the first answers the second badly. A heartland
+# genome composes 88 names; drawn uniformly each lands on about one person in ninety, so
+# nobody is common and - the part that costs more - nobody is unusual either. A rare name
+# cannot mark a foreigner, an old family or an affectation when no name is rare.
+#
+# Real naming is far more concentrated than that. In the English poll tax returns of the
+# late fourteenth century one man in three was a John and the five commonest names covered
+# about four fifths of all men, with a long tail of forms borne by one person each. These
+# shares are those figures rounded. They are tabulated rather than fitted because the
+# measured curve is steeper at the head than any single Zipf exponent reproduces: an
+# exponent steep enough to put one name at 35% still leaves the top five short of 79%.
+HEAD_SHARES = (0.35, 0.17, 0.12, 0.09, 0.06)
+
+# What the ranks below the head divide the remaining 0.21 by. A plain 1/r.
+ZIPF_EXPONENT = 1.0
+
+# How often a name comes from outside the common stock. Small on purpose: this is the tail
+# that makes rarity mean something, not a second stock.
+RARE_SHARE = 0.025
+
+
+def _rare_patterns(lexicon):
+    """The ordered role pairs the authored templates leave unspent.
+
+    A rare name is still two meaning-bearing roots joined. It has to be: the phonotactic
+    path coins `Wopagup` and `Yoroochaat`, which is the reason the dithematic path exists,
+    and a tail built from it would read as generator noise exactly where a reader is meant
+    to notice the name. What makes these rare is the *pairing*. A `site`-initial form or a
+    craft before a terrain is legal in the tongue and simply not what this people usually
+    calls a child.
+
+    Both authored sets are removed. Pairs already spent on personal names are what common
+    means, so they cannot also be rare; pairs spent on settlements would make a person read
+    as a town, which is the collision `person_name` documents itself as avoiding.
+    """
+    roles = sorted(lexicon['slot_roles'])
+    spent = {tuple(template['pattern']) for template in lexicon['personal_templates']}
+    spent |= {tuple(template['pattern']) for template in lexicon['settlement_templates']}
+    return [(first, second) for first in roles for second in roles
+            if first != second and (first, second) not in spent]
+
+
+def _enumerate(resolved, lexicon, patterns):
+    """`{name: (gloss, weight, slots)}` for every slot pair those patterns admit here.
+
+    Composition collides: two different root pairs can join to one string once the seam
+    rules have had their say, so the table is keyed on the finished name. The first reading
+    wins and the highest weight wins, because a name a common template can reach is a common
+    name however else it can also be reached.
+    """
+    roots = resolved['genome']['lexicon']
+    roles = lexicon['slot_roles']
+    forms = resolved['genome'].get('forbidden_forms', ())
+    found = {}
+    for pattern, weight in patterns:
+        heads = sorted(slot for slot in roles[pattern[0]] if slot in roots)
+        tails = sorted(slot for slot in roles[pattern[1]] if slot in roots)
+        for first in heads:
+            for second in tails:
+                if first == second:
+                    continue  # `_pick_elements` discards a repeated slot; so does this.
+                name = _compose(resolved, (first, second))
+                if not _acceptable(name, forms):
+                    continue
+                previous = found.get(name)
+                if previous is None:
+                    found[name] = (f'{first}-{second}', weight, (first, second))
+                elif weight > previous[1]:
+                    found[name] = (previous[0], weight, previous[2])
+    return found
+
+
+def _ordered(found):
+    """Rank order before the head is spread: authored weight, then length, then spelling.
+
+    Rank has to be a property of the culture rather than of a seed - `Eldsel` is a common
+    heartland name in every world the way John was common in every English county - and this
+    package carries no seed logic by design, which rules out permuting the order with one.
+
+    Template weight is authored and already says which shapes a people reaches for. Length
+    breaks its ties, because the names that wear into everyday use are the short ones, and
+    the spelling breaks what is left, so the order is total and the stock is reproducible.
+    """
+    return sorted(found.items(), key=lambda entry: (-entry[1][1], len(entry[0]), entry[0]))
+
+
+# How many of the commonest names are held apart from each other. The head carries about
+# four fifths of a people, so these are the names a reader meets over and over.
+HEAD_SPREAD = 5
+
+
+def _ranked(found):
+    """Commonest first, with the head spread across the space rather than bunched in it.
+
+    Ranking on length alone put the whole heartland head on one root: `Eldsel`, `Frosel`,
+    `Nersel`, `Versel`, and the elves on `-naur` four times over. That is worse than the
+    uniform draw it replaces. Four fifths of a people would share not just a few names but a
+    few *sounds*, and a reader meeting them in succession hears a stutter rather than a
+    culture. Real stocks do not behave that way: John, William, Thomas, Richard and Robert
+    have nothing in common, because a name that cannot be told from the last one is a name
+    that stops being used.
+
+    So the head is filled greedily from rank order, skipping any name that reuses a root
+    already standing in it. What is skipped is not discarded - it falls to the body of the
+    stock, in its own rank order - and if the space is too small to fill the head with
+    distinct roots, the rank order stands unaltered rather than the head running short.
+    """
+    ordered = _ordered(found)
+    head, body, spent = [], [], set()
+    for name, (gloss, _weight, slots) in ordered:
+        if len(head) < HEAD_SPREAD and not spent.intersection(slots):
+            spent.update(slots)
+            head.append((name, gloss))
+        else:
+            body.append((name, gloss))
+    if len(head) < min(HEAD_SPREAD, len(ordered)):
+        return [(name, value[0]) for name, value in ordered]
+    return head + body
+
+
+def _thresholds(count):
+    """Cumulative draw thresholds over `count` ranks: the tabulated head, then 1/r.
+
+    Normalised at the end so a stock smaller than the head table still sums to one rather
+    than silently dropping its last ranks below the last threshold.
+    """
+    if count <= 0:
+        return ()
+    shares = list(HEAD_SHARES[:count])
+    rest = count - len(shares)
+    if rest > 0:
+        remainder = 1.0 - sum(shares)
+        harmonic = sum(1.0 / rank ** ZIPF_EXPONENT for rank in range(1, rest + 1))
+        shares += [remainder / rank ** ZIPF_EXPONENT / harmonic for rank in range(1, rest + 1)]
+    total = sum(shares)
+    running, cumulative = 0.0, []
+    for share in shares:
+        running += share / total
+        cumulative.append(running)
+    return tuple(cumulative)
+
+
+def name_stock(resolved, lexicon):
+    """Every name this people uses, ranked, with the thresholds that say how often.
+
+    Pure and seedless, so one people yields one stock in every world. It enumerates the
+    whole reachable space, which is cheap but not free - build it once per civilization and
+    hand it to `stock_name` for each person rather than per name.
+    """
+    common = _ranked(_enumerate(resolved, lexicon,
+                                [(template['pattern'], template['weight'])
+                                 for template in lexicon['personal_templates']]))
+    rare = _ranked(_enumerate(resolved, lexicon,
+                              [(pattern, 1) for pattern in _rare_patterns(lexicon)]))
+    spoken = {name for name, _ in common}
+    # A rare pairing that composes to a name the common stock already holds is not rare.
+    rare = [entry for entry in rare if entry[0] not in spoken]
+    return {'common': common, 'rare': rare, 'thresholds': _thresholds(len(common))}
+
+
+def stock_name(stock, draw):
+    """One `(name, gloss)` under the people's own concentration, or None if the stock is empty.
+
+    Two draws whatever the outcome, so the stream a caller sees does not depend on which
+    branch was taken and adding the rare tail cannot desynchronise a replay from itself.
+
+    An empty stock means a family whose roots reach none of the personal templates, which is
+    an authoring failure rather than a naming one; the caller falls back and it stays visible.
+    """
+    roll, cut = draw.random(), draw.random()
+    common, rare = stock['common'], stock['rare']
+    if not common:
+        # No common stock means no personal template this family's roots can fill. The rare
+        # pairings may still compose, but promoting them would make the tail the whole tongue
+        # and hide the authoring fault behind names that look fine. Refuse the whole stock.
+        return None
+    if rare and roll < RARE_SHARE:
+        return rare[min(int(cut * len(rare)), len(rare) - 1)]
+    for index, threshold in enumerate(stock['thresholds']):
+        if cut < threshold:
+            return common[index]
+    return common[-1]

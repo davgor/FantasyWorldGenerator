@@ -29,7 +29,7 @@ of them carries a role or a `biome_weights` table ([BESTIARY-MONSTERS-BIOME-BLIN
 so the ice sheet is the one place where that accidental default meets a total animal exclusion.
 Nobody decided this.
 
-The failure is silent in the same shape as [BESTIARY-BRIMSTONE-BATS](../backlog/BESTIARY-BRIMSTONE-BATS.md):
+The failure is silent in the same shape as [BESTIARY-BRIMSTONE-BATS](BESTIARY-BRIMSTONE-BATS.md):
 a missing key and a deliberate zero are indistinguishable to the consumer. The catalogue
 validates, the world generates, and the ice is simply empty of animals. Nothing raises.
 
@@ -56,7 +56,7 @@ biome 17 went from **0 to 531 sites**; at size 17, from **0 to 83**. What follow
 as filed, with the four corrections the execution found.
 
 Originally unfixed, and deliberately so. The change alters nest placement in every world while
-[PRODUCT-WORLD-DISPOSABILITY-DECISION](../backlog/PRODUCT-WORLD-DISPOSABILITY-DECISION.md) is unruled.
+[PRODUCT-WORLD-DISPOSABILITY-DECISION](PRODUCT-WORLD-DISPOSABILITY-DECISION.md) is unruled.
 
 **There is no measurement behind the hold.** It is decision-blocked only, and can land the
 moment disposability is ruled - it does not need a larger world, and it was checked rather

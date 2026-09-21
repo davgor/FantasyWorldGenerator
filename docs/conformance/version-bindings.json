@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "note": "Binds a documented version integer to the code that emits it. A document states a version with a <!-- conformance:version id=N --> marker and never in prose, because several historical sentences in the canonical documents cite old versions correctly and a prose scrape cannot tell the difference. Resolver kinds: constant, cxx-constexpr, emitted-key, returned-key. An emitted-key binding is additionally scanned for across every module under Sim/, so a second site writing the same block with a different integer is reported rather than guessed at.",
+ "note": "Binds a documented integer to the code that emits it -- a schema or API version, or a published bound such as the grid ceiling. A document states the integer with a <!-- conformance:version id=N --> marker and never in prose, because several historical sentences in the canonical documents cite old versions correctly and a prose scrape cannot tell the difference. Resolver kinds: constant, cxx-constexpr, emitted-key, returned-key, tuple-bound (an entry of a bounds table, bounds={'size':(3,1025)}) and call-arg (an integer argument of a named call, selected by another constant argument -- the guard half of a published bound). Any binding may carry a `mirror` naming a second statement of the same fact; the two are resolved independently and reported when they disagree. No binding uses cxx-constexpr any more: the three planner VERSION-MIRROR clauses tying Python to Core/*.hpp planner_version were removed on 2026-09-21 as follow-through on decision 027, which rules that native divergence is not a defect, is not tracked, and is not a hold on anything. The resolver still supports the kind; nothing should use it before the port is scoped again. An emitted-key binding is additionally scanned for across every module under Sim/, so a second site writing the same block with a different integer is reported rather than guessed at.",
  "bindings": [
   {
    "id": "magic",
@@ -15,7 +15,7 @@
    "shadowed_by": [
     "Sim/icarus_sim/terrain_magic.py"
    ],
-   "shadow_note": "terrain_magic.add_magic writes magic version 1 and terrain_leyline_history.generate_networks writes version 4. Neither merges; each replaces the whole block. The arbitration is not path-dependent: add_magic is imported at terrain_leyline_history.py:10 and is called from nowhere in the repository, so the version 1 write is unreachable and generate_networks is the sole writer. Established three ways rather than one, because a call-site walk alone does not prove a Python symbol unreachable: an AST walk matching func.id and func.attr across every module under Sim/ finds no call site; 'add_magic' appears as a string constant nowhere, so no getattr or string-keyed dispatch reaches it; and no .html, .js, .json or .md file in the repository names it apart from this note, so the browser lab does not drive it either. That is no plausible route rather than no possible route — a runtime-assembled name would evade all three. The suppression rests on reachability, not on ordering. If anything ever wires add_magic into a generation path this binding is wrong, and the two writers need arbitration before that happens; see the warning comment at the def and board/backlog/MAGIC-ADD-MAGIC-DEAD-WRITER.md.",
+   "shadow_note": "terrain_magic.add_magic writes magic version 1 and terrain_leyline_history.generate_networks writes version 4. Neither merges; each replaces the whole block. The arbitration is not path-dependent: add_magic is imported at terrain_leyline_history.py:10 and is called from nowhere in the repository, so the version 1 write is unreachable and generate_networks is the sole writer. Established three ways rather than one, because a call-site walk alone does not prove a Python symbol unreachable: an AST walk matching func.id and func.attr across every module under Sim/ finds no call site; 'add_magic' appears as a string constant nowhere, so no getattr or string-keyed dispatch reaches it; and no .html, .js, .json or .md file in the repository names it apart from this note, so the browser lab does not drive it either. That is no plausible route rather than no possible route — a runtime-assembled name would evade all three. The suppression rests on reachability, not on ordering. If anything ever wires add_magic into a generation path this binding is wrong, and the two writers need arbitration before that happens; see the warning comment at the def and board/retired/MAGIC-ADD-MAGIC-DEAD-WRITER.md.",
    "claims": [
     "docs/terrain-world-layers.md",
     "Contracts/README.md"
@@ -44,11 +44,23 @@
     "file": "Sim/icarus_sim/terrain_settlements.py",
     "block": "settlements",
     "key": "version",
-    "line": 949
+    "line": 999
    },
    "claims": [
     "docs/terrain-world-layers.md",
     "Contracts/README.md"
+   ]
+  },
+  {
+   "id": "city-layout",
+   "label": "settlements.sites[].city_layout record",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_settlements.py",
+    "name": "CITY_LAYOUT_VERSION"
+   },
+   "claims": [
+    "docs/conformance/settlement-records.md"
    ]
   },
   {
@@ -59,7 +71,7 @@
     "file": "Sim/icarus_sim/terrain_humans.py",
     "block": "humans",
     "key": "version",
-    "line": 232
+    "line": 273
    },
    "claims": [
     "docs/terrain-world-layers.md"
@@ -88,7 +100,7 @@
     "file": "Sim/icarus_sim/terrain_settlements.py",
     "block": "population_budget",
     "key": "version",
-    "line": 866
+    "line": 914
    },
    "claims": [
     "docs/terrain-math-lab.md"
@@ -128,11 +140,6 @@
     "file": "Sim/icarus_sim/city_planner.py",
     "name": "VERSION"
    },
-   "mirror": {
-    "kind": "cxx-constexpr",
-    "file": "Core/cityplanner.hpp",
-    "name": "planner_version"
-   },
    "claims": [
     "docs/city-planner.md"
    ]
@@ -145,11 +152,6 @@
     "file": "Sim/icarus_sim/hamlet_planner.py",
     "name": "VERSION"
    },
-   "mirror": {
-    "kind": "cxx-constexpr",
-    "file": "Core/hamletplanner.hpp",
-    "name": "planner_version"
-   },
    "claims": [
     "docs/hamlet-planner.md"
    ]
@@ -161,11 +163,6 @@
     "kind": "constant",
     "file": "Sim/icarus_sim/castle_planner.py",
     "name": "VERSION"
-   },
-   "mirror": {
-    "kind": "cxx-constexpr",
-    "file": "Core/castleplanner.hpp",
-    "name": "planner_version"
    },
    "claims": [
     "docs/castle-planner.md"
@@ -185,6 +182,18 @@
    ]
   },
   {
+   "id": "heroes",
+   "label": "heroes block",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/hero_generator/__init__.py",
+    "name": "VERSION"
+   },
+   "claims": [
+    "docs/hero-generator.md"
+   ]
+  },
+  {
    "id": "nomads",
    "label": "nomads block",
    "code": {
@@ -194,6 +203,43 @@
    },
    "claims": [
     "docs/nomads.md"
+   ]
+  },
+  {
+   "id": "villains",
+   "label": "villains block",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_villains.py",
+    "name": "VERSION"
+   },
+   "claims": [
+    "docs/super-villains.md"
+   ]
+  },
+  {
+   "id": "beast-movements",
+   "label": "beast_movements block",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_beast_movement.py",
+    "name": "VERSION"
+   },
+   "claims": [
+    "docs/beast-movement.md"
+   ]
+  },
+  {
+   "id": "nomad-routes",
+   "label": "nomad route pass",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_nomad_routes.py",
+    "name": "ROUTES_VERSION"
+   },
+   "claims": [
+    "docs/nomads.md",
+    "docs/conformance/nomads.md"
    ]
   },
   {
@@ -269,6 +315,139 @@
    },
    "claims": [
     "docs/conformance/settlement-founding.md"
+   ]
+  },
+  {
+   "id": "store-contract",
+   "label": "world handle and store contract",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/fantasy_world_generator/world_handle.py",
+    "name": "STORE_CONTRACT_VERSION"
+   },
+   "claims": [
+    "docs/conformance/world-handles.md"
+   ]
+  },
+  {
+   "id": "read-api",
+   "label": "bounded read request API",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_read.py",
+    "name": "READ_API_VERSION"
+   },
+   "claims": [
+    "docs/conformance/read-surface.md"
+   ]
+  },
+  {
+   "id": "read-schema",
+   "label": "read document schemas",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_read.py",
+    "name": "READ_SCHEMA_VERSION"
+   },
+   "claims": [
+    "docs/conformance/read-surface.md"
+   ]
+  },
+  {
+   "id": "quest-api",
+   "label": "quest action request API",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_quest_api.py",
+    "name": "QUEST_API_VERSION"
+   },
+   "claims": [
+    "docs/conformance/actor-scale-writes.md"
+   ]
+  },
+  {
+   "id": "person-api",
+   "label": "person state request API",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_person_api.py",
+    "name": "PERSON_API_VERSION"
+   },
+   "claims": [
+    "docs/conformance/actor-scale-writes.md"
+   ]
+  },
+  {
+   "id": "stage-profile",
+   "label": "stage profile record",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_profile.py",
+    "name": "PROFILE_VERSION"
+   },
+   "claims": [
+    "docs/conformance/stage-profile.md",
+    "docs/performance.md"
+   ]
+  },
+  {
+   "id": "grid-size-max",
+   "label": "grid size ceiling",
+   "code": {
+    "kind": "tuple-bound",
+    "file": "Sim/icarus_sim/terrain_world.py",
+    "name": "bounds",
+    "key": "size",
+    "index": 1
+   },
+   "mirror": {
+    "kind": "call-arg",
+    "file": "Sim/icarus_sim/terrain_world.py",
+    "call": "over_capacity",
+    "arg": 2,
+    "select": {
+     "0": "size"
+    }
+   },
+   "mirror_note": "Not a schema version: a published bound, bound here for the same reason. The registry advertises the grid range in its `bounds` table and a separate statement of the same integer four hundred lines below rejects a world outside it. They agreed because somebody checked, which is the footing the Python and native grid ceilings were on before they drifted from 257 to 1025 with nothing published saying so. The `code` side reads the advertised bound out of the table and the `mirror` side reads the guard's own argument, so the two cannot move apart without a VERSION-MIRROR finding naming both. Deriving the guard from the table in terrain_world.py would be better still and is one line; it was not done here because that file is provenance-pinned and the edit needs a manifest revision row this lane does not own. See board/done/PRODUCT-PARAMETER-PROVENANCE.md.",
+   "claims": [
+    "docs/conformance/world-parameters.md"
+   ]
+  },
+  {
+   "id": "wildlife",
+   "label": "wildlife block",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_nests.py",
+    "name": "WILDLIFE_VERSION"
+   },
+   "claims": [
+    "docs/conformance/creature-placement.md"
+   ]
+  },
+  {
+   "id": "beast-nests",
+   "label": "beast_nests block",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_nests.py",
+    "name": "BEAST_NESTS_VERSION"
+   },
+   "claims": [
+    "docs/conformance/creature-placement.md"
+   ]
+  },
+  {
+   "id": "encounters",
+   "label": "encounters block and schema",
+   "code": {
+    "kind": "constant",
+    "file": "Sim/icarus_sim/terrain_encounters.py",
+    "name": "VERSION"
+   },
+   "claims": [
+    "docs/conformance/encounter-index.md"
    ]
   }
  ]

@@ -1,6 +1,8 @@
 # Final-world castle planner
 
-Castle planner version 1 runs after stage 16 (and after the last requested age transition), after the [city planner](city-planner.md) and [hamlet planner](hamlet-planner.md). Earlier simulation snapshots do not contain castle plans. It adds the optional, independently versioned `castle_plans` world-output section so fortification layouts can be retuned without depending on `city_plans` or `hamlet_plans`.
+Castle planner version 3 runs after stage 16 (and after the last requested age transition), after the [city planner](city-planner.md) and [hamlet planner](hamlet-planner.md). Earlier simulation snapshots do not contain castle plans. It adds the optional, independently versioned `castle_plans` world-output section so fortification layouts can be retuned without depending on `city_plans` or `hamlet_plans`.
+Version 2 applies the same correction as [city planner](city-planner.md) 7: the coarse `flood_risk` layer no longer masks cells, because it is a regional proxy constant across a castle footprint and cannot judge one cell inside it. It had left 34 of 56 castles unbuildable in a seed-42 size-33 world. The reserved river channel and its 28-metre setback still block, since that mask is measured in local metres. The sampler's probe harness publishes `channel` in place of the former combined `flood` field. Worlds built by planner 1 must be regenerated.
+
 
 Planner identity hashes [`castles.json`](../Sim/icarus_sim/castles.json) and the `structure_blocks.castle` building subset only. Age advancement rejects mismatched identities. The city planner identity is unaffected by kit/join edits in `castles.json`.
 

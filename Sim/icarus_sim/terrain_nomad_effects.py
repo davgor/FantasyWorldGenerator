@@ -184,6 +184,67 @@ def seed_survivor_camps(result, cfg):
     return result, len(candidates)
 
 
+def absorb_survivor_camps(result, survivors, age):
+    """Grow the refuge a survivor band walked to, instead of founding a town on top of it.
+
+    **Owner ruling, 2026-09-21.** A candidate does not name free ground. It names the
+    refuge city's own node, 4 of 4 across two worlds and true by construction:
+    `terrain_nomad_routes._flight` routes the band to the node of the site whose uid is
+    `basis['refuge_uid']`, and `seed_survivor_camps` records the candidate at
+    `terminal['node']`. "Adopt the candidate as a settlement" would therefore found a
+    second settlement on a standing city. The band did not reach empty ground and start a
+    hamlet; it reached a town and stopped, so the town gets bigger. The rejected
+    alternative was recording the camp one cell short of the refuge, which buys free
+    ground at the price of a resolution-dependent placement constant -- 8 km at size 17,
+    under 1 km at size 129 -- which is the exact failure this subsystem exists to avoid.
+
+    Called at the age boundary with the cities that survived it, so the filter the card
+    asked for is the argument rather than a lookup: a refuge that fell this age absorbs
+    nobody and the band's arrival is simply not recorded.
+
+    **The absorbed count has to ride `CARRIED_SURVIVOR_KEYS`, not `population_estimate`.**
+    The founding seam worked out on the card does not transfer here, and this is the part
+    that had to be re-verified rather than assumed: `add_settlements` re-derives
+    `population_estimate` from the population budget on every rebuild
+    (`residents = allowance//len(members) + ...`), so a number added to a survivor row
+    before `rebuild_tail` is overwritten by the very rebuild it was meant to ride. What
+    survives is `absorbed_refugees`, which the budget adds back after the capacity split.
+
+    Idempotent across advances by band uid, which is `nomad-<age>-<node>` and so is never
+    reused by a later age. It has to be: `seed_survivor_camps` only assigns the block when
+    it has candidates, so a world can carry a previous advance's list unchanged, and
+    absorbing it again would breed people every age out of one migration.
+    """
+    candidates = result.get('settlement_candidates') or []
+    if not candidates:
+        return 0, 0
+    bands = {band['uid']: band for band in ((result.get('nomads') or {}).get('groups') or [])}
+    standing = {site['uid']: site for site in survivors if 'uid' in site}
+    absorbed = 0
+    people = 0
+    for candidate in sorted(candidates, key=lambda c: c['id']):
+        band = bands.get(candidate.get('from_band'))
+        if band is None:
+            continue
+        refuge_uid = (band.get('basis') or {}).get('refuge_uid')
+        site = standing.get(refuge_uid)
+        if site is None:
+            continue
+        taken = list(site.get('absorbed_bands') or [])
+        if band['uid'] in taken:
+            continue
+        count = int(candidate.get('population_estimate') or 0)
+        if count <= 0:
+            continue
+        site['absorbed_bands'] = sorted(taken + [band['uid']])
+        site['absorbed_refugees'] = int(site.get('absorbed_refugees') or 0) + count
+        candidate['absorbed_age'] = age
+        candidate['absorbed_into'] = refuge_uid
+        absorbed += 1
+        people += count
+    return absorbed, people
+
+
 def apply_nomad_effects(result, cfg):
     """Every write-back, in a fixed order, reported rather than silent."""
     if not cfg.world_recipe or cfg.phase < 16 or not result.get('nomads'):

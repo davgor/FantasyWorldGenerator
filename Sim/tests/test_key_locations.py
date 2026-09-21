@@ -1,12 +1,20 @@
 """Key locations are chosen from a finished world's own record, and change nothing in it.
 
-Hand-built worlds keep this fast and independent of terrain_history; the generated-world
-conformance check lives with the world schema tests, which already build one world.
+Hand-built worlds keep almost all of this fast and independent of terrain_history. One class
+is the exception and pays for itself: :class:`GeneratedWorldGateAudit` runs the real generator
+once, because the catalogue-versus-world questions are the ones a fixture structurally cannot
+answer. A fixture is written by the same person who writes the gate and is kinder to the
+catalogue than the world is, which is exactly how three archetypes stayed unplaceable in every
+world ever generated while the audit of them was green. That class found a fourth on its first
+run - an archetype gating on a layer nothing in the repository writes.
 
-The pins matter as much as the behaviour. This package carries its own copies of
-``child_seed`` and of the sphere-grid geometry, because it reads only world JSON and never
-imports the generator. Copies that nothing compares silently fork the replay contract, so
-they are compared here.
+This package reads only world JSON and never imports the generator, so it used to carry its
+own copies of ``child_seed`` and of the sphere-grid geometry and pin each one here. Those
+copies are gone: both now come from ``world_geometry``, which is pure arithmetic over
+``math``, ``hashlib`` and ``random`` and imports no generator, so the isolation is unchanged
+and there is one implementation instead of four. The pin lives once, in
+``Sim/tests/test_world_geometry.py``. What is pinned here is that this package's own import
+paths still resolve to that shared implementation.
 """
 import copy
 import json
@@ -186,35 +194,27 @@ def world(seed=42, ages=2, **overrides):
 
 
 class Pins(unittest.TestCase):
-    """The copied primitives still equal the generator's. An unpinned copy forks replay."""
+    """This package no longer owns a copy to pin.
 
-    def test_seed_helper_matches_the_generator(self):
-        from icarus_sim.terrain_tectonics import child_seed as reference
-        for master in (0, 1, 42, 4294967295):
-            for domain in ('keyloc-place-karst_cave', 'keyloc-site-barrow-91', 'plates'):
-                for variation in (0, 3):
-                    self.assertEqual(child_seed(master, domain, variation), reference(master, domain, variation))
+    `key_locations.seeds` and `key_locations.core.grid` are re-export shims over
+    `world_geometry`, which is shared with the other three reader packages and holds the only
+    implementation. `Sim/tests/test_world_geometry.py` is the one pin: it asserts identity
+    with the shared functions and equality with `icarus_sim` at five raster sizes, which is
+    strictly more than the three pins that used to live here.
 
-    def test_grid_geometry_matches_the_generator(self):
-        from icarus_sim.terrain_erosion import sphere_grid
-        from icarus_sim.terrain_globe import direction as reference_direction
-        for n in (9, 17, 33):
-            points, areas, _ = sphere_grid(n, RADIUS)
-            self.assertEqual(len(points), grid.node_count(n))
-            for index, (x, z) in enumerate(points):
-                self.assertEqual(grid.node_index(x, z, n), index, f'node index at {(x, z)} size {n}')
-                self.assertEqual(grid.cell(index, n), (x, z), f'cell of node {index} size {n}')
-                self.assertEqual(grid.direction(x, z, n), reference_direction(x, z, n))
-                self.assertAlmostEqual(grid.cell_area_m2(z, n, RADIUS), areas[index], places=6)
+    What remains this package's own is that the shims really do resolve to the shared
+    implementation from *this* package's import paths. A shim that quietly grew a local
+    definition back would pass every assertion in `test_world_geometry` about
+    `world_geometry`, and fail here.
+    """
 
-    def test_great_circle_and_slerp_stay_on_the_sphere(self):
-        a, b = grid.direction(2, 5, SIZE), grid.direction(9, 11, SIZE)
-        self.assertAlmostEqual(grid.great_circle_m(a, a, RADIUS), 0., places=6)
-        midpoint = grid.slerp(a, b, .5)
-        self.assertAlmostEqual(math.sqrt(sum(c * c for c in midpoint)), 1., places=9)
-        half = grid.great_circle_m(a, b, RADIUS) / 2
-        self.assertAlmostEqual(grid.great_circle_m(a, midpoint, RADIUS), half, places=4)
-        self.assertEqual(grid.slerp(a, a, .5), tuple(a))
+    def test_the_import_paths_resolve_to_the_shared_implementation(self):
+        import world_geometry
+        self.assertIs(child_seed, world_geometry.seeds.child_seed)
+        self.assertIs(rng, world_geometry.seeds.rng)
+        for name in ('node_count', 'node_index', 'cell', 'direction', 'cell_area_m2',
+                     'cell_of_direction', 'great_circle_m', 'offset', 'normalise', 'slerp'):
+            self.assertIs(getattr(grid, name), getattr(world_geometry.grid, name), name)
 
 
 class Catalogue(unittest.TestCase):
@@ -395,6 +395,132 @@ class Catalogue(unittest.TestCase):
             catalogue_rules._pairs([('a', 1), ('a', 2)])
 
 
+class GeneratedWorldGateAudit(unittest.TestCase):
+    """The third leg of the guard: the catalogue against a world the generator made.
+
+    The other two audit the catalogue against a hand-built fixture and against
+    ``CONSTANT_IN_DOMAIN``, a curated reading from earlier worlds. Both are
+    catalogue-versus-something-cheap, and each carries its own blind spot in its own
+    docstring. Neither runs the generator, so neither can see a layer the generator stopped
+    publishing, never published, or publishes with a distribution nothing predicted. This
+    one runs it.
+
+    It found two things the cheap halves could not, which is the argument for paying for it:
+
+    * ``peat_cuttings`` requires ``wetland_distance``, **a layer nothing in the repository
+      writes**. The fixture publishes it, so the fixture audit is green on it forever. It is
+      pinned exactly below rather than excused.
+    * gates that resolved to a cut admitting every land cell - thirteen of them on
+      ``settlement_distance`` plus ``tar_pit`` on ``deposition`` at size 17, at size 33 those
+      fourteen plus ``ford``, ``ferry_crossing``, ``bridge`` and ``toll_station`` on ``river``,
+      and at size 65 only the last five, because ``settlement_distance`` stops collapsing once
+      the raster is fine enough that land is no longer mostly settlement. That is the finding
+      the refusal in ``placement.resolve`` now closes, and this is the test that watches it on
+      real ground rather than on a fixture.
+
+    One world, generated once for the class: a phase-16 generation is the largest single cost
+    in this suite and every question here needs the same one. Size 17 on purpose - the
+    coarsest raster is where the node budget binds hardest and where a percentile collapses
+    first, so it is the cheapest world that can still show the shape. Its limit, stated rather
+    than left implicit: one seed at one raster. A gate that collapses only at size 65 - and
+    ``river`` gets worse with the raster, not better - would pass here.
+    """
+
+    SEED = 42
+    GENERATED_SIZE = 17
+    PHASE = 16
+
+    # An archetype whose gate names a layer nothing publishes. It fails *closed* - `resolve`
+    # returns None on a missing layer and `diagnostics` says "the world never generated the
+    # wetland_distance layer" in every world ever made - so it costs a kind of place and says
+    # so, which is the loud half of the asymmetry rather than the dangerous one. It is out of
+    # this audit's lane to re-gate, and asserting the set *exactly* is deliberate: the entry
+    # cannot grow without failing here, and it cannot be quietly fixed without failing either.
+    KNOWN_UNPUBLISHED = {('peat_cuttings', 'wetland_distance')}
+
+    @classmethod
+    def setUpClass(cls):
+        from icarus_sim.terrain_world import generate_request
+        cls.world = generate_request({'seed': cls.SEED,
+                                      'overrides': {'size': cls.GENERATED_SIZE, 'phase': cls.PHASE}})
+        cls.document = catalogue_rules.load()
+        cls.layers = {**cls.world['layers'], **fields.derive(cls.world, readers)}
+        cls.by_domain = {domain: readers.cells(cls.world, domain)
+                         for domain in ('land', 'water', 'ocean', 'lake', 'any')}
+        cls.block = key_locations.generate(cls.world)
+
+    def test_every_requires_term_names_a_layer_this_world_actually_publishes(self):
+        """A term naming a layer nobody writes is the most complete form of a dead gate."""
+        absent = {(a['id'], t['layer']) for a in self.document['archetypes']
+                  for t in a.get('requires', [])
+                  if self.layers.get(t['layer']) is None}
+        self.assertEqual(absent, self.KNOWN_UNPUBLISHED,
+                         'the set of archetypes gating on an unpublished layer moved; a new '
+                         'one is a catalogue fault and a missing one means the layer arrived')
+
+    def test_no_requires_term_names_a_field_constant_inside_its_own_domain(self):
+        """The fixture audit's own predicate, run where the fixture cannot follow."""
+        offenders = []
+        for archetype in self.document['archetypes']:
+            cells = self.by_domain[archetype['domain']]
+            if not cells:
+                continue
+            for term in archetype.get('requires', []):
+                grid = self.layers.get(term['layer'])
+                if grid is None:
+                    continue
+                values = [grid[c['z']][c['x']] for c in cells]
+                if min(values) == max(values):
+                    offenders.append((archetype['id'], archetype['domain'], term['layer'], min(values)))
+        self.assertEqual(offenders, [],
+                         'a requires term must name a field that varies inside its own domain')
+
+    def test_nothing_is_placed_through_a_gate_that_admitted_its_whole_domain(self):
+        """The property the refusal exists for, asserted on the world rather than on a rule.
+
+        Recomputed from the emitted block rather than from the engine's own bookkeeping: for
+        every archetype that put a site on the ground, resolve its gate again against the
+        domain it declared and check that the gate refused *somebody*. A gate that admits the
+        whole domain enforced nothing, and the site standing there carries a `reason` string
+        describing a requirement that was never tested.
+
+        Composed sites are excluded because they are not gated: a chain or cluster member is
+        positioned off its anchor and never enters `eligible`.
+        """
+        scattered = {s['kind'] for s in self.block['sites'] if s['placement'] == 'node'}
+        by_id = {a['id']: a for a in self.document['archetypes']}
+        voided = []
+        for kind in sorted(scattered):
+            archetype = by_id[kind]
+            cells = self.by_domain[archetype['domain']]
+            if not archetype.get('requires') or not cells:
+                continue
+            chosen = placement.eligible(archetype, self.layers, cells)
+            if len(chosen) == len(cells):
+                voided.append((kind, archetype['domain'], len(cells),
+                               [t['layer'] for t in archetype['requires']]))
+        self.assertEqual(voided, [],
+                         'these archetypes placed sites through a gate that admitted every '
+                         'cell they were allowed to stand on')
+
+    def test_a_refused_gate_is_reported_with_the_field_and_the_share_it_admitted(self):
+        """A refusal that does not name the field sends the reader to the world, not the gate.
+
+        `gap` separates four absences that look identical in a count, and this is the fourth.
+        On this world it fires: the reason has to name the layer, the domain and how much of
+        the domain the cut let through, so a reader can tell a collapsed percentile from a
+        world that merely lacks the ground.
+        """
+        refused = [d for d in self.block['diagnostics'] if 'admits all' in d['reason']]
+        self.assertTrue(refused, 'no percentile collapsed on this world, so this test proves '
+                                 'nothing - check the world before weakening the assertion')
+        for row in refused:
+            self.assertEqual(row['candidates'], 0, row['archetype'])
+            self.assertEqual(row['placed'], 0, row['archetype'])
+            self.assertIn('land', row['reason'], row['archetype'])
+            self.assertIn(str(len(self.by_domain['land'])), row['reason'], row['archetype'])
+
+
 class Placement(unittest.TestCase):
     def setUp(self):
         self.world = world()
@@ -469,6 +595,67 @@ class Placement(unittest.TestCase):
         flat['freshwater_distance'] = shaped(lambda x, z: float(z))
         self.assertIsNotNone(placement.resolve(term, flat, self.cells))
         self.assertIsNone(placement.gap(term, flat, self.cells))
+
+    def test_a_percentile_that_admits_its_whole_domain_is_refused(self):
+        """Zero variance is one route to a voided gate. Saturation and sparsity are two more.
+
+        The no-variation rule above catches the degenerate case and only that case. A field
+        that *varies* can still resolve to a cut every cell clears, and then the gate admits
+        the whole domain and reports ``placed`` exactly as a flat field did. Two ways in, and
+        both are live on generated worlds:
+
+        * **saturated** - ``river`` read a flat 1.0 on land before the river-threshold fix;
+        * **sparse** - it now reads zero on 246 of 268 land cells at size 33, and a nearest-rank
+          ``above_percentile 0.55`` cut over a field that is zero on 92 per cent of the domain
+          lands *on* zero, so every cell clears it again.
+
+        The rule is therefore shaped on the outcome rather than on the field: a resolved term
+        that admits every cell in the domain separates nothing, so it selects nothing. Measured
+        on a generated seed-42 world at phase 16, that is 16 archetypes at size 17 and 19 at
+        size 33, and at 33 ``bridge`` was placing five sites on ground its own ``river`` term
+        had stopped filtering.
+
+        No synthetic layer here: the fixture's own ``river`` is 1.0 on one row and 0.05
+        elsewhere, so ``ford``'s real catalogue gate is eligible on all 219 fixture land cells
+        before the change.
+        """
+        document = catalogue_rules.load()
+        ford = next(a for a in document['archetypes'] if a['id'] == 'ford')
+        self.assertEqual([t['layer'] for t in ford['requires']], ['river'],
+                         'this test is written against the shipped gate, not a copy of it')
+        self.assertIsNone(placement.resolve(ford, self.layers, self.cells),
+                          'a cut every land cell clears is not a top 45 per cent of anything')
+        self.assertEqual(placement.eligible(ford, self.layers, self.cells), [])
+        reason = placement.gap(ford, self.layers, self.cells)
+        self.assertIn('river', reason)
+        self.assertIn('land', reason)
+        self.assertIn(str(len(self.cells)), reason,
+                      'the reason has to say how much of the domain the cut admitted')
+
+        # The floor is what the floor is for. A percentile that has fallen to the bottom of
+        # its field but sits beside an absolute floor that still bites is not refused: the
+        # floor is doing the selecting, which is the job `floor_rule` gives it.
+        floored = dict(ford, requires=[dict(ford['requires'][0], min=.5)])
+        self.assertIsNotNone(placement.resolve(floored, self.layers, self.cells))
+        self.assertTrue(placement.eligible(floored, self.layers, self.cells))
+        self.assertLess(len(placement.eligible(floored, self.layers, self.cells)), len(self.cells))
+
+        # And a percentile that selects a genuine top is untouched, or the rule would be a
+        # ban on percentiles rather than a rule about degenerate ones.
+        honest = {'id': 'x', 'domain': 'land', 'prefers': [],
+                  'requires': [{'layer': 'height', 'above_percentile': .8}]}
+        chosen = placement.eligible(honest, self.layers, self.cells)
+        self.assertTrue(chosen)
+        self.assertLess(len(chosen), len(self.cells))
+        self.assertIsNone(placement.gap(honest, self.layers, self.cells))
+
+        # An archetype with no requires at all stands anywhere by declaration - the chain and
+        # cluster furniture does exactly that - and this rule must not touch it. It is a rule
+        # about a percentile term that stopped discriminating, not about a wide gate.
+        ungated = {'id': 'x', 'domain': 'land', 'requires': [], 'prefers': []}
+        self.assertEqual(placement.resolve(ungated, self.layers, self.cells), [])
+        self.assertEqual(len(placement.eligible(ungated, self.layers, self.cells)), len(self.cells))
+        self.assertIsNone(placement.gap(ungated, self.layers, self.cells))
 
     def test_the_gap_reason_separates_a_catalogue_fault_from_an_unlucky_world(self):
         """Three absences that look identical in a count and point at three different people."""
@@ -910,10 +1097,12 @@ class Interiors(unittest.TestCase):
 
 
 class Naming(unittest.TestCase):
-    def test_city_suffix_is_stripped_and_other_names_are_left_alone(self):
-        self.assertEqual(naming.short_name('Fern City'), 'Fern')
+    def test_a_name_is_left_alone_and_only_an_empty_one_becomes_none(self):
+        """The retired ` City` strip is gone; a place called that keeps the name."""
+        self.assertEqual(naming.short_name('Gulf City'), 'Gulf City')
         self.assertEqual(naming.short_name('Ashen wyrm'), 'Ashen wyrm')
         self.assertIsNone(naming.short_name(None))
+        self.assertIsNone(naming.short_name(''))
 
     def test_every_placeholder_resolves_even_with_an_empty_context(self):
         filled = naming.fill('{near} {culture} {school} {god} {adj}', {}, rng(1, 'n'))

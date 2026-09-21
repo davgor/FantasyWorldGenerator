@@ -56,8 +56,10 @@ class NomadWorldTests(unittest.TestCase):
         cls.block = nomads(cls.world, routes=True)
         cls.cfg = Config(**cls.world['config'])
         cls.radius = cls.world['effective_config']['globe_radius']
-        points, _, _ = sphere_grid(cls.cfg.size, cls.radius)
+        points, areas, _ = sphere_grid(cls.cfg.size, cls.radius)
         cls.ground = ground(cls.world, cls.cfg, cls.radius, points)
+        from icarus_sim.terrain_nests import habitat_cells
+        cls.cells = habitat_cells(cls.world, cls.cfg, points, areas)
         # Grid row per node, for the hemisphere assertions.
         cls.rows = [z for _, z in points]
         cls.gates = policy()['classifications']
@@ -75,9 +77,16 @@ class NomadWorldTests(unittest.TestCase):
         import json
         json.dumps(self.world, allow_nan=False)
 
-    def test_every_band_traces_back_to_a_roll(self):
+    def test_every_band_traces_back_to_a_roll_or_to_a_parent(self):
+        # A placed band comes from a candidate roll. A fission child comes from a band that
+        # did, and is deliberately NOT written into `rolls`: `rolls` answers "what did the
+        # point process consider here", and a child was never considered -- it descends.
         rolled = {r['uid'] for r in self.block['rolls'] if r.get('uid')}
-        self.assertEqual({b['uid'] for b in self.block['groups']}, rolled)
+        placed = {b['uid'] for b in self.block['groups'] if not b.get('parent_uid')}
+        self.assertEqual(placed, rolled)
+        for band in self.block['groups']:
+            if band.get('parent_uid'):
+                self.assertIn(band['parent_uid'], rolled, band['uid'])
         self.assertEqual(len({b['uid'] for b in self.block['groups']}), len(self.block['groups']))
 
     def test_a_candidate_that_satisfies_nothing_raises_nobody(self):
@@ -244,6 +253,99 @@ class NomadRouteTests(NomadWorldTests):
     def test_the_route_summary_accounts_for_every_band(self):
         summary = self.block['routes']
         self.assertEqual(summary['routed'] + summary['stranded'], len(self.block['groups']))
+
+    # ---------------------------------------------------------------- lineage fission
+
+    def children(self):
+        return [b for b in self.block['groups'] if b.get('parent_uid')]
+
+    def test_a_clan_that_outgrows_its_round_splits_onto_ground_it_already_held(self):
+        """`fission` was a declared branch and `parent_uid` sat on every band; neither was
+        ever populated, so the vocabulary promised something the generator did not do."""
+        children = self.children()
+        self.assertTrue(children, 'no band names a parent: lineage fission never ran')
+        self.assertIn('fission', {leg['branch'] for b in children for leg in b['legs']},
+                      'no leg joins a child to its parent')
+        from icarus_sim.terrain_nomad_routes import round_forage, round_capacity
+        by_uid = {b['uid']: b for b in self.block['groups']}
+        pol = policy()
+        for child in children:
+            parent = by_uid.get(child['parent_uid'])
+            self.assertIsNotNone(parent, child['uid'])
+            self.assertEqual(child['classification'], parent['classification'], child['uid'])
+            # Inherited ground, not fresh ground: the child starts on a camp of the
+            # parent's own round.
+            self.assertIn(child['node'], [c['node'] for c in parent['camps']], child['uid'])
+            # The trigger is the parent's size against what its round carries, not a roll.
+            self.assertGreater(parent['size'],
+                               round_capacity(parent, pol, round_forage(parent, self.cells)),
+                               parent['uid'])
+            joins = [leg for leg in child['legs'] if leg['branch'] == 'fission']
+            self.assertEqual(len(joins), 1, child['uid'])
+            # The join names the parent's own start camp, which is what makes it a join
+            # between two rounds rather than a leg inside one.
+            self.assertEqual(joins[0]['to'], parent['camps'][0]['id'], child['uid'])
+            self.assertEqual(joins[0]['from'], child['camps'][0]['id'], child['uid'])
+
+    def test_the_trigger_is_head_count_against_the_round_and_nothing_else(self):
+        """A fixture placed on both sides of the threshold on purpose.
+
+        The bands this world happens to raise sit wherever the size draw put them, so a
+        test that only reads them passes for a trigger that fired for everybody and for a
+        trigger that fired for nobody. These two populations are built one head above and
+        one head below each band's own computed capacity, so both readings go red.
+        """
+        import copy
+        from icarus_sim.terrain_lab import Config
+        from icarus_sim.terrain_nomad_routes import add_nomad_routes, round_forage, round_capacity
+        cfg = Config(**self.world['config'])
+        pol = policy()
+        outcome = {}
+        for label in ('over', 'under'):
+            world = {k: v for k, v in self.world.items() if k != 'nomads'}
+            world['nomads'] = copy.deepcopy(self.block)
+            world['nomads']['groups'] = [b for b in world['nomads']['groups']
+                                         if not b.get('parent_uid')]
+            for band in world['nomads']['groups']:
+                if band['classification'] != 'wanderers':
+                    continue
+                carries = round_capacity(band, pol, round_forage(band, self.cells))
+                band['size'] = max(1, int(carries) + 1 if label == 'over' else int(carries))
+            add_nomad_routes(world, cfg)
+            outcome[label] = world['nomads']['routes']['fissioned']
+        self.assertGreater(outcome['over'], 0,
+                           'no clan split with every herder one head over what its round carries')
+        self.assertEqual(outcome['under'], 0,
+                         'a clan split while no herder was over what its round carries')
+
+    def test_fission_is_bounded_because_a_child_never_splits_again(self):
+        """The ceiling, and the whole reason the conservative reading was taken: fission
+        runs once at placement, at most one child per band, and a child is not a parent."""
+        children = self.children()
+        parents = [b['parent_uid'] for b in children]
+        self.assertEqual(len(parents), len(set(parents)), 'a band fissioned more than once')
+        child_uids = {b['uid'] for b in children}
+        self.assertFalse(child_uids & set(parents), 'a child fissioned')
+        self.assertLessEqual(len(children),
+                             len(self.block['groups']) - len(children))
+
+    def test_rebuilding_the_routes_does_not_breed_more_bands(self):
+        """`add_nomad_routes` runs again on every `nomad_request` and on the monthly route
+        cadence. A fission step that accumulated there is the unbounded growth the card
+        warned about, so it is re-derived rather than added to."""
+        from icarus_sim.terrain_lab import Config
+        from icarus_sim.terrain_nomad_routes import add_nomad_routes
+        import json
+        before = json.dumps(self.block, sort_keys=True)
+        add_nomad_routes(self.world, Config(**self.world['config']))
+        self.assertEqual(json.dumps(self.world['nomads'], sort_keys=True), before)
+
+    def test_the_counts_include_the_children(self):
+        tally = {}
+        for band in self.block['groups']:
+            tally[band['classification']] = tally.get(band['classification'], 0) + 1
+        for name in CLASSIFICATIONS:
+            self.assertEqual(self.block['counts'][name], tally.get(name, 0), name)
 
 
 if __name__ == '__main__':

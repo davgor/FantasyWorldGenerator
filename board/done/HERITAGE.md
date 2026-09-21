@@ -3,7 +3,7 @@
 Owner: local. State: complete for Phases A, B and D. No delegates.
 
 Phase C (trait-driven geometry) was **not** built and is a reviewed open question with the
-user — see `board/backlog/HERITAGE-GEOMETRY.md`. The native mirrors this work will eventually
+user — see `board/retired/HERITAGE-GEOMETRY.md`. The native mirrors this work will eventually
 need are queued in `board/backlog/HERITAGE-NATIVE-MIRRORS.md` and belong to the port phase.
 
 ## Delivered

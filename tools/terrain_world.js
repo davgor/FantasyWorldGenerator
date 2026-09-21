@@ -2,17 +2,23 @@
 if (data.config.world_recipe >= 1) {
   const title = s => s.replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
   const make = (tag, text, parent) => { const e=document.createElement(tag); if(text!==undefined)e.textContent=text; if(parent)parent.append(e); return e; };
-  const style=make('style', '#world-params label{display:block;font-size:12px}#world-params input,#world-params select{width:100%}.world-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.world-card{padding:14px;background:#20313c;border-radius:8px}.world-controls{display:flex;flex-wrap:wrap;gap:12px}.world-controls label{margin:4px}.world-controls input[type=checkbox]{width:auto}#world-atlas{aspect-ratio:2;image-rendering:pixelated}#world-layers{max-height:250px;overflow:auto}#world-layers label{display:inline-flex;align-items:center;gap:5px;margin:4px 10px 4px 0}#world-layers input[type=range]{width:65px}#world-viewer{margin:24px 0;padding:18px;border:1px solid #405d68;border-radius:12px}');
+  const style=make('style', '#world-params label{display:block;font-size:12px}#world-params input,#world-params select{width:100%}.world-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.world-card{padding:14px;background:#20313c;border-radius:8px}.world-controls{display:flex;flex-wrap:wrap;gap:12px}.world-controls label{margin:4px}.world-controls input[type=checkbox]{width:auto}#world-atlas{aspect-ratio:2;image-rendering:pixelated}#world-layers{max-height:250px;overflow:auto}#world-layers label{display:inline-flex;align-items:center;gap:5px;margin:4px 10px 4px 0}#world-layers input[type=range]{width:65px}#world-viewer{margin:24px 0;padding:18px;border:1px solid #405d68;border-radius:12px}#world-controls{margin:0 0 22px;padding:16px 18px;border:1px solid #405d68;border-radius:12px;background:#1a2732;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}#world-controls h2{width:100%;margin:0 0 2px;font-size:17px}#world-controls label{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:13px}#world-controls #world-status{width:100%;margin:2px 0 0}#world-controls #world-params,#world-controls>details,#world-controls>p{width:100%}#world-controls #world-generate{font-weight:600;background:#31647d;border-color:#8ed9ed}');
   document.head.append(style);
   const svgEl=(tag,attrs,parent)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,v);if(parent)parent.append(e);return e;};
   document.head.append(make('style','.story-card svg{display:block;margin:6px auto;max-width:100%}.story-histogram{display:grid;gap:3px;margin:6px 0}.story-bar{display:grid;grid-template-columns:220px 1fr;align-items:center;gap:8px;font-size:12px}.story-bar-fill{display:block;height:10px;background:#ffd67e;border-radius:3px}'));
   const aside=document.querySelector('aside');
   for(const e of [...aside.children])e.hidden=true;
-  const head=make('div',undefined,aside);make('h2','World recipe',head);
+  // Above the layout, not inside the sidebar. The sidebar is the left column of a
+  // two-column grid that collapses to `order:-1` on the map below 750px, which put the
+  // only control that starts a simulation underneath a page tens of thousands of pixels
+  // tall. A run is the first thing anyone comes here to do, so it goes first.
+  const head=make('section');head.id='world-controls';
+  document.querySelector('.layout').before(head);
+  make('h2','New simulation',head);
   const baseline=make('details');make('summary','Ground-only baseline and legacy diagnostics',baseline);$('human-panel').before(baseline);baseline.append($('human-panel'));
   const mode=make('select',undefined,head);mode.id='world-mode';
   for(const [value,text] of [['random','Random'],['parameters','Parameters']]){const option=make('option',text,mode);option.value=value;}
-  const generateButton=make('button','Generate random world',head);generateButton.id='world-generate';generateButton.disabled=!live;
+  const generateButton=make('button','Run simulation',head);generateButton.id='world-generate';generateButton.disabled=!live;
   const resolutionLabel=make('label','Simulation resolution ',head),resolution=make('select',undefined,resolutionLabel);resolution.id='world-resolution';
   for(const size of [17,33,65,129]){const option=make('option',`${size-1} × ${size-1} cells${size===65?' · detailed':''}`,resolution);option.value=size;}
   resolution.value=String(data.config.size);if(!resolution.value)resolution.value='65';
@@ -36,11 +42,11 @@ if (data.config.world_recipe >= 1) {
       if(key==='world_size'&&!Object.hasOwn(explicit,'globe_radius'))inputs.globe_radius.value=10000*({small:1,medium:2,large:3}[input.value]);
     };
   }
-  const status=make('p',`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Random generation uses defaults at the selected resolution.`,head);status.id='world-status';status.setAttribute('role','status');
+  const status=make('p',(sample?`Prebuilt sample: seed ${data.config.seed} · recipe ${data.config.world_recipe} · ${data.config.size-1} × ${data.config.size-1} cells. Nothing was generated to show this. Run simulation builds a new world and times it.`:`Seed ${data.config.seed} · recipe ${data.config.world_recipe}. Random generation uses defaults at the selected resolution.`),head);status.id='world-status';status.setAttribute('role','status');
   const advanceButton=make('button','Advance age',head);advanceButton.id='world-advance-age';advanceButton.hidden=data.config.world_recipe!==3;advanceButton.disabled=!live||!data.beast_nests;
   const exportButton=make('button','Export world JSON',head);exportButton.onclick=()=>$('download').click();
   refine.onclick=()=>{if(busy)return;mode.value='parameters';mode.onchange();explicit={...completeWorld.recipe.overrides,size:Number(resolution.value)};inputs.seed.value=completeWorld.config.seed;for(const [k,v]of Object.entries(explicit))if(inputs[k])inputs[k].value=v;generateButton.click();};
-  mode.onchange=()=>{parameters.hidden=mode.value==='random';generateButton.textContent=mode.value==='random'?'Generate random world':'Generate with parameters';};
+  mode.onchange=()=>{parameters.hidden=mode.value==='random';generateButton.textContent=mode.value==='random'?'Run simulation':'Run simulation with parameters';};
   reset.onclick=()=>{explicit={};for(const [k,e] of Object.entries(inputs))e.value=schema[k].default;};
   parameters.onsubmit=e=>{e.preventDefault();generateButton.click();};
   const foundingLog=make('details',undefined,head);make('summary','Founding rounds',foundingLog);const foundingText=make('pre','',foundingLog);
@@ -128,7 +134,7 @@ if (data.config.world_recipe >= 1) {
     const danger=tier?` Tier ${tier} (${TIERS[tier]}).`:'';
     nestInfo.textContent=profile?`${profile.name} / ${profile.role||profile.family} / ${profile.kind}.${danger} Habitat: ${profile.medium}; ${profile.temperature.join(' to ')} C; required fields: ${Object.entries(profile.requires).map(([k,v])=>title(k)+' >= '+v).join(', ')||'none'}. ${nest?`${nest.layer}: suitability ${(nest.suitability*100).toFixed(0)}%; ${nest.den?'den':'range'} over ${nest.range_m.toFixed(0)} m.`:`no habitat placed (${diagnostic?.placed??0} anchors).`}`:'Select a species or map marker. Cyan circles: animals; coral: monsters. Habitat anchors are static proposals, not a simulated population; recipe 3 age transitions apply explicit local fantasy-threat rules.';
   }
-  function heroSite(p){if(!p?.presence)return null;const k=p.presence.site_kind,u=p.presence.uid;const s=k==='nest'?(data.beast_nests?.sites||[]).find(n=>n.id===u):k==='ruin'?(data.ruins||[]).find(r=>r.uid===u):k==='camp'?(data.heroes?.camps||[]).find(c=>c.uid===u):k==='college'?(data.magic?.colleges||[]).find(c=>c.id===u):k==='hamlet'?(data.humans?.hamlets||[]).find(c=>c.id===u):k==='fortress'?(data.humans?.fortresses||[]).find(c=>c.id===u):k==='port'?(data.fisheries?.ports||[]).find(c=>c.id===u):k==='key_location'?(data.key_locations?.sites||[]).find(c=>c.id===u):k==='shrine'?(()=>{const site=(data.religion?.sites||[]).find(c=>c.id===u);const ruin=site&&(data.ruins||[]).find(r=>r.id===site.ruin_id);return ruin?{...ruin,name:p.site_name||ruin.name}:null;})():(data.settlements?.sites||[]).find(c=>c.uid===u);return s&&s.x!=null?s:null;}
+  function heroSite(p){if(!p?.presence)return null;const k=p.presence.site_kind,u=p.presence.uid;const s=k==='nest'?(data.beast_nests?.sites||[]).find(n=>n.id===u):k==='ruin'?(data.ruins||[]).find(r=>r.uid===u):k==='camp'?(data.heroes?.camps||[]).find(c=>c.uid===u):k==='college'?(data.magic?.colleges||[]).find(c=>c.id===u):k==='hamlet'?(data.humans?.hamlets||[]).find(c=>(c.uid||c.id)===u):k==='fortress'?(data.humans?.fortresses||[]).find(c=>(c.uid||c.id)===u):k==='port'?(data.fisheries?.ports||[]).find(c=>c.id===u):k==='key_location'?(data.key_locations?.sites||[]).find(c=>c.id===u):k==='shrine'?(()=>{const site=(data.religion?.sites||[]).find(c=>c.id===u);const ruin=site&&(data.ruins||[]).find(r=>r.id===site.ruin_id);return ruin?{...ruin,name:p.site_name||ruin.name}:null;})():(data.settlements?.sites||[]).find(c=>c.uid===u);return s&&s.x!=null?s:null;}
   function heroCast(){const h=data.heroes;return h?.status==='ok'?[...h.people,...h.dreads]:[];}
   function heroColor(p){const g=p.alignment?.good??0;return g>.34?'rgb(255,220,126)':g<-.34?'rgb(214,64,64)':'rgb(186,192,204)';}
   function drawHeroPin(ctx,x,y,p,offset){const r=p.role==='dread'?8:6;x+=offset;ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r,y);ctx.lineTo(x,y+r);ctx.lineTo(x-r,y);ctx.closePath();ctx.fillStyle=heroColor(p);ctx.fill();ctx.lineWidth=p.role==='dread'?2:1;ctx.strokeStyle=p.role==='dread'?'#3b0d0d':'#111';ctx.stroke();}
@@ -318,7 +324,7 @@ if (data.config.world_recipe >= 1) {
   function rebuild(){
     advanceButton.disabled=busy||!live||!completeWorld.beast_nests;
     civilizationLegend.replaceChildren();
-    if(data.civilizations){make('p','Civilization regions follow reachable city support areas; wilderness remains unassigned. Larger square pins are capitals; small dots are hamlets (green farming, amber resource, cyan coastal) and slate chevrons are fortresses.',civilizationLegend);for(const entity of data.civilizations.entities){const capital=data.settlements?.sites.find(s=>s.node===entity.capital_node);const label=make('span',`${entity.name}: ${entity.city_count} cities${capital?' · Capital: '+capital.name:''}. `,civilizationLegend);label.style.color=`rgb(${civilizationColor(entity.region_index).join(',')})`;}}
+    if(data.civilizations){make('p','Civilization regions follow reachable city support areas; wilderness remains unassigned. Larger square pins are capitals; small dots are hamlets (green farming, amber resource, cyan coastal), slate keeps are fortresses and stone walls with a gap are ruins.',civilizationLegend);for(const entity of data.civilizations.entities){const capital=data.settlements?.sites.find(s=>s.node===entity.capital_node);const label=make('span',`${entity.name}: ${entity.city_count} cities${capital?' · Capital: '+capital.name:''}. `,civilizationLegend);label.style.color=`rgb(${civilizationColor(entity.region_index).join(',')})`;}}
     nodePoints=[];for(let z=0;z<data.config.size;z++)for(let x=0;x<(z===0||z===data.config.size-1?1:data.config.size-1);x++)nodePoints.push([x,z]);
     for(const key of Object.keys(data.layers))if(!layerInfo[key])layerInfo[key]=[title(key),'relative'];
     const old=field.value;field.replaceChildren();
@@ -385,9 +391,12 @@ if (data.config.world_recipe >= 1) {
     // landmarks. Without these the hinterland reads as empty, though a default world
     // places dozens of hamlets and a dozen fortresses in it.
     for(const h of data.humans?.hamlets||[]){const [x,y]=project([h.x,h.z]),role=h.role||'';ctx.fillStyle=/harbor|fishing|landing/.test(role)?'#8ff6ed':role==='resource'?'#edc17e':'#9fd79a';ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();}
-    for(const f of data.humans?.fortresses||[]){const [x,y]=project([f.x,f.z]);ctx.strokeStyle='#a8c4e0';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y-4);ctx.lineTo(x+4,y+3);ctx.lineTo(x-4,y+3);ctx.closePath();ctx.stroke();}
+    // A crenellated keep, the same silhouette and slate the globe already uses for a
+    // fortress. It was a thin outlined triangle, which at four pixels beside a filled
+    // hamlet dot was one small pale mark next to another.
+    for(const f of data.humans?.fortresses||[]){const [x,y]=project([f.x,f.z]);ctx.fillStyle='#c7c6d1';ctx.strokeStyle='#202b35';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x-4,y+4);ctx.lineTo(x-4,y-4);ctx.lineTo(x-1.5,y-4);ctx.lineTo(x-1.5,y-1.5);ctx.lineTo(x+1.5,y-1.5);ctx.lineTo(x+1.5,y-4);ctx.lineTo(x+4,y-4);ctx.lineTo(x+4,y+4);ctx.closePath();ctx.fill();ctx.stroke();}
     for(const s of data.settlements?.sites||[]){const p=project([s.x,s.z]),radius=s.city_class==='capital'?5:s.city_class==='medium'?4:3;ctx.fillStyle='#fff2bc';ctx.fillRect(p[0]-radius,p[1]-radius,2*radius,2*radius);if(s.city_class==='capital'){ctx.strokeStyle='#fff2bc';ctx.strokeRect(p[0]-8,p[1]-8,16,16);}}
-    for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);drawRuinIcon(ctx,x,y,16);}
+    for(const ruin of data.ruins||[]){const [x,y]=project([ruin.x,ruin.z]);drawRuinIcon(ctx,x,y,6);}
     {const seen={};for(const p of heroCast()){if(p.status!=='living')continue;const s=heroSite(p);if(!s)continue;const key=s.x+','+s.z;const offset=(seen[key]=(seen[key]||0)+1)-1;const [x,y]=project([s.x,s.z]);drawHeroPin(ctx,x,y,p,offset*7);}}
     for(const p of data.fisheries?.ports||[]){const [x,y]=project([p.x,p.z]);ctx.strokeStyle='#8ff6ed';ctx.strokeRect(x-4,y-4,8,8);}
     if($('terrain-icons').checked)for(const f of data.terrain?.features||[]){const [x,y]=project([f.x,f.z]);terrainIcon(ctx,x,y,f.kind,7);}
@@ -465,18 +474,27 @@ if (data.config.world_recipe >= 1) {
   };
   generateButton.onclick=async()=>{
     if(busy||!live||mode.value==='parameters'&&!parameters.reportValidity())return;
-    busy=true;generateButton.disabled=true;status.textContent='Generating terrain, habitats and supply networks…';
+    busy=true;generateButton.disabled=true;
+    // What is being timed is the run, not the server's share of it: the clock starts on
+    // the click and stops when the new world is on screen, so transfer and redraw are
+    // inside the number. A world takes minutes, so it also ticks while it waits --
+    // a button that goes quiet for three minutes reads as a hang.
+    const started=performance.now(),elapsed=since=>((performance.now()-since)/1000).toFixed(1);
+    const running=()=>{status.textContent=`Running simulation… ${elapsed(started)} s · terrain, habitats, civilizations and supply networks`;};
+    running();const ticking=setInterval(running,100);
     try{
       const randomMode=mode.value==='random';const seed=randomMode?crypto.getRandomValues(new Uint32Array(1))[0]:Number(inputs.seed.value);const overrides={size:Number(resolution.value)};
       if(!randomMode)for(const k of Object.keys(explicit)){if(!inputs[k])continue;overrides[k]=schema[k].type==='string'?inputs[k].value:Number(inputs[k].value);}
       overrides.size=Number(resolution.value);
       const response=await fetch('/world/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seed,recipe_version:completeWorld.config.world_recipe,overrides})});const result=await response.json();if(!response.ok)throw Error(result.error||'Generation failed');
+      const answered=performance.now();
       data=result;explicit={...data.recipe.overrides};for(const [k,input] of Object.entries(inputs))input.value=data.recipe.resolved[k]??schema[k].default;
       for(const [k,v] of Object.entries(data.config))if($('controls').elements[k])$('controls').elements[k].value=v;
       patchData=null;patchRequest++;$('patch-canvas').hidden=true;$('patch-download').disabled=true;
       selectedRow=Math.floor(data.config.size/2);rebuild();refreshLayers();draw();
-      status.textContent=`Generated seed ${seed} · recipe ${data.config.world_recipe} · ${Object.keys(overrides).length} explicit overrides. Switch to Parameters to reproduce or tweak it.`;
-    }catch(error){status.textContent=error.message;}finally{busy=false;generateButton.disabled=false;}
+      const finished=performance.now();
+      status.textContent=`Simulation complete in ${((finished-started)/1000).toFixed(1)} s · ${((answered-started)/1000).toFixed(1)} s generating and transferring, ${((finished-answered)/1000).toFixed(1)} s drawing. Seed ${seed} · recipe ${data.config.world_recipe} · ${data.config.size-1} × ${data.config.size-1} cells · ${Object.keys(overrides).length} explicit overrides. Switch to Parameters to reproduce or tweak it.`;
+    }catch(error){status.textContent=`${error.message} (after ${elapsed(started)} s)`;}finally{clearInterval(ticking);busy=false;generateButton.disabled=false;}
   };
   advanceButton.onclick=async()=>{
     if(busy||!live)return;

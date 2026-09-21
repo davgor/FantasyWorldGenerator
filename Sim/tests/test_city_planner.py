@@ -64,6 +64,21 @@ class CityPlannerTests(unittest.TestCase):
         for p in plan['plots']:
             for x,z in corners(p['x_m'],p['z_m'],p['plot_m']['width'],p['plot_m']['depth'],math.radians(p['rotation_degrees'])):self.assertGreaterEqual(abs(x),28)
 
+    def test_saturated_regional_flood_risk_does_not_disqualify_a_city(self):
+        """A coarse regional proxy must not decide a city smaller than one of its cells.
+
+        flood_risk is emitted as 0 or 1 over a raster whose cell is thousands of metres
+        across, so every sample inside a 480 m footprint reads the same number. Honouring
+        it here marked 23 of 35 cities in a seed-42 size-33 world unbuildable on ground
+        under 21 degrees. The neighbouring test covers the case this does NOT relax: a
+        routed river still reserves its channel and setback.
+        """
+        world=fixture();world['layers']['flood_risk']=[[1]*17 for _ in range(17)]
+        plan=plan_city(world,world['settlements']['sites'][0])
+        self.assertNotEqual(plan['status'],'unbuildable')
+        self.assertTrue(plan['plots'])
+        self.assertGreater(plan['location']['buildable_area_m2'],0)
+
     def test_final_generation_only_and_assets_cover_all_plots(self):
         from icarus_sim.terrain_world import generate_request
         from icarus_sim.terrain_history import materialize_stage

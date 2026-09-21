@@ -11,11 +11,18 @@ Time is a real number of days since founding year 0, on the moon's calendar: 24-
 [the moon](astrology.md) already uses, so a tick and `POST /world/moon` cannot disagree
 about what time it is.
 
-**An age is 100 years.** Ages had no duration before this capability: `history.ages` is a
+**An age is 5,000 years.** Ages had no duration before this capability: `history.ages` is a
 list, and the age lottery samples the founding year for its moon day, so nothing in the
 generator said how long one lasts. A tick cannot route a long span into an age advance
 without an answer. `terrain_time_schedule.AGE_YEARS` is that answer and it is new contract,
-not a discovered constant.
+not a discovered constant — see
+[028 An age is five thousand years](decisions/028-an-age-is-five-thousand-years.md), which
+also rules that a quest does not cross one.
+
+It is one number with two consequences, and both move with it. It decides what counts as a
+tick: a century is 1/50th of an age and moves the living layer only. And the per-year ley
+drift bounds are derived from it, so an age length changed on its own would drain the magic
+layer through ordinary ticking — see **Leylines** below.
 
 `world_clock` carries it: `{version, day, age, epoch_day, derived_from}`. A world generated
 before the clock existed is read at its founding year, so adopting a clock does not move a
@@ -34,7 +41,8 @@ caller persists it. The caller's object is never modified.
 
 `elapsed` names exactly one of `seconds`, `days` or `years`. `leyline_edits` are the same
 player edits `advance-age` accepts, applied before the span runs. `resolutions` closes
-quests the player has played. `commit` is read only by the age band.
+quests the player has played. `commit` is read by the age band and by the work ceiling:
+it means *yes, I have seen the price and I will pay it*.
 
 ## Bands
 
@@ -47,8 +55,8 @@ boundaries fall inside the window.
 | `instant` | under a day | typically nothing but the clock and the lunar surge |
 | `day` | a day to a season | quests, encounters, beast movements, nomad routes |
 | `season` | a season to two years | the above, plus seasonal food, ley drift, nomad reclassification and its write-backs, villain outlook |
-| `long` | two years to an age | the same cadences, over a longer span |
-| `age` | an age or more | not a tick — see below |
+| `long` | two years to an age | the same cadences, over a longer span — a century is here |
+| `age` | an age (5,000 years) or more | not a tick — see below |
 
 **The band names the size of a span; it does not decide what may run.** What runs is
 whatever cadence boundaries fall inside the window, and nothing else. The earlier design
@@ -70,17 +78,18 @@ whose expiry carries forward, and ley drift, which compounds — run every step.
 order is dependency order, producers before consumers, because `add_encounters` reads the
 blocks `add_nomads` and `add_beast_movements` write.
 
-## Five thousand years is an age advancement
+## Five thousand years is one age advancement
 
 A span of one age or longer is answered with an age advancement, not a tick, because that
-is what it is. By default the call does not advance anything: it returns the world
-unchanged with a report naming how many ages the span is worth and what they would cost.
+is what it is. Five thousand years is exactly one of them. By default the call does not
+advance anything: it returns the world unchanged with a report naming how many ages the
+span is worth and what they would cost.
 
 ```json
-{"band": "age", "ages": 50, "committed": false,
- "cost_estimate": {"ages": 50, "per_age_seconds": ..., "total_seconds": ...,
+{"band": "age", "ages": 1, "committed": false,
+ "cost_estimate": {"ages": 1, "per_age_seconds": ..., "total_seconds": ...,
                    "peak_mb": ..., "measured": false,
-                   "basis": "extrapolated from generation cost ..."}}
+                   "basis": "extrapolated by cell count from age advances timed directly ..."}}
 ```
 
 The figures are computed from the world's own grid size, so no fixed numbers are quoted
@@ -90,14 +99,21 @@ would be wrong for every world but one.
 Send `commit: true` to actually advance. A caller asking for five thousand years has no
 idea whether that is a second or an hour, and the estimate is how it finds out before
 paying. `measured` says whether the figure came from this world's own recorded
-`age_advance_total`, divided by the ages that call actually advanced, or from an
-extrapolation of *generation* cost. An age advance has never been timed directly at any
-size.
+`age_advance_total`, divided by the ages that call actually advanced, or from the
+reference measurement below.
 
-A span is rarely a whole number of ages. The remainder is **ticked**, not dropped: 150
-years is one age advance plus a fifty-year tick, and equals 100 years followed by 50. Any
+An age advance **has** now been timed directly — 34.3 to 39.4 seconds at size 17 and 181.8
+seconds at size 33, seed 42 through phase 16, on a contended development machine, so upper
+bounds. It used to extrapolate from *generation* cost recorded at size 129, which priced a
+different pass from constants that had gone stale in both halves; the memory figure was
+wrong by two orders of magnitude at the one size anybody generates. Nothing is measured
+above size 33 and everything beyond it is a cell-count extrapolation.
+
+A span is rarely a whole number of ages. The remainder is **ticked**, not dropped: 5,030
+years is one age advance plus a thirty-year tick, and equals 5,000 years followed by 30. Any
 `leyline_edits` and `resolutions` ride that remainder rather than being validated and
-discarded.
+discarded — which means a resolution cannot name a quest of the age being left behind,
+because the board the remainder sees belongs to the age that arrived.
 
 **When the age boundary refuses.** `age_gate` calls `validate_age_world` and reports
 whatever it refuses, in its own words, rather than restating its rules. An earlier version
@@ -108,7 +124,46 @@ only form of this that cannot go stale again.
 
 **A ceiling that is this module's own:** a request is capped at 50 ages, because each age
 rebuilds every derived layer and an unbounded span is an unbounded loop. That refusal
-carries the cost estimate, so a caller learns the size of what it asked for.
+carries the cost estimate, so a caller learns the size of what it asked for. Fifty ages is
+now a quarter of a million years; whether that is still the right ceiling is an open
+question decision 028 deliberately does not answer.
+
+## The work ceiling, which is not about the age band at all
+
+Every guard above lives in the age band, and decision 028 moved the boundary of that band
+from a century to five thousand years. So the span a game actually drives — a decade, a
+century, a millennium — fell on the side with no estimate, no gate and no refusal, however
+long it was. `advance({'years': 4999})` is **1,804,646 cadence steps**, and it used to run
+them without saying anything first.
+
+A request that would execute more than `MAX_TICK_STEPS` steps **as a tick** is now reported
+instead, with what it would cost, at any band:
+
+```json
+{"band": "long", "steps": 1804646, "elapsed_days": 1799640.0, "committed": false,
+ "blocked": {"code": "STATE_CAPACITY", "field": "elapsed",
+             "suggestion": {"kind": "clamp", "value": {"days": 199439.0}},
+             "cost_estimate": {"steps": 1804646, "elapsed_years": 4999.0,
+                               "total_seconds": ..., "peak_mb": ...}}}
+```
+
+`commit: true` runs it anyway, so nothing that worked before is now impossible — but a
+caller that used to get a world back for a long span now gets a report unless it says so.
+The suggestion is in **days** because days are what the request carries; clamping `elapsed`
+to a step count, which the generic capacity refusal would have suggested, is not a request
+this API can accept.
+
+Only the steps a request will actually tick are counted. A span of whole ages is delegated
+to `advance-age` and is not ticked, so only the remainder after those ages is priced, and
+the question is asked before the first age turns — a span of ages plus an unaffordable
+remainder is reported whole rather than advancing half of itself and then stopping.
+
+The ceiling is an absolute count of steps and deliberately not a fraction of an age: how
+much work a machine can afford does not change when the calendar is redefined. It also does
+not scale with the world, and the estimate beside it does — a step costs about three times
+as much on a size-33 world as on a size-17 one, so a large world is expensive at any span.
+Steps are a proxy for cost rather than cost, because a coalesced pass runs once per call
+however many crossings it had while the daily quest sweep runs every day.
 
 ## Refusals
 
@@ -148,8 +203,12 @@ Three separate things, and conflating them is the classic error here:
    including the instant band. A hidden school takes no surge and carries no
    `surged_strength` key at all.
 2. Base `intensity` drifts on a yearly cadence. The per-year bounds are the age transition's
-   own `0.65..1.35` raised to `1/100`, so a century of year-steps composes to the same band
-   as one age step rather than applying an age-sized shock a hundred times.
+   own `0.65..1.35` raised to `1/AGE_YEARS` — `1/5000`, so `0.65 ** 0.0002` ≈ 0.99991385 and
+   `1.35 ** 0.0002` ≈ 1.00006002 — and an age of year-steps composes to the same band as one
+   age step rather than applying an age-sized shock once a year. **The exponent is derived
+   and must never be written as a literal.** The pair that composes correctly over a century
+   composes to `0.65 ** 50`, about 2e-10, over an age: the magic layer drains to zero through
+   ordinary ticking, silently, with every individual step inside its stated bounds.
 3. `evaluate_networks` — the expensive globe pass — runs at most once per request, and only
    when the base field actually moved or a player edited it.
 
@@ -158,10 +217,31 @@ Three separate things, and conflating them is the classic error here:
 The tick owns quest **lifecycle**; it does not own quest content and does not decide play.
 
 `quests.quests[]` carries one entry per hook in `heroes.quest_hooks`, keyed on `hook_id`,
-with the contract's `anchor` and `verb` taken from fields the hook already has. An offer
+with the contract's `anchor` and `verb` taken from fields the hook already has — `verb` from
+the hook's own field at `heroes` version 2, falling back to `actual_effect.action` for an
+older world, where a ley quest has no verb to read. An offer
 opens when the world first sees it and expires when its window passes, when its giver is no
 longer present, or when its target is gone. Difficulty is **not** emitted here: that belongs
-to the quest generator.
+to the quest generator, and `heroes.quest_hooks[].difficulty` is where it is published.
+
+**A quest does not cross an age.** Five thousand years pass, `heroes` is regenerated
+wholesale, and the people who offered and populate an offer are gone, so an age turn closes
+every quest still `offered` or `taken` with `closed_reason: 'age_turned'`, logs each
+closure, retires the previous age's rows and rebuilds the board from the new age's hooks.
+`quest_id` therefore names one age's offer: an id seen before and after a turn is two
+different quests.
+
+`age_turned` is not `hook_gone` and a consumer should not collapse them — one says this hook
+left the block while the world stood, the other says the world moved on. The reaping used to
+be the first standing in for the second, and it only mostly worked: the regenerated cast
+re-mints positional uids such as `hero-reeve-hamlet-node-<n>` as the same string, so a quest whose
+id was minted twice carried on with the old age's `anchor`, `verb` and `stated_purpose`
+against a hook nobody wrote it for and a `giver_uid` naming nobody. The seven closing
+reasons — `expired`, `giver_gone`, `target_gone`, `hook_gone`, `age_turned`, `resolved`,
+`abandoned` — are published as an enum in `Contracts/schemas/read-quests.schema.json`.
+
+`POST /world/advance-age` does not reap: it turns an age without a clock, so it has no day
+to close a quest on. Only `advance-time`'s age band closes a board.
 
 Outcomes arrive from the game through `resolutions`:
 
@@ -201,17 +281,30 @@ pretend otherwise.
 
 ## Limitations
 
-- A world persisted by the CLI has `timing_ms` stripped, and several passes write into it
-  unguarded. `terrain_time` makes the key present before running anything so a persisted
-  world can tick at all. That is a mitigation; the contract question is
-  `board/backlog/TIME-PERSISTED-WORLD-CANNOT-ADVANCE.md`.
+- A world persisted by the CLI has `timing_ms` stripped, and 32 producers across 18
+  modules write into it unguarded. The key is made present where such a world *re-enters* —
+  `terrain_history.adopt_world` for the six request APIs that take a caller's world through
+  it, and `terrain_time`'s own `_timing` because it makes its own private copy. That is the
+  contract rather than a mitigation, and guarding the 32 producers individually is
+  deliberately not done. Verified 2026-09-21 across every `POST /world/*` route;
+  `board/done/TIME-PERSISTED-WORLD-CANNOT-ADVANCE.md`.
 - No native `Core/` port. A world advanced in Python and one advanced natively are not
   claimed to agree, because the native side has no time advance.
-- Irruptive swarms still appear in every year. The trigger they need now has a clock to
-  hang on; see `board/backlog/NOMAD-IRRUPTION-TRIGGER.md`.
-- An age advance has never been timed directly, at any size, so an estimate for a world
-  that has not advanced before is extrapolated from generation cost.
-- A quest's `taken` state is honoured if a caller writes it into the document it persists,
-  but there is no request field that sets it: the API has no "the player accepted this"
-  channel yet. Until there is, a game that wants an accepted quest to stop expiring must
-  write `state: 'taken'` itself.
+- Irruptive swarms answer to the clock as of 2026-09-21 — `board/done/NOMAD-IRRUPTION-TRIGGER.md`.
+  One caveat that belongs to this module rather than to that one: a pass running inside the
+  cadence loop sees `world_clock` as it was *before* the span, because the advanced clock is
+  written after the loop. `beast_movements` is built for the year the span started in, so a
+  multi-year advance is off by the span. Handing each cadence step its own day would close
+  it.
+- An age advance has been timed only at sizes 17 and 33 (34.3-39.4 s and 181.8 s, seed 42
+  through phase 16, 2026-09-21, on a contended machine). Above that, an estimate for a world
+  that has not advanced before is an extrapolation by cell count, and the memory figure is
+  worse than the seconds figure: it takes its own smaller reference size because the larger
+  reading came back visibly trimmed, and it over-states as it scales up. `cost_estimate`
+  carries `basis` and `peak_mb_precision` saying exactly that.
+- A quest's `taken` state is honoured here and written elsewhere: `POST /world/quest` takes
+  and abandons offers, so a `state` can change with no elapsed time in between and a
+  consumer caching a board between ticks is stale. See
+  [actor-scale writes](conformance/actor-scale-writes.md).
+- An age turn reaps the quest board, but only through `advance-time`. A caller that turns
+  ages through `POST /world/advance-age` directly carries its board across unchanged.

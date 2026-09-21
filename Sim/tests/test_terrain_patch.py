@@ -57,6 +57,11 @@ class PatchTests(unittest.TestCase):
 
     def test_request_rejects_invalid_world_before_sampling(self):
         from icarus_sim.terrain_patch import patch_request
+        from icarus_sim.terrain_world import registry
+        # Derived, not written out: the sentinel is one step past the declared ceiling, so it
+        # follows the bound if the bound moves. A literal here silently stops testing the
+        # rejection the day the registry changes -- SDET-CEILING-SENTINELS.
+        over_ceiling=registry(3)['size']['max']+1
         for body in ([],{}, {'config':[], 'patch':{}}, {'config':{'shape':'plane'},'patch':{}},
-                     {'config':{'shape':'globe','size':1026},'patch':{}}):
+                     {'config':{'shape':'globe','size':over_ceiling},'patch':{}}):
             with self.assertRaises(ValueError): patch_request(body)

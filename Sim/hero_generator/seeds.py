@@ -1,16 +1,14 @@
-"""Seed derivation, byte-identical to ``icarus_sim.terrain_tectonics.child_seed``.
+"""Seed derivation, re-exported from :mod:`world_geometry.seeds`.
 
-Copied rather than imported so this package reads only the finished world JSON and never
-the generator's modules. A test pins the two implementations against each other, so a
-change on either side is caught instead of silently forking the replay contract.
+This package reads only the finished world JSON and never the generator's modules, and it
+still does: ``world_geometry`` is pure arithmetic over ``math``, ``hashlib`` and ``random``
+and imports no generator. What has changed is that the derivation is no longer copied here.
+It used to be, and a per-package test pinned the copy; there is now one implementation and
+one pin, in ``Sim/tests/test_world_geometry.py``.
+
+The import path is unchanged, so every caller in this package keeps working. Nothing in this
+module computes anything, so there is nothing here that can fork from the generator.
 """
-import hashlib
-import random
+from world_geometry.seeds import child_seed, rng
 
-
-def child_seed(master, domain, variation=0):
-    return int.from_bytes(hashlib.sha256(f'tectonics-v1:{master}:{domain}:{variation}'.encode()).digest()[:4], 'big')
-
-
-def rng(master, domain, variation=0):
-    return random.Random(child_seed(master, domain, variation))
+__all__ = ['child_seed', 'rng']

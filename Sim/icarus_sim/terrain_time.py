@@ -24,12 +24,13 @@ move. Only an age advance rebuilds ground, and this module reaches that by calli
 """
 import copy
 import json
+import math
 import random
 from dataclasses import replace
 from importlib import import_module
 from time import perf_counter
 
-from .terrain_errors import (SCHEMA as ERROR_SCHEMA, SCHEMA_VERSION as ERROR_SCHEMA_VERSION,
+from .terrain_errors import (CLAMP, SCHEMA as ERROR_SCHEMA, SCHEMA_VERSION as ERROR_SCHEMA_VERSION,
                              cross_field, invalid_choice, missing_block, over_capacity,
                              refused_by_world, retired_version, unknown_field,
                              unsupported_api, wrong_type)
@@ -48,27 +49,145 @@ QUESTS_VERSION = 1
 OFFER_MIN_DAYS = 180.
 OFFER_MAX_DAYS = 1080.
 
+# Why a quest closed. This is a published vocabulary -- `closed_reason` in
+# `Contracts/schemas/read-quests.schema.json` is constrained to exactly these plus `null`
+# -- and a consumer branches on it to tell a player what happened, so two reasons that
+# read the same to a player are still two reasons here.
+#
+# `hook_gone` and `age_turned` are the pair that is easiest to collapse and must not be.
+# `hook_gone` says *this hook* left `heroes.quest_hooks` while the world around it stood.
+# `age_turned` says the world moved on: five thousand years passed, the cast was
+# regenerated, and everyone who could have offered or populated the quest is gone. A
+# consumer that cannot tell those apart cannot tell a player whether their quest went away
+# or their age did.
+#
+# `abandoned` is written by `terrain_quest_actions`, not here; it is in the vocabulary
+# because the vocabulary is the block's, not this module's.
+AGE_TURNED = 'age_turned'
+CLOSED_REASONS = ('expired', 'giver_gone', 'target_gone', 'hook_gone', AGE_TURNED,
+                  'resolved', 'abandoned')
+
 # Ley intensities drift 0.65..1.35 across one age transition (`terrain_history`). A year
 # step must compose to that same band over an age rather than applying an age-sized shock
-# a hundred times, so the per-year bounds are the age bounds taken to the power of one
-# over the age's length in years.
+# once per year, so the per-year bounds are the age bounds taken to the power of one over
+# the age's length in years.
+#
+# **The exponent is derived from `AGE_YEARS` and must never be written as a literal.** The
+# two numbers are one contract: the pair that composes correctly over a century composes to
+# `0.65 ** 50` -- about 2e-10 -- over the five thousand years an age now lasts, which is the
+# magic layer draining to zero through ordinary ticking, silently, with every individual
+# step inside its stated bounds. `LeyDriftCompositionTests` in `Sim/tests/test_time_advance.py`
+# is the guard, and it is a guard against a future edit rather than against this line.
 LEY_AGE_LOW, LEY_AGE_HIGH = .65, 1.35
 LEY_YEAR_LOW = LEY_AGE_LOW ** (1. / schedule.AGE_YEARS)
 LEY_YEAR_HIGH = LEY_AGE_HIGH ** (1. / schedule.AGE_YEARS)
 
-# Recorded generation cost, stated with its basis because a cost figure is description and
-# not invariant: 11 s / 30 MB at size 129 and 42 s / 116 MB at size 257, seed 42, on the
-# development machine. Cost scales with cell count, which is the square of the grid.
-COST_BASIS_SIZE = 129.
-COST_BASIS_SECONDS = 11.
-COST_BASIS_MB = 30.
+# Recorded cost of **one age advance**, stated with its basis because a cost figure is
+# description and not invariant.
+#
+# It used to be recorded *generation* cost -- 11 s / 30 MB at size 129 -- extrapolated by
+# cell count to price a different pass entirely, and both halves had gone stale. The MB
+# figure was the worse of the two: 30 MB at size 129 scales down to **0.5 MB at size 17**,
+# where generation alone now peaks at 378 MB. Wrong by nearly three orders of magnitude,
+# in the direction that tells a caller an expensive call is free.
+#
+# Measured 2026-09-21, seed 42, recipe 3, through phase 16, on the development machine
+# with five other sessions sharing it, so **wall clock is an upper bound**: 34.3 s, 37.6 s
+# and 39.4 s in three runs for one age at size 17, and 181.8 s at size 33.
+#
+# The seconds basis is the *larger* of the two points on purpose. An age advance grows
+# faster than cell count between them -- 4.7x the time for 3.8x the cells -- so
+# extrapolating from size 17 under-reports size 33 by a fifth, while extrapolating from 33
+# over-reports 17 by about the same. A cost guard should err toward warning.
+AGE_BASIS_SIZE = 33.
+AGE_BASIS_SECONDS = 181.8
+# **Memory has its own reference size, and that is deliberate rather than untidy.** The
+# only memory figure available here is peak working set, and the machine was trimming
+# working sets under load from the other sessions: the size-33 reading came back *smaller*
+# per cell than the size-17 one, which is the instrument and not the world. So the
+# size-17 reading is used -- 566 MB peak across a generation and one age advance, against
+# 378 MB for the generation alone -- and it is a **lower** bound. Pretending both
+# quantities share one reference would state a precision neither has.
+AGE_BASIS_MB_SIZE = 17.
+AGE_BASIS_MB = 566.
+
+# What a tick costs, measured on the same worlds in the same runs. Two terms because the
+# cost has two shapes, and a single-term model gets whichever one it omits badly wrong:
+#
+# - a fixed cost per call, which is the private deep copy every non-instant span makes.
+#   It scales with the world and not with the span.
+# - a marginal cost per cadence step, which scales with the span.
+#
+# Measured at size 17 (seed 42, phase 16): 18,057 steps in 1.15 s, 72,207 in 2.05 s,
+# 361,007 in 6.15 s and 1,804,646 in 26.81 s -- a straight line, 14.2 us a step over a
+# 1.0 s copy. The copy itself is 51 MB resident with `build_stages` shared rather than
+# copied, as the code does it; a step tuple in the schedule's list is 132 bytes, measured
+# over a century's 36,107 of them.
+#
+# **Both terms are scaled by cell count**, which the second point justifies rather than
+# assumes: at size 33 the same spans took 4.30 s, 6.47 s, 19.26 s and 79.90 s, so the copy
+# grew 3.2x and the per-step cost 3.0x for 3.8x the cells. Scaling both quadratically
+# therefore over-reports size 33 by about a fifth, which is the safe direction for a
+# figure a caller uses to decide whether to pay.
+#
+# **Steps are a proxy for cost and not cost** -- a coalesced pass runs once per call
+# however many crossings it had, while the daily quest sweep runs every day -- so two
+# spans with equal counts can differ, and an estimate built on this says so.
+TICK_BASIS_SIZE = 17.
+TICK_BASIS_COPY_SECONDS = 1.
+TICK_BASIS_STEP_SECONDS = .0000142
+TICK_BASIS_COPY_MB = 51.
+TICK_BASIS_STEP_BYTES = 132.
 
 # `advance_age_request` accepts 1..10 steps per call, so a longer run is chunked.
 MAX_AGE_STEPS = 10
 # And a run has to end. Each age rebuilds every derived layer, so an unbounded span
-# is an unbounded loop: five thousand years is fifty ages, a million years is ten
-# thousand. Refused with the estimate attached rather than silently attempted.
+# is an unbounded loop: a million years is two hundred ages. Refused with the estimate
+# attached rather than silently attempted.
+#
+# The number is unchanged by decision 028 and its meaning is not: fifty ages was five
+# thousand years and is now two hundred and fifty thousand. Decision 028 leaves whether
+# that is still the right ceiling open, and this change does not answer it either: it is
+# kept beside `MAX_TICK_STEPS` rather than replaced by it, because a work ceiling and an
+# ages ceiling refuse different things -- one prices a tick, the other bounds a loop of
+# whole-world rebuilds this module does not execute itself.
 MAX_AGES_PER_REQUEST = 50
+
+# The most work one request executes as a tick before it is **reported** rather than
+# attempted. Steps, because a step is what costs; years are what a caller asks in, and
+# both are reported.
+#
+# This guard exists because the one the module had was on the wrong axis. `cost_estimate`,
+# `age_gate` and the ages-per-request cap were all reached only when `band(days) == AGE`,
+# so a span below that boundary was executed however long it was -- and decision 028 moved
+# that boundary from a century to five thousand years, putting a fifty-fold cost increase
+# on the unguarded side of it. A caller could ask for 4,999 years, get 1.8 million cadence
+# steps, and reach none of the machinery built to say what that would cost.
+#
+# **An absolute count, and never a share of an age.** Writing it as a fraction of
+# `AGE_DAYS` would re-couple the guard to the band boundary, which is the defect itself:
+# how much work a machine can afford does not change when the calendar is redefined.
+# `WorkCeilingTests.test_the_ceiling_is_an_absolute_count_and_not_a_share_of_an_age` is
+# that assertion.
+#
+# 200,000 steps is about 554 years measured from day zero: roughly 3.8 s and 25 MB of
+# transient step tuples at size 17, against a *measured* 26.8 s and 230 MB of them for the
+# 4,999-year span the band permits. It is an order of magnitude above any span a game
+# drives -- a century is 36,107 steps -- and an order of magnitude below the band's own
+# maximum, so what it catches is a caller that did not know what it was asking for rather
+# than a caller playing the game.
+#
+# **It does not scale with the world, and the estimate beside it does.** A step costs
+# about three times as much on a size-33 world as on a size-17 one, so the same permitted
+# span is 14 s there and would be far worse on a large grid. A ceiling read out of the
+# cost model instead would move every time somebody re-measured -- the same request
+# refused on Monday and run on Tuesday, with no constant edited -- which is worse than a
+# ceiling that is honest about being one number. `tick_cost_estimate` carries the
+# size-dependent figure, and the record says so.
+#
+# **It advises; it does not forbid.** `commit: true` proceeds, exactly as it does for the
+# age band, so nothing a caller could do before is now impossible.
+MAX_TICK_STEPS = 200000
 
 # Every cadence maps to a pass with the same `(result, cfg)` signature, except the three
 # this module implements itself because no pass exists for them.
@@ -282,9 +401,11 @@ def _quest_step(result, cfg, day, index, liveness_of, givers):
     by_hook = {hook['hook_id']: hook for hook in hooks}
     rng = random.Random(child_seed(cfg.seed, 'time-quests', index))
     # Walk the union: a hook the world no longer offers still has a quest to close. Walking
-    # hooks alone left an open quest for every hook that vanished -- and an age transition
-    # regenerates `heroes` wholesale, so that was roughly the whole board, immortal and
-    # growing, every age.
+    # hooks alone left an open quest for every hook that vanished, immortal and growing.
+    # `hook_gone` is this hook leaving `heroes.quest_hooks` while the world around it stands
+    # -- a resolved hook, a player edit, a caller trimming the block. An age turn is *not*
+    # reaped here and never was reliably: `_turn_age_board` closes that board under its own
+    # reason before the new age's first tick reaches this function.
     for hook_id in list(by_hook) + [q for q in tracked if q not in by_hook]:
         hook = by_hook.get(hook_id)
         quest = tracked.get(hook_id)
@@ -300,10 +421,14 @@ def _quest_step(result, cfg, day, index, liveness_of, givers):
                      # The contract's anchor and verb, from fields the hook already
                      # carries. Difficulty is the quest generator's to emit and is not
                      # invented here.
-                     # `target` is uid-or-node_id only, so a nest hook -- which carries
-                     # `nest_id` -- anchored to null and named nothing at all.
+                     # Both fallbacks are for a world generated before `heroes` version 2,
+                     # which is the version that made the hook answer for itself. A
+                     # pre-2 `target` is uid-or-node_id only, so a nest hook -- which
+                     # carries `nest_id` -- anchored to null and named nothing at all;
+                     # and a pre-2 ley hook had no `action` on its effect, so its verb
+                     # read as null however the board was queried.
                      'anchor': (hook.get('target') or (hook.get('actual_effect') or {}).get('nest_id')),
-                     'verb': (hook.get('actual_effect') or {}).get('action'),
+                     'verb': (hook.get('verb') or (hook.get('actual_effect') or {}).get('action')),
                      'stated_purpose': hook.get('stated_purpose'), 'unwitting': hook.get('unwitting', False),
                      'state': 'offered', 'offered_day': day,
                      'expires_day': day + rng.uniform(OFFER_MIN_DAYS, OFFER_MAX_DAYS),
@@ -327,6 +452,54 @@ def _quest_step(result, cfg, day, index, liveness_of, givers):
             block['log'].append({'day': day, 'quest_id': quest['quest_id'], 'event': reason})
     block['quests'].sort(key=lambda quest: quest['quest_id'])
     return block
+
+
+def _turn_age_board(result, cfg, day):
+    """Retire the quest board at an age turn and rebuild it from the new age's hooks.
+
+    A quest does not cross an age. Five thousand years pass, `heroes` is regenerated
+    wholesale, and the people who offered and populate an offer are gone, so every quest
+    still open closes -- under `age_turned`, which is its own reason: the world moved on,
+    rather than one hook having vanished from under it.
+
+    **It does not depend on the id disappearing, and that is the whole point.** That is how
+    reaping used to happen, and it was only mostly true. The regenerated cast re-mints
+    positional uids -- `hero-reeve-hamlet-node-<n>`, `hero-sovereign-<city uid>` -- as the same
+    string, so `by_hook.get(hook_id)` found a *different* hook wearing the old id and the
+    quest carried on: the old age's `anchor`, `verb` and `stated_purpose`, the new age's
+    target check, and a `giver_uid` naming someone who no longer exists. Measured 2026-09-21
+    with all 49 open quests taken and one age advanced: 39 closed, **10 survived** as that
+    chimera.
+
+    **The previous age's rows are retired with it rather than kept beside the new ones**, for
+    the same reason rather than for tidiness: a retained closed row whose id the new cast
+    re-mints could not be told apart from the offer that id now names, and which rows
+    survived would again be decided by an accident of uid minting. `quests.log` keeps every
+    closure with its day and its reason, so why a quest ended outlives the board it stood on.
+
+    Only a world that already carries a board gets one back. The quest lifecycle begins when
+    a world is first ticked -- `POST /world/quests` refuses a world that has never been
+    advanced, because no quests and no quest lifecycle are different facts -- and an age turn
+    continues a lifecycle rather than starting one.
+    """
+    block = result.get('quests')
+    if not isinstance(block, dict):
+        return
+    log = block.setdefault('log', [])
+    for quest in block.get('quests') or []:
+        if quest.get('state') in ('offered', 'taken'):
+            quest['state'] = 'expired'
+            quest['closed_day'] = day
+            quest['closed_reason'] = AGE_TURNED
+            log.append({'day': day, 'quest_id': quest.get('quest_id'), 'event': AGE_TURNED})
+    block['quests'] = []
+    from .terrain_liveness import liveness
+    # Keyed on the day the age turned, like every other step in this module: the quests
+    # cadence has a period of one day, so the absolute index of the sweep at `day` is
+    # `floor(day)`. The next tick's window is half-open at the start and begins at
+    # `floor(day) + 1`, so nothing is drawn twice and no offer opened here depends on how
+    # the span that reached this age was cut.
+    _quest_step(result, cfg, day, int(math.floor(day)), liveness, _giver_index(result))
 
 
 def _apply_resolutions(result, cfg, day, resolutions):
@@ -394,10 +567,19 @@ def cost_estimate(world, ages):
     """What an age advance would cost, before the caller commits to paying it.
 
     A caller asking for five thousand years has no idea whether that is a second or an
-    hour, and the honest answer is a range with its basis attached. `measured` says
-    whether this world has actually been advanced before: if it has, its own recorded
-    cost is used, and if it has not, this is an extrapolation from *generation* cost,
-    which is a different pass. Nobody has measured an age advance at size 513.
+    hour, and the honest answer is a figure with its basis attached. `measured` says
+    whether **this world** has actually been advanced before: if it has, its own recorded
+    cost is used, and if it has not, this extrapolates from a reference advance timed on a
+    different world.
+
+    The fallback used to extrapolate from *generation* cost, which is a different pass,
+    and from constants recorded at size 129 that had gone stale in both halves. An age
+    advance has now been timed directly, at sizes 17 and 33, so the fallback prices the
+    operation it claims to price -- and it moved the size-17 answer from 0.19 s and 0.5 MB
+    to 48 s and 566 MB, against a measured 34-39 s. It is still an extrapolation by cell
+    count, still unmeasured above size 33, and the seconds and the megabytes take
+    *different* reference sizes because only the seconds could be measured cleanly at
+    both; `peak_mb_precision` says what the memory figure is worth.
     """
     size = float(world['config']['size'])
     recorded = (world.get('timing_ms') or {}).get('age_advance_total')
@@ -414,14 +596,65 @@ def cost_estimate(world, ages):
                  % carried)
         measured = True
     else:
-        per_age = COST_BASIS_SECONDS * (size / COST_BASIS_SIZE) ** 2
-        basis = ('extrapolated from generation cost (11 s at size 129, 42 s at size 257, seed 42) '
-                 'by cell count; an age advance itself has never been timed at any size')
+        per_age = AGE_BASIS_SECONDS * (size / AGE_BASIS_SIZE) ** 2
+        basis = ('extrapolated by cell count from age advances timed directly on 2026-09-21 '
+                 '(34.3-39.4 s at size 17 and 181.8 s at size 33, seed 42 through phase 16, '
+                 'on a contended development machine, so upper bounds); the seconds take '
+                 'size 33 as the reference because the cost grows faster than cell count '
+                 'between the two, and nothing has been timed above size 33')
         measured = False
     return {'ages': ages, 'per_age_seconds': round(per_age, 3),
             'total_seconds': round(per_age * ages, 3),
-            'peak_mb': round(COST_BASIS_MB * (size / COST_BASIS_SIZE) ** 2, 1),
+            'peak_mb': round(AGE_BASIS_MB * (size / AGE_BASIS_MB_SIZE) ** 2, 1),
+            'peak_mb_precision': ('566 MB peak working set measured at size 17, '
+                                  'extrapolated by cell count. The measurement is a lower '
+                                  'bound, because the machine was trimming working sets '
+                                  'under load; the extrapolation is an over-estimate of '
+                                  'unknown size, because the two measured world documents '
+                                  'grew 3.0x for 3.8x the cells rather than in step with '
+                                  'them. Nothing above size 33 has been measured at all, '
+                                  'and no age advance above size 33 has been run'),
             'basis': basis, 'measured': measured}
+
+
+def tick_cost_estimate(world, days, steps):
+    """What a tick would cost, before the caller commits to paying it.
+
+    The age band's estimate has a sibling here because the work ceiling refuses on the
+    tick path and a refusal without a price is half an answer. Unlike the age band's, this
+    one is exact about *what* would run: `schedule.work` counts the crossings a span
+    contains, so the step count is a fact and not a projection. Only the seconds and the
+    megabytes are projected.
+
+    Two terms, because the cost has two shapes. The private deep copy is paid once per
+    call and scales with the world; the per-step cost is paid per crossing and does not.
+    A single-term model gets whichever term it omits badly wrong, which is the mistake the
+    age band's own basis constants made for a year.
+
+    **Steps are a proxy for cost and not cost.** `add_encounters` coalesces to one run per
+    call while the daily quest sweep runs every day, so two spans with equal step counts
+    can differ by orders of magnitude, and `precision` says so rather than letting a
+    rounded number imply otherwise.
+    """
+    size = float((world.get('config') or {}).get('size') or TICK_BASIS_SIZE)
+    scale = (size / TICK_BASIS_SIZE) ** 2
+    copy_seconds = TICK_BASIS_COPY_SECONDS * scale
+    return {'steps': steps, 'elapsed_days': days,
+            'elapsed_years': round(days / schedule.DAYS_PER_YEAR, 3),
+            'total_seconds': round(copy_seconds + steps * TICK_BASIS_STEP_SECONDS * scale, 3),
+            'copy_seconds': round(copy_seconds, 3),
+            'per_step_seconds': TICK_BASIS_STEP_SECONDS * scale,
+            'peak_mb': round(TICK_BASIS_COPY_MB * scale
+                             + steps * TICK_BASIS_STEP_BYTES / 1048576., 1),
+            'basis': ('measured 2026-09-21 on seed 42 through phase 16, on a contended '
+                      'development machine: at size 17, 72,207 steps in 2.05 s and '
+                      '1,804,646 in 26.81 s, so 14.2 us a step over a 1.0 s copy; at '
+                      'size 33 the same spans took 6.47 s and 79.90 s, so both terms are '
+                      'scaled by cell count, which over-reports size 33 by about a fifth'),
+            'precision': ('order of magnitude; steps are a proxy for cost, because a '
+                          'coalesced pass runs once per call however many crossings it '
+                          'had while the daily quest sweep runs every day'),
+            'measured': True}
 
 
 def age_gate(world):
@@ -555,7 +788,7 @@ def advance_time_request(body):
     if type(commit) is not bool:
         raise wrong_type('commit', commit,
                          {'type': 'boolean',
-                          'description': 'whether to actually advance the age band'})
+                          'description': 'whether to pay a cost this boundary reported first'})
 
     world = body.get('world')
     cfg = validate_time_world(world)
@@ -567,6 +800,55 @@ def advance_time_request(body):
     started = perf_counter()
     now = clock(world)
     which = schedule.band(days)
+
+    # What this request would execute **as a tick**, priced before anything is copied.
+    #
+    # Only the remainder after whole ages, because the ages themselves are delegated to
+    # `advance_age_request` and are not ticked here; pricing them as cadence steps would
+    # refuse every age advance for work it never does. Asked before the age branch rather
+    # than inside it, so a span of ages *plus* an unaffordable remainder is reported
+    # whole instead of advancing its ages and then baulking -- failure at this boundary is
+    # all-or-nothing and a partial answer would be the one thing this module promises not
+    # to produce.
+    #
+    # `schedule.work` counts crossings and allocates nothing, which is the point of its
+    # existing: the span this guard is for is 1.8 million step tuples, and a guard that
+    # had to build the list to price it would have paid the cost it exists to report.
+    tick_days = days - schedule.ages_for(days) * schedule.AGE_DAYS if which == schedule.AGE else days
+    tick_from = now['day'] + (days - tick_days)
+    tick_steps = schedule.work(tick_from, tick_days)
+    if tick_steps > MAX_TICK_STEPS and not commit:
+        # Reported, not raised, and `commit` proceeds -- the age gate's shape, extended
+        # down the bands it never reached. A caller that asked for a millennium deserves
+        # the estimate and the reason together; an exception throws away the more useful
+        # half, and a guard that quietly ran *less* than it was asked for would be the
+        # band-selects-cadences data loss `terrain_time_schedule` documents at length.
+        refusal = over_capacity('elapsed', tick_steps, MAX_TICK_STEPS, 'cadence steps per request')
+        document = refusal.document()
+        # `over_capacity` suggests clamping the field to the limit, which here would tell
+        # a caller to send `elapsed` as a step count -- a unit this API does not accept.
+        # The span that would fit, in days, is the value that actually works.
+        #
+        # Measured from the caller's *own* clock rather than from `tick_from`, so that
+        # sending this value straight back is guaranteed to be accepted. A suggestion
+        # computed from the day the ages would have ended is a suggestion about a request
+        # the caller cannot make, and off by a step or two besides -- half-open windows
+        # start where they start.
+        fits = schedule.longest_span(now['day'], MAX_TICK_STEPS)
+        document['suggestion'] = {'kind': CLAMP, 'value': {'days': fits},
+                                  'note': 'the longest span from this world_clock that '
+                                          'runs at most %d steps' % MAX_TICK_STEPS}
+        document['cost_estimate'] = tick_cost_estimate(world, tick_days, tick_steps)
+        out = copy.deepcopy(world)
+        out['world_clock'] = now
+        out['time_advance'] = {
+            'api_version': TIME_API_VERSION, 'band': which, 'elapsed_days': days,
+            'from_day': now['day'], 'to_day': now['day'] + days, 'steps': tick_steps,
+            'ages': schedule.ages_for(days) if which == schedule.AGE else 0,
+            'committed': False, 'blocked': document,
+            'note': ('Estimate only. Send commit: true to run it anyway, or ask for at '
+                     'most %g day(s).' % fits)}
+        return out
 
     # The age band answers before anything is copied: it either delegates wholesale or
     # reports why it cannot.
@@ -610,6 +892,10 @@ def advance_time_request(body):
         clock_after['day'] = now['day'] + age_days
         clock_after['age'] = len(advanced['history']['ages'])
         advanced['world_clock'] = clock_after
+        # The age turned, so the board does. Every quest still open closes as `age_turned`
+        # and the board is rebuilt from the cast this age raised -- before the remainder
+        # ticks, because the remainder is time spent in the new age.
+        _turn_age_board(advanced, cfg, clock_after['day'])
         advanced['history'].setdefault('operations', []).append(
             {'api_version': TIME_API_VERSION, 'kind': 'time', 'band': schedule.AGE,
              'elapsed_days': age_days, 'ages': ages, 'from_day': now['day'],

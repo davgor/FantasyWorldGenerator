@@ -8,7 +8,7 @@ Read [PLAN.md](PLAN.md). It contains the source baseline and extraction scope, e
 
 The extraction is complete; see [ML-00 evidence](board/done/ML-00.md) and the [current board](board/README.md). The pinned Python reference remains importable as `icarus_sim`; repository-level commands and portable contract helpers use the `fantasy_world_generator` facade.
 
-ML-01/02 and the scoped ML-03a typed C++ counter proof are complete. ML-03b/c add native JSON/numeric conformance and a reproducible source proof bundle. **ML-03 (in progress)** is Unreal setup. Native world genesis now reproduces the Python reference world in C++ and runs in process inside the plugin, and a cooked Win64 consumer generates and materializes it without Python ([ML-03d](board/backlog/ML-03d.md), [ML-03e](board/backlog/ML-03e.md)); settlement, road and nest placement are the remaining native slice. Ordinary reference/core development remains independent of the anime game's assets and character-creator progress.
+ML-01/02 and the scoped ML-03a typed C++ counter proof are complete. ML-03b/c add native JSON/numeric conformance and a reproducible source proof bundle. **ML-03 (in progress)** is Unreal setup. Native world genesis now reproduces the Python reference world in C++ and runs in process inside the plugin, and a cooked Win64 consumer generates and materializes it without Python ([ML-03d](board/retired/ML-03d.md), [ML-03e](board/retired/ML-03e.md)); settlement, road and nest placement are the remaining native slice. Ordinary reference/core development remains independent of the anime game's assets and character-creator progress.
 
 ## Status
 
@@ -17,6 +17,8 @@ The repository contains the standalone world generator, portable contract fixtur
 ## Staged world lab
 
 Run `python tools/terrain_lab.py --serve` for the sixteen-stage recipe 3 lab, including deep-time tectonics, eight leylines, 104 magical biome variants and two civilization ages. Use Previous/Next to inspect saved stages. Old recipe/save compatibility is retired: regenerate worlds for the natural-core and explicit magical-state contract. [Behavior and replay contract](docs/terrain-world-layers.md).
+
+The page opens on `Fixtures/sample-world-v1.json`, a committed world built by `python tools/build_sample_world.py`; nothing is generated to show it. **Run simulation** builds a new world and reports how long the whole run took. Command-line terrain settings reach `/generate` but not the page — pass `--fresh` to generate the page from them on every load.
 
 ## Local validation
 

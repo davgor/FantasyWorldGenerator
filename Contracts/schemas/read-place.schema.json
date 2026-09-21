@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/read-place.schema.json",
+  "title": "Read: place",
+  "description": "One settlement, hamlet, fortress or key location by id, with the rows that join to it resolved. Answered by POST /world/place (Sim/icarus_sim/terrain_read.place_request). Every join is the writer's own field and the writing site is named in joins[].writer, because a near miss - endswith for equality, a node where the writer keyed on an id - answers a different question and looks correct.",
+  "type": "object",
+  "required": ["schema", "schema_version", "read", "api_version", "source", "anchor", "place",
+               "resolved", "joins", "post_ceiling"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.read.place" },
+    "schema_version": { "const": 1 },
+    "read": { "const": "place" },
+    "api_version": { "const": 1 },
+    "source": { "$ref": "#/$defs/source" },
+    "anchor": {
+      "type": "object",
+      "description": "What to cache. id_survives_an_age is false for hamlets and fortresses, whose ids are ordinals re-derived at every age boundary; node is the thing to key on instead.",
+      "required": ["id", "kind", "node", "x", "z", "roster_key", "id_survives_an_age"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["city", "hamlet", "fortress", "key_location"] },
+        "node": { "type": ["integer", "null"] },
+        "x": { "type": ["integer", "number", "null"] },
+        "z": { "type": ["integer", "number", "null"] },
+        "roster_key": { "type": ["string", "null"], "description": "The key npcs.sites[].uid files this place under. A settlement uid unchanged for a city; hamlet-node-<node> or fortress-node-<node> for the small sites, because their ordinal ids renumber. Null for a key location, which the roster has no rows for yet." },
+        "id_survives_an_age": { "type": "boolean" }
+      }
+    },
+    "place": { "type": "object", "description": "The generator's own row, verbatim. Fields are the writing block's and are not restated here." },
+    "resolved": {
+      "type": "object",
+      "required": ["plan", "location_plan", "npc_site", "npc_posts", "post_count", "posts_truncated"],
+      "properties": {
+        "core": { "type": ["object", "null"], "description": "humans.cores[] where site_id equals settlements.sites[].id. Cities only." },
+        "seasonal_food_model": { "type": ["object", "null"], "description": "seasonal_food.models[] where site_id equals settlements.sites[].id. Cities only." },
+        "seasonal_food_summary": { "type": ["object", "null"], "description": "seasonal_food.cities[] for the same site_id. Cities only." },
+        "core_city": { "type": ["object", "null"], "description": "The city a hamlet or fortress answers to. core_id is a POSITION in settlements.sites, not a uid; it is checked against that site's own id before being used, because settlements.sites[].id equals its index is an invariant and not a coincidence." },
+        "plan": { "$ref": "#/$defs/site_plan" },
+        "location_plan": { "$ref": "#/$defs/location_plan" },
+        "npc_site": { "type": ["object", "null"] },
+        "npc_posts": { "type": "array", "items": { "$ref": "#/$defs/post" } },
+        "post_count": { "type": "integer", "minimum": 0, "description": "The true number of roster rows filed under this place, whether or not they were all returned." },
+        "posts_truncated": { "type": "boolean" }
+      }
+    },
+    "joins": { "type": "array", "items": { "$ref": "#/$defs/join" } },
+    "post_ceiling": { "type": "integer" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["generator_version", "seed", "size", "phase", "day", "age"],
+      "properties": {
+        "generator_version": { "type": ["integer", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "size": { "type": ["integer", "null"] },
+        "phase": { "type": ["integer", "null"] },
+        "day": { "type": ["number", "null"] },
+        "age": { "type": ["integer", "null"] }
+      }
+    },
+    "site_plan": {
+      "type": ["object", "null"],
+      "description": "A city, hamlet or castle plan: its identity, status and size, never its body. A city plan is most of a megabyte on a size-17 world and this read is meant to be kilobytes, so bytes states what fetching it would cost. Null on a key location, which has a location_plan instead. Kept apart from location_plan because their status fields are different vocabularies that share the word complete.",
+      "required": ["block", "id_field", "id", "status", "version", "plots", "unplaced", "bytes", "writer"],
+      "additionalProperties": false,
+      "properties": {
+        "block": { "enum": ["city_plans", "hamlet_plans", "castle_plans"] },
+        "id_field": { "type": "string", "description": "The field inside that block this id was matched against: city_uid, hamlet_id or fortress_id." },
+        "id": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["complete", "partial", "unbuildable"],
+          "description": "The planner's own word for whether this plan was fully placed, carried verbatim. The same three tokens world-output.schema.json declares for city, hamlet and castle plan items, where status is required. NOT the same question as a key location plan's status, which asks whether a plan has contents; complete is in both vocabularies and means two different things - see board/backlog/SDET-STATUS-VOCABULARY.md."
+        },
+        "version": { "type": ["integer", "null"] },
+        "plots": { "type": "integer", "minimum": 0 },
+        "unplaced": { "type": "integer", "minimum": 0 },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "writer": { "type": "string" }
+      }
+    },
+    "location_plan": {
+      "type": ["object", "null"],
+      "description": "A key location's plan: the same identity, status and size fields, in its own definition because its status is its own vocabulary. Null on a city, hamlet or fortress, which have a site_plan instead.",
+      "required": ["block", "id_field", "id", "status", "version", "plots", "unplaced", "bytes", "writer"],
+      "additionalProperties": false,
+      "properties": {
+        "block": { "const": "key_location_plans" },
+        "id_field": { "const": "location_id" },
+        "id": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["complete", "empty"],
+          "description": "Whether this plan has contents, carried verbatim. The two tokens key-location-plans.schema.json declares for plans[], where status is required. NOT the site planners' question of whether a plan was fully placed."
+        },
+        "version": { "type": ["integer", "null"] },
+        "plots": { "type": "integer", "minimum": 0 },
+        "unplaced": { "type": "integer", "minimum": 0 },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "writer": { "type": "string" }
+      }
+    },
+    "post": {
+      "type": "object",
+      "description": "A roster row projected, not copied: the full record is what the person read is for.",
+      "required": ["uid", "name", "post", "building_id", "status", "important", "hero_uid"],
+      "additionalProperties": false,
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "post": { "type": ["string", "null"] },
+        "building_id": { "type": ["string", "null"] },
+        "status": {
+          "type": "string",
+          "enum": ["alive", "dead"],
+          "description": "npc_roster's own vocabulary, carried verbatim. The same two tokens npc-roster.schema.json declares for npcs.people[], where status is required. It is one of five status vocabularies in this tree and it is NOT the hero one: use the person read for liveness resolved through the single predicate."
+        },
+        "important": { "type": ["boolean", "null"] },
+        "hero_uid": { "type": ["string", "null"] }
+      }
+    },
+    "join": {
+      "type": "object",
+      "required": ["name", "from", "to", "writer"],
+      "properties": {
+        "name": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "writer": { "type": "string" }
+      }
+    }
+  }
+}

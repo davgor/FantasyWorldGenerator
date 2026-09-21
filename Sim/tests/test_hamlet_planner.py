@@ -98,7 +98,7 @@ class HamletPlannerTests(unittest.TestCase):
         world=generate_request({'seed':42,'overrides':{'size':17,'phase':16,'hamlets_per_core':2}})
         self.assertIn('hamlet_plans',world)
         self.assertNotIn('hamlet_plans',materialize_stage(world,15))
-        self.assertEqual(world['hamlet_plans']['version'],2)
+        self.assertEqual(world['hamlet_plans']['version'],3)
         self.assertEqual(len(world['hamlet_plans']['hamlets']),len(world['humans']['hamlets']))
         ids={a['id'] for a in compile_asset_list()['assets']}
         for plan in world['hamlet_plans']['hamlets']:

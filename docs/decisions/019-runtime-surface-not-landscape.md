@@ -1,7 +1,7 @@
 # 019 — The materialized surface is a runtime mesh, not an editor Landscape
 
 On 2026-09-18 the native world generate landed in `Core/` and the consumer pass began.
-[Decision 018](018-unrealworldgen-dev-consumer.md) and [ML-03e](../../board/backlog/ML-03e.md)
+[Decision 018](018-unrealworldgen-dev-consumer.md) and [ML-03e](../../board/retired/ML-03e.md)
 call the presented terrain a *Landscape*. `ALandscape` cannot be created at runtime:
 its import and heightmap-authoring paths live in editor-only modules, so a cooked game
 cannot build one. ML-03e also requires that the **same** path run in PIE and in a

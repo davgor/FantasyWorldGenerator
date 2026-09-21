@@ -19,7 +19,13 @@ import math
 
 from .terrain_tectonics import child_seed
 
-VERSION = 1
+# 2: `tiers` stopped being turmoil-ever and became turmoil-sustained (TIER_KEPT_PER_AGE),
+# which is what made the fall band reachable at all; a claim's `kind` tracks its holder's
+# tier and carries `refreshed_age`; and `outlook.regions` now also reports an anchor that
+# still holds a villain but that no region was produced for, whose `culture` is null. A
+# consumer that reads a version 1 `tiers` value as "the worst this region ever was" reads
+# a version 2 one wrong, which is what the integer is for.
+VERSION = 2
 SUPER_TIER = 1.             # the band a villain is "super" above
 REACH_SPACINGS_PER_TIER = 4.  # how far one tier of reach carries, in settlement spacings
 RISK_WEIGHT, HUNGER_WEIGHT = .3, .3
@@ -27,6 +33,31 @@ FALLOFF = 1.5               # reach multiples at which a villain's pressure is s
 VILLAIN_WEIGHT = .5         # its share of a city's fate lottery at the seat, at tier one
 STALLED_TIER = .999         # where a pretender sits when the ceiling is full
 FRAGMENT_SHARE = .35        # the tier a region keeps when its villain falls
+# What a region's tier ledger keeps from one age to the next.
+#
+# Without it the ledger is turmoil-*ever*: `tier = tier + rise * concentration`, both
+# factors non-negative by construction, so a seated villain's tier is monotonically
+# non-decreasing. Seating requires `tier >= SUPER_TIER` (1.) and `villain_hold` is declared
+# `0. .. 1.`, so `tier < hold` needed `hold > 1.0000000000000009` and the reachable set was
+# empty by one epsilon. Everything downstream of the fall -- `status: 'fallen'`, `fell_age`,
+# `villains.fallen`, the claim influence fields, `fallen_mark`, and the consumer filters
+# added when the fall was made recordable -- was dead code in every buildable world.
+# Hysteresis needs a measure that can come back down, and turmoil-ever cannot: a region at
+# zero turmoil for twenty-five ages held its villain at exactly its seating tier.
+#
+# With it, tier is turmoil *sustained*. A region holds its villain while it keeps
+# concentrating and loses it when it goes quiet, and a steady concentration `p` settles at
+# `rise * p / (1 - TIER_KEPT_PER_AGE)` rather than growing without bound with the world's
+# age -- so reach measures how bad a region is, not how old the world is.
+#
+#   quiet ages since the peak   0     1    2    3     4
+#   tier from SUPER_TIER        1.0   .9   .81  .729  .656
+#
+# .9 is chosen for the band, not for the arithmetic: four quiet ages to cross the default
+# `villain_hold` of .7 from the *bottom* of the band is what "a reign is long once
+# established" has to mean once it can end at all. Seed-visible -- every world's `tiers`
+# and `villains.outlook` move, which is why VERSION is 2.
+TIER_KEPT_PER_AGE = .9
 # How hard a fallen villain's claims still press on the world. Ground it took stays
 # taken -- that is a decision, not a default -- but how *strongly* taken is a separate
 # question from whether the record persists, and it is deliberately a number rather
@@ -262,10 +293,16 @@ def fallen_mark(result, villain, age):
     return mark
 
 def advance(result, cfg, age, rise, hold, density):
-    """Accumulate each region's tier, then seat, hold or unseat its villain.
+    """Move each region's tier, then seat, hold or unseat its villain.
 
     Returns the standing cast. A region's tier is the thing that persists; a villain is the
     name the world puts on a region that has concentrated past the band.
+
+    The ledger is not an accumulator. It keeps `TIER_KEPT_PER_AGE` of what it held and adds
+    `rise * concentration`, so it measures turmoil sustained rather than turmoil ever, and a
+    region that goes quiet loses its villain. While it only ever rose, no `villain_hold`
+    inside its declared `0..1` could end a reign and every line below that writes a fall was
+    dead code.
 
     `block['people']` holds the fallen as well, with `status: 'fallen'` and a `fell_age`.
     They are kept and never pruned: a world that forgets what stood in it cannot be asked
@@ -300,20 +337,41 @@ def advance(result, cfg, age, rise, hold, density):
     radius = result['effective_config']['globe_radius']
     spacing = cfg.settlement_spacing
     region_list = regions(result, radius, reports_by_uid)
+    by_anchor = {region['anchor']: region for region in region_list}
     limit = ceiling(len(region_list), density)
     seated_count = sum(1 for v in living.values() if v['tier'] >= SUPER_TIER)
+    # A villain whose anchor is not produced this age was never the subject of this loop:
+    # its tier was never touched, the fall check never ran, and it went straight back into
+    # `people` as standing, holding a frozen reach over a region the world no longer has
+    # and pressing cities together through `resolve_wars._villain_pressure` forever. Two
+    # ordinary routes get there -- a seat city taken by a fate, so its culture is not
+    # rebuilt from the surviving roads, and a ley node appended nearer the seat, which
+    # moves the anchor while the region itself carries on. It is visited here with the
+    # concentration a region nobody produced presses, which is none.
+    #
+    # Deliberately NOT an immediate fall. The second route leaves a region that still
+    # exists under a villain that still holds it, and unseating that one the moment a node
+    # is appended would be a rule about ley geometry masquerading as a rule about power.
+    # Decay reaches the same end for the first route within the same band as any other
+    # quiet region.
+    #
+    # Visited *after* the produced regions, so which regions seat a villain this age is
+    # unchanged: a stranded reign ending must not free a seat in the age it ends.
+    stranded = [rid for rid in sorted(living) if rid not in by_anchor]
 
-    for region in region_list:
-        rid = region['anchor']
-        pressed = concentration(region, reports_by_uid)
-        tier = tiers.get(rid, 0.) + rise * pressed
+    for rid in [region['anchor'] for region in region_list] + stranded:
+        region = by_anchor.get(rid)
+        pressed = concentration(region, reports_by_uid) if region is not None else 0.
+        tier = tiers.get(rid, 0.) * TIER_KEPT_PER_AGE + rise * pressed
         villain = living.get(rid)
         if tier >= SUPER_TIER and villain is None and seated_count >= limit:
             # Pretenders stall at the line: the ceiling stops a rise, not an existence.
             tier = min(tier, STALLED_TIER)
         tiers[rid] = tier
         if villain is None:
-            if tier >= SUPER_TIER:
+            # `region is None` implies a stranded anchor, which by construction holds a
+            # villain, so this never seats one into a region that was not produced.
+            if tier >= SUPER_TIER and region is not None:
                 seat, school, node_id = region['seat'], region['school'], region['node_id']
                 pressure = dominant_pressure([reports_by_uid[c['uid']] for c in region['cities']
                                               if c.get('uid') in reports_by_uid])
@@ -412,6 +470,11 @@ def outlook(result, cfg, rise, density):
     The counterpart of war_outlook: that one tells "they are coming" from "we once
     fought", this one tells a region that is about to produce something from one that is
     merely violent, and names who is stalled at the line.
+
+    `standing` always equals the number of rows marked `seated`, which needs saying because
+    it did not use to: a villain holding an anchor no region was produced for was counted in
+    the first and absent from the second, so one document gave two answers. Such a holding
+    gets a row of its own, with a null `culture` and no cities.
     """
     reports_by_uid = {r['city_uid']: r for r in result.get('threat_assessments', {}).get('cities', [])}
     block = result.get('villains', {})
@@ -432,6 +495,24 @@ def outlook(result, cfg, rise, density):
             'seated': rid in seated,
             'stalled': rid not in seated and tier >= STALLED_TIER,
             'cities': len(region['cities']),
+        })
+    # `standing` is counted from `people` and the rows are built from the anchors produced
+    # this age, so a villain standing on an anchor no region was produced for made one
+    # document give two answers -- `standing: 1` beside zero regions seated -- with no way
+    # for a reader to tell which was right. The holding is shown instead of being counted
+    # and hidden: a region the world stopped producing, with someone still on it. Appended
+    # after the produced rows and sorted, so the order is a property of the world.
+    for rid in sorted(seated - {region['anchor'] for region in region_list}):
+        tier = tiers.get(rid, 0.)
+        rows.append({
+            'region': rid,
+            'culture': None,
+            'concentration': 0.,
+            'tier': round(tier, 6),
+            'to_threshold': round(max(0., SUPER_TIER - tier), 6),
+            'seated': True,
+            'stalled': False,
+            'cities': 0,
         })
     return {'rise': rise, 'ceiling': limit, 'standing': len(seated), 'regions': rows}
 
@@ -564,6 +645,14 @@ def sink_well(result, cfg, villain, age):
     return villain['well']
 
 
+SEAT_TIER = SUPER_TIER * 1.5   # the band at which a claim is a seat rather than a village
+
+
+def claim_kind(villain):
+    """Whether a claim is a seat or a village: a band on the holder's tier right now."""
+    return 'seat' if villain['tier'] >= SEAT_TIER else 'village'
+
+
 def claim_settlements(result, cfg, villain, age):
     """Ground a villain has taken for its own, mixed rather than of one people.
 
@@ -572,6 +661,20 @@ def claim_settlements(result, cfg, villain, age):
     so a site pushed into the survivor list would simply not be placed. Founding real
     cities means changing placement, which is a settlement-model change and not a tail on
     this one. The claim is what an orchestrator reads until then.
+
+    **A claim is a snapshot with a standing half, and the split is deliberate.** `age`,
+    `direction`, `node`, `factions` and `drawn_from` record what this villain took and
+    when, so a city founded two ages later does not retroactively join a claim staked
+    before it existed -- and a `drawn_from` uid that is a ruin by now is the record being
+    honest about a claim taken from the living. What tracks the present is the holder's
+    own standing: `kind`, and the `holder_status`, `holder_fell_age` and `influence` that
+    `advance` restamps.
+
+    The rejected alternative was to treat the whole claim as a standing fact and redraw
+    `factions` and `drawn_from` every age. It is defensible -- the docstring above argues
+    for it -- but it makes `age` mean nothing, it silently rewrites history every age, and
+    no consumer reads either field today. Taking `kind` alone fixes the half that is
+    wrong under both readings and leaves the half that needs a ruling to the ruling.
     """
     radius = result['effective_config']['globe_radius']
     cities = result.get('settlements', {}).get('sites', [])
@@ -582,7 +685,7 @@ def claim_settlements(result, cfg, villain, age):
         return None
     claim = {'id': f"claim-{villain['uid']}", 'villain_uid': villain['uid'], 'age': age,
              'direction': list(villain['direction']), 'node': villain['node'],
-             'kind': 'seat' if villain['tier'] >= SUPER_TIER * 1.5 else 'village',
+             'kind': claim_kind(villain), 'refreshed_age': age,
              # Mixed by construction: a villain takes whoever is close, not whoever
              # shares its blood, which is what makes its holdings look wrong to everyone.
              'factions': sorted(set(mix)), 'drawn_from': [uid for _, uid, _ in near[:MIXED_FACTIONS]],
@@ -590,9 +693,17 @@ def claim_settlements(result, cfg, villain, age):
              # Stated on both sides so a reader never has to treat absence as a state.
              'holder_status': 'living', 'influence': 1.}
     villain.setdefault('claims', [])
-    if not any(c['id'] == claim['id'] for c in villain['claims']):
+    held = next((c for c in villain['claims'] if c['id'] == claim['id']), None)
+    if held is None:
         villain['claims'].append(claim)
-    return claim
+        return claim
+    # The id is `claim-<uid>`, one constant per villain, so from the second age onward
+    # this function used to recompute the whole claim and drop it on the floor. Only the
+    # standing half is refreshed: `kind` is a band on the holder's tier now, and a tier
+    # band is not a thing any reading of this record makes correct to freeze.
+    held['kind'] = claim['kind']
+    held['refreshed_age'] = age
+    return held
 
 
 def build(result, cfg, age, villains):

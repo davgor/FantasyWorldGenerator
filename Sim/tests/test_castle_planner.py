@@ -80,6 +80,20 @@ class CastlePlannerTests(unittest.TestCase):
         if plan['status'] == 'unbuildable':
             self.assertEqual(plan['plots'], [])
 
+    def test_saturated_regional_flood_risk_does_not_disqualify_a_castle(self):
+        """Mirrors the city-planner case: a coarse proxy cannot judge one local cell.
+
+        flood_risk is 0 or 1 over a raster cell thousands of metres wide, so every
+        sample in a castle footprint reads one value. Honouring it left 34 of 56
+        castles unbuildable in a seed-42 size-33 world. A routed river channel and
+        its setback still block, because that mask is measured in local metres.
+        """
+        world = fixture()
+        world['layers']['flood_risk'] = [[1] * 17 for _ in range(17)]
+        plan = plan_castle(world, world['humans']['fortresses'][0])
+        self.assertNotEqual(plan['status'], 'unbuildable')
+        self.assertTrue(plan['plots'])
+
     def test_final_generation_exports_castle_plans_and_assets(self):
         from icarus_sim.terrain_world import generate_request
         from icarus_sim.terrain_history import materialize_stage
@@ -87,7 +101,12 @@ class CastlePlannerTests(unittest.TestCase):
         world = generate_request({'seed': 42, 'overrides': {'size': 17, 'phase': 16, 'fortress_count': 2}})
         self.assertIn('castle_plans', world)
         self.assertNotIn('castle_plans', materialize_stage(world, 15))
-        self.assertEqual(world['castle_plans']['version'], 1)
+        self.assertEqual(world['castle_plans']['version'], VERSION)
+        # A castle plan declares no sleeping capacity rather than a zero beside a
+        # placed garrison: no structure in the castle registry carries a bed count.
+        self.assertIn('beds', world['castle_plans'])
+        for plan in world['castle_plans']['castles']:
+            self.assertFalse(any('beds' in p for p in plan['plots']))
         self.assertEqual(len(world['castle_plans']['castles']), len(world['humans']['fortresses']))
         ids = {a['id'] for a in compile_asset_list()['assets']}
         for plan in world['castle_plans']['castles']:

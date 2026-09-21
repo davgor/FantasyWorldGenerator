@@ -44,6 +44,19 @@ def apply(world, people, policy):
         opponents = {_civilization_of(d.get('opponent_uid'), cities_by_uid, ruins_by_uid) for d in person['deeds'] if d.get('opponent_uid')}
         if len(opponents - {None}) >= 2:
             f.add('deeds:two_civilizations')
+        # `villain:prior_age` is NOT a reference to a super villain. `icarus_sim.terrain_villains`
+        # owns that word in the world model: a field with a continuous tier, a reach in metres, a
+        # seat and held ley nodes, at most one per cultural region, published in the `villains`
+        # block under its own schema. This is a feature token on an ordinary person, and it means
+        # only what the line below tests -- a pretender whose people founded a city again after
+        # they were born, so their claim was overtaken while they lived. It carries no tier, no
+        # reach, no region and no seat, and a world can be full of these with an empty `villains`
+        # block. Filtering `selectable` for it to find "people connected to a super villain"
+        # returns dispossessed claimants and nothing about super villains at all, with no error;
+        # and it is NOT evidence that a super villain stood here in a prior age, which is a
+        # question `villains.fallen` answers and this does not. `Sim/tests/test_villain_vocabulary.py`
+        # holds the disclaimer in place. See board/done/VOCABULARY-VILLAIN-TWO-AXES.md for why the
+        # token was not renamed and what the rename would cost.
         if person['role'] == 'pretender' and person['born_age'] < final and latest_founding.get(person['civilization_id'], 0) > person['born_age']:
             f |= {'villain:prior_age', 'stake:regained'}
         if person['role'] in SEATED and person['civilization_id'] in camp_leaders_by_civ:

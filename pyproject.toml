@@ -19,7 +19,7 @@ package-dir = { "" = "Sim" }
 
 [tool.setuptools.packages.find]
 where = ["Sim"]
-include = ["fantasy_world_generator*", "icarus_sim*", "hero_generator*", "story_web*", "heritage*", "key_locations*", "npc_roster*"]
+include = ["fantasy_world_generator*", "icarus_sim*", "hero_generator*", "story_web*", "heritage*", "key_locations*", "npc_roster*", "world_geometry*"]
 
 [tool.setuptools.package-data]
 fantasy_world_generator = ["*.json"]

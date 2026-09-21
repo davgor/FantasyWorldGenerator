@@ -37,7 +37,7 @@ The clearest consequence today is [BESTIARY-LAND-ICE-NO-ANIMALS](BESTIARY-LAND-I
 because biome `17` is in no role table, animals score `0.` there while monsters score `1.`, so
 the ice sheet is pure monster territory. That is the accidental monster default and the animal
 exclusion meeting in one place. Related in shape:
-[CONTENT-ENCOUNTERS-ARE-FISH](../backlog/CONTENT-ENCOUNTERS-ARE-FISH.md), where what the player meets is
+[CONTENT-ENCOUNTERS-ARE-FISH](CONTENT-ENCOUNTERS-ARE-FISH.md), where what the player meets is
 decided by where the world happens to have surface rather than by authored intent.
 
 ## Current state
@@ -74,7 +74,7 @@ A ruling first, then at most one of:
   acquires a stray `biome_weights` is caught rather than silently honoured.
 - **Author preferences.** Give monster families biome tables the way animals have roles. This is
   seed-changing and needs its `Core/` port in the same change; sequence it behind
-  [PRODUCT-WORLD-DISPOSABILITY-DECISION](../backlog/PRODUCT-WORLD-DISPOSABILITY-DECISION.md).
+  [PRODUCT-WORLD-DISPOSABILITY-DECISION](PRODUCT-WORLD-DISPOSABILITY-DECISION.md).
 
 Do not do both, and do not close this by adding tables to a handful of monsters - a partial pass
 would make the fallback genuinely ambiguous rather than merely undocumented.

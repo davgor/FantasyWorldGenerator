@@ -392,7 +392,7 @@ class NativeWorldTests(unittest.TestCase):
                     self.assertEqual(float(head[8]), river['river_distance_m'])
                 self.assertEqual(int(head[9]), layout['required_asset_count'])
                 self.assertEqual(int(head[10]), layout['required_node_slots'])
-                self.assertEqual(bool(int(head[11])), layout['buildings']['missing_anchors'])
+                self.assertEqual(bool(int(head[11])), layout['asset_anchors_missing'])
                 self.assertEqual(head[12], layout.get('fallback', {}).get('reason', '-'))
                 self.assertEqual([row[2] for row in plan['features']], list(feature_order))
                 for row, name in zip(plan['features'], feature_order):
@@ -401,21 +401,12 @@ class NativeWorldTests(unittest.TestCase):
                     self.assertEqual(int(row[4]), expected['count'])
                     self.assertEqual(_anchors(row[5:]),
                                      [(a['node'], a['distance_to_city_m']) for a in expected['anchors']])
-                options = layout['buildings']['options']
-                self.assertEqual([row[2] for row in plan['options']], list(options))
-                for row in plan['options']:
-                    expected = options[row[2]]
-                    self.assertEqual(row[3], expected['placement'])
-                    self.assertEqual(int(row[4]), expected['target_count'])
-                    self.assertEqual(int(row[5]), expected['placed_count'])
-                    self.assertEqual(int(row[6]), expected['required_node_slots'])
-                    self.assertEqual(bool(int(row[7])), expected['required'])
-                    self.assertEqual(bool(int(row[8])), expected['bridge_required'])
-                    self.assertEqual(None if row[9] == '-' else row[9], expected['skip_reason'])
-                    self.assertEqual([] if row[10] == '-' else row[10].split(','), expected['tags'])
-                    self.assertEqual([] if row[11] == '-' else row[11].split(','), expected['assets'])
-                    self.assertEqual(_anchors(row[12:]),
-                                     [(a['node'], a['distance_to_city_m']) for a in expected['anchors']])
+                # The per-option placement detail is not compared any more: Python stopped
+                # publishing `city_layout.buildings` at city_layout 2, because it was a
+                # second answer to a question `city_plans` already answers. The native
+                # driver still emits its rows and they are read past. Under decision 027
+                # the two sides diverge by design until the port is redone, so this is not
+                # a hole in the gate -- the asset roll-up below still compares.
                 self.assertEqual([(row[2], int(row[3])) for row in plan['required']],
                                  [(row['asset_id'], row['count']) for row in layout['required_assets']])
 

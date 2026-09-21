@@ -34,6 +34,16 @@ ACTIVE_GLOBS = (
     'docs/*.md', 'docs/conformance/*.md', 'docs/decisions/*.md',
     'Contracts/*.md', 'Core/README.md', 'Sim/README.md', 'provenance/README.md',
     'board/README.md', 'board/backlog/*.md', 'board/in-progress/*.md',
+    # Two folders that no glob named until 2026-09-21, and so were read by nothing: the
+    # card template every new card is copied from, and the plugin README that links five
+    # documents across two folders with `../../` paths -- the exact shape that dies when
+    # a card is moved.
+    'board/templates/*.md', 'Unreal/FantasyWorldGenerator/README.md',
+    # Retired cards are not worked, but they are still linked from live documents and
+    # still link back into them, and a card that changes folder takes its sibling links
+    # with it. Freezing them instead would suppress the link check, which is the one
+    # check that catches exactly that move -- it missed six dead links on 2026-09-21.
+    'board/retired/*.md',
 )
 # Historical or imported evidence: read but never repaired. Frozen must be a subset of
 # what is provenance-pinned or of board/done, so nothing current can hide in here.
@@ -43,6 +53,36 @@ FROZEN_GLOBS = (
     'board/done/*.md',
     'provenance/source-reviews/*.md',
 )
+# Markdown this gate deliberately does not read, each with the reason. Every document in
+# the repository must match one of the three lists, so a new folder fails loudly instead
+# of being silently skipped, and every run prints what this list cost.
+UNCHECKED_GLOBS = {
+    'Artifacts/*.md': 'generated profile reports, rewritten wholesale by '
+                      'tools/stage_profile.py; no prose in them is hand-authored',
+}
+
+# The closed vocabulary for a record's `tier`. These are the four tiers declared in
+# docs/conformance/README.md's evidence table, restated here because the table was the
+# only statement of them and nothing read it: `tier` is the word a reader is most likely
+# to trust and it was self-assigned. Keep the two in step -- a fifth tier invented in a
+# record now fails here, and a fifth tier added to the table has to be added here too.
+TIERS = {
+    'DECLARED': 'the symbol exists with this signature; its own comments say it does X',
+    'REACHABLE': 'a caller exists and a named build compiles and links it',
+    'EXERCISED': 'a named test runs this code and asserts on its output',
+    'PARITY': 'output matches a reference field by field at a stated seed and tolerance',
+}
+
+# Where a proof file has to live to be run at all. These mirror the three unittest
+# discoveries in tools/validate_repo.py (`sim-tests`, `repo-tests`, `consumers`); a
+# record may not cite a file no suite reaches.
+PROOF_PATTERNS = ('Sim/tests/test_*.py', 'tests/test_*.py', 'tests/consumer_*.py')
+
+
+# Values a record may write where a path is expected, to say plainly that there is none.
+# Anything else in those fields is read as a path and must resolve.
+def disclaimed(value):
+    return not value or value.lower() == 'none' or value.startswith('(')
 
 FENCE = re.compile(r'^\s*(```|~~~)')
 INLINE_CODE = re.compile(r'`[^`]*`')
@@ -76,17 +116,33 @@ def matches(path, globs):
 
 
 def all_markdown():
+    """Every document in the tree. Hidden directories are not documentation.
+
+    `.git`, `.venv` and `node_modules` were named one at a time; the rule behind them is
+    that a dot-directory holds machinery rather than prose. Stating it as the rule also
+    gives this repository's negative tests somewhere to build a deliberately broken
+    record: a probe record parked in `docs/conformance/` is indistinguishable from a real
+    one for as long as it exists, and another session standing at a closeout run sees it
+    as a failure that is theirs to chase.
+    """
     out = []
     for p in sorted(ROOT.rglob('*.md')):
         parts = p.relative_to(ROOT).parts
-        if '.git' in parts or 'node_modules' in parts or '.venv' in parts:
+        if 'node_modules' in parts or any(x.startswith('.') for x in parts):
             continue
         out.append(p)
     return out
 
 
 def read_text(path, findings):
-    """Read a document, reporting an unreadable one rather than raising."""
+    """Read a document, reporting an unreadable one rather than raising.
+
+    A document can also disappear between being listed and being read, because four other
+    sessions move cards between board folders while this runs. That is not a defect in the
+    tree and it is not the reader's to fail on, but a gate that dies with a traceback
+    halfway through has reported nothing at all -- so it is a warning and the run
+    continues.
+    """
     try:
         return path.read_bytes().decode('utf-8')
     except UnicodeDecodeError as exc:
@@ -94,6 +150,12 @@ def read_text(path, findings):
             HARD, 'ENCODING', rel(path),
             'is not valid UTF-8 (%s at byte %d); a reader that assumes UTF-8 crashes on it'
             % (exc.reason, exc.start)))
+        return None
+    except OSError:
+        findings.append(Finding(
+            WARN, 'VANISHED', rel(path),
+            'disappeared between being listed and being read; another session most '
+            'likely moved it mid-run, and nothing in this run examined it'))
         return None
 
 
@@ -193,7 +255,9 @@ def check_citations(findings, docs):
             continue
         try:
             text = p.read_text(encoding='utf-8')
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, OSError):
+            # Undecodable is reported by check_documents; gone is another session moving
+            # a card mid-run. Neither is this check's to die on.
             continue
         for i, line in enumerate(text.splitlines(), 1):
             for target, start, end in CITATION.findall(line):
@@ -281,8 +345,16 @@ def check_numbering(findings):
                 % (num, ' and '.join(names), num)))
 
 
-def check_provenance_decisions(findings):
-    p = ROOT / 'provenance' / 'extraction-manifest.json'
+def check_provenance_decisions(findings, manifest=None):
+    """Every revision row cites a decision document that exists.
+
+    `manifest` exists so a negative test can hand this a fixture of its own. The
+    extraction manifest is the most contended file in the repository -- it has already
+    been corrupted once by two sessions racing on it -- and a test that rewrites the real
+    one and restores it from bytes captured a second earlier silently reverts whatever
+    another session wrote inside that window, with no error and no diff to notice.
+    """
+    p = manifest or (ROOT / 'provenance' / 'extraction-manifest.json')
     if not p.is_file():
         return
     data = json.loads(p.read_text(encoding='utf-8'))
@@ -325,8 +397,27 @@ def records():
     return out
 
 
+_FRONT_MATTER = {}
+
+
 def front_matter(path, findings):
-    """A deliberately small key: value and - item subset. No PyYAML."""
+    """A deliberately small key: value, - item and nested - key: value subset. No PyYAML.
+
+    The nested form is the one that matters and it used to be dropped on the floor. A
+    continuation line under a list item -- the `schema:` under `- path:`, the `assert:`
+    under `- id:`, the `establishes:` under `- path:` -- is indented and does not begin
+    with `- `, so the old parser skipped it silently. Five of the nine keys could not be
+    read at all, which is a harder version of not reading them.
+
+    An item whose body is `key: value` becomes a dict and swallows the indented
+    `key: value` lines beneath it; an item without a colon stays the plain string that
+    `modules:`, `tickets:` and `decisions:` are made of. Parsed once per path: two
+    checks read the same record and a second parse would report every syntax defect
+    twice.
+    """
+    if path in _FRONT_MATTER:
+        return _FRONT_MATTER[path]
+    _FRONT_MATTER[path] = {}
     text = read_text(path, findings)
     if text is None:
         return {}
@@ -339,14 +430,24 @@ def front_matter(path, findings):
         findings.append(Finding(
             HARD, 'CLAIM-SYNTAX', rel(path), 'front matter block is not closed'))
         return {}
-    data, key = {}, None
+    data, key, item = {}, None, None
     for i, line in enumerate(text[3:end].splitlines(), 2):
         if not line.strip() or line.lstrip().startswith('#'):
             continue
         if line.startswith((' ', '\t')):
-            item = line.strip()
-            if item.startswith('- ') and key:
-                data.setdefault(key, []).append(item[2:].strip())
+            stripped = line.strip()
+            if stripped.startswith('- ') and key:
+                body = stripped[2:].strip()
+                if ':' in body:
+                    field, _, value = body.partition(':')
+                    item = {field.strip(): value.strip()}
+                    data.setdefault(key, []).append(item)
+                else:
+                    item = None
+                    data.setdefault(key, []).append(body)
+            elif isinstance(item, dict) and ':' in stripped:
+                field, _, value = stripped.partition(':')
+                item[field.strip()] = value.strip()
             continue
         if ':' not in line:
             findings.append(Finding(
@@ -355,7 +456,12 @@ def front_matter(path, findings):
             continue
         key, _, value = line.partition(':')
         key, value = key.strip(), value.strip()
-        data[key] = value if value else []
+        item = None
+        # `key: []` is an empty list written inline. Left as the string it looks like,
+        # iterating it yields '[' and ']' and a claim check reports two missing files
+        # named after brackets.
+        data[key] = [] if value in ('', '[]') else value
+    _FRONT_MATTER[path] = data
     return data
 
 
@@ -434,14 +540,14 @@ def check_coverage(findings, ratchet_base=None):
         try:
             blob = subprocess.check_output(
                 ['git', 'show', '%s:docs/conformance/coverage.json' % ratchet_base],
-                cwd=str(ROOT), stderr=subprocess.DEVNULL).decode('utf-8')
+                cwd=str(ROOT), stderr=subprocess.DEVNULL, timeout=60).decode('utf-8')
             base = {u['module'] for u in json.loads(blob).get('uncovered', [])}
             grew = sorted(uncovered - base)
             if grew:
                 findings.append(Finding(
                     HARD, 'COVERAGE-RATCHET', 'docs/conformance/coverage.json',
                     'uncovered grew by %d: %s' % (len(grew), ', '.join(grew))))
-        except (subprocess.CalledProcessError, ValueError):
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, ValueError):
             print('COVERAGE-RATCHET skipped (no merge base at %s)' % ratchet_base)
     return uncovered
 
@@ -455,13 +561,33 @@ def _int_of(node):
     return None
 
 
-def _dict_key(node, key):
+def _dict_value(node, key):
+    """The AST node a dict literal holds under a constant key, not its integer."""
     if not isinstance(node, ast.Dict):
         return None
     for k, v in zip(node.keys, node.values):
         if isinstance(k, ast.Constant) and k.value == key:
-            return _int_of(v)
+            return v
     return None
+
+
+def _dict_key(node, key):
+    return _int_of(_dict_value(node, key))
+
+
+def _choose(found, spec):
+    """The declared site wins; any other site holding a different integer is a shadow."""
+    if not found:
+        return None, []
+    line = spec.get('line')
+    chosen = None
+    for ln, v in found:
+        if line is None or ln == line:
+            chosen = v
+            break
+    if chosen is None:
+        chosen = found[-1][1]
+    return chosen, [(ln, v) for ln, v in found if v != chosen]
 
 
 def resolve_code(spec, findings, where):
@@ -504,19 +630,50 @@ def resolve_code(spec, findings, where):
                         v = _dict_key(sub.value, spec.get('key', 'version'))
                         if v is not None:
                             found.append((sub.lineno, v))
-        if not found:
-            return None, []
-        # The declared site wins; any other site emitting a different value is a shadow.
-        line = spec.get('line')
-        chosen = None
-        for ln, v in found:
-            if line is None or ln == line:
-                chosen = v
-                break
-        if chosen is None:
-            chosen = found[-1][1]
-        shadows = [(ln, v) for ln, v in found if v != chosen]
-        return chosen, shadows
+        return _choose(found, spec)
+
+    if kind == 'tuple-bound':
+        # A bound published as a tuple in a table -- bounds={'size':(3,1025)}. Read out
+        # of the table rather than restated, so the binding cannot be satisfied by
+        # editing a number here: only by moving the published bound itself.
+        found = []
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Assign):
+                continue
+            for t in node.targets:
+                if not (isinstance(t, ast.Name) and t.id == spec['name']):
+                    continue
+                entry = _dict_value(node.value, spec['key'])
+                index = spec.get('index', 1)
+                if isinstance(entry, (ast.Tuple, ast.List)) and len(entry.elts) > index:
+                    v = _int_of(entry.elts[index])
+                    if v is not None:
+                        found.append((node.lineno, v))
+        return _choose(found, spec)
+
+    if kind == 'call-arg':
+        # The enforcement half of a published bound: over_capacity('size',v,1025,'grid').
+        # A bound and the guard that enforces it are two statements of one fact, and in
+        # terrain_world.py they sit four hundred lines apart. They agree because somebody
+        # checked, which is the footing the Python and native grid ceilings were on
+        # before they drifted. `select` pins which call is meant, by a constant argument.
+        found = []
+        select = {int(i): want for i, want in spec.get('select', {}).items()}
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            name = func.attr if isinstance(func, ast.Attribute) else getattr(func, 'id', None)
+            if name != spec['call'] or len(node.args) <= spec['arg']:
+                continue
+            if any(len(node.args) <= i or not isinstance(node.args[i], ast.Constant)
+                   or node.args[i].value != want for i, want in select.items()):
+                continue
+            v = _int_of(node.args[spec['arg']])
+            if v is not None:
+                found.append((node.lineno, v))
+        return _choose(found, spec)
+
     findings.append(Finding(HARD, 'VERSION-CODE', where, 'unknown resolver kind %r' % kind))
     return None, []
 
@@ -614,7 +771,9 @@ def check_versions(findings, docs):
             continue
         try:
             text = p.read_text(encoding='utf-8')
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, OSError):
+            # Undecodable is reported by check_documents; gone is another session moving
+            # a card mid-run. Neither is this check's to die on.
             continue
         # A marker shown as an example in a fence or in backticks is documentation of
         # the syntax, not a claim about this product.
@@ -633,19 +792,168 @@ def check_versions(findings, docs):
     return actual
 
 
+# ----------------------------------------------------------------------------- claims
+
+def check_claims(findings, versions):
+    """The rest of the record: the eight front-matter keys nothing read.
+
+    `modules:` was the only key this gate consulted, so every other claim a record made
+    to its reader was decoration. `proof:` could name a file that was never written,
+    `emits[].schema` a schema that had been deleted, `versions:` any integer at all --
+    version checking runs off version-bindings.json and never consulted a record's own
+    list -- and `tier:`, the one word a reader is most likely to trust, any word.
+
+    What a green run of this establishes, stated so it is not read as more: the cited
+    files exist, each proof path is a file one of the three suites discovers, each
+    asserted version equals the integer the code emits, and `tier` is a declared word.
+    It does not establish that a proof test passes, or that it establishes what
+    `establishes:` says it does. Existence is not exercise.
+    """
+    for name, path in records().items():
+        fm = front_matter(path, findings)
+        if not fm:
+            continue
+        stem = Path(name).stem
+
+        if fm.get('conformance') != '1':
+            findings.append(Finding(
+                HARD, 'CLAIM-SCHEMA', name,
+                'record schema is %r; this gate reads schema 1' % fm.get('conformance')))
+        if fm.get('record') != stem:
+            findings.append(Finding(
+                HARD, 'CLAIM-RECORD', name,
+                'names itself %r but its file is %s.md; a record cited by name has to be '
+                'findable by it' % (fm.get('record'), stem)))
+        tier = fm.get('tier')
+        if tier not in TIERS:
+            findings.append(Finding(
+                HARD, 'CLAIM-TIER', name,
+                'tier %r is not a declared tier; the vocabulary is %s'
+                % (tier, ', '.join('%s (%s)' % (k, v) for k, v in sorted(TIERS.items())))))
+        if not isinstance(fm.get('summary'), str) or not fm.get('summary'):
+            findings.append(Finding(
+                HARD, 'CLAIM-SUMMARY', name,
+                'has no summary; the record is the present-tense claim and a record that '
+                'makes none is a heading'))
+
+        for i, entry in enumerate(fm.get('emits') or []):
+            if not isinstance(entry, dict) or 'schema' not in entry:
+                findings.append(Finding(
+                    HARD, 'CLAIM-EMITS', name,
+                    'emits[%d] declares no schema: line; write `schema: none` to say '
+                    'there is no schema rather than leaving it unsaid' % i))
+                continue
+            schema = entry['schema']
+            if not disclaimed(schema) and not (ROOT / schema).exists():
+                findings.append(Finding(
+                    HARD, 'CLAIM-EMITS', name,
+                    'emits[%d] names a schema that does not exist: %s' % (i, schema)))
+
+        for i, entry in enumerate(fm.get('proof') or []):
+            if not isinstance(entry, dict) or 'path' not in entry:
+                findings.append(Finding(
+                    HARD, 'CLAIM-PROOF', name, 'proof[%d] declares no path: line' % i))
+                continue
+            target = entry['path']
+            if not entry.get('establishes'):
+                findings.append(Finding(
+                    HARD, 'CLAIM-PROOF', name,
+                    'proof[%d] (%s) has no establishes: line; a proof citation that does '
+                    'not say what it proves is a filename' % (i, target)))
+            if disclaimed(target):
+                continue
+            if not (ROOT / target).exists():
+                findings.append(Finding(
+                    HARD, 'CLAIM-PROOF', name,
+                    'proof[%d] names a file that does not exist: %s' % (i, target)))
+            elif not matches(target, PROOF_PATTERNS):
+                findings.append(Finding(
+                    HARD, 'CLAIM-PROOF', name,
+                    'proof[%d] names %s, which no test suite discovers; the suites run '
+                    '%s' % (i, target, ', '.join(PROOF_PATTERNS))))
+
+        for i, entry in enumerate(fm.get('versions') or []):
+            if not isinstance(entry, dict) or 'id' not in entry or 'assert' not in entry:
+                findings.append(Finding(
+                    HARD, 'CLAIM-VERSION', name,
+                    'versions[%d] is not an `- id:` with an `assert:` beneath it' % i))
+                continue
+            bid, stated = entry['id'], entry['assert']
+            if bid not in versions:
+                findings.append(Finding(
+                    HARD, 'CLAIM-VERSION', name,
+                    'versions[%d] asserts %s=%s, and no binding in '
+                    'docs/conformance/version-bindings.json is named %s'
+                    % (i, bid, stated, bid)))
+            elif not stated.isdigit() or int(stated) != versions[bid]:
+                findings.append(Finding(
+                    HARD, 'CLAIM-VERSION', name,
+                    'asserts %s=%s but the code emits %s' % (bid, stated, versions[bid])))
+
+        # Tickets and decisions drift legitimately -- a card moves between backlog/,
+        # in-progress/, done/ and retired/ and takes every citation of it along. A hard
+        # failure would punish the move, so this half is soft.
+        for field in ('tickets', 'decisions'):
+            for target in fm.get(field) or []:
+                if isinstance(target, str) and not (ROOT / target).exists():
+                    findings.append(Finding(
+                        WARN, 'CLAIM-REF', name,
+                        '%s names %s, which does not exist; the card most likely moved'
+                        % (field, target)))
+
+
+def check_document_globs(findings):
+    """Every document is claimed by a glob list, and every glob list claims a document.
+
+    A checker that cannot see a folder cannot fail on it. `board/retired/` was created on
+    2026-09-21 and named in neither list. Four cards moved into it, six sibling-relative
+    links inside them died, and the run stayed green because the folder was never
+    scanned. The only symptom was the document count falling from 208 to 204, which was
+    rationalised rather than investigated, and the dead links were caught by a separate
+    repo-wide sweep rather than here.
+
+    Coverage is the property a gate cannot check about itself by passing. Both
+    directions, because a new folder and a folder that moved away are different failures:
+    a document matching no glob is unexamined, and a glob matching no document is a
+    folder that has gone somewhere this list has not followed.
+    """
+    names = [rel(p) for p in all_markdown()]
+    unchecked = {}
+    for name in names:
+        if matches(name, ACTIVE_GLOBS) or matches(name, FROZEN_GLOBS):
+            continue
+        hit = next((g for g in UNCHECKED_GLOBS if fnmatch.fnmatchcase(name, g)), None)
+        if hit:
+            unchecked.setdefault(hit, []).append(name)
+            continue
+        findings.append(Finding(
+            HARD, 'GLOB-UNCLAIMED', name,
+            'is examined by no glob in docs_check: add it to ACTIVE_GLOBS, to '
+            'FROZEN_GLOBS if it is imported evidence, or to UNCHECKED_GLOBS with the '
+            'reason. A checker that cannot see a folder cannot fail on it.'))
+    for glob in tuple(ACTIVE_GLOBS) + tuple(FROZEN_GLOBS) + tuple(UNCHECKED_GLOBS):
+        if not any(fnmatch.fnmatchcase(n, glob) for n in names):
+            findings.append(Finding(
+                WARN, 'GLOB-EMPTY', 'tools/docs_check.py',
+                'glob %r matches no document; a folder that moved leaves its glob behind '
+                'and takes its documents out of this gate without a finding' % glob))
+    return unchecked
+
+
 # --------------------------------------------------------------------------- reporting
 
 def run(args):
     findings = []
     docs = [p for p in all_markdown() if matches(p, ACTIVE_GLOBS) or matches(p, FROZEN_GLOBS)]
 
+    unchecked = check_document_globs(findings)
     check_documents(findings, docs)
     check_citations(findings, docs)
     check_index(findings)
     check_numbering(findings)
     check_provenance_decisions(findings)
     uncovered = check_coverage(findings, args.ratchet_base)
-    check_versions(findings, docs)
+    check_claims(findings, check_versions(findings, docs))
 
     if args.list_uncovered:
         for m in sorted(uncovered or []):
@@ -658,6 +966,17 @@ def run(args):
         print(f)
     for f in sorted(warnings, key=lambda f: (f.code, f.where)):
         print('%s  [warning]' % f)
+
+    # What was NOT read, on every run and before the verdict. A green line that reports
+    # only what it looked at reads as coverage of everything; the folder this gate could
+    # not see is exactly the one that rotted.
+    frozen = [p for p in docs if matches(p, FROZEN_GLOBS)]
+    skipped = sum(len(v) for v in unchecked.values())
+    print('%d document(s) not examined%s' % (
+        skipped, (': ' + '; '.join('%s (%d) -- %s' % (g, len(v), UNCHECKED_GLOBS[g])
+                                   for g, v in sorted(unchecked.items()))) if skipped else '.'))
+    print('%d frozen document(s) read but not link-, citation- or version-checked.'
+          % len(frozen))
 
     if errors:
         print('%d documentation error(s).' % len(errors))

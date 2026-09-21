@@ -93,7 +93,7 @@
       ],
       "properties": {
         "version": {
-          "const": 1
+          "const": 3
         },
         "identity": {
           "type": "object"
@@ -155,7 +155,7 @@
                 "type": "object"
               },
               "version": {
-                "const": 1
+                "const": 3
               },
               "terrain": {
                 "type": "object",
@@ -220,7 +220,7 @@
       ],
       "properties": {
         "version": {
-          "const": 6
+          "const": 8
         },
         "identity": {
           "type": "object"
@@ -275,7 +275,7 @@
                 "type": "object"
               },
               "version": {
-                "const": 6
+                "const": 8
               },
               "terrain": {
                 "type": "object",
@@ -401,7 +401,7 @@
       ],
       "properties": {
         "version": {
-          "const": 2
+          "const": 3
         },
         "identity": {
           "type": "object"
@@ -459,7 +459,7 @@
                 "type": "object"
               },
               "version": {
-                "const": 2
+                "const": 3
               },
               "terrain": {
                 "type": "object",
@@ -524,7 +524,7 @@
     },
     "humans": {
       "type": "object",
-      "description": "Human cultures, hamlets and fortresses. NOTE: `hamlets[].id` and `fortresses[].id` are list ORDINALS that renumber at every age advance and are not stable identity -- see board/backlog/SDET-SITE-ID-ORDINALS.md."
+      "description": "Human cultures, hamlets and fortresses. NOTE: `hamlets[].id` and `fortresses[].id` are list ORDINALS that renumber at every age advance and are not stable identity. `hamlets[].uid` and `fortresses[].uid` are: `hamlet-node-<node>` / `fortress-node-<node>`, keyed on the terrain node, which does not move. Join on the uid and keep the id only for `hamlet_plans` / `castle_plans`, which still join on it. Minted identically by the generator (terrain_humans.record) and by the player founding route (terrain_settlement_api._rural_row), and it is the key npc_roster and hero_generator already use -- see board/done/SDET-SITE-ID-ORDINALS.md."
     },
     "key_location_plans": {
       "type": "object",
@@ -788,7 +788,7 @@
     },
     "settlement_candidates": {
       "type": "array",
-      "description": "Sites the settlement placer considered, one entry per candidate."
+      "description": "Refugee camps recorded by the nomad write-back pass: one entry per survivor band that reached its refuge and stayed. Not, despite the name, the sites the settlement placer considered -- `settlements.founding.events` is that. Each one's `node` is the refuge city's own node rather than free ground, so the refuge ABSORBS the band at the next age boundary rather than a settlement being founded there: `terrain_history.age_transition` credits the standing refuge with the band's `population_estimate` and stamps `absorbed_age` and `absorbed_into` here. A candidate with neither is one whose refuge did not survive the boundary, or one no age has turned on yet. See board/done/NOMAD-SURVIVOR-SETTLEMENT.md."
     },
     "settlements": {
       "type": "object",
@@ -798,7 +798,7 @@
       ],
       "properties": {
         "version": {
-          "const": 15
+          "const": 16
         },
         "sites": {
           "type": "array",
@@ -836,6 +836,18 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1
+              },
+              "absorbed_refugees": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "People this city took in from survivor bands that reached it, summed over every age boundary it has stood through. Already included in population_estimate, which is otherwise the capacity split and is re-derived on every rebuild; this is the term that is carried. Absent on a world that has never been advanced."
+              },
+              "absorbed_bands": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The nomad band uids counted in absorbed_refugees, sorted. Present for audit and for idempotency: a band already listed here is never absorbed twice, however often a stale settlement_candidates list is carried into a later advance."
               },
               "war_history": {
                 "type": "array",
@@ -937,7 +949,7 @@
     },
     "villains": {
       "type": "object",
-      "description": "Seated super villains, their tiers and the outlook report. This block has NO schema of its own; `Contracts/` publishes contracts derived from it (key-locations, nomads) but not the block itself -- see board/backlog/VILLAINS-NO-SCHEMA.md."
+      "description": "Super villains: everyone who ever held a region, the per-anchor tier ledger, what they built this age and the outlook report. Described in full by `Contracts/schemas/villains.schema.json` (version 2), which tests/test_world_schema_conformance.py validates a generated world against in both directions: every container in it is closed, so a field the emitter grows and no contract mentions fails there. `key-locations` and `nomads` publish contracts for records derived from this block and now have a described source to derive from."
     },
     "water": {
       "type": "object",

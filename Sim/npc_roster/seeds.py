@@ -1,18 +1,14 @@
-"""Seed helpers, byte-for-byte the generator's ``child_seed``, so a roster is a pure function of the world seed.
+"""Seed derivation, re-exported from :mod:`world_geometry.seeds`, so a roster is a pure
+function of the world seed.
 
-Copied rather than imported for the same reason `hero_generator` and `story_web` copy it:
-this package reads only the finished world JSON and never the generator's modules, so a
-saved `world.json` serves it as well as a live result. A test pins the two implementations
-against each other, so a change on either side is caught instead of silently forking the
-replay contract.
+This package reads only the finished world JSON and never the generator's modules, so a saved
+`world.json` serves it as well as a live result. That is unchanged: ``world_geometry`` is pure
+arithmetic over ``math``, ``hashlib`` and ``random`` and imports no generator.
+
+What has changed is that the derivation is no longer a copy. It used to be copied here and
+pinned by a per-package test; there is now one implementation and one pin, in
+``Sim/tests/test_world_geometry.py``.
 """
-import hashlib
-import random
+from world_geometry.seeds import child_seed, rng
 
-
-def child_seed(master, domain, variation=0):
-    return int.from_bytes(hashlib.sha256(f'tectonics-v1:{master}:{domain}:{variation}'.encode()).digest()[:4], 'big')
-
-
-def rng(master, domain, variation=0):
-    return random.Random(child_seed(master, domain, variation))
+__all__ = ['child_seed', 'rng']

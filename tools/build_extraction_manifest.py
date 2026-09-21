@@ -50,7 +50,10 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "provenance/extraction-manifest.json")
     args = parser.parse_args()
     source = args.source.resolve()
-    commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
+    # Bounded: a `git` that never returns would otherwise hang this tool with no signal,
+    # and an interrupted parent cannot reap a child it is still blocked on.
+    commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"],
+                                     text=True, timeout=60).strip()
     if commit != PINNED_COMMIT:
         raise ValueError(f"source checkout is {commit}; expected pinned commit {PINNED_COMMIT}")
     rows = []

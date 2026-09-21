@@ -27,7 +27,14 @@ from .core import composition, fields, interiors, naming, placement, succession,
 from .core.grid import cell_of_direction, great_circle_m, node_index, offset as grid_offset
 from .seeds import rng
 
-VERSION = 1
+# 2: a percentile requirement that resolves to a cut admitting every cell in the archetype's
+# own domain is refused rather than honoured, so the block no longer emits sites whose
+# defining requirement was never enforced. A consumer diffing counts across this boundary is
+# reading two different contracts, not two worlds: on seed 42 at phase 16 it is 14 archetypes
+# at size 17, 18 at size 33 and 5 at size 65 that stop placing, and the sites that were standing
+# on ground their own `reason` string misdescribes are gone. `diagnostics` gains a fourth reason,
+# naming the layer, the percentile and the share of the domain the cut let through.
+VERSION = 2
 _EMPTY_NAMES = {'natural': {}, 'variant_asset': {}, 'variant_name': {}}
 ENV_SWITCH = 'FANTASY_WORLD_KEY_LOCATIONS'
 NEAR_RUIN_CELLS = 3.

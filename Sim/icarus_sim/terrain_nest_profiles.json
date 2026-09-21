@@ -3245,7 +3245,7 @@
    ],
    "weights": {
     "mountain": 2,
-    "volcanic": 2,
+    "moisture": 2,
     "ley_infernal": 2
    },
    "requires": {
@@ -17180,8 +17180,7 @@
     36
    ],
    "weights": {
-    "fishing_productivity": 2,
-    "reef": 2
+    "fishing_productivity": 2
    },
    "requires": {},
    "biome_weights": {

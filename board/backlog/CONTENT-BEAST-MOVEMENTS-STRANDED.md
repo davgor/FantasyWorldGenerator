@@ -1,5 +1,11 @@
 # CONTENT-BEAST-MOVEMENTS-STRANDED — a third of the travelling world never travels
 
+> **Re-tested 2026-09-21 against the tree — CONFIRMED, claim reproduces.** **856 of 2,610 stranded = 32.8%**, against the carded 260 of 792 = 32.8%. Identical proportion at 3.3× the scale. Note `board/README.md` summarised this card as “records no consumer reaches”, which is wrong — `encounters` carries 2,610 entries sourced from `beast_movements`.
+> Measured on `Fixtures/sample-world-v1.json` (seed 42, **size 33**, generator 16) unless the evidence
+> names a file; the card's own figures are size 17 and are not superseded by these.
+> [Reconciliation](../../docs/reviews/2026-09-21-board-tree-reconciliation.md).
+
+
 Owner: none. State: open, unowned. Found by the Python-output red team
 (`docs/reviews/233182e-python-output-red-team.md`, finding 5).
 
@@ -79,3 +85,46 @@ strand rate may be the correct output rather than a routing failure. **Re-measur
 with all five octaves resolved before treating 33% as a defect.** That does not weaken the ask in
 step 2 — a stranded group should carry its reason either way, and the reason is exactly what
 would answer this.
+
+## 2026-09-21 - NOT WORKED. Blocked on a live editor, and the premise has moved under it.
+
+Picked up as part of the bestiary sweep and put down again without a change, for two reasons.
+
+**1. Another session is mid-rewrite of the module this card lives in.**
+`Sim/icarus_sim/terrain_beast_movement.py` was rewritten at 02:27 tonight, after this sweep
+started: `VERSION` 1 to 2, a new `route_status` value `solitary`, a `world_year` /
+`year_forage_factor` mechanism giving irruptions a trigger in time, new block keys `solitary`,
+`year` and `year_forage_factor`, a matching `beast-movements.schema.json` v2, a rewritten
+`docs/beast-movement.md` v2, and a new `Sim/tests/test_beast_movements.py`. That is
+`NOMAD-IRRUPTION-TRIGGER` landing. Writing a per-group strand reason into the same function
+while its owner is still in it risks clobbering unfinished work in one direction or the other,
+so it was not attempted.
+
+**2. Their change moves this card's own numbers.** Groups that previously failed to route and
+were counted `stranded` can now be `solitary` instead, which is a different fact. Measured on
+a fresh seed 42 size 33 phase 16 world *after* their change:
+
+    considered 2760   routed 1576   stranded 933 (33.8%)   solitary 251 (9.1%)
+    groups carrying no legs: 1184 of 2760 = 42.9%
+
+Against the pre-change tree measured earlier the same night:
+
+    considered 2756   routed 1856   stranded 900 (32.7%)   solitary n/a
+    groups carrying no legs: 900 of 2756 = 32.7%
+
+So **the carded claim reproduces** - a third of the travelling groups still never travel - but
+the single number it is stated as has split in two, and "carries no legs" is now 42.9% rather
+than 32.8% because the solitary phase also holds still. **Anyone picking this card up must
+re-measure against the settled module and restate the acceptance threshold in terms of
+`stranded` alone, not of legless groups.**
+
+What is still open and unaffected by their change: a stranded group carries no *reason*. The
+card's step 2 - record per group why, the way `key_locations.diagnostics` does - is untouched,
+and `solitary` is a good precedent for it: the same distinction between "a normal state" and
+"a route that failed" is exactly what a strand reason would carry.
+
+Also note this card's step 4 overlaps `CONTENT-ENCOUNTERS-ARE-FISH`, which was delivered in
+this sweep. `encounters` is at version 2 and every entry now carries `domain`, `class` and
+`airborne`, but **not** route status: a stranded group still appears with its start camp and a
+null day window and is indistinguishable at the entry from one that walks. Marking that is
+still this card's, and it is a one-field change to `_beast_entry` once the module settles.

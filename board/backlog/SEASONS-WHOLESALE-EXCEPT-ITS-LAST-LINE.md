@@ -1,5 +1,11 @@
 # SEASONS-WHOLESALE-EXCEPT-ITS-LAST-LINE - a replacement pass that appends
 
+> **Re-tested 2026-09-21 against the tree — CONFIRMED, claim reproduces.** Confirmed with evidence the card lacked: the world carries **28 warnings, only 15 distinct**, the top string repeated **4 times** — once per age pass, which is exactly the wholesale-replace-plus-append shape.
+> Measured on `Fixtures/sample-world-v1.json` (seed 42, **size 33**, generator 16) unless the evidence
+> names a file; the card's own figures are size 17 and are not superseded by these.
+> [Reconciliation](../../docs/reviews/2026-09-21-board-tree-reconciliation.md).
+
+
 ## Observed behavior
 
 `terrain_seasons.add_seasonal_food` replaces `result['seasonal_food']` wholesale. Every

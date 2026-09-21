@@ -228,6 +228,27 @@ names at all**. That was chosen while the genome was still pending, and it paid:
 zero bytes of the fixture. Keep it that way. A name in a fixture is a tripwire for a subsystem
 this package does not own.
 
+### How often a name repeats
+
+`name_for` draws from the people's **stock** rather than from everything its tongue can build —
+see `docs/heritage.md`, "The stock". The reason is this package's scale. A size-65 world carries
+some thirteen thousand people, and a flat draw over the 88 names a heartland genome composes
+gave each about one person in ninety: no name common enough to be met twice, and none rare
+enough to be worth remarking. On the stock the commonest name takes about a third of a people
+and the top five about three quarters, which is what the late-fourteenth-century English returns
+record, with a small tail of names borne by one person.
+
+The stock is built once per `(civilization_id, parent_race_id)` and cached here, because
+enumerating a name space thirteen thousand times is not free and the result never varies. It is
+seedless, so it does not touch the replay contract below; the draw a caller passes is spent on
+*which* name, and always two values whichever branch it takes.
+
+**What is still missing is the byname.** At this concentration the commonest heartland name
+lands on hundreds of people in one world. That is correct — it is what the record shows — but a
+real population told those people apart with a patronymic, a trade or a home town, and nothing
+generates one yet. Every input is already on the record (`post`, `site_uid`, `civilization_id`),
+so this is the next layer, not a redesign of this one.
+
 ## Determinism, isolation and the switch
 
 Every draw is `child_seed(world seed, 'npc-name-' + uid)`; the helper is a byte-for-byte copy of

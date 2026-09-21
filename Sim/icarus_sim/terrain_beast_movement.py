@@ -9,7 +9,10 @@ classes rather than one "wanders" flag:
              herd walking the same ground each year is the correct behaviour, not a
              limitation
   irruptive  normally sparse; when marginal ground stops supporting them they go, in a
-             body, and keep going until something feeds them. Not a season -- a trigger
+             body, and keep going until something feeds them. Not a season -- a trigger,
+             and since `world_clock` exists the trigger is a particular year being bad.
+             A group whose year is ordinary stays in the solitary phase and carries
+             `route_status: "solitary"`, which is a normal state and not a failed route
   follower   derives its route from something else's. A wolf pack does not hold a range
              when the herd it eats does not either
   drifter    the dead with no grave to return to. An undead with one nests at it; these
@@ -20,9 +23,11 @@ mover reads both with one code path. A beast group additionally carries `species
 for followers, `host_uid`.
 """
 import math
+import random
 from time import perf_counter
 from .terrain_tectonics import child_seed
 from .terrain_world import options
+from .terrain_astrology import DAYS_PER_YEAR
 from .terrain_erosion import sphere_grid
 from .terrain_nests import habitat_cells, profiles, distance, clamp
 from .terrain_settlements import shortest_paths
@@ -30,8 +35,16 @@ from .terrain_society import trace
 from .terrain_nomad_routes import (travel_cost, _camp, _best, _within, _assign_days,
                                    midwinter_day)
 
-VERSION = 1
+# 2: irruptions gained a condition in time. Under version 1 every irruptive group marched
+# in every year, so a consumer could read the block as a fixed roster of swarms; now a
+# group may carry `route_status: "solitary"` and the roster changes from year to year.
+VERSION = 2
 MOVING = ('migratory', 'irruptive', 'follower', 'drifter')
+
+# The solitary phase: normally sparse, and not going anywhere this year. Returned by the
+# irruption builder instead of `None`, because `None` means "no route could be built" and
+# is reported as `stranded`. A swarm that is not swarming is not a failure to route.
+SOLITARY = 'solitary'
 
 # Metres a day, by how big the thing is. A herd moves at the pace of its slowest member and
 # a swarm at the pace of the wind behind it. Absolute, like the nomad speeds, because a
@@ -56,6 +69,68 @@ SEASONAL_REACH = 3.
 IRRUPTION_REACH = 4.
 DRIFT_REACH = 2.5
 FOLLOW_REACH = 3.
+
+# How much a year's forage departs from an ordinary one. One draw for the whole world, not
+# one per group: a bad year is bad for everybody at once, which is what makes the swarms of
+# one year a regional event rather than a flat probability wearing a calendar.
+IRRUPTION_YEAR_LOW, IRRUPTION_YEAR_HIGH = .55, 1.25
+# How far below its own neighbourhood this year's forage has to fall before the gregarious
+# phase takes over. Marginal ground AND a bad year; either on its own is ordinary life.
+# Measured against the neighbourhood rather than an absolute floor because a swarm forms
+# where conditions turn, not where they were always poor -- and because an absolute floor
+# is a forage constant, which would mean something different in every biome.
+#
+# The number is calibrated, and the shape of the distribution it sits in is the reason it
+# is well below one. An irruptive species is already placed on marginal ground by the nest
+# pass, so `forage(start) / mean(forage within a march)` runs 0.08 at the tenth percentile
+# to 1.14 at the maximum with a median of 0.30 -- measured over the 90 irruptive groups of
+# seed 42 at size 17. At 0.18, 59% of them march in the leanest year of a century, 28% in
+# an ordinary one and 20% in the fattest, so the solitary phase stays the normal state and
+# a bad year roughly doubles the swarms. At 0.85 nearly every group marched in every year,
+# which is the behaviour this card exists to remove.
+IRRUPTION_MARGIN = .18
+
+
+def world_year(result):
+    """The absolute year this world stands in.
+
+    `world_clock` is minted by the first time advance, so a freshly generated world has
+    none and is read at its founding year -- the same day the age lottery already samples,
+    which is how `terrain_time.clock` adopts a clock for a world that predates one.
+    Derived from `terrain_astrology` directly rather than by importing `terrain_time`,
+    which imports this module.
+
+    **Known imprecision, stated because it is visible in the output.** On a tick this reads
+    the clock as it stands when the pass runs, and `advance_time_request` writes the
+    advanced `world_clock` only after its cadence loop finishes. So a span crossing several
+    years builds this block for the year the span *started* in -- measured at 5250 against a
+    clock that ended at 5252 on a two-year advance. Generation, the age path and any span
+    that does not cross a year boundary are exact. Closing it means the executor handing
+    each cadence step its own day, which is a change to `terrain_time` and belongs to
+    whoever owns that module.
+    """
+    clock = result.get('world_clock')
+    if isinstance(clock, dict) and isinstance(clock.get('day'), (int, float)):
+        return int(clock['day'] // (DAYS_PER_YEAR or 1))
+    from .terrain_astrology import reported_year
+    year, _ = reported_year(result)
+    return int(year)
+
+
+def year_forage_factor(result, year):
+    """This year's forage against an ordinary year's, one draw for the whole world.
+
+    **Keyed on the world's genesis seed, deliberately not on `cfg.seed`.** The time advance
+    hands each cadence a stepped config -- `replace(cfg, seed=child_seed(cfg.seed,
+    'time-beast_movements', index))` -- and this pass runs on a *monthly* cadence, so a
+    factor drawn from `cfg.seed` would be a different number in every month of the same
+    year. That is the failure `terrain_time_schedule` exists to prevent, arriving from the
+    other direction: the year's weather is a property of the world and the year, and of
+    nothing about when somebody happened to tick.
+    """
+    seed = int((result.get('config') or {}).get('seed', 0))
+    return random.Random(child_seed(seed, 'beast-year', int(year))).uniform(
+        IRRUPTION_YEAR_LOW, IRRUPTION_YEAR_HIGH)
 
 
 def movement_of(profile):
@@ -120,6 +195,21 @@ def _irruption(group, ctx):
 
     A swarm does not form where conditions are good; it forms where they are marginal and
     then leaves. So the destination is the best forage in reach and the route is one way.
+
+    **And it forms in a particular year, not in every year.** That is the whole of the
+    locust pattern and it is the half this builder did not have: the solitary phase is the
+    normal state, and gregarious swarming is a response to violent environmental
+    fluctuation. Two conditions, and neither on its own is enough:
+
+      the year   `year_forage_factor` scales this year's forage against an ordinary one.
+                 One draw for the world, so a bad year is a bad year for everybody.
+      the ground the group's own cell against the mean of what a march can reach. Marginal
+                 ground is ground that falls short of its *neighbourhood* -- a swarm forms
+                 where conditions turn, not where they were always poor, and an absolute
+                 floor would have made the same handful of desert cells swarm forever.
+
+    A group that fails to clear the bar is `SOLITARY`, which is a normal state. `None` is
+    kept for its old meaning -- no reachable ground to march to -- and is still `stranded`.
     """
     cells, spacing = ctx['cells'], ctx['spacing']
     start = group['node']
@@ -129,7 +219,18 @@ def _irruption(group, ctx):
         f = cells[node]['fields']
         return max(f.get('food_potential', 0.), f.get('natural_food_potential', 0.))
 
-    target = _best([i for i in _within(distances, IRRUPTION_REACH * spacing) if i != start], fed)
+    within = _within(distances, IRRUPTION_REACH * spacing)
+    if not within:
+        return None
+    # Plain accumulation rather than sum(): CPython compensates a builtin sum of floats and
+    # a native port would have to replicate that to stay bit-exact.
+    total = 0.
+    for node in within:
+        total += fed(node)
+    local_mean = total / len(within)
+    if fed(start) * ctx['year_forage'] >= IRRUPTION_MARGIN * local_mean:
+        return SOLITARY
+    target = _best([i for i in within if i != start], fed)
     if target is None:
         return None
     return ([_camp(group, 0, start, cells, 'base'), _camp(group, 1, target, cells, 'terminal')],
@@ -230,12 +331,13 @@ def add_beast_movements(result, cfg):
     # Followers derive from whatever already walks: nomad bands first, then the herds built
     # in this same pass. So followers are built last, once there is something to follow.
     hosts = [b for b in (result.get('nomads', {}).get('groups', []) or []) if b.get('legs')]
+    year = world_year(result)
     ctx = {'cells': cells, 'spacing': spacing, 'paths': paths, 'radius': radius,
-           'ruins': result.get('ruins', []) or [], 'hosts': hosts}
+           'ruins': result.get('ruins', []) or [], 'hosts': hosts,
+           'year': year, 'year_forage': year_forage_factor(result, year)}
 
-    import random
     rng = random.Random(child_seed(cfg.seed, 'beast-movement-v1', int(o.get('nomad_variation', 0))))
-    groups, deferred, stranded = [], [], 0
+    groups, deferred, stranded, solitary = [], [], 0, 0
     considered = skipped = 0
     for site, profile, source in _site_groups(result):
         movement = movement_of(profile)
@@ -264,8 +366,16 @@ def add_beast_movements(result, cfg):
         (deferred if movement == 'follower' else groups).append((group, movement))
 
     def build(group, movement):
-        nonlocal stranded
+        nonlocal stranded, solitary
         built = BUILDERS[movement](group, ctx)
+        if built is SOLITARY:
+            # Sparse and staying put, which is the normal state for this class and not a
+            # route that failed. It keeps a base camp, so the encounter index still places
+            # it: a player can meet the solitary phase, just not a swarm on the march.
+            group['route_status'] = SOLITARY
+            group['camps'] = [_camp(group, 0, group['node'], cells, 'base')]
+            solitary += 1
+            return
         if not built:
             group['route_status'] = 'stranded'
             group['camps'] = [_camp(group, 0, group['node'], cells, 'base')]
@@ -313,18 +423,29 @@ def add_beast_movements(result, cfg):
         'version': VERSION, 'groups': everything, 'counts': counts,
         'considered': considered, 'skipped': skipped, 'share': share,
         'routed': sum(1 for g in everything if g['route_status'] == 'routed'), 'stranded': stranded,
+        'solitary': solitary, 'year': year, 'year_forage_factor': round(ctx['year_forage'], 6),
         'method': 'Every placed site whose species declares a movement class other than nester becomes a '
                   'travelling group. Herds walk a seasonal round between high summer pasture and sheltered '
-                  'winter ground through a calving camp; swarms make one march out of marginal ground toward '
-                  'the best forage in reach; the unhoused dead circuit between ruins; and followers derive '
-                  "their circuit from a host's, taking nomad bands and herds alike. Groups share the shape of "
-                  'nomads.groups so one consumer reads both.',
+                  'winter ground through a calving camp; the unhoused dead circuit between ruins; and '
+                  'followers derive their circuit from a host\'s, taking nomad bands and herds alike. A swarm '
+                  'marches only in a year that is actually bad for it: this year\'s forage factor -- one draw '
+                  'for the whole world, keyed on the genesis seed and the absolute year so a monthly tick '
+                  'cannot re-roll it -- is applied to the group\'s own cell and compared against the mean of '
+                  'what a march can reach, so marginal ground in a lean year erupts and the same ground in an '
+                  'ordinary year stays solitary. Groups share the shape of nomads.groups so one consumer '
+                  'reads both.',
         'limits': 'A group is one site rather than a modelled population: nothing breeds, starves, is eaten or '
                   'merges with another group, and a herd does not shrink when a follower attaches to it. '
-                  'Followers pick the nearest host and never change host. Irruptions have no trigger condition '
-                  'in time -- a swarm that would only erupt in a bad year is here in every year. Circuits are '
-                  'static, and a group whose route could not be built is reported as stranded rather than '
-                  'dropped.',
+                  'Followers pick the nearest host and never change host. The irruption year is a draw rather '
+                  'than a simulated drought: seasonal_environment carries twelve climatological months that '
+                  'are the same in every year, so there is no modelled weather for a year to depart from, and '
+                  'the factor stands in for one. On a tick the year is read from world_clock as it '
+                  'stands when this pass runs, and a time advance writes the advanced clock after its '
+                  'cadence loop, so a span crossing several years builds this block for the year that '
+                  'span started in. A swarm that is not swarming carries route_status '
+                  '"solitary", which is its normal state; a group whose route could not be built is still '
+                  'reported as stranded. This block is therefore not stable from year to year, which is the '
+                  'point of it. Circuits are otherwise static.',
     }
     elapsed = (perf_counter() - started) * 1000
     result['timing_ms']['beast_movements'] = elapsed

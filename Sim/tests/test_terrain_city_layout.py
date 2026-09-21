@@ -30,6 +30,13 @@ class CityLayoutTests(unittest.TestCase):
         profile = _load_city_layout_profiles()['profiles']['standard_city_layout']
         plan = _build_city_layout_plan(7, 0, points, profile, 'human_heartland', 200, 0, graph[0], [True, True, False], candidates)
         self.assertIn('fallback', plan)
+        # The record makes no building-placement claim; city_plans is authoritative for
+        # that. What survives the draw is the asset requirement and whether it was met --
+        # here the pack carries no options, so nothing could go unanchored and the
+        # fallback above comes from the feature pass rather than from the asset draw.
+        self.assertNotIn('buildings', plan)
+        self.assertIs(plan['asset_anchors_missing'], False)
+        self.assertEqual(plan['required_assets'], [])
         self.assertTrue(all(feature['count'] == 0 for feature in plan['features'].values()))
         self.assertTrue(any(feature['target_count'] > 0 for feature in plan['features'].values()))
 
@@ -38,7 +45,7 @@ class CityLayoutTests(unittest.TestCase):
         first = generate(config)
         second = generate(config)
         self.assertEqual(first['settlements'], second['settlements'])
-        self.assertEqual(first['settlements']['version'], 15)
+        self.assertEqual(first['settlements']['version'], 16)
         self.assertTrue(first['settlements']['sites'])
 
         points, _, graph = sphere_grid(config.size, first['effective_config']['globe_radius'])
@@ -55,7 +62,12 @@ class CityLayoutTests(unittest.TestCase):
         for site in first['settlements']['sites']:
             self.assertTrue(site['building_pack_id'])
             layout = site['city_layout']
-            self.assertEqual(layout['version'], 1)
+            self.assertEqual(layout['version'], 2)
+            # The catchment estimate is named for its axis, and the record makes no
+            # building-placement claim: city_plans is authoritative for that.
+            self.assertNotIn('residents', layout)
+            self.assertNotIn('buildings', layout)
+            self.assertIn('population_estimate', layout)
             self.assertEqual(set(layout['features']), expected_features)
             constraints = layout['constraints']
             seen = set()

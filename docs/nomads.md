@@ -11,6 +11,15 @@ Reference: `Sim/icarus_sim/terrain_nomads.py`, `nomads.json` (authored balance),
 the [schema](../Contracts/schemas/nomads.schema.json), `Sim/tests/test_terrain_nomads.py`,
 `board/in-progress/NOMADS.md`.
 
+Versions: the band block is <!-- conformance:version nomads=1 --> and the route pass,
+which owns lineage fission and the caravan cut, is <!-- conformance:version nomad-routes=3 -->.
+The request API is <!-- conformance:version nomad-api=1 -->.
+
+The route pass moved to 3 on 2026-09-21: `_subdivide` now cuts a caravan leg *before* the
+day's march is exceeded rather than after, so no merchant leg is longer than one march. At 2
+a leg could reach 1.5 marches, and did -- 1.171 on seed 42 size 33. Leg and station counts
+move with it; no field and no enum changed.
+
 ## Thesis
 
 **The land decides who walks it.** A start point is read for what surrounds it, and that
@@ -111,11 +120,43 @@ Bands appear from stage sixteen. `nomads` is listed in `STATE_KEYS` and in the l
 `historyStateKeys`; omitting the latter does not raise, it silently shows the final bands at
 every earlier stage, because `materialize_stage` builds from everything *not* in that list.
 
+## Lineage fission
+
+A herding clan whose head count passes what its own round carries splits. The daughter is
+seated on a camp of the parent's round — summer pasture first — names the parent in
+`parent_uid`, and carries one leg of branch `fission` joining its round to the parent's
+start camp. That is the only leg whose `to` names a camp of a *different* band; it has no
+day window, because the split happened once rather than every year, and it is left out of
+`round_length_m`.
+
+Capacity is dimensionless. `round_capacity` reads the classification's authored `size`
+band and the forage of the round picks a point on it. Head per square kilometre was
+rejected for the same reason clearance scales the placement rate instead of skipping
+cells: an absolute figure reads the raster rather than the land, and the same clan on the
+same ground would outgrow it at one resolution and not another.
+
+**Fission runs once, at placement, not once an age.** That was an open question and the
+answer is recorded rather than assumed. Nothing kills a band, so a per-age rule grows the
+population every age with no term removing anyone; a band does not survive an age turn
+anyway, because `add_nomads` replaces the block wholesale; and an age is five thousand
+years ([028](decisions/028-an-age-is-five-thousand-years.md)), so a per-age rule fires
+once per two hundred generations of herders. The cost is that a clan's descent is not
+legible across ages and no band has a grandchild. See `docs/conformance/nomads.md`.
+
+A child is **not** recorded in `rolls`, which answers what the point process considered at
+a point; a child was never considered. Every band either names a roll or names a parent
+that does.
+
 ## Limitations
 
-Routes, seasonal camps and day windows exist; **lineage fission does not**, so no band has
-a child and `fission` never appears as a branch. Circuits are static: a band walks the same
-round every year and nothing re-routes it when the world changes underneath.
+A fissioned parent keeps its own head count: the route pass has no demographic model, and
+rewriting a placed band's size from there would make the authored size band a fiction.
+`rich_forage` is calibrated against measured rounds rather than derived. A daughter whose
+inherited camp cannot support a round of its own is refused rather than recorded as a
+stranded child.
+
+Circuits are static: a band walks the same round every year and nothing re-routes it when
+the world changes underneath.
 
 A band whose circuit cannot be built carries `route_status: "stranded"` and keeps its start
 camp. That is not a failure to hide — it is the case the classification gate cannot see on
@@ -133,6 +174,14 @@ of road nodes ridden, not a modelled cargo volume, and nothing consumes it yet. 
 bands that reached safety are recorded as **settlement candidates rather than founded
 settlements**, because founding one at stage sixteen would mean re-running settlement
 generation after every downstream block has already read the settlements it produced.
+
+A candidate is **absorbed by the refuge at the next age boundary**, not founded there later.
+Its `node` is the refuge city's own node -- `_flight` routes the band to the node of the
+site named by `basis['refuge_uid']` -- so founding would put a second settlement on a
+standing city. `absorb_survivor_camps` credits that city with the band's headcount if it
+survived the boundary, stamping `absorbed_age` and `absorbed_into` on the candidate and
+`absorbed_refugees` and `absorbed_bands` on the city. The block is therefore a **migration
+ledger, not a founding queue**.
 
 Raid pressure is added *after* the threat assessment was evaluated, so it widens
 `regional_threat` without having influenced anything that already read it.

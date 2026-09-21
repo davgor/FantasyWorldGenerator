@@ -109,6 +109,78 @@ class NestRulesTests(unittest.TestCase):
                                        tier_density(10.,falloff,tier-1))
 
 
+class TerritoryAcrossCellsTests(unittest.TestCase):
+    """That a lair in one cell can hold ground in another, and where it stops.
+
+    `NestWorldTests` asserts the territory invariant on the sites a world came out with,
+    which is the right assertion but is blind here: both worlds it builds are size 33, and
+    on a size 33 world NO refusal is cross-cell. Animals cannot manage one -- their widest
+    reach is 550 m against a 611.6 m smallest neighbour gap at 200 km, so it is
+    geometrically impossible -- and monsters, whose 1,750 m reach makes it possible, did
+    not happen to place in the tight rings on either world. Counted at seed 42: 0 of 63,183
+    animal and 0 of 11,580 monster refusals at 200 km, 0 of 212,657 and 0 of 37,522 on the
+    threefold world, and then 50 of 47,311 and 426 of 9,777 at size 65.
+
+    So the suite would have passed a `node in set` territory test, which is wrong. These
+    unit the rule directly instead of hoping a world exercises it.
+    """
+    @staticmethod
+    def _grid(n=513,circumference_m=200000.):
+        from icarus_sim.terrain_globe import direction
+        radius=circumference_m/(2*3.141592653589793)
+        return n,radius,direction
+
+    def _cell(self,x,z,n,direction):
+        return dict(node=z*(n-1)+x,x=x,z=z,direction=direction(x,z,n))
+
+    def test_a_neighbour_in_the_polar_ring_is_close_enough_to_hold_ground(self):
+        from icarus_sim.terrain_nests import _blocked,distance
+        n,radius,direction=self._grid()
+        pitch=radius*3.141592653589793/(n-1)
+        # Two DIFFERENT cells, side by side in the ring next to the north pole, where the
+        # zonal pitch has collapsed by cos(lat) to a couple of metres.
+        held=self._cell(0,1,n,direction);candidate=self._cell(1,1,n,direction)
+        self.assertNotEqual(held['node'],candidate['node'])
+        apart=distance(held['direction'],candidate['direction'],radius)
+        self.assertLess(apart,10.)
+        reach=800.
+        site=dict(direction=held['direction'],range_m=reach,node=held['node'],z=1)
+        self.assertTrue(_blocked({held['node']:[site]},{1:[site]},reach,
+                                 candidate,reach,radius,pitch))
+        # And the thing the prose used to claim: same-cell is NOT the whole rule.
+        self.assertNotIn(candidate['node'],{held['node']})
+
+    def test_the_row_band_does_not_reach_past_what_territory_can_cross(self):
+        from icarus_sim.terrain_nests import _blocked
+        n,radius,direction=self._grid()
+        pitch=radius*3.141592653589793/(n-1)
+        reach=800.
+        # Rows are a uniform pitch apart, so a site this many rows away is further than
+        # any territory in play however the longitudes fall.
+        rows=int(reach/pitch)+2
+        held=self._cell(0,40,n,direction);candidate=self._cell(0,40+rows,n,direction)
+        site=dict(direction=held['direction'],range_m=reach,node=held['node'],z=40)
+        self.assertFalse(_blocked({held['node']:[site]},{40:[site]},reach,
+                                  candidate,reach,radius,pitch))
+
+    def test_the_band_is_wide_enough_for_the_widest_territory_in_the_bucket(self):
+        """A monster bucket is a tier, so the blocker's reach can exceed the candidate's.
+
+        The bound has to be taken over `widest`, not over the candidate alone, or a
+        narrow-ranged species walks straight through a wide incumbent's territory.
+        """
+        from icarus_sim.terrain_nests import _blocked
+        n,radius,direction=self._grid()
+        pitch=radius*3.141592653589793/(n-1)
+        wide=1750.;narrow=100.
+        rows=int(wide/pitch)-1
+        self.assertGreater(rows,int(narrow/pitch)+1)
+        held=self._cell(0,40,n,direction);candidate=self._cell(0,40+rows,n,direction)
+        site=dict(direction=held['direction'],range_m=wide,node=held['node'],z=40)
+        self.assertTrue(_blocked({held['node']:[site]},{40:[site]},wide,
+                                 candidate,narrow,radius,pitch))
+
+
 def build(**overrides):
     from icarus_sim.terrain_world import generate_request
     return generate_request({'seed':42,'overrides':{'size':33,'phase':13,**overrides}})
@@ -193,28 +265,108 @@ class NestWorldTests(unittest.TestCase):
         # A lesser lair inside a greater territory is the feature, not a leak.
         self.assertTrue(nested)
 
+    def test_every_monster_tier_reaches_the_open_ocean(self):
+        """Habitat breadth is the ceiling on placement, so a tier with no ocean is a hole.
+
+        A lair is refused by an incumbent of its own tier within reach, and every species'
+        reach is smaller than the raster pitch at every width this product ships, so the
+        spacing test only ever compares a cell against itself: a tier holds at most one
+        lair per cell and its placed count is capped by the cells it reaches rather than
+        by its density budget. On a world three quarters water those cells are mostly sea
+        cells, so a tier with no open-ocean species is pinned to a fraction of its
+        neighbours' count whatever the budget says. That is what put tier three at 97
+        placed against tier four's 209 while its draws were twice tier four's.
+        """
+        from icarus_sim.terrain_nests import habitat_cells,suitability,biome_weight
+        from icarus_sim.terrain_world import options
+        from icarus_sim.terrain_lab import Config
+        from icarus_sim.terrain_erosion import sphere_grid
+        w=self.world;cfg=Config(**w['config']);o=options(cfg)
+        radius=w['effective_config']['globe_radius']
+        points,areas,_=sphere_grid(cfg.size,radius)
+        sea=[c for c in habitat_cells(w,cfg,points,areas) if c['fields'].get('medium')=='marine']
+        self.assertTrue(sea)
+        reach={}
+        for tier in (1,2,3,4,5):
+            roster=[p for p in profiles() if p['class']=='monster' and p['tier']==tier]
+            reach[tier]=sum(1 for c in sea if any(
+                biome_weight(p,c['biome'])>0 and suitability(p,c['fields'])[0]>=o['nest_min_suitability']
+                for p in roster))
+        widest=max(reach.values())
+        for tier in (1,2,3,4,5):
+            self.assertGreaterEqual(reach[tier],widest//2,
+                'tier %d reaches %d of %d sea cells against the widest tier\'s %d: %s'
+                % (tier,reach[tier],len(sea),widest,reach))
+
     def test_pyramid_and_overlap(self):
+        """The pyramid is a property of the rate; the placed set is that rate clipped.
+
+        `saturation` publishes both, per tier, so the two are not confused again. The
+        budget a tier is drawn from falls geometrically with danger on every world and
+        every raster - that is the claim `tier_density` makes and it holds exactly. What
+        reaches `sites` is that draw minus everything the territory rule refuses, and at
+        a raster whose pitch exceeds every species' reach the monster rule can keep only
+        one lair per tier per cell. So the placed set is bounded by cells, not by budget,
+        and a tier whose budget exceeds its cells is pinned there.
+        """
         import collections
         from icarus_sim.terrain_nests import distance
         w=self.wide;r=w['effective_config']['globe_radius']
         for key,_ in PASSES:
+            rows=w[key].get('saturation')
+            self.assertTrue(rows,'%s publishes no saturation diagnostic, so the pyramid '
+                                 'cannot be read anywhere but off the clipped placed set' % key)
+            drawn={row['tier']:row['drawn'] for row in rows}
+            cells={row['tier']:row['cells'] for row in rows}
+            placed={row['tier']:row['placed'] for row in rows}
+            live=[t for t in (1,2,3,4,5) if cells.get(t)]
+            self.assertTrue(live,key)
+            # The pyramid, where it is exact: each tier is drawn from a strictly smaller
+            # share of the world than the tier below it.
+            for above,below in zip(live,live[1:]):
+                self.assertGreater(drawn[above],drawn[below],(key,above,below,drawn))
+            for tier in live:
+                self.assertLessEqual(placed[tier],drawn[tier],(key,tier,rows))
             spread=collections.Counter(s['tier'] for s in w[key]['sites'])
+            self.assertEqual(dict(spread),{t:placed[t] for t in live if placed[t]},key)
+            # What survives the clipping is still the product's claim to a player: the
+            # harmless outnumber the lethal, at every width.
             self.assertGreater(spread[1],spread[max(spread)],key)
-            # The shape survives the noise of one world even where a middle tier
-            # happens to draw nothing: the harmless outnumber the lethal.
-            self.assertGreater(spread[1]+spread[2],2*(spread[4]+spread[5]),key)
+        # A monster holds ground against its own tier only, so its placed count can never
+        # exceed the cells its tier reaches. Naming the ceiling is what keeps a flat
+        # histogram legible as saturation rather than as a broken budget.
+        for row in w['beast_nests']['saturation']:
+            self.assertLessEqual(row['placed'],row['cells'],row)
         # The two passes never read each other, so hunting grounds and territory overlap.
         self.assertTrue(any(distance(a['direction'],m['direction'],r)<max(a['range_m'],m['range_m'])
                             for a in w['wildlife']['sites'] for m in w['beast_nests']['sites']))
 
     def test_population_scales_with_the_ground(self):
-        # The count is an integral over habitable ground, so it tracks area rather
-        # than any constant. This is the defect the redesign removed: a fixed ceiling
-        # made a world thirty times emptier simply for being larger.
+        """The rate is an integral over habitable ground, so it tracks area.
+
+        Measured on `saturation.drawn`, which is the integral itself, rather than on the
+        placed set. `sites` is the draw after the territory rule has refused everything
+        that landed in an occupied cell, and the raster does not grow with circumference -
+        the same size holds the same cells however wide the world is - so a saturated tier
+        cannot grow with the ground no matter how much ground there is. Asserting area
+        scaling on `sites` measures the raster, not the ecology; the ceiling is asserted
+        below instead.
+        """
         area=surface_km2(self.wide)/surface_km2(self.world)
         for key,_ in PASSES:
-            small=len(self.world[key]['sites']);large=len(self.wide[key]['sites'])
+            small=sum(row['drawn'] for row in self.world[key]['saturation'])
+            large=sum(row['drawn'] for row in self.wide[key]['saturation'])
             self.assertTrue(.7<(large/small)/area<1.4,(key,small,large,area))
+            # The rate scaling above cannot see a ceiling, because a cap bites after the
+            # draw. This can: a world with three times the ground holds strictly more
+            # than the reference world, and a fixed anchor budget - the defect the
+            # redesign removed - makes the two equal instead.
+            self.assertGreater(len(self.wide[key]['sites']),len(self.world[key]['sites']),key)
+            for world in (self.world,self.wide):
+                rows=world[key]['saturation']
+                self.assertEqual(sum(row['placed'] for row in rows),len(world[key]['sites']),key)
+                self.assertEqual([row['refused'] for row in rows],
+                                 [row['drawn']-row['placed'] for row in rows],key)
 
     def test_disabled_and_capped(self):
         w=build(nest_density=0)

@@ -1,4 +1,8 @@
-# Super villains: villains schema 1
+# Super villains: villains schema 2
+
+The contract is [`Contracts/schemas/villains.schema.json`](../Contracts/schemas/villains.schema.json), not this page. This page says why the block is shaped the way it is; the schema says what is in it, and `tests/test_world_schema_conformance.py` validates a generated world against it in both directions — every container in that schema is closed, so a field the generator grows and nobody describes fails there. Why a core-emitted block gets a contract of its own at all is [decision 029](decisions/029-core-emitted-blocks-carry-their-own-schema.md).
+
+The block is at version <!-- conformance:version villains=2 -->. Version 2 decays the tier ledger, which is what made `villain_hold` reachable and moves the bytes of every world that carries the block; a claim's `kind` tracks its holder's tier instead of being frozen at the age it was staked; and `outlook.regions` reports an anchor still held by a villain that no region was produced for.
 
 Every figure the generator otherwise produces is a point in the world — a person attached to a city, named after events that already happened. Kings, guild masters, Dreads and the player all feel the same size because structurally they are.
 
@@ -30,13 +34,44 @@ Three things follow, and they are the whole design:
 
 *Diffuse* turmoil makes minor villains, which `hero_generator` already does continuously from every ruin, war and schism. *Concentrated* turmoil raises tier.
 
+> **There is a second `villain` in this repository and it is not one of these.** `hero_generator`
+> and `story_web` carry a feature token `villain:prior_age`, and it is **unrelated** to everything
+> on this page. It marks a pretender whose civilization founded a city again after they were born
+> — a dispossessed claimant — and it carries no tier, no reach, no region, no seat and no held
+> nodes. A world can be full of people holding it with no `villains` block at all, and a seated
+> super villain appears in nobody's feature list. The two share no field, no id space and no
+> derivation; the only name in common is `tier`, which is a continuous number here and one of
+> `notable`/`renowned`/`legendary` there.
+>
+> **The join that matters is the one this page is the answer to.** "Did a super villain stand here
+> in a prior age?" is answered by `villains.people` with `status: 'fallen'` and by
+> `villains.fallen` — *not* by `villain:prior_age`, which is what a reader looking for villain
+> history meets first and which would answer a different question with a straight face. See
+> [hero generator](hero-generator.md) and [story web](story-web.md), and
+> `Sim/tests/test_villain_vocabulary.py`, which holds all three statements in place.
+
 A city's turmoil is read straight from `threat_assessments` v3, so nothing new measures it:
 
 ```
 turmoil = clamp(regional_threat + 0.3 × war_risk + 0.3 × war_hunger)
 ```
 
-The forecast counts as well as the scars, because a region about to fight is concentrating as surely as one that already has. A region's **concentration** is the mean across its cities — the mean is what separates "one bad city" from "a region coming apart" — and each age adds `villain_rise × concentration` to that region's tier.
+The forecast counts as well as the scars, because a region about to fight is concentrating as surely as one that already has. A region's **concentration** is the mean across its cities — the mean is what separates "one bad city" from "a region coming apart".
+
+## The ledger measures turmoil sustained, not turmoil ever
+
+Each age a region's tier keeps `0.9` of what it held and adds `villain_rise × concentration`:
+
+```
+tier = 0.9 × tier + villain_rise × concentration
+```
+
+**The `0.9` is the whole reason a reign can end.** Without it the ledger only ever rose — both factors are non-negative by construction — so a seated villain's tier was monotonically non-decreasing and could never come back down through `villain_hold`. Seating requires tier at or above `1.0` and `villain_hold` is declared `0.0 .. 1.0`, so a fall needed a hold above `1.0000000000000009`: the reachable set was empty by one epsilon, and everything below under "What a fall leaves behind" was dead code in every world anyone could build. Hysteresis needs a measure that can come back down; a running total of turmoil-ever cannot.
+
+Two consequences worth stating, because they are what the number now means:
+
+- A region at zero turmoil loses its villain. From the bottom of the band it takes four quiet ages to cross the default `villain_hold` of `0.7` — `1.0`, `0.9`, `0.81`, `0.729`, `0.656` — which is what "a reign is long once established" has to mean once it can end at all.
+- A steady concentration `p` settles at `villain_rise × p / 0.1` instead of climbing with the world's age. Reach measures how bad a region is, not how old the world is.
 
 ## The anchor, and why it is not a culture
 
@@ -55,6 +90,14 @@ So a region is anchored to the **nearest ley node**, whose ids persist and are o
 
 The band to stay sits below the band to rise. That hysteresis is what makes a reign long once established and stops anything flickering across the line. When a villain falls, the region keeps a fraction of its tier rather than resetting: the concentration **releases** rather than vanishing, which is the successor squabble.
 
+### A villain whose region stops being produced
+
+`regions()` is rebuilt every age, and a villain is looked up by the anchor the region reports. Two ordinary things can mean its anchor is not produced: its seat city is taken by a fate, so its culture is not rebuilt from the surviving roads, and a ley node appended nearer the seat moves the anchor while the region itself carries on.
+
+Such a villain is still visited, with the concentration a region nobody produced presses — none — so it decays and falls in the same band as any other quiet region. It is **not** unseated on the spot. The second route above leaves a region that still exists under a villain that still holds it, and ending that reign the moment a node is appended would be a rule about ley geometry wearing the clothes of a rule about power.
+
+Until it falls it is reported. `villains.outlook` carries a row for an anchor that holds a standing villain but that no region was produced for, with `culture: null` and `cities: 0`, so `standing` always equals the number of rows marked `seated`. Before that the report counted such a villain and showed nowhere it could be standing: one document, two answers, and no way for a reader to tell which was right.
+
 ### What a fall leaves behind
 
 Two records, because they answer two questions.
@@ -72,6 +115,20 @@ The mark carries **no `asset_id`**, unlike a ruin. A ruin is a thing standing on
 That makes `people` a list of everyone who ever held a region, not a list of who holds one now. **Every reader that means "who stands right now" must say so** — `terrain_villains.standing()` is the predicate, and absent status reads as standing so older records still resolve. This is the same shape `heroes.people` uses for `legend` and `npcs.people` uses for `dead`: one list, a status field, and the reader filters.
 
 The ground a villain took does **not** revert. Its claims stay on the map and keep steering key-location placement and the nomad cultist gate, because held ground outlives its holder. Its own seat position does not: the claim persists, the person does not stand there any more.
+
+## What a claim records, and which half of it moves
+
+A claim is stored under one constant id per villain, `claim-<uid>`, and `claim_settlements` runs every age. It is **a snapshot with a standing half**, and the split is the contract:
+
+| Frozen at the age it was taken | Tracks the present |
+|---|---|
+| `age`, `direction`, `node`, `factions`, `drawn_from` | `kind`, `refreshed_age`, `holder_status`, `holder_fell_age`, `influence` |
+
+`kind` — `seat` at or above `1.5 × SUPER_TIER`, `village` below — is a band on the holder's tier *now*, and it moves in both directions: a villain that grows past the band promotes its claim, one whose region quietens demotes it. It used to be computed fresh every age and then thrown away, because the whole claim was appended once under that constant id and never touched again. The promotion could therefore only ever fire for a villain that crossed `1.5` in the single age it first built — one that rose past it in a single step — so the threshold was unreachable by the ramp the model is built around.
+
+The frozen half is frozen on purpose. A city founded two ages later does not retroactively join a claim staked before it existed, and a `drawn_from` uid that names a ruin by now is this record being honest about a claim taken from the living. `refreshed_age` is beside `age` so a consumer never has to read one as if it were the other.
+
+**The rejected alternative**, recorded so it can be reversed: treat the whole claim as a standing fact and redraw `factions` and `drawn_from` every age. The docstring's "the claim is what an orchestrator reads until then" argues for it. It was rejected because it makes `age` mean nothing, it rewrites history silently every age, and no consumer reads either field today — while `kind` is wrong under *both* readings, since no reading of "snapshot" makes a tier band correct to freeze.
 
 How *hard* a fallen villain's claims still press is a separate question from whether they persist, and it is deliberately a number — `influence` on the claim, `FALLEN_CLAIM_INFLUENCE` in the module — rather than a boolean. It decays: `0.6` at the fall and `0.6` of that again each further age, reported as exactly zero once it falls below `0.05`. The argument is the one `FRAGMENT_SHARE` already makes for tier — a region's grip fades when its holder goes, and a world that never decays it eventually places by who *ever* held power rather than by who holds it. The record is never pruned; only the pressure fades. Settled with the tick cadence, because only a span crossing many ages makes the failure visible: see [decision 024](decisions/024-fallen-claim-decay.md). `terrain_nomads`' cultist gate is the only reader of the field today.
 

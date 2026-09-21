@@ -534,5 +534,167 @@ class AppearanceRejectionTests(unittest.TestCase):
         self.assertEqual(merged['frame']['build'], 'reedy')
         self.assertEqual(merged['frame']['height_m'], base['frame']['height_m'])
 
+class NameStockTests(unittest.TestCase):
+    """The stock layer: what a people actually calls its children, and how often.
+
+    `person_name` says what a tongue can build; these say which of those names get used. The
+    numbers below are the English poll tax returns of the late fourteenth century - one man in
+    three a John, four fifths of men inside the top five - because that is the only part of
+    this the repository can check against something outside itself.
+    """
+
+    def setUp(self):
+        heritage.reset_cache()
+        self.lexicon = heritage.lexicon()
+        self.resolved = heritage.resolve('human_heartland', 'human')
+        self.stock = naming.name_stock(self.resolved, self.lexicon)
+
+    def _shares(self, stock, count=4000, seed=11):
+        draw = random.Random(seed)
+        counts = {}
+        for _ in range(count):
+            name = naming.stock_name(stock, draw)[0]
+            counts[name] = counts.get(name, 0) + 1
+        ordered = sorted(counts.values(), reverse=True)
+        return [value / count for value in ordered]
+
+    def test_the_stock_is_the_same_in_every_world(self):
+        """Seedless on purpose: a name is common because of the culture, not the seed."""
+        again = naming.name_stock(heritage.resolve('human_heartland', 'human'), self.lexicon)
+        self.assertEqual(again['common'], self.stock['common'])
+        self.assertEqual(again['rare'], self.stock['rare'])
+
+    def test_one_name_in_three_is_the_commonest_one(self):
+        shares = self._shares(self.stock)
+        self.assertGreater(shares[0], 0.30, shares[:5])
+        self.assertLess(shares[0], 0.40, shares[:5])
+
+    def test_the_top_five_carry_most_of_a_people(self):
+        shares = self._shares(self.stock)
+        self.assertGreater(sum(shares[:5]), 0.70, shares[:5])
+        self.assertLess(sum(shares[:5]), 0.85, shares[:5])
+
+    def test_the_effective_number_of_names_is_a_handful_not_a_hundred(self):
+        """The measure the uniform draw failed: 88 names drawn flat scores about 88."""
+        shares = self._shares(self.stock)
+        effective = 1 / sum(share * share for share in shares)
+        self.assertLess(effective, 9, effective)
+        self.assertGreater(effective, 4, effective)
+
+    def test_the_commonest_names_share_no_root(self):
+        """Ranking on length alone gave `Eldsel`, `Frosel`, `Nersel`, `Versel` - one root,
+        four fifths of a people, and a reader who hears a stutter rather than a culture.
+
+        Swept over all twelve rather than the one in `setUp`, because the greedy fill has a
+        fallback: a people whose roots overlap too much to yield five root-disjoint names
+        gets plain rank order back, which is exactly the bunched head this guards against.
+        No people takes that branch today, so a single-people version of this test would
+        pass on the data rather than on the property, and would keep passing if a lexicon
+        edit pushed one of them into it.
+        """
+        for cid, parent in PEOPLES:
+            stock = naming.name_stock(heritage.resolve(cid, parent), self.lexicon)
+            spent = set()
+            for name, gloss in stock['common'][:naming.HEAD_SPREAD]:
+                slots = gloss.split('-')
+                self.assertFalse(spent.intersection(slots),
+                                 f'{cid}: {name} reuses a root already in the head')
+                spent.update(slots)
+
+    def test_every_people_is_concentrated_and_not_only_the_one_above(self):
+        """The three tests above measure one people in detail. This one measures the claim.
+
+        A pool's size varies by which roots its family carries - 88 for heartland, 184 for
+        gnome - and the head table is shared, so the shape has to be asserted where it could
+        diverge rather than only where it was tuned.
+        """
+        for cid, parent in PEOPLES:
+            stock = naming.name_stock(heritage.resolve(cid, parent), self.lexicon)
+            shares = self._shares(stock, count=2000, seed=13)
+            effective = 1 / sum(share * share for share in shares)
+            self.assertGreater(shares[0], 0.28, f'{cid}: commonest name {shares[0]:.3f}')
+            self.assertLess(effective, 10, f'{cid}: effective names {effective:.1f}')
+
+    def test_a_people_too_inbred_to_spread_its_head_keeps_rank_order(self):
+        """The fallback branch, which no real people reaches and which would otherwise be
+        asserted by nothing at all: every candidate shares a root, so no head can be spread
+        and the ranking must come back whole rather than short."""
+        # `Ac` shares no root with `Aa` and would be promoted over `Ab` if the head were
+        # spread; the head still cannot reach five, so rank order must come back untouched.
+        # Three names all sharing one root would pass whether or not the branch exists,
+        # which is a test that cannot fail rather than a test that holds.
+        found = {'Aa': ('stone-fire', 4, ('stone', 'fire')),
+                 'Ab': ('stone-gold', 4, ('stone', 'gold')),
+                 'Ac': ('wood-iron', 4, ('wood', 'iron'))}
+        self.assertEqual([name for name, _ in naming._ranked(found)], ['Aa', 'Ab', 'Ac'])
+
+    def test_a_rare_name_is_never_also_a_common_one(self):
+        common = {name for name, _ in self.stock['common']}
+        for name, _ in self.stock['rare']:
+            self.assertNotIn(name, common, name)
+
+    def test_a_rare_pairing_is_neither_an_everyday_one_nor_a_settlement_shape(self):
+        """What makes the tail rare is the pairing, so it may not reuse either authored set."""
+        spent = {tuple(template['pattern']) for template in self.lexicon['personal_templates']}
+        settlements = {tuple(template['pattern'])
+                       for template in self.lexicon['settlement_templates']}
+        rare = naming._rare_patterns(self.lexicon)
+        self.assertTrue(rare)
+        for pattern in rare:
+            self.assertNotIn(pattern, spent, pattern)
+            self.assertNotIn(pattern, settlements, pattern)
+
+    def test_the_tail_reaches_names_the_common_stock_cannot(self):
+        """Without this a closed pool has no singletons, so no name can read as unusual."""
+        common = {name for name, _ in self.stock['common']}
+        draw = random.Random(5)
+        drawn = [naming.stock_name(self.stock, draw)[0] for _ in range(4000)]
+        outside = [name for name in drawn if name not in common]
+        self.assertTrue(outside)
+        # Rare, and recognisably so: a tail that drifts towards a second stock is not a tail.
+        self.assertLess(len(outside) / len(drawn), naming.RARE_SHARE * 2)
+
+    def test_every_name_it_draws_is_one_the_stock_holds(self):
+        held = {name for name, _ in self.stock['common']} | {name for name, _ in self.stock['rare']}
+        draw = random.Random(6)
+        for _ in range(500):
+            name, gloss = naming.stock_name(self.stock, draw)
+            self.assertIn(name, held)
+            self.assertEqual(len(gloss.split('-')), 2, gloss)
+
+    def test_the_draw_is_fixed_width_whichever_branch_it_takes(self):
+        """A branch that spends a different number of draws desynchronises a replay."""
+        for seed in range(30):
+            spender = random.Random(seed)
+            naming.stock_name(self.stock, spender)
+            counter = random.Random(seed)
+            counter.random(), counter.random()
+            self.assertEqual(spender.random(), counter.random(), seed)
+
+    def test_an_empty_stock_says_so_rather_than_returning_a_blank_name(self):
+        empty = {'common': [], 'rare': [], 'thresholds': ()}
+        self.assertIsNone(naming.stock_name(empty, random.Random(0)))
+
+    def test_a_stock_with_only_a_tail_is_refused_rather_than_promoted(self):
+        """Serving the rare pairings would make the tail the whole tongue, and would hide an
+        unfillable template behind names that look perfectly fine."""
+        tail_only = {'common': [], 'rare': self.stock['rare'], 'thresholds': ()}
+        for seed in range(200):
+            self.assertIsNone(naming.stock_name(tail_only, random.Random(seed)), seed)
+
+    def test_a_stock_smaller_than_the_head_table_still_spends_every_share(self):
+        """Truncating the head without renormalising would drop its last ranks unreachable."""
+        for count in (1, 2, 3, len(naming.HEAD_SHARES), len(naming.HEAD_SHARES) + 7):
+            thresholds = naming._thresholds(count)
+            self.assertEqual(len(thresholds), count, count)
+            self.assertAlmostEqual(thresholds[-1], 1.0, places=9, msg=count)
+
+    def test_every_people_carries_a_stock_and_a_tail(self):
+        for cid, parent in PEOPLES:
+            stock = naming.name_stock(heritage.resolve(cid, parent), self.lexicon)
+            self.assertTrue(stock['common'], cid)
+            self.assertTrue(stock['rare'], cid)
+
+
 if __name__ == '__main__':
     unittest.main()

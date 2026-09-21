@@ -173,6 +173,13 @@ DEFAULT_OROGENY=10.
 # spare. Raise both this and the Config bound together if a wider world is ever wanted.
 RIVER_THRESHOLD_MAX_KM2=10000.
 RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM=2878.6
+# Largest reach `terrain_lab.Config` and `registry()` admit for the three distances that
+# scale with the world's width. Unlike the catchment above, the binding width differs per
+# key because each has its own reference-world base: 450 m settlement_spacing binds at
+# 2477.55 km, 1000 m support_reach at 1114.90 km and 1800 m culture_link_cost at 619.39 km
+# -- 3.13% above the 600 km large preset, which is why the silent clamp that used to live
+# here was a defect waiting on one authored world rather than a safety net.
+REACH_MAX_M=100000.
 
 
 # Every published control's unit and description, in one table so a control cannot ship
@@ -364,11 +371,34 @@ def generate_request(body):
         # world and have to grow with it. derive_population would have scaled them, but it
         # is unreachable on recipe 3 (auto_parameters is forbidden there), so they are
         # derived here instead. Left absolute, the rural layer disappears completely.
-        from .terrain_scale import reach_scale,runoff_scale
+        from .terrain_scale import reach_scale,runoff_scale,REFERENCE_CIRCUMFERENCE_M
         factor=reach_scale(circumference)
-        for key,ceiling in (('settlement_spacing',100000.),('support_reach',100000.),
-                            ('culture_link_cost',100000.)):
-            if key not in overrides:raw[key]=min(ceiling,raw[key]*factor)
+        # Do NOT clamp, for the same reason river_threshold_km2 below does not. The old
+        # min(REACH_MAX_M, raw*factor) was the min(<absolute>,<relative>) arm swap this
+        # block exists to undo: past the width where the ceiling binds, the reach stops
+        # growing with the planet, silently, and cultural regions quietly stop scaling
+        # while everything around them keeps going. It was one preset from firing --
+        # culture_link_cost resolves 96870.01 m at the 600 km large preset, 3.13% below
+        # the ceiling, so a world authored at 620 km would have hit it. Each key binds at
+        # REACH_MAX_M/base reference circumferences: 2477.55 km for settlement_spacing,
+        # 1114.90 km for support_reach, 619.39 km for culture_link_cost. Below those
+        # widths this is bit-for-bit what the clamp produced, because min() of a value
+        # under the ceiling returns that value itself: no generated world moves.
+        for key in ('settlement_spacing','support_reach','culture_link_cost'):
+            if key in overrides:continue
+            base=raw[key];scaled=base*factor
+            if scaled>REACH_MAX_M:
+                binds_km=REACH_MAX_M/base*REFERENCE_CIRCUMFERENCE_M/1000. if base>0 else 0.
+                raise RequestError(
+                    'STATE_CAPACITY',
+                    f'A {circumference/1000:g} km world resolves {key} to {scaled:g} m, '
+                    f'above the {REACH_MAX_M:g} m maximum; widths above {binds_km:.0f} km '
+                    f'need that bound raised in terrain_lab.Config and in registry(), or '
+                    f'an explicit {key} override',
+                    field=key,received=scaled,
+                    expected={'max':REACH_MAX_M,'max_circumference_km':binds_km},
+                    suggestion={'kind':'clamp','value':REACH_MAX_M})
+            raw[key]=scaled
         # river_threshold_km2 is an AREA, not a reach, so it takes the SQUARE of the same
         # factor. Left absolute it stopped spanning anything: at the 200 km default every
         # land cell drains more than 0.15 km2, so every land cell is a river, every land

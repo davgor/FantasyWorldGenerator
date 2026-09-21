@@ -1,6 +1,6 @@
 # SUPER-VILLAINS — World-scale antagonists and the hidden schools
 
-Drafted: 2026-09-19. Status: in progress; S0-S8 landed, S9 (the native port) not started. Owner: super-villain session.
+Drafted: 2026-09-19. Status: **S0-S8 landed; S9 (the native port) is retired, not deferred.** Under [027 The native port is deferred to a full redo](../../docs/decisions/027-native-port-deferred-to-a-full-redo.md) the `Core/` port is a full rewrite at the end of the project, so S9's native parity work — which needed `Core/tests/world_driver.cpp` to accept option overrides, itself unscoped — will not be written against this tree. **Nothing native remains outstanding on this ticket.** Its owner should confirm S0-S8 and close it; it is left in `in-progress/` rather than moved, because whether S3 and S7 discharged their own notes is the owner's call and not this pass's. Owner: super-villain session.
 
 This ticket writes the continuation of [PLAN.md](../../PLAN.md) §21, which has been a heading with no body since extraction: *"Villains understand the same system."* PLAN.md flags the gap at lines 117, 427, 678, 766 and 844.
 

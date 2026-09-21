@@ -66,13 +66,13 @@ Every identity in the exhaustive asset list has an Unreal registry row: object p
 
 Python can already write world JSON. That is not Unreal setup. ML-03 must close all three:
 
-1. `.uplugin` (`FantasyWorldGenerator`) and an in-process native generate API. `Core/` carries the bounded counter kernel and a native world generator that is compared against the Python reference layer by layer; what remains open is the generic plugin, the installed consumer and the cooked loop ([ML-03d](../board/backlog/ML-03d.md)). See [`Core/README.md`](../Core/README.md) for what is verified and what is present but unreached by any test.
-2. UnrealWorldGen importer: Z-up / centimetre mapping in this document, Landscape, asset-ID registry ([ML-03e](../board/backlog/ML-03e.md)).
+1. `.uplugin` (`FantasyWorldGenerator`) and an in-process native generate API. `Core/` carries the bounded counter kernel and a native world generator that is compared against the Python reference layer by layer; what remains open is the generic plugin, the installed consumer and the cooked loop ([ML-03d](../board/retired/ML-03d.md)). See [`Core/README.md`](../Core/README.md) for what is verified and what is present but unreached by any test.
+2. UnrealWorldGen importer: Z-up / centimetre mapping in this document, Landscape, asset-ID registry ([ML-03e](../board/retired/ML-03e.md)).
 3. Packaged Win64 generate → materialize loop with an exact package digest (ML-03e). Editor PIE does not close the epic.
 
-See [decision 018](decisions/018-unrealworldgen-dev-consumer.md) and parent [ML-03](../board/in-progress/ML-03.md).
+See [decision 018](decisions/018-unrealworldgen-dev-consumer.md) and parent [ML-03](../board/retired/ML-03.md).
 
-The first engine host is sibling project **UnrealWorldGen** (Unreal 5.8, local Win64). The plugin is owned here at `Unreal/FantasyWorldGenerator/`. See [decision 018](decisions/018-unrealworldgen-dev-consumer.md), [ML-03d](../board/backlog/ML-03d.md), and [ML-03e](../board/backlog/ML-03e.md).
+The first engine host is sibling project **UnrealWorldGen** (Unreal 5.8, local Win64). The plugin is owned here at `Unreal/FantasyWorldGenerator/`. See [decision 018](decisions/018-unrealworldgen-dev-consumer.md), [ML-03d](../board/retired/ML-03d.md), and [ML-03e](../board/retired/ML-03e.md).
 
 - Genesis is in-process native `Core/` code. No Python lab, spawned Python, or embedded interpreter.
 - ML-03d proves native generate, on-demand sampling, axis fixtures, and catalogue-complete registry schema **headlessly** before UnrealWorldGen maps.
@@ -100,7 +100,7 @@ Hub gameplay lives in UnrealWorldGen.
 
 Request offsets still transport as exact whole metres or bounded decimal strings in the JSON validation path; sampled heights cross the boundary as doubles.
 
-The module compiles under UnrealBuildTool for the Win64 game target in the sibling UnrealWorldGen project. Editor-target compile and the cooked run are the open items ([ML-03e](../board/backlog/ML-03e.md)).
+The module compiles under UnrealBuildTool for the Win64 game target in the sibling UnrealWorldGen project. Editor-target compile and the cooked run are the open items ([ML-03e](../board/retired/ML-03e.md)).
 
 ## Presented surface
 

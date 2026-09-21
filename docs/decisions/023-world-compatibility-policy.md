@@ -14,8 +14,11 @@ saved world, and no migration is owed.**
 
 A seed-breaking or save-invalidating change is therefore routine. It does not need its own
 ruling, it does not need a migration path, and it does not need to be deferred to a quieter
-release. It still needs its native `Core/` port in the same change, and it still needs its
-regeneration statement in the document that owns the subsystem.
+release. ~~It still needs its native `Core/` port in the same change~~ — **that clause is
+superseded** by [027 The native port is deferred to a full redo](027-native-port-deferred-to-a-full-redo.md),
+ruled 2026-09-21: no Python change owes a native port. Everything else in this record stands,
+including that such a change still needs its regeneration statement in the document that owns
+the subsystem.
 
 ## The milestone at which this changes
 
@@ -46,7 +49,7 @@ two should treat the card as the source for "phase 2".
   world.
 - **Nothing about a persisted document surviving a round trip.** A world written by the CLI
   cannot currently be advanced at all — see
-  [TIME-PERSISTED-WORLD-CANNOT-ADVANCE](../../board/backlog/TIME-PERSISTED-WORLD-CANNOT-ADVANCE.md).
+  [TIME-PERSISTED-WORLD-CANNOT-ADVANCE](../../board/done/TIME-PERSISTED-WORLD-CANNOT-ADVANCE.md).
   Disposability is not a licence to leave that broken. It is the reason it stayed invisible.
 
 ## The one compatible-change pattern this repository has found
@@ -65,8 +68,9 @@ consumes an RNG stream, adds a draw or reorders an existing one is not additive,
 its output is separated.
 
 This is a pattern to prefer, not a rule that is enforced. Enforcing it needs the block registry
-[PRODUCT-BLOCK-REGISTRY](../../board/backlog/PRODUCT-BLOCK-REGISTRY.md) asks for. Describing it
-is what a decision record can do.
+[PRODUCT-BLOCK-REGISTRY](../../board/done/PRODUCT-BLOCK-REGISTRY.md) asked for, which landed on
+2026-09-21 as `Contracts/blocks.json`: it makes absence representable per block, and does not by
+itself enforce this pattern. Describing it is what a decision record can do.
 
 ## Where the regeneration statements live
 

@@ -1,7 +1,7 @@
 {
   "schema": "fantasy-world-generator.hero-wells-policy",
-  "revision": 5,
-  "notes": "Precipitation chances, council seats by city class, magic tables, placement and cross-cutting feature thresholds. Countryside, ports and shrines roll per site (reeve, castellan, harbourmaster, keeper, cult). Each candidate rolls once with child_seed(seed, 'hero-roll-' + uid); every roll is recorded in heroes.rolls. chance = min(cap, base + bonus), the bonus reading the event's own weight.",
+  "revision": 6,
+  "notes": "Precipitation chances, council seats by city class, magic tables, the quest rubric, placement and cross-cutting feature thresholds. Countryside, ports and shrines roll per site (reeve, castellan, harbourmaster, keeper, cult). Each candidate rolls once with child_seed(seed, 'hero-roll-' + uid); every roll is recorded in heroes.rolls. chance = min(cap, base + bonus), the bonus reading the event's own weight.",
   "cap": 0.95,
   "precipitation": {
     "heir": {
@@ -116,6 +116,29 @@
       "infernal": "weave"
     },
     "hook_intensity_delta": 0.5
+  },
+  "quests": {
+    "notes": "The quest contract's derived fields. A hook already names the anchor; this says how hard the thing is. The generator prices no reward -- difficulty is the number the consuming game turns into treasure. Only the tunable half lives here: the verb vocabulary is a closed contract rather than a tuning table and lives in hooks.VERBS, tied to npc_roster/policies/posts.json by Sim/tests/test_hero_generator.py::QuestContractTests. difficulty = clamp(min, max, floor(opposition + pressure + 0.5)) on the creature-tier rubric: 1 harmless, 2 can hurt you, 3 kills the careless, 4 kills the prepared, 5 a campaign threat.",
+    "ley_verb": {
+      "strengthen": "tend",
+      "weaken": "cleanse"
+    },
+    "opposition": {
+      "ruin": 2.0,
+      "relic": 2.0,
+      "city": 2.0,
+      "hamlet": 2.0,
+      "fortress": 2.0,
+      "port": 2.0,
+      "shrine": 1.0,
+      "college": 1.0
+    },
+    "ley_floor": 1.0,
+    "ley_intensity_weight": 0.5,
+    "pressure_per_tier": 0.25,
+    "pressure_cap": 1.0,
+    "difficulty_min": 1,
+    "difficulty_max": 5
   },
   "placement": {
     "heir_leads_own_camp": true,

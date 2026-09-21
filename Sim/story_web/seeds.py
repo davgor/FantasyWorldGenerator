@@ -1,15 +1,13 @@
-"""Seed helpers, byte-for-byte the generator's `child_seed`, so a web is a pure function of the world seed.
+"""Seed derivation, re-exported from :mod:`world_geometry.seeds`.
 
 The compiler itself is deterministic without draws (weights decide, ties break on ids); the
 seed is reserved for the initiative deadline jitter so heroes do not all fire on one day.
+
+The derivation used to be copied into this package and pinned by a test of its own. It is now
+shared: ``world_geometry`` is pure arithmetic and imports no generator, so the isolation this
+package asserts is unaffected, and one pin in ``Sim/tests/test_world_geometry.py`` holds the
+single implementation to the generator's.
 """
-import hashlib
-import random
+from world_geometry.seeds import child_seed, rng
 
-
-def child_seed(master, domain, variation=0):
-    return int.from_bytes(hashlib.sha256(f'tectonics-v1:{master}:{domain}:{variation}'.encode()).digest()[:4], 'big')
-
-
-def rng(master, domain, variation=0):
-    return random.Random(child_seed(master, domain, variation))
+__all__ = ['child_seed', 'rng']

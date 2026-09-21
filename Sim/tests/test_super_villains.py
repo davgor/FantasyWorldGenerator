@@ -140,7 +140,11 @@ class RiseTests(unittest.TestCase):
     def test_the_outlook_says_where_it_is_coming_from(self):
         outlook = self.world['villains']['outlook']
         self.assertGreaterEqual(outlook['ceiling'], 1)
-        self.assertEqual(outlook['standing'], len(self.world['villains']['people']))
+        # `standing` counts the standing; `people` holds the fallen too. The two agree in
+        # a world where nobody has fallen, which is every world that could be built while
+        # the hold band was unreachable -- so this read `len(people)` and was right by
+        # accident. It stops being right the first time a reign ends.
+        self.assertEqual(outlook['standing'], len(villains.standing(self.world['villains']['people'])))
         for row in outlook['regions']:
             self.assertEqual(round(row['to_threshold'], 6),
                              round(max(0., villains.SUPER_TIER - row['tier']), 6))
@@ -364,6 +368,95 @@ class FallTests(unittest.TestCase):
             villains.advance(world, self.Config(), age, rise=0., hold=99., density=3.)
         self.assertEqual([m['id'] for m in world['villains']['fallen']], first,
                          'the dead are neither dropped nor duplicated by later ages')
+
+
+class ClaimTests(unittest.TestCase):
+    """What a claim records, and which half of it is allowed to move.
+
+    A claim is taken once and kept under a constant id, `claim-<villain uid>`. Everything
+    in it was therefore fixed at the first build -- including `kind`, which is a band on
+    the holder's **current** tier and not a fact about the age it was taken. The
+    tier-1.5 promotion to `seat` could only ever fire for a villain that crossed the line
+    in the same age it first built, which is a villain that rose past 1.5 in a single
+    step; one that grows there over several ages, which is what the ramp is for, never
+    promoted.
+    """
+
+    class Config:
+        settlement_spacing = 1000.
+
+    def world(self):
+        city = {'id': 'site-1', 'uid': 'city-1', 'node': 7, 'direction': [0., 1., 0.],
+                'population_profile': 'human_heartland'}
+        return {
+            'effective_config': {'globe_radius': 100000.},
+            'settlements': {'sites': [city]},
+            'humans': {'cultures': [{'id': 'culture-1', 'city_ids': ['site-1']}]},
+            'magic': {'networks': {'weave': {'nodes': [{'id': 'ley-1', 'direction': [0., 1., 0.]}],
+                                             'edges': []}}},
+            'threat_assessments': {'cities': [{'city_uid': 'city-1', 'regional_threat': 1.,
+                                               'war_risk': 0., 'war_hunger': 0.,
+                                               'war_pressure': 0., 'nest_pressure': 1.,
+                                               'ley_pressure': 0.}]},
+        }
+
+    def test_a_claim_promotes_to_a_seat_when_its_villain_grows_into_one(self):
+        """The defect: the band is recomputed every age and the fresh claim is dropped."""
+        world = self.world()
+        cast = villains.advance(world, self.Config(), 0, rise=1., hold=.7, density=3.)
+        self.assertEqual(len(cast), 1)
+        first = villains.claim_settlements(world, self.Config(), cast[0], 0)
+        self.assertEqual(first['kind'], 'village', 'seated at the bottom of the band')
+        uid = cast[0]['uid']
+
+        for age in (1, 2):
+            cast = villains.advance(world, self.Config(), age, rise=1., hold=.7, density=3.)
+            for villain in cast:
+                villains.claim_settlements(world, self.Config(), villain, age)
+
+        record = next(p for p in world['villains']['people'] if p['uid'] == uid)
+        self.assertGreaterEqual(record['tier'], villains.SUPER_TIER * 1.5,
+                                'the probe needs the villain to actually cross the band')
+        self.assertEqual(len(record['claims']), 1, 'the id is stable, so nothing is added')
+        claim = record['claims'][0]
+        self.assertEqual(claim['kind'], 'seat',
+                         f"a villain at tier {record['tier']!r} is well past "
+                         f"{villains.SUPER_TIER * 1.5} and its claim still reads "
+                         f"{claim['kind']!r}. The stored claim is appended once under a "
+                         'constant id and never updated, so the promotion can only fire for '
+                         'a villain that crosses 1.5 in the single age it first builds.')
+
+    def test_what_a_claim_drew_from_is_the_snapshot_and_does_not_move(self):
+        """The other half, and it is deliberately frozen: `age` names when it was taken.
+
+        A claim is what this villain took and when. The peoples it drew from are part of
+        that record, so a city founded afterwards does not retroactively join a claim
+        staked before it existed. Only the holder's own standing -- `kind`, and the
+        `holder_status` and `influence` that `advance` restamps -- tracks the present.
+        """
+        world = self.world()
+        cast = villains.advance(world, self.Config(), 0, rise=1., hold=.7, density=3.)
+        first = villains.claim_settlements(world, self.Config(), cast[0], 0)
+        drawn = list(first['drawn_from'])
+        factions = list(first['factions'])
+        uid = cast[0]['uid']
+
+        # A second city appears, nearer to nothing the claim knew about.
+        world['settlements']['sites'].append(
+            {'id': 'site-2', 'uid': 'city-2', 'node': 9, 'direction': [0., .9, .43589],
+             'population_profile': 'human_reaver'})
+        cast = villains.advance(world, self.Config(), 1, rise=1., hold=.7, density=3.)
+        for villain in cast:
+            villains.claim_settlements(world, self.Config(), villain, 1)
+
+        record = next(p for p in world['villains']['people'] if p['uid'] == uid)
+        claim = record['claims'][0]
+        self.assertEqual(claim['age'], 0, 'the age it was taken never moves')
+        self.assertEqual(claim['drawn_from'], drawn, 'a claim does not redraw its peoples')
+        self.assertEqual(claim['factions'], factions)
+        self.assertEqual(claim['refreshed_age'], 1,
+                         'the age the standing fields were last refreshed is recorded, so a '
+                         'consumer never has to read `age` as if it were that')
 
 
 if __name__ == '__main__':

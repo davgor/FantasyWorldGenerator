@@ -24,7 +24,7 @@ twice and byte-compares, so a mutating block would fail the build.
 """
 import os
 
-from .naming import name_for
+from .naming import name_for, name_with_gloss, reset_cache
 from .policy import load_all, revisions
 from .seeds import rng
 from .sites import collect, locate, places, posts_in

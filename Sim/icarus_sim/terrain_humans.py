@@ -140,15 +140,52 @@ def add_humans(result,cfg):
     yields=[(a*biome_food_multiplier(node_profiles[i],biomes[i],cell_variant(result,*points[i]))*(1-hazard[i]),
              b*biome_food_multiplier(node_profiles[i],biomes[i],cell_variant(result,*points[i]))*(1-hazard[i])) for i,(a,b) in enumerate(yields)]
     natural=[a for a,b in yields];food=[b for a,b in yields]
-    vectors=[direction(x,z,n) for x,z in points];occupied=[s['node'] for s in sites]
+    # A rural site the player founded is an instruction, not a proposal, so it is not
+    # re-derived and not subject to the counts and ceilings below. Its node joins the
+    # occupied set before the generated passes run, so nothing is placed on top of it --
+    # the uniqueness `test_no_two_settlements_share_a_node_in_a_finished_world` pins.
+    previous=result.get('humans') or {}
+    player_rural={'hamlet':[],'fortress':[]}
+    for key,kind in (('hamlets','hamlet'),('fortresses','fortress')):
+        for row in previous.get(key,[]) or []:
+            if row.get('founded_by')=='player':player_rural[kind].append(row)
+    for kind in ('hamlet','fortress'):player_rural[kind].sort(key=lambda row:row['node'])
+    player_nodes={row['node'] for rows in player_rural.values() for row in rows}
+    vectors=[direction(x,z,n) for x,z in points];occupied=[s['node'] for s in sites]+sorted(player_nodes)
     def separated(i,minimum):
         return all(r*math.acos(max(-1,min(1,sum(a*b for a,b in zip(vectors[i],vectors[j])))))>=minimum for j in occupied)
     def record(i,kind,number,reason):
+        # `id` is the ORDINAL, kept because `hamlet_plans` and `castle_plans` join on it.
+        # `uid` beside it is the handle that survives an age boundary: this list is rebuilt
+        # and re-sorted by defence score every age, so `fortress-36` names different ground
+        # after an advance while the terrain node does not move. Same spelling the player
+        # founding route mints (terrain_settlement_api._rural_row) and the same one
+        # npc_roster and hero_generator key on -- one convention, not three.
         core=owner[i];x,z=points[i];path=[i]
         while parent[path[-1]]>=0:path.append(parent[path[-1]])
-        return {'id':f'{kind}-{number}','kind':kind,'node':i,'x':x,'z':z,'core_id':core,
+        return {'id':f'{kind}-{number}','uid':f'{kind}-node-{i}','kind':kind,'node':i,'x':x,'z':z,'core_id':core,
                 'population_profile':sites[core]['population_profile'],'culture_id':culture_ids[groups[core]],'height_m':height[i],
                 'access_cost':distance[i],'access_nodes':path,'reason':reason}
+    def adopt(row,kind,number):
+        """Re-seat a player-founded rural row in this pass's numbering and catchments.
+
+        The ordinal `id` is reissued because it is a position in a list this pass rebuilt,
+        and the access path, owning city and culture are recomputed because they describe
+        the world as it is now. The `uid`, the node and the player's own choices are not:
+        they are what the player founded, and re-deriving them would move a settlement
+        under its owner. A node outside every catchment keeps the core it was founded
+        against rather than being dropped.
+        """
+        i=row['node']
+        if owner[i]>=0:
+            reseated=record(i,kind,number,row.get('reason','Founded by the player.'))
+        else:
+            reseated=dict(row,id=f'{kind}-{number}')
+        for key in ('uid','founded_by','founded_age','name','population_profile','role',
+                    'irrigation_benefit','worked_area_km2','delivered_food',
+                    'delivered_materials','defence_score','protected_route_node'):
+            if key in row:reseated[key]=row[key]
+        return reseated
     hamlets=[]
     for site in sites:
         profile=site_profiles[site['id']]
@@ -165,6 +202,17 @@ def add_humans(result,cfg):
                     h.update({'role':role,'irrigation_benefit':food[i]-natural[i],
                               'worked_area_km2':0.,'delivered_food':0.,'delivered_materials':0.})
                     hamlets.append(h);occupied.append(i);break
+    # Adopted before the catchment allocation below, so a player hamlet works land exactly
+    # as a generated one does. The four accumulators start at zero for the same reason a
+    # generated hamlet's do -- the allocation fills them -- and the irrigation benefit is a
+    # read of this pass's ground rather than the previous pass's, because it describes the
+    # cell and not the settlement. The caller's block is never mutated.
+    for row in player_rural['hamlet']:
+        adopted=adopt(row,'hamlet',len(hamlets))
+        i=row['node']
+        adopted.update(irrigation_benefit=food[i]-natural[i],worked_area_km2=0.,
+                       delivered_food=0.,delivered_materials=0.)
+        hamlets.append(adopted)
     # Each productive cell belongs to at most one hamlet and cannot cross city catchments.
     def farm_cost(i,j,d):
         if owner[i]!=owner[j] or distance[j]>cfg.support_reach:return None
@@ -215,6 +263,10 @@ def add_humans(result,cfg):
             fort=record(i,'fortress',len(forts),'Nearby city road; junction/crossing importance and elevated surroundings')
             fort.update({'defence_score':score,'protected_route_node':route_node})
             forts.append(fort);occupied.append(i)
+    # A player keep is not a route-defence proposal, so it is appended after the ceiling
+    # rather than competing for a place under it.
+    for row in player_rural['fortress']:
+        forts.append(adopt(row,'fortress',len(forts)))
     cores=[]
     for site in sites:
         members=[h for h in hamlets if h['core_id']==site['id']]
@@ -229,9 +281,10 @@ def add_humans(result,cfg):
     layers.update({'food_potential':node_grid(food,points,n),'natural_food_potential':node_grid(natural,points,n),
                    'irrigation_benefit':node_grid([b-a for a,b in yields],points,n),'culture_region':node_grid(region,points,n),
                    'hamlet_catchment':node_grid(farm_owner,points,n)})
-    result['humans']={'version':8,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
+    result['humans']={'version':9,'population_profile':cfg.population_profile,'cores':cores,'hamlets':hamlets,'fortresses':forts,'cultures':cultures,'shipments':shipments,
         'fortress_demand':{'proposed':proposed,'city_ceiling':len(sites)+veteran_demand,
                            'requested_ceiling':cfg.fortress_count,'limit':fortress_limit,
+                           'player_founded':len(player_rural['fortress']),
                            'veteran_demand':veteran_demand,
                            'veteran_cities':sum(1 for v in veteran.values() if v),
                            'road_length_m':road_length,
@@ -240,7 +293,7 @@ def add_humans(result,cfg):
         'culture_method':'Existing road links below a cost threshold form single-link interaction groups. Culture IDs are seed-local, not inferred ethnicities or political borders; architecture style keys identify standalone civilizations. Territory stops at the support reach; wilderness remains unassigned.',
         'defence_method':'Fortresses are spaced route-defence proposals, not a siege or visibility simulation. How many a world asks for follows its own road length, support reach and distinct river crossings, ceilinged by its city count; fortress_count caps that and never raises it. Usable defensible ground and the 200 m spacing decide how many of the requested forts exist. Garrison demand is not yet budgeted.'}
     if 'magic' in result:
-        result['humans']['version']=8
+        result['humans']['version']=9
         result['humans']['method']+=' Mutation and the selected population biome food multipliers reduce crop surplus. Rural access cannot cross unsafe magic.'
     result['warnings'].extend([result['humans']['method'],result['humans']['culture_method'],result['humans']['defence_method']])
     elapsed=(perf_counter()-started)*1000;result['timing_ms']['human_hinterlands']=elapsed;result['timing_ms']['total']+=elapsed

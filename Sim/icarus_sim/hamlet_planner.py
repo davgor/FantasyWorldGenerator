@@ -5,7 +5,7 @@ from .city_geometry import grow_roads, corners, footprint_cells
 from .city_planner import _sampler, CELL
 from .civilization_registry import hamlet_plan, section, registry_identity
 
-VERSION=2
+VERSION=3
 HALF_DEFAULT=100  # 200 m across; smaller than small-city 480 m
 NEIGHBOUR_GAP=8  # metres reserved between facing hamlet windows
 
@@ -157,7 +157,7 @@ def plan_hamlet(world,hamlet):
     for c in entries:
         cell=tuple(c['cell']);gate=c['gate_local_m'];point=[-half+(v+.5)*CELL for v in cell]
         v=sample(*gate);length=math.dist(point,gate)
-        if cell in road and not v['water'] and v['flood']<=.65 and v['slope']<=25 and abs(v['height']-heights[cell])<=.35*length+1e-6:
+        if cell in road and not v['water'] and not v['channel'] and v['slope']<=25 and abs(v['height']-heights[cell])<=.35*length+1e-6:
             approach=next((path for path in paths if path[-1]==cell),[cell])
             c.update(status='connected',reason='Terrain-safe junction to parent-city approach',
                      local_path_m=[[-half+(a+.5)*CELL,-half+(b+.5)*CELL] for a,b in approach]+[gate])

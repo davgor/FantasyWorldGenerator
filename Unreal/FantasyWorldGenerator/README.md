@@ -51,10 +51,10 @@ reverses for Unreal's left-handed frame.
 ## What does not exist
 
 Settlement, road, city-plan and nest placement are not in the native envelope yet
-([ML-03d](../../board/backlog/ML-03d.md)), so this plugin materializes no building,
+([ML-03d](../../board/retired/ML-03d.md)), so this plugin materializes no building,
 street or nest. `bUnrealQualified` stays false: an enabled plugin is not a
 qualification, and cooked-runtime evidence lives with
-[ML-03e](../../board/backlog/ML-03e.md).
+[ML-03e](../../board/retired/ML-03e.md).
 
 ## Use from UnrealWorldGen
 

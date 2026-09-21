@@ -19,7 +19,6 @@ from story_web import weights as weight_rules
 from story_web.facts import FACTS, WorldFacts, person_facts
 from story_web.policy import lint_tropes, load, load_all
 from story_web.predicates import eligible, missing
-from story_web.seeds import child_seed
 from story_web.threads import RANK, opposes, threads_from
 
 import test_hero_generator as cast_fixture
@@ -410,10 +409,11 @@ class FixtureTests(unittest.TestCase):
 
 
 class IsolationTests(unittest.TestCase):
-    def test_seed_helper_matches_the_generator(self):
-        from icarus_sim.terrain_tectonics import child_seed as reference
-        for master, domain, variation in ((42, 'web-x', 0), (7, 'web-initiative-a', 3), (4294967295, '', 1)):
-            self.assertEqual(child_seed(master, domain, variation), reference(master, domain, variation))
+    # The seed helper is no longer copied into this package; it is imported from the shared,
+    # generator-free `world_geometry`, and `Sim/tests/test_world_geometry.py` is the one pin
+    # holding it to `icarus_sim.terrain_tectonics.child_seed`. A second pin here would assert
+    # the same equality by a longer route. The isolation assertion below is the part that is
+    # still this package's own, and it stays.
 
     def test_attach_reports_failure_instead_of_raising_and_honours_the_switch(self):
         block = story_web.attach({'config': {'seed': 1}})

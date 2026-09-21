@@ -18,6 +18,56 @@ An engine-independent, Python-standard-library experiment. Launch from the
 repository root with `python tools/terrain_lab.py --serve`, then open
 http://127.0.0.1:8765. Stop the server with Ctrl+C. It binds only to loopback.
 
+## What the page shows, and what a run costs
+
+`/` serves `Fixtures/sample-world-v1.json`: a committed recipe-3 world, seed 42 at
+size 33, with all sixteen stage snapshots. Opening the lab reads that file and
+generates nothing. **Run simulation** is the only thing that builds a world, and it
+reports the measured wall time of the whole run — request, transfer and redraw —
+ticking a live counter while it waits, because a run takes minutes and a silent
+button reads as a hang.
+
+Two consequences worth stating plainly:
+
+- The size is a priced choice, measured on one desktop at seed 42 with stage
+  snapshots included: size 17 gives 16 × 16 cells, 80 s and 52.9 MB for 12 cities,
+  24 hamlets and 10 ruins; size 33 gives 32 × 32 cells, 225 s and 162.1 MB for 35
+  cities, 116 hamlets and 38 ruins. 33 is pinned because a dozen cities on a whole
+  globe is too sparse to read. Neither resolves more than 1 of the 5 noise octaves —
+  513 is the first size that admits all five — so the sample's terrain carries little
+  surface detail at any committable size. Run a simulation to see that.
+- The sample carries no `timing_ms`, which is the exporter's own default and is what
+  lets `--check` be an exact byte comparison. An earlier version of this file forced
+  `--include-timings`, on the reasoning that `terrain_biomes.py` writes into that map
+  unguarded so `Advance age` on a stripped world must raise `KeyError: 'timing_ms'`
+  ([TIME-PERSISTED-WORLD-CANNOT-ADVANCE](../board/backlog/TIME-PERSISTED-WORLD-CANNOT-ADVANCE.md)).
+  That was derived and never tested, and it is false: `terrain_history.adopt_world`
+  guards the seam every stateless request API takes a caller's world through, at that
+  one boundary rather than at the 32 producer sites. Measured on a stripped seed-42
+  size-17 world, `advance_age_request` advances it and `advance_time_request` accepts
+  all three elapsed bands. The timings panel is therefore empty until you run a
+  simulation, which is the honest state — a prebuilt world's build times were measured
+  on somebody else's machine.
+
+Rebuild the sample with `python tools/build_sample_world.py`; `--check` rebuilds into
+a temporary file and fails if a single byte differs, and runs inside
+`validate_repo.py --stage artifacts`. That comparison is the first thing in this
+repository to assert that `build_stages` is byte-reproducible — `compare_worlds`
+omits the sixteen snapshots — and it passes. Anything that changes what the pinned request
+produces — a recipe change, a generator version, a different resolved default — makes
+the sample stale, and that gate is what says so.
+
+The server is threaded and answers `HEAD`. One page load now moves over 160 MB, and on a
+single-threaded server that held the only worker while every other client — a second tab,
+a preview pane's health check — waited in the accept backlog: a `GET /` that had not
+returned after 300 seconds completes in 0.76 s threaded, and a `HEAD /` that answered 501
+answers 200 in 0.22 s without building the document.
+
+Terrain settings given on the command line change `/generate` and the legacy controls,
+not the served page; the server prints which ones it is ignoring. Pass `--fresh` to go
+back to generating the page from them on every load, or `--sample PATH` to serve a
+different prebuilt world.
+
 Change seed, noise amplitude/scale/octaves, ridge mix, gorge depth/half-width,
 meander, physical region extent, resolution, and TPI radius; press Generate.
 Use stage buttons and diagnostics, hover for measurements, and click an atlas row for a cross-section.

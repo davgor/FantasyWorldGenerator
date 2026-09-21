@@ -42,7 +42,14 @@ class HumanHinterlandTests(unittest.TestCase):
         self.assertEqual(result['settlements'],previous['settlements'])
         self.assertEqual(result['roads'],previous['roads'])
         human=result['humans'];self.assertTrue(human['cores']);self.assertTrue(human['hamlets'])
-        self.assertTrue(all(s['kind']=='city' and s['name'].endswith(' City') for s in result['settlements']['sites']))
+        # Names come from heritage's morphemic namer, so each carries the gloss of the roots
+        # it was built from. The round-robin that appended a literal ' City' is retired; this
+        # line asserted that suffix was present while test_heritage_consumers asserted it was
+        # absent, and only this one failed. See board/backlog/CONTENT-CITY-SUFFIX-DEAD-READERS.md.
+        for s in result['settlements']['sites']:
+            self.assertEqual(s['kind'],'city',s['name'])
+            self.assertFalse(s['name'].endswith(' City'),s['name'])
+            self.assertTrue(s['name_gloss'],s['name'])
         all_sites=human['hamlets']+human['fortresses']
         nodes=[s['node'] for s in all_sites]+[s['node'] for s in result['settlements']['sites']]
         self.assertEqual(len(nodes),len(set(nodes)))
@@ -74,6 +81,29 @@ class HumanHinterlandTests(unittest.TestCase):
         again=generate(cfg)
         self.assertEqual(human,again['humans'])
         json.dumps(result,allow_nan=False)
+
+    def test_no_two_settlements_share_a_node_in_a_finished_world(self):
+        """The uniqueness `test_hinterland_invariants_and_stage_isolation` asserts, but
+        at phase 16 rather than phase 9.
+
+        Coastal harbours are raised later, by terrain_society, against its own occupied
+        set -- and that set listed cities and hamlets but not fortresses, so a harbour
+        could be founded on a node a fort already held. It went unseen because the only
+        test of the invariant stopped at phase 9, before the pass that breaks it: 28 of
+        56 forts in a seed-42 size-33 world shared their exact node with a hamlet.
+        """
+        from icarus_sim.terrain_world import generate_request
+        world=generate_request({'seed':42,'overrides':{'size':17,'phase':16}})
+        rows=([('city',s) for s in world['settlements']['sites']]
+              +[('hamlet',h) for h in world['humans']['hamlets']]
+              +[('fortress',f) for f in world['humans']['fortresses']])
+        seen={}
+        clashes=[]
+        for kind,row in rows:
+            key=row['node']
+            if key in seen:clashes.append((key,seen[key],(kind,row.get('id',row.get('name')))))
+            else:seen[key]=(kind,row.get('id',row.get('name')))
+        self.assertEqual(clashes,[])
 
     def test_culture_control_changes_groups_without_moving_sites(self):
         cfg=Config(shape='globe',tectonics=1,size=33,phase=9)

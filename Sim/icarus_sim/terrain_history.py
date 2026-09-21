@@ -11,6 +11,7 @@ from .terrain_tectonics import child_seed
 from .terrain_leyline_history import SCHOOLS, KNOWN_SCHOOLS, generate_networks, evaluate_networks, edit_network, dominant_school
 from .terrain_astrology import add_astrology, refresh_astrology, tide, day_state, DAYS_PER_YEAR
 from .terrain_ruins import ruin_legacy
+from . import terrain_profile
 
 STAGES = ['Plate layout', 'Tectonic relief', 'Surface detail', 'Erosion and sediment',
           'Connected water', 'Second tectonic relief', 'Valleys and gorges', 'Wind and rain',
@@ -378,6 +379,13 @@ def age_transition(result,cfg,age,moon_day=None,final=False):
         if 'religion' in result:
             from .terrain_visitation import walking_gods, depart_god
             for god_id in walking_gods(result):depart_god(result,cfg,god_id,age,rebuild=False)
+    # A refugee band that reached a standing town is absorbed by it rather than founding a
+    # settlement on top of it: the candidate names the refuge's own node, not free ground.
+    # Before the rebuild, on the cities that survived the boundary, so a refuge that fell
+    # this age takes nobody in. Writes nothing on a generated world -- settlement_candidates
+    # is written at stage 16, after both generation-internal age transitions.
+    from .terrain_nomad_effects import absorb_survivor_camps
+    absorb_survivor_camps(result,survivors,age)
     rebuild_tail(result,cfg,survivors,'age',age,evaluate=bool(cfg.magic_enabled))
     if final:
         # The simulation ends with promotions. Accumulation alone cannot seat anybody
@@ -519,6 +527,7 @@ def generate_history(cfg):
         previous_layers={k:(layers[k] if k in layers else previous_layers.get(k)) for k in result['layers']}
         previous_state={k:(state[k] if k in state else previous_state.get(k)) for k in STATE_KEYS}
     for stage in range(1,cfg.phase+1):
+        terrain_profile.begin(stage,STAGES[stage-1])
         if stage<=5:
             result=generate_base(replace(cfg,phase=stage))
             # Climate/biome inspection belongs to stage 8 in this recipe.
@@ -572,7 +581,9 @@ def generate_history(cfg):
             _attach_npcs(result)
             _attach_key_locations(result)
             _attach_key_location_plans(result)
+        terrain_profile.mark()
         capture(stage)
+        terrain_profile.end(result,snapshots)
     result['generator_version']=16
     result['config']=asdict(cfg);result['effective_config']['world_recipe']=3;result['effective_config']['phase']=cfg.phase
     result['phases'].update(version=2,completed=cfg.phase,titles=STAGES)
@@ -656,15 +667,17 @@ def validate_age_world(world):
         if type(moon['tilt_max_degrees']) not in (int,float) or not TILT_RANGE[0]<=moon['tilt_max_degrees']<=TILT_RANGE[1]:
             raise ValueError('Invalid moon tilt')
         if moon['great_year_days']!=math.lcm(*moon['periods'].values()):raise ValueError('Invalid great year')
-        if world['settlements']['version']!=15 or world['civilizations']['version']!=3:
+        if world['settlements']['version']!=16 or world['civilizations']['version']!=3:
             raise missing_block('settlements','This world carries a retired settlement '
                                 'or civilization version. Regenerate it.')
         # A rural report older than 7 pinned its fortresses to a static count. Advancing
         # it would rebuild the hinterland under the derived demand and hand back a world
         # whose two ages disagree about how much route defence it ever wanted.
-        if world['humans']['version']!=8:
+        if world['humans']['version']!=9:
             raise missing_block('humans','This world carries a rural report older than '
-                                'version 8, which pinned fortresses to a static count. '
+                                'version 9, whose coastal harbours could stand on the '
+                                'same node as a fortress, and older than version 8, '
+                                'which pinned fortresses to a static count. '
                                 'Advancing it would hand back a world whose two ages '
                                 'disagree about how much route defence it wanted.')
         from .civilization_registry import registry_identity

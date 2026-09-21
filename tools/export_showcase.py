@@ -15,6 +15,28 @@ WORLDS = [
 ]
 
 
+REFUSE_MB = 100
+ADVISORY_MB = 50
+
+
+def page_size_verdict(megabytes):
+    """'refuse', 'warn' or 'ok' for one page.
+
+    GitHub warns above 50 MB per file and refuses above 100, and Pages caps a site at 1 GB.
+    Every main merge commits these bundles into the portfolio repository, so an unnoticed
+    growth becomes permanent history there rather than merely a slow test.
+
+    A function rather than two inline comparisons so the boundaries can be checked without
+    generating a world: provoking a real oversized page costs three size-65 generations,
+    which is the cost board/done/PERF-SHOWCASE-TEST-COST.md exists to talk about.
+    """
+    if megabytes >= REFUSE_MB:
+        return 'refuse'
+    if megabytes >= ADVISORY_MB:
+        return 'warn'
+    return 'ok'
+
+
 def omit_timings(value):
     """Keep the renderer's timing map, without nondeterministic wall-clock values."""
     if isinstance(value, dict):
@@ -31,8 +53,10 @@ def main():
     parser.add_argument('--allow-dirty', action='store_true', help='Local verification only; marks the bundle as an uncommitted, non-publishable preview')
     args = parser.parse_args()
     source = args.source.resolve()
-    revision = subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip()
-    dirty = bool(subprocess.check_output(['git', '-C', str(source), 'status', '--porcelain'], text=True).strip())
+    # Both bounded: `git status --porcelain` over a tree carrying a 162 MB fixture is the
+    # slowest call here and still finishes in seconds, so a minute is a hang, not a stall.
+    revision = subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True, timeout=60).strip()
+    dirty = bool(subprocess.check_output(['git', '-C', str(source), 'status', '--porcelain'], text=True, timeout=120).strip())
     if dirty and not args.allow_dirty:
         parser.error('Source checkout must be clean so the published revision identifies the generated code.')
     sys.path.insert(0, str(source / 'tools'))
@@ -64,17 +88,20 @@ def main():
                                       seed=seed, recipe=world['recipe'], bytes=len(payloads[filename]),
                                       sha256=hashlib.sha256(payloads[filename]).hexdigest()))
         print(slug, len(payloads[filename]), 'bytes', flush=True)
-    # Every main merge commits these into the portfolio repository, so an
-    # unnoticed growth in payload size becomes permanent history there. GitHub
-    # warns above 50 MB per file, refuses above 100 MB, and Pages caps a site at
-    # 1 GB. Fail before publishing something the destination cannot accept.
-    for world in manifest['worlds']:
-        megabytes = world['bytes'] / 1_000_000
-        if megabytes >= 100:
-            parser.error(f"{world['file']} is {megabytes:.1f} MB; GitHub rejects files at 100 MB. "
+        # Checked HERE, inside the generation loop, rather than in a second pass over the
+        # finished manifest. The refusal is the cheapest failure this tool has -- a world
+        # too large to publish -- and in the second-pass form it arrived only after every
+        # world had been generated, so two worlds' cost bought a verdict the first world
+        # already determined. It has fired that way on record. Each page is now judged as
+        # soon as it exists, and an unpublishable one stops the run before the next
+        # generation starts.
+        megabytes = len(payloads[filename]) / 1_000_000
+        verdict = page_size_verdict(megabytes)
+        if verdict == 'refuse':
+            parser.error(f"{filename} is {megabytes:.1f} MB; GitHub rejects files at {REFUSE_MB} MB. "
                          'Reduce the showcase grid size or stop embedding build_stages in the bundle.')
-        if megabytes >= 50:
-            print(f"WARNING: {world['file']} is {megabytes:.1f} MB, above GitHub's 50 MB advisory limit; "
+        if verdict == 'warn':
+            print(f"WARNING: {filename} is {megabytes:.1f} MB, above GitHub's {ADVISORY_MB} MB advisory limit; "
                   'the portfolio repository grows by this much on every main merge.', flush=True)
 
     template = Path(__file__).with_name('fantasy-world-generator-showcase.html').read_text(encoding='utf-8')

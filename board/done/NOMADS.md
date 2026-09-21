@@ -37,7 +37,7 @@ Cult prevalence is a function of how violent the world's history was, not an aut
 Next actions are carded rather than left in prose:
 
 - `board/backlog/NOMAD-FISSION.md` — `fission` is a declared branch kind that never appears.
-- `board/backlog/NOMAD-SURVIVOR-SETTLEMENT.md` — nothing adopts `settlement_candidates`.
+- `board/done/NOMAD-SURVIVOR-SETTLEMENT.md` — nothing adopted `settlement_candidates`; closed 2026-09-21 by absorption into the refuge rather than by founding.
 - `board/backlog/NOMAD-CARAVAN-ECONOMY.md` — nothing reads `caravan_throughput`.
 - `board/backlog/NOMAD-IRRUPTION-TRIGGER.md` — swarms erupt every year because there are no years; depends on the queued time-control work.
 - `board/backlog/NOMAD-CORRUPTION-CONTRACT.md` — the `pending_ley_edits` applier contract was agreed with a session that has since closed and can no longer be confirmed by its author.

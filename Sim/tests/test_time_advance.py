@@ -4,7 +4,9 @@ import pathlib
 import unittest
 
 from icarus_sim import terrain_time_schedule as schedule
-from icarus_sim.terrain_time import advance_time_request, age_gate, cost_estimate, clock
+from icarus_sim.terrain_time import (AGE_TURNED, CLOSED_REASONS, LEY_AGE_HIGH, LEY_AGE_LOW,
+                                     LEY_YEAR_HIGH, LEY_YEAR_LOW, advance_time_request,
+                                     age_gate, cost_estimate, clock)
 from icarus_sim.terrain_liveness import liveness, is_present, present, census
 from icarus_sim.terrain_villains import claim_influence, FALLEN_CLAIM_INFLUENCE, CLAIM_INFLUENCE_FLOOR
 
@@ -22,6 +24,17 @@ def _state(world):
     history.pop('replay', None)
     out['history'] = history
     return json.dumps(out, sort_keys=True, allow_nan=False)
+
+
+def _unclocked(world):
+    """`_state` without `world_clock`, for the refusals that report the clock they read.
+
+    A reported refusal returns the caller's world with the clock it was measured against
+    and the report attached, and changes nothing else. A world that has never been ticked
+    carries no clock at all, so comparing that key would compare a key against its own
+    absence rather than comparing two worlds.
+    """
+    return _state({k: v for k, v in world.items() if k != 'world_clock'})
 
 
 class ScheduleTests(unittest.TestCase):
@@ -45,7 +58,24 @@ class ScheduleTests(unittest.TestCase):
         self.assertEqual(schedule.band(720.), schedule.LONG)
         self.assertEqual(schedule.band(schedule.elapsed_days({'years': 30})), schedule.LONG)
         self.assertEqual(schedule.band(schedule.elapsed_days({'years': 5000})), schedule.AGE)
-        self.assertEqual(schedule.ages_for(schedule.elapsed_days({'years': 5000})), 50)
+        self.assertEqual(schedule.ages_for(schedule.elapsed_days({'years': 5000})), 1)
+        self.assertEqual(schedule.ages_for(schedule.elapsed_days({'years': 250000})), 50)
+
+    def test_a_century_is_a_long_tick_and_not_an_age_advance(self):
+        """An age is five thousand years, so a century is one fiftieth of one.
+
+        `band` returned `AGE` at a hundred years while `AGE_YEARS` was `100.`, so a span
+        that size rebuilt every derived layer, regenerated the cast and cleared the board.
+        Under `docs/decisions/028-an-age-is-five-thousand-years.md` it moves the living
+        layer and nothing else.
+        """
+        century = schedule.elapsed_days({'years': 100})
+        self.assertEqual(schedule.band(century), schedule.LONG)
+        self.assertEqual(schedule.ages_for(century), 0)
+        self.assertEqual(schedule.plan(0., century)['ages'], 0)
+        # And the age band still begins at exactly one age, not at one age plus a day.
+        self.assertEqual(schedule.band(schedule.AGE_DAYS), schedule.AGE)
+        self.assertEqual(schedule.band(schedule.AGE_DAYS - 1.), schedule.LONG)
 
     def test_a_span_runs_what_it_crosses_and_nothing_else(self):
         """Three seconds runs nothing because three seconds crosses nothing.
@@ -151,6 +181,194 @@ class ScheduleTests(unittest.TestCase):
         names = {name for _, name, _ in schedule.steps(0., 400.)}
         self.assertIn('ley_drift', names)
         self.assertIn('quests', names)
+
+
+class WorkCeilingTests(unittest.TestCase):
+    """The cost guard keyed on work rather than on band membership. Pure: no world.
+
+    Decision 028 moved the age boundary from a century to five thousand years, which moved
+    a fifty-fold cost increase onto the unguarded side of the one guard this module had:
+    `cost_estimate`, `age_gate` and the ages-per-request cap are all reached only when the
+    band is `AGE`. Below that boundary a span was executed however long it was, and the
+    longest such span is now 4,999 years -- 1.8 million cadence steps.
+    """
+
+    # A span named in years, deliberately NOT derived from `MAX_TICK_STEPS` by arithmetic.
+    # `SDET-CEILING-SENTINELS` records three rejection tests whose sentinel was "one above
+    # the current limit": when the limit moved, each sentinel became legal work and a
+    # 0.1 s rejection turned into a 48 s generation, with no signal but a slower suite.
+    # The precondition is asserted instead, so raising the ceiling past this span fails
+    # loudly here rather than quietly ticking a millennium inside a rejection test.
+    SENTINEL_YEARS = 1000
+
+    def sentinel_days(self):
+        return self.SENTINEL_YEARS * schedule.DAYS_PER_YEAR
+
+    def test_the_sentinel_is_still_outside_the_ceiling(self):
+        """The guard on this class's own sentinel, which is the trap that keeps being sprung."""
+        from icarus_sim.terrain_time import MAX_TICK_STEPS
+        work = schedule.work(0., self.sentinel_days())
+        self.assertLess(MAX_TICK_STEPS, work,
+                        'MAX_TICK_STEPS has been raised above this class\'s sentinel of %d '
+                        'years (%d steps). The rejection tests below now *execute* that '
+                        'span instead of refusing it. Choose a new sentinel deliberately; '
+                        'do not derive one from the constant.'
+                        % (self.SENTINEL_YEARS, work))
+
+    def test_the_counter_and_the_enumerator_agree(self):
+        """`work` answers exactly the question `steps` answers, for every span.
+
+        It exists so the guard can answer before the step list is built -- a span just
+        under an age is 1.8 million tuples and `plan` used to build a second copy -- and a
+        counter that answers a slightly different question than the enumerator is the
+        near-miss this repository keeps finding. So it is checked against the enumerator
+        rather than against a formula.
+        """
+        for now in (0., 0.5, 17., 359.9, 1234.5):
+            for days in (0., .25, 1., 89., 90., 400., 720., 7200.):
+                with self.subTest(now=now, days=days):
+                    self.assertEqual(schedule.work(now, days),
+                                     len(schedule.steps(now, days)))
+
+    def test_the_plan_still_reports_what_it_always_reported(self):
+        """`plan` counts crossings instead of materialising them; the document is identical."""
+        for now, days in ((0., 400.), (13.5, 7200.), (1234.5, 90.)):
+            with self.subTest(now=now, days=days):
+                counts = {}
+                for _, name, _ in schedule.steps(now, days):
+                    counts[name] = counts.get(name, 0) + 1
+                plan = schedule.plan(now, days)
+                self.assertEqual(plan['by_cadence'], dict(sorted(counts.items())))
+                self.assertEqual(plan['steps'], sum(counts.values()))
+
+    def test_the_ceiling_is_an_absolute_count_and_not_a_share_of_an_age(self):
+        """It must not move when the length of an age moves.
+
+        A ceiling written as a fraction of `AGE_DAYS` would re-couple the guard to the band
+        boundary, which is the defect this card is about: how much work a box can afford
+        does not change when the calendar is redefined. The number is a measurement, so it
+        moves only when something is measured again.
+        """
+        import io
+        import pathlib
+        import tokenize
+        path = pathlib.Path(__file__).resolve().parents[1] / 'icarus_sim' / 'terrain_time.py'
+        source = io.StringIO(path.read_text(encoding='utf-8')).readline
+        code = [tok for tok in tokenize.generate_tokens(source)
+                if tok.type not in (tokenize.COMMENT, tokenize.STRING, tokenize.NL,
+                                    tokenize.NEWLINE, tokenize.INDENT, tokenize.DEDENT)]
+        line = next((tok.start[0] for tok in code if tok.string == 'MAX_TICK_STEPS'), None)
+        self.assertIsNotNone(line, 'MAX_TICK_STEPS must be a module constant')
+        assignment = [tok.string for tok in code if tok.start[0] == line]
+        for forbidden in ('AGE_DAYS', 'AGE_YEARS', 'schedule'):
+            self.assertNotIn(forbidden, assignment,
+                             'the work ceiling must not be derived from the age length')
+
+
+class LeyDriftCompositionTests(unittest.TestCase):
+    """A year-step composed over one whole age must land in the age transition's own band.
+
+    This is the half of `docs/decisions/028-an-age-is-five-thousand-years.md` that is
+    silent when it breaks, and it is the reason the age length and the ley bounds are one
+    change rather than two. Every individual step stays inside its stated per-year bounds
+    while the composition over an age leaves the band entirely: the pair that composes
+    correctly over a century is `0.65 ** 0.01`, and over the five thousand years an age now
+    lasts that composes to `0.65 ** 50` -- about 2e-10. The magic layer drains to zero
+    through ordinary ticking, with nothing out of range anywhere to notice.
+
+    So the exponent is derived from `AGE_YEARS` in `terrain_time` rather than written as a
+    literal, and these two tests fail the moment anybody writes it as one. They are pure:
+    no world, no clock, no generation.
+    """
+
+    def test_the_year_bounds_are_the_age_bounds_taken_to_one_over_an_age(self):
+        """The arithmetic, stated directly. Fails at `1/100` with a five-thousand-year age."""
+        self.assertAlmostEqual(LEY_YEAR_LOW ** schedule.AGE_YEARS, LEY_AGE_LOW, places=9)
+        self.assertAlmostEqual(LEY_YEAR_HIGH ** schedule.AGE_YEARS, LEY_AGE_HIGH, places=9)
+        # A year is a smaller move than an age in both directions, never the same one.
+        self.assertLess(LEY_AGE_LOW, LEY_YEAR_LOW)
+        self.assertLess(LEY_YEAR_LOW, 1.)
+        self.assertLess(1., LEY_YEAR_HIGH)
+        self.assertLess(LEY_YEAR_HIGH, LEY_AGE_HIGH)
+
+    def test_an_age_of_year_steps_stays_inside_the_age_band(self):
+        """The real drift pass, run for one whole age of year steps.
+
+        The arithmetic above could be satisfied by a constant nothing reads. This drives
+        `_ley_drift` itself -- the same random walk a ticking world runs, keyed on the same
+        absolute year indices -- and asserts both halves of the failure at once: every
+        single step is inside its stated per-year bounds, and the product of all of them is
+        inside the age's.
+        """
+        from icarus_sim.terrain_time import _ley_drift
+
+        class Cfg:
+            magic_enabled = 1
+            seed = 42
+
+        cfg = Cfg()
+        start = 1.
+        world = {'magic': {'networks': {'weave': {'nodes': [{'id': 'ley-1', 'intensity': start}],
+                                                  'edges': []}}}}
+        node = world['magic']['networks']['weave']['nodes'][0]
+        previous = node['intensity']
+        for index in range(1, int(schedule.AGE_YEARS) + 1):
+            self.assertTrue(_ley_drift(world, cfg, index), 'the pass must report that it moved')
+            ratio = node['intensity'] / previous
+            self.assertGreaterEqual(ratio, LEY_YEAR_LOW - 1e-12, 'year %d' % index)
+            self.assertLessEqual(ratio, LEY_YEAR_HIGH + 1e-12, 'year %d' % index)
+            previous = node['intensity']
+        composed = node['intensity'] / start
+        self.assertGreaterEqual(composed, LEY_AGE_LOW,
+                                'an age of year-steps drained the field below the age band: '
+                                '%r, against a floor of %r' % (composed, LEY_AGE_LOW))
+        self.assertLessEqual(composed, LEY_AGE_HIGH,
+                             'an age of year-steps drove the field above the age band: %r' % composed)
+
+
+class QuestReasonVocabularyTests(unittest.TestCase):
+    """`closed_reason` is a published vocabulary and has exactly one home."""
+
+    def test_the_published_enum_is_the_vocabulary_the_writers_use(self):
+        """A token written and not published cannot be branched on by any consumer."""
+        root = pathlib.Path(__file__).resolve().parents[2]
+        schema = json.loads((root / 'Contracts' / 'schemas' / 'read-quests.schema.json')
+                            .read_text(encoding='utf-8'))
+        published = schema['$defs']['quest']['properties']['closed_reason']['enum']
+        self.assertEqual(sorted(token for token in published if token is not None),
+                         sorted(CLOSED_REASONS))
+        self.assertIn(None, published, 'a quest that has not closed carries no reason')
+
+    def test_an_age_turning_is_not_a_hook_vanishing(self):
+        """Two different facts about why a quest ended, and a player is owed both.
+
+        `hook_gone` is this hook leaving `heroes.quest_hooks` while the world around it
+        stands. `age_turned` is five thousand years passing and taking everyone who could
+        have offered or populated the quest. A consumer handed one token for both cannot
+        tell a player whether their quest went away or their age did.
+        """
+        self.assertNotEqual(AGE_TURNED, 'hook_gone')
+        for token in (AGE_TURNED, 'hook_gone'):
+            self.assertIn(token, CLOSED_REASONS, token)
+
+    def test_an_age_turn_does_not_start_a_quest_lifecycle_that_never_began(self):
+        """The lifecycle begins when a world is first ticked, not when an age turns.
+
+        `POST /world/quests` refuses a world that has never been advanced, because no
+        quests and no quest lifecycle are different facts. An age turn continues a
+        lifecycle; it does not start one, and a world that has never carried a board does
+        not acquire one by being advanced five thousand years.
+        """
+        from icarus_sim.terrain_time import _turn_age_board
+
+        class Cfg:
+            magic_enabled = 1
+            seed = 42
+
+        world = {'heroes': {'status': 'ok', 'people': [],
+                            'quest_hooks': [{'hook_id': 'hook-1', 'giver_uid': 'hero-1'}]}}
+        _turn_age_board(world, Cfg(), 1800000.)
+        self.assertNotIn('quests', world)
 
 
 class LivenessTests(unittest.TestCase):
@@ -408,16 +626,36 @@ class WorldTimeTests(unittest.TestCase):
         self.assertAlmostEqual(out['magic']['lunar_surge']['day'], out['world_clock']['day'])
 
     def test_five_thousand_years_is_an_age_advance_and_says_so(self):
+        """One age exactly, and nothing is advanced until a caller says `commit`."""
         out = self.advance(self.world, {'years': 5000})
         report = out['time_advance']
         self.assertEqual(report['band'], 'age')
-        self.assertEqual(report['ages'], 50)
+        self.assertEqual(report['ages'], 1)
         self.assertFalse(report['committed'])
         self.assertIn('cost_estimate', report)
         self.assertEqual(out['history']['ages'], self.world['history']['ages'])
+        # The cap is fifty ages and it is now a quarter of a million years.
+        capped = self.advance(self.world, {'years': 250000})
+        self.assertEqual(capped['time_advance']['ages'], 50)
+        self.assertNotIn('blocked', capped['time_advance'])
+
+    def test_a_century_moves_the_living_layer_and_not_the_ground(self):
+        """Decision 028, point 3, against a real world rather than the schedule alone.
+
+        A hundred years used to be an age advance: every derived layer rebuilt, the cast
+        regenerated, the board cleared. It is one fiftieth of an age and it is a tick.
+        """
+        out = self.advance(self.world, {'years': 100})
+        self.assertEqual(out['time_advance']['band'], 'long')
+        self.assertTrue(out['time_advance']['committed'])
+        self.assertEqual(out['history']['ages'], self.world['history']['ages'])
+        # Ground and cast are read-only to a tick, however long the tick is.
+        for key in ('settlements', 'city_plans', 'humans', 'heroes', 'npcs', 'key_locations'):
+            if key in self.world:
+                self.assertEqual(out.get(key), self.world.get(key), key)
 
     def test_an_age_span_commits_when_asked(self):
-        out = self.advance(self.world, {'years': 100}, commit=True)
+        out = self.advance(self.world, {'years': 5000}, commit=True)
         self.assertEqual(out['time_advance']['band'], 'age')
         self.assertTrue(out['time_advance']['committed'])
         self.assertEqual(len(out['history']['ages']), len(self.world['history']['ages']) + 1)
@@ -463,27 +701,107 @@ class WorldTimeTests(unittest.TestCase):
         self.assertEqual(_state(whole), _state(stepped))
 
     def test_an_age_span_with_a_remainder_keeps_the_remainder(self):
-        """`advance(150y)` must equal `advance(100y)` then `advance(50y)`.
+        """One age and thirty days must equal one age, then thirty days.
 
         The age band floored the span to whole ages and dropped the rest, while still
         reporting the requested elapsed -- a counterexample to the invariant that needed no
         band table, and an operation log that described a move the clock never made.
+
+        The cut is expressed in days rather than years because the band boundary moved with
+        `AGE_YEARS`: a hundred and fifty years used to be an age plus fifty and is now a
+        `LONG` tick that crosses no age at all. The claim is about a cut that straddles the
+        age boundary, so it has to be written against that boundary and not against a
+        number that once sat on it.
         """
         start = clock(self.world)['day']
-        whole = self.advance(self.world, {'years': 150}, commit=True)
-        self.assertAlmostEqual(whole['world_clock']['day'], start + 150 * schedule.DAYS_PER_YEAR)
-        self.assertAlmostEqual(whole['time_advance']['to_day'], start + 150 * schedule.DAYS_PER_YEAR)
-        stepped = self.advance(self.advance(self.world, {'years': 100}, commit=True), {'years': 50})
+        span = schedule.AGE_DAYS + 30.
+        whole = self.advance(self.world, {'days': span}, commit=True)
+        self.assertEqual(whole['time_advance']['ages'], 1)
+        self.assertAlmostEqual(whole['world_clock']['day'], start + span)
+        self.assertAlmostEqual(whole['time_advance']['to_day'], start + span)
+        stepped = self.advance(self.advance(self.world, {'years': 5000}, commit=True), {'days': 30})
         self.assertAlmostEqual(stepped['world_clock']['day'], whole['world_clock']['day'])
+        # And it is the same world, not merely the same clock: the age turn and the tick
+        # after it are both keyed on simulated time, so the call boundary cannot reach them.
+        self.assertEqual(_state(whole), _state(stepped))
 
     def test_an_unbounded_span_is_refused_with_its_estimate(self):
-        """A million years is ten thousand age rebuilds, not a request to attempt."""
+        """A million years is two hundred age rebuilds, not a request to attempt."""
         out = self.advance(self.world, {'years': 1000000}, commit=True)
         report = out['time_advance']
         self.assertFalse(report['committed'])
         self.assertIn('blocked', report)
         self.assertIn('cost_estimate', report['blocked'])
         self.assertEqual(out['history']['ages'], self.world['history']['ages'])
+
+    def test_a_tick_past_the_work_ceiling_is_reported_rather_than_executed(self):
+        """The guard the age band always had, on the band a game actually drives.
+
+        Reported and not raised, matching the age gate: a caller that asked for a
+        millennium deserves the estimate and the reason together, and an exception throws
+        away the more useful half.
+        """
+        from icarus_sim.terrain_errors import SCHEMA
+        from icarus_sim.terrain_time import MAX_TICK_STEPS
+        years = WorkCeilingTests.SENTINEL_YEARS
+        out = self.advance(self.world, {'years': years})
+        report = out['time_advance']
+        self.assertFalse(report['committed'])
+        self.assertIn('blocked', report)
+        self.assertEqual(report['blocked']['schema'], SCHEMA)
+        self.assertEqual(report['blocked']['field'], 'elapsed')
+        self.assertIn('cost_estimate', report['blocked'])
+        # The suggestion must be a span this API accepts, not the ceiling restated as a
+        # value for a field that never carried steps -- and sending it straight back must
+        # be permitted, which is the only form of "a value that would work" worth the name.
+        # So it is sent back, rather than the guard's own condition being restated here.
+        from icarus_sim.terrain_errors import CLAMP
+        suggestion = report['blocked']['suggestion']
+        self.assertEqual(suggestion['kind'], CLAMP)
+        suggested = schedule.work(clock(self.world)['day'], suggestion['value']['days'])
+        self.assertLessEqual(suggested, MAX_TICK_STEPS)
+        # Sending it back *runs* it, so this assertion has a cost, and that cost follows
+        # the ceiling. Bounded against a literal as well so raising the ceiling cannot
+        # quietly turn a four-second test into an hour-long one -- the SDET-CEILING-SENTINELS
+        # shape arriving from the other side, where work grows instead of a rejection
+        # becoming work.
+        self.assertLessEqual(suggested, 250000,
+                             'MAX_TICK_STEPS has been raised far enough that this test now '
+                             'ticks a span nobody sized for a test suite; bound it deliberately')
+        accepted = self.advance(self.world, {'days': suggestion['value']['days']})
+        self.assertTrue(accepted['time_advance']['committed'],
+                        'the suggested span must not itself be refused')
+        # Both units, because a step is what costs and a year is what a caller asks in.
+        self.assertEqual(report['steps'], schedule.work(clock(self.world)['day'],
+                                                        years * schedule.DAYS_PER_YEAR))
+        self.assertGreater(report['steps'], MAX_TICK_STEPS)
+        self.assertEqual(report['elapsed_days'], years * schedule.DAYS_PER_YEAR)
+        # Nothing ran. `world_clock` is excluded because the report carries the clock the
+        # refusal was measured against, exactly as the age gate's refusal does, and a
+        # world that has never been ticked carries no clock at all to compare it with.
+        self.assertEqual(_unclocked(out), _unclocked(self.world))
+        self.assertEqual(len((out.get('history') or {}).get('operations') or []),
+                         len((self.world.get('history') or {}).get('operations') or []))
+
+    def test_the_longest_span_the_long_band_can_hold_is_refused(self):
+        """4,999 years: the span decision 028 moved onto the unguarded side of the guard."""
+        out = self.advance(self.world, {'years': 4999})
+        report = out['time_advance']
+        self.assertEqual(report['band'], schedule.LONG)
+        self.assertFalse(report['committed'])
+        self.assertIn('blocked', report)
+        self.assertEqual(_unclocked(out), _unclocked(self.world))
+
+    def test_commit_ticks_a_span_past_the_ceiling_anyway(self):
+        """`commit` proceeds, exactly as it does for the age band. The ceiling advises."""
+        years = WorkCeilingTests.SENTINEL_YEARS
+        out = self.advance(self.world, {'years': years}, commit=True)
+        report = out['time_advance']
+        self.assertTrue(report['committed'])
+        self.assertNotIn('blocked', report)
+        self.assertAlmostEqual(out['world_clock']['day'],
+                               clock(self.world)['day'] + years * schedule.DAYS_PER_YEAR)
+        self.assertEqual(out['history']['operations'][-1]['band'], schedule.LONG)
 
     def test_a_quest_whose_hook_disappears_is_closed(self):
         """The reaper walked hooks, so a quest whose hook vanished was immortal.
@@ -501,6 +819,56 @@ class WorldTimeTests(unittest.TestCase):
         self.assertTrue(after['quests']['quests'], 'the records must survive')
         self.assertTrue(all(q['state'] != 'offered' for q in after['quests']['quests']))
         self.assertIn('hook_gone', [q['closed_reason'] for q in after['quests']['quests']])
+        # And `hook_gone` is what a hook vanishing under a standing world is called. An age
+        # turn is a different fact and carries a different reason.
+        self.assertNotIn(AGE_TURNED, [q['closed_reason'] for q in after['quests']['quests']])
+
+    def test_an_age_turn_closes_every_open_quest_because_the_age_turned(self):
+        """A quest does not cross an age, and not by luck.
+
+        Reaping used to happen by accident: `_quest_step` walks hook ids and an age
+        transition regenerates `heroes` wholesale, so most ids vanished and their quests
+        closed as `hook_gone`. Most is not all. The regenerated cast re-mints positional
+        uids -- `hero-reeve-hamlet-0`, `hero-sovereign-<city uid>` -- as the same string, so
+        a quest whose id was minted twice survived pointing at a hook nobody wrote it for:
+        the old age's `anchor`, `verb` and `stated_purpose`, the new age's target check, and
+        a `giver_uid` naming someone who no longer exists. Measured 2026-09-21: 39 closed,
+        10 survived.
+
+        So the assertion is over *every* open quest and is keyed on the age turning, never
+        on whether an id happened to disappear.
+        """
+        ticked = self.advance(self.world, {'days': 30})
+        before = [quest for quest in (ticked.get('quests') or {}).get('quests') or []
+                  if quest['state'] in ('offered', 'taken')]
+        if not before:
+            self.skipTest('this world raised no quest hooks')
+        out = self.advance(ticked, {'years': 5000}, commit=True)
+        board = out['quests']['quests']
+        reaped = {entry['quest_id'] for entry in out['quests']['log']
+                  if entry.get('event') == AGE_TURNED}
+        self.assertEqual(reaped, {quest['quest_id'] for quest in before},
+                         'every quest open when the age turned must close because it turned')
+        # No survivor, by id or by state. This is the assertion the ten chimeras failed.
+        carried = [quest['quest_id'] for quest in board
+                   if quest['quest_id'] in {q['quest_id'] for q in before}
+                   and quest.get('offered_day') != out['world_clock']['day']]
+        self.assertEqual(carried, [], 'a quest outlived the age that raised it')
+        # The board is the new age's, rebuilt from the cast this age raised.
+        hooks = [hook['hook_id'] for hook in (out['heroes'].get('quest_hooks') or [])]
+        self.assertEqual(sorted(quest['quest_id'] for quest in board), sorted(hooks))
+        self.assertTrue(board, 'the new age must raise a board of its own')
+        for quest in board:
+            self.assertEqual(quest['offered_day'], out['world_clock']['day'], quest['quest_id'])
+            self.assertNotEqual(quest.get('closed_reason'), AGE_TURNED,
+                                'a quest opened by the turn cannot also have been reaped by it')
+        # A giver on the new board is somebody this age holds, which is the whole point.
+        givers = {person.get('uid') for person in (out['heroes'].get('people') or [])}
+        givers |= {person.get('uid') for person in (out['heroes'].get('dreads') or [])}
+        givers |= {person.get('uid') for person in ((out.get('npcs') or {}).get('people') or [])}
+        unknown = [quest['quest_id'] for quest in board if quest['giver_uid'] not in givers]
+        self.assertEqual(unknown, [], 'a rebuilt board names a giver the new age does not hold')
+
 
     def test_the_nomad_write_backs_are_reapplied_when_the_bands_are(self):
         """`add_nomads` replaces the block wholesale, discarding `nomads.effects`."""

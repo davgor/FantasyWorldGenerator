@@ -1,13 +1,13 @@
 {
   "schema": "fantasy-world-generator.hero-generator-fixture",
-  "fixture_version": 8,
-  "notes": "A hand-built two-age world (four ruins including a self-destroyed college, two wars, one dragon, ley key points, two realms) and the projection of the cast it must yield under the recorded policy revisions, including every precipitation roll across all four wells. Names now come from the heritage language genome keyed on civilization_id rather than from parent-race syllable tables, and realms carry a native name beside the English english_name. Regenerate with Sim/tests/test_hero_generator.world() when a policy or heritage revision changes, and bump fixture_version. Fixture 8 (names revision 6): one display name only, `Keeper of the fire Stone` to `Keeper of the Fire Stone`. A school filled inside a title now uses the capitalised `{School}` token; no draw changed, so exactly one rendered string moved and nothing else in the cast did.",
+  "fixture_version": 9,
+  "notes": "A hand-built two-age world (four ruins including a self-destroyed college, two wars, one dragon, ley key points, two realms) and the projection of the cast it must yield under the recorded policy revisions, including every precipitation roll across all four wells. Names now come from the heritage language genome keyed on civilization_id rather than from parent-race syllable tables, and realms carry a native name beside the English english_name. Regenerate with Sim/tests/test_hero_generator.world() when a policy or heritage revision changes, and bump fixture_version. Fixture 9 (wells revision 6): the quest rubric landed in wells.json, so every quest hook now carries verb, difficulty, target_node and unsited_reason. No draw reads that section, so not one person, roll, bond or mantle pinned below moved; only the recorded wells revision did.",
   "policy_revision": {
     "archetypes": 4,
     "axis_overlays": 1,
     "alignment": 1,
     "names": 6,
-    "wells": 5
+    "wells": 6
   },
   "world": {
     "config": {

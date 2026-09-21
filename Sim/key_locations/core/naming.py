@@ -1,12 +1,13 @@
 """Names for places, in the idiom the rest of the tree already uses for sites.
 
-The generator names cities by round-robin over twelve nature words plus the literal string
-" City", and every ruin, realm and quest hook inherits those strings. That is a real gap and
-worth its own ticket, but it is not this one's to fix, so key locations do what
-``hero_generator`` does for sites: descriptor templates filled from world facts — "the
-farmstead below Alder", "the shrine of The Red Field at Fern". A place named for what it is
-and what it is near reads better than a syllable-generated proper noun attached to nothing,
-and it stays honest about how much this world actually knows.
+The generator once named cities by round-robin over twelve nature words plus the literal
+string " City", and every ruin, realm and quest hook inherited those strings. It no longer
+does: ``heritage.settlement_name`` draws a city's name from its own people's lexicon, so
+the names arriving here are already proper nouns of the world. Key locations still do what
+``hero_generator`` does for sites — descriptor templates filled from world facts, "the
+farmstead below Bargdorn", "the shrine of The Red Field at Frosnord" — because a place
+named for what it is and what it is near reads better than a bare proper noun attached to
+nothing, and it stays honest about how much this world actually knows.
 
 Pure: no filesystem, no network, no engine, no generator imports.
 """
@@ -15,14 +16,19 @@ ADJECTIVES = ('old', 'drowned', 'broken', 'quiet', 'hollow', 'grey', 'low', 'far
               'long', 'black', 'dry', 'cold', 'deep', 'lost', 'crooked', 'silent', 'thin',
               'red', 'high', 'sunken', 'blind', 'empty', 'pale')
 FALLBACK_NEAR = 'the waste'
-SUFFIX = ' City'
 
 
 def short_name(name):
-    """``'Fern City'`` becomes ``'Fern'``; anything else is left alone."""
+    """A place's name as the generator wrote it, or ``None`` when it has none.
+
+    It used to cut a trailing ``' City'`` off, back when the generator appended one. It
+    does not any more: a name that ends in those characters is now the name, and cutting
+    them would rename the place. What is left is the empty-to-``None`` normalisation the
+    descriptor templates need, which is the only part of this that was ever load-bearing.
+    """
     if not name:
         return None
-    return name[:-len(SUFFIX)] if name.endswith(SUFFIX) else name
+    return name
 
 
 def nearest(records, point, distance_of):

@@ -32,7 +32,7 @@ def build_debug(world):
             if other is s or 'direction' not in s or 'direction' not in other:continue
             distances.append(radius*math.acos(max(-1,min(1,sum(a*b for a,b in zip(s['direction'],other['direction']))))))
         cities.append({'uid':s.get('uid',str(s.get('id'))),'name':s['name'],'civilization':s.get('population_profile'),
-                       'parent_race':s.get('parent_race_id'),'population':population,'nearest_city_m':min(distances) if distances else None,
+                       'parent_race':s.get('parent_race_id'),'urban_population_estimate':population,'nearest_city_m':min(distances) if distances else None,
                        'stats':p.get('stats',{}),'placement':p.get('debug',{}),'unplaced':p.get('unplaced',[]),
                        'junctions':Counter(c['status'] for c in p.get('road_connections',[]))})
     for snap in world.get('build_stages',[]):

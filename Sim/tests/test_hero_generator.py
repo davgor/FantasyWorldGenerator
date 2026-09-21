@@ -25,7 +25,6 @@ def certain():
         rule['base'] = 1.
     policies['wells']['cap'] = 1.
     return policies
-from hero_generator.seeds import child_seed
 
 
 def direction(lon_deg, lat_deg):
@@ -345,6 +344,93 @@ class FacesAndHooksTests(unittest.TestCase):
         self.assertNotEqual(first['persona'], second['persona'])
 
 
+class QuestContractTests(unittest.TestCase):
+    """The quest contract: a hook names an anchor, a verb and a difficulty 1-5.
+
+    The generator never prices a reward. It says who is asking, what the player does, where
+    the player stands to do it, and how hard the thing is on the creature-tier rubric; the
+    consuming game turns that number into treasure.
+    """
+
+    def canonical_verbs(self):
+        """The one vocabulary, read from the roster's own policy rather than restated here.
+
+        `hero_generator` may not import a sibling package, so the list is declared twice and
+        this test is what keeps the two copies one list.
+        """
+        import pathlib
+        path = pathlib.Path(__file__).resolve().parents[1] / 'npc_roster' / 'policies' / 'posts.json'
+        return list(json.loads(path.read_text(encoding='utf-8'))['verbs'])
+
+    def fixture_world(self):
+        import pathlib
+        path = pathlib.Path(__file__).resolve().parents[2] / 'Fixtures' / 'hero-generator-v1.json'
+        return json.loads(path.read_text(encoding='utf-8'))['world']
+
+    def reference_blocks(self):
+        return (('hand-built', hero_generator.generate(world(), certain())),
+                ('pinned fixture', hero_generator.generate(self.fixture_world())))
+
+    def test_the_hook_vocabulary_is_the_roster_vocabulary(self):
+        from hero_generator import hooks as hook_rules
+        self.assertEqual(list(hook_rules.VERBS), self.canonical_verbs())
+
+    def test_every_hook_names_a_verb_and_carries_a_difficulty(self):
+        from hero_generator import hooks as hook_rules
+        for label, block in self.reference_blocks():
+            hooks = block['quest_hooks']
+            self.assertTrue(hooks, label)
+            for hook in hooks:
+                self.assertIn(hook['verb'], hook_rules.VERBS, f'{label}: {hook["hook_id"]}')
+                self.assertIsInstance(hook['difficulty'], int, f'{label}: {hook["hook_id"]}')
+                self.assertTrue(1 <= hook['difficulty'] <= 5, f'{label}: {hook["hook_id"]}')
+            # A rubric that answers the same number everywhere is not a rubric. This is the
+            # guard against the equation quietly collapsing to a constant.
+            self.assertGreater(len({h['difficulty'] for h in hooks}), 1, label)
+
+    def test_difficulty_is_the_creature_tier_of_the_thing_you_face(self):
+        """A lair's own tier is the whole answer for a slay hook: derived, never invented."""
+        for tier in (1, 2, 3, 4, 5):
+            block = hero_generator.generate(world(nest_tier=tier), certain())
+            slay = [h for h in block['quest_hooks'] if h['actual_effect']['kind'] == 'nest']
+            self.assertTrue(slay, tier)
+            self.assertEqual({h['difficulty'] for h in slay}, {tier})
+            self.assertEqual({h['verb'] for h in slay}, {'slay'})
+
+    def test_every_hook_stands_somewhere_or_says_why_it_does_not(self):
+        from hero_generator import hooks as hook_rules
+        for label, block in self.reference_blocks():
+            for hook in block['quest_hooks']:
+                where = f'{label}: {hook["hook_id"]}'
+                if hook['target_node'] is None:
+                    self.assertIn(hook['unsited_reason'], hook_rules.UNSITED_REASONS, where)
+                else:
+                    self.assertIsInstance(hook['target_node'], int, where)
+                    self.assertIsNone(hook['unsited_reason'], where)
+                # The nest hooks are the ones whose `target` was null, because a nest effect
+                # names `nest_id` and the old field only read `uid` or `node_id`.
+                self.assertIsNotNone(hook['target'], where)
+
+    def test_a_ley_key_point_stands_at_its_ruin_and_a_bare_node_stands_nowhere(self):
+        """The one place a ley objective has a position, and the one place it has none."""
+        block = hero_generator.generate(world(), certain())
+        ruins_by_id = {r['id']: r for r in world()['ruins']}
+        ley = [h for h in block['quest_hooks'] if h['actual_effect']['kind'] == 'ley_node']
+        self.assertTrue(ley)
+        keyed = [h for h in ley if h['actual_effect']['node_id'].endswith('-key')]
+        bare = [h for h in ley if not h['actual_effect']['node_id'].endswith('-key')]
+        self.assertTrue(keyed and bare)
+        for hook in keyed:
+            ruin = ruins_by_id[hook['actual_effect']['node_id'][:-4]]
+            self.assertEqual(hook['target_node'], ruin['node'], hook['hook_id'])
+            self.assertIsNone(hook['unsited_reason'])
+        for hook in bare:
+            self.assertIsNone(hook['target_node'], hook['hook_id'])
+            self.assertEqual(hook['unsited_reason'], 'ley_node_has_no_site')
+        self.assertEqual({h['verb'] for h in ley if h['actual_effect']['intensity_delta'] > 0}, {'tend'})
+        self.assertEqual({h['verb'] for h in ley if h['actual_effect']['intensity_delta'] < 0}, {'cleanse'})
+
+
 class CitiesAndGuildsTests(unittest.TestCase):
     def test_realms_seat_sovereigns_cities_seat_councils_and_orders_hold_the_line(self):
         block = hero_generator.generate(world(), certain())
@@ -553,14 +639,17 @@ class CatalogueTests(unittest.TestCase):
 
 
 class IsolationTests(unittest.TestCase):
-    def test_seed_helper_matches_the_generator(self):
-        from icarus_sim.terrain_tectonics import child_seed as reference
-        for master, domain, variation in ((42, 'hero-x', 0), (7, 'hero-alignment-a', 3), (4294967295, '', 1)):
-            self.assertEqual(child_seed(master, domain, variation), reference(master, domain, variation))
+    # The seed helper is no longer copied into this package; it is imported from the shared,
+    # generator-free `world_geometry`, and `Sim/tests/test_world_geometry.py` is the one pin
+    # holding it to `icarus_sim.terrain_tectonics.child_seed`. A second pin here would assert
+    # the same equality by a longer route. The isolation assertion below is the part that is
+    # still this package's own, and it stays.
 
     def test_attach_reports_failure_instead_of_raising_and_honours_the_switch(self):
         block = hero_generator.attach({'config': {'seed': 1}})
-        self.assertEqual((block['version'], block['status']), (1, 'failed'))
+        # A failed block still names the version it would have written, so a consumer can
+        # tell which contract failed rather than only that something did.
+        self.assertEqual((block['version'], block['status']), (hero_generator.VERSION, 'failed'))
         self.assertIn('history.ages', block['error'])
         with patch.dict(os.environ, {hero_generator.ENV_SWITCH: '0'}):
             self.assertIsNone(hero_generator.attach(world()))

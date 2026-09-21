@@ -27,13 +27,85 @@ def distance_to_frame(p,frame):
 def arc_distance(p,a,b):return distance_to_frame(p,arc_frame(a,b))
 
 
-def college_eligible(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile=None):
+# The eight limits a cell must clear to host a college, in the order they are tested.
+# Declared once so the diagnostic names them out of the gate's own list rather than out
+# of a second copy of it.
+COLLEGE_LIMITS=('density','hazard','water','slope','temperature','freshwater','flood','suitability')
+# What the college pass walks, in words. Cells a city cannot reach are never looked at,
+# so a report that counted the whole grid would describe work that never happened.
+SOURCE_KIND="cells within a city's support reach"
+
+
+def college_refusal(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile=None):
+    """Which of COLLEGE_LIMITS refuses this cell a college, or None if none does.
+
+    This is the definition of college eligibility; `college_eligible` is this predicate
+    read as a boolean. The diagnostic needs to say which limit refused, and a second copy
+    of the gate written for the report is how a report starts disagreeing with the thing
+    it reports on. The clause order is the original `and` chain's short-circuit order, so
+    'the limit that refused' means the same thing it always did.
+    """
     if profile is None:
         from .terrain_profiles import get_profile
         from .civilization_registry import default_profile_id
         profile=get_profile(default_profile_id())
-    return (density>=.35 and hazard<=limit and water==0 and slope<profile['college_slope_limit'] and profile['college_temperature_min']<temp<profile['college_temperature_max']
-            and 0<=fresh<=profile['college_water_reach'] and flood<profile['college_flood_limit'] and suitability>=profile['college_suitability_min'])
+    if not density>=.35:return 'density'
+    if not hazard<=limit:return 'hazard'
+    if not water==0:return 'water'
+    if not slope<profile['college_slope_limit']:return 'slope'
+    if not profile['college_temperature_min']<temp<profile['college_temperature_max']:return 'temperature'
+    if not 0<=fresh<=profile['college_water_reach']:return 'freshwater'
+    if not flood<profile['college_flood_limit']:return 'flood'
+    if not suitability>=profile['college_suitability_min']:return 'suitability'
+    return None
+
+
+def college_eligible(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile=None):
+    return college_refusal(density,hazard,limit,slope,temp,fresh,flood,suitability,water,profile) is None
+
+
+def _row(placed,wanted,candidates,sources,reason):
+    return {'institution':'wizard_college','placed':placed,'wanted':wanted,'candidates':candidates,
+            'sources':sources,'source_kind':SOURCE_KIND,'reason':reason}
+
+
+def pending_college_diagnostics(wanted):
+    """The row a `magic` block carries before the college pass has run.
+
+    generate_networks writes `colleges: []` and the pass fills it later, so between the
+    two the empty list means "not yet", not "none placed". Those read alike in a finished
+    document if only one of them says anything.
+    """
+    return [_row(0,int(wanted),0,0,'the college pass has not run at this phase, so nothing was evaluated')]
+
+
+def college_diagnostics(placed,wanted,candidates,sources,refusals,clearance,spacing):
+    """One row per institution: whether it placed, what was evaluated, and why none did.
+
+    The shape `key_locations` publishes per archetype and `heroes` per role, in the block
+    that owns the institutions. `candidates` counts every cell that cleared all eight
+    limits, including cells the budget never reached, so `placed == candidates` means the
+    world ran out of ground and `placed < candidates` means the budget or the spacing
+    stopped it -- which are different facts and used to be the same zero.
+    """
+    if wanted<=0:
+        reason='no colleges were requested'
+    elif placed>=wanted:
+        reason=f'{placed} of {candidates} candidates were seated, which is every college asked for'
+    elif placed:
+        reason=(f'{placed} of {wanted} colleges were seated from {candidates} candidates; '
+                f'settlement clearance refused {clearance} and regional spacing refused {spacing}')
+    elif candidates:
+        reason=(f'no room: settlement clearance refused {clearance} of {candidates} candidates '
+                f'and regional spacing refused {spacing}')
+    elif sources:
+        # Deterministic tie-break: the most refusals, then the earliest limit tested.
+        worst=max((refusals.get(k,0),-i,k) for i,k in enumerate(COLLEGE_LIMITS))
+        reason=(f'{sources} {SOURCE_KIND} were read and none produced a candidate; '
+                f'{worst[2]} refused the most, at {worst[0]}')
+    else:
+        reason=f'no {SOURCE_KIND} in this world, so nothing rolled'
+    return [_row(placed,wanted,candidates,sources,reason)]
 
 
 def add_magic(result,cfg):
@@ -124,14 +196,23 @@ def add_colleges(result,cfg):
     occupied=[direction(s['x'],s['z'],n) for s in cities+result['humans']['hamlets']+result['humans']['fortresses']]
     colleges=[];college_points=[]
     spacing=college_spacing_m(r) if cfg.world_recipe==3 else 150
+    # Counted for the diagnostic, never read by placement. The budget check moved below
+    # the limits so a cell the budget never reached is still counted as a candidate:
+    # placement is unchanged by that -- the checks above it have no side effects and a
+    # `continue` past the placement body leaves colleges, occupied and college_points
+    # exactly as the old `break` did.
+    candidates=0;refusals={};refused_clearance=0;refused_spacing=0
+    sources=sum(1 for o in owner if o>=0)
     for i in sorted(range(len(points)),key=lambda i:(-(density[i]*(1-hazard[i])+.25*suitability[i]),i)):
-        if len(colleges)>=cfg.college_count:break
         if owner[i]<0:continue
         profile=city_profiles[owner[i]]
-        if not college_eligible(density[i],hazard[i],profile['mutation_limit'] if cfg.world_recipe else cfg.human_magic_limit,slope[i],temp[i],fresh[i],flood[i],suitability[i],water[i],profile):continue
+        refusal=college_refusal(density[i],hazard[i],profile['mutation_limit'] if cfg.world_recipe else cfg.human_magic_limit,slope[i],temp[i],fresh[i],flood[i],suitability[i],water[i],profile)
+        if refusal is not None:refusals[refusal]=refusals.get(refusal,0)+1;continue
+        candidates+=1
+        if len(colleges)>=cfg.college_count:continue
         x,z=points[i];p=direction(x,z,n)
-        if any(r*math.acos(max(-1,min(1,dot(p,q))))<150 for q in occupied):continue
-        if any(r*math.acos(max(-1,min(1,dot(p,q))))<spacing for q in college_points):continue
+        if any(r*math.acos(max(-1,min(1,dot(p,q))))<150 for q in occupied):refused_clearance+=1;continue
+        if any(r*math.acos(max(-1,min(1,dot(p,q))))<spacing for q in college_points):refused_spacing+=1;continue
         path=[i]
         own_parent=parent_by_city[owner[i]] if cfg.world_recipe else parent
         while own_parent[path[-1]]>=0:path.append(own_parent[path[-1]])
@@ -142,7 +223,8 @@ def add_colleges(result,cfg):
                          'reason':'Strong magic within population mutation, slope, climate, freshwater, flood and suitability limits; reachable from a city.'})
         occupied.append(p);college_points.append(p)
     result['magic']['colleges']=colleges
+    result['magic']['diagnostics']=college_diagnostics(len(colleges),cfg.college_count,candidates,sources,refusals,refused_clearance,refused_spacing)
     result['magic']['college_spacing_m']=spacing
-    result['magic']['college_method']='Colleges share the selected population safety limit; no protective ward discount. Sites may be fewer than requested. Institutions have no separate population or supply demand yet.'
+    result['magic']['college_method']='Colleges share the selected population safety limit; no protective ward discount. Sites may be fewer than requested, and magic.diagnostics says per institution how many were asked for, how many cells were within a city\'s support reach, how many of those cleared every limit, and what refused the rest. Institutions have no separate population or supply demand yet.'
     elapsed=(perf_counter()-started)*1000;result['timing_ms']['colleges']=elapsed;result['timing_ms']['total']+=elapsed
     return result

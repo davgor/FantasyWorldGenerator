@@ -225,6 +225,54 @@ The phonotactic path remains for a caller holding a genome but no lexicon. It dr
 syllable under the tongue's real template, which is what makes malformed output like `Caelioaes`
 unconstructible rather than merely unlikely.
 
+### The stock: which of those names a people uses
+
+`person_name` says what a tongue *can* build. It does not say what a people calls its children,
+and for a long time nothing did — every reachable name was equally likely. A heartland genome
+composes 88 of them, so each landed on about one person in ninety. At the scale a roster works
+at, thirteen thousand people in a size-65 world, that reads wrong in both directions: no name is
+common enough to be met twice, and none is rare enough to be worth remarking, so a rare name
+cannot mark a foreigner, an old family or an affectation.
+
+Real naming is far more concentrated. In the English poll tax returns of the late fourteenth
+century one man in three was a John and the five commonest names covered about four fifths of
+all men, with a long tail of forms borne by one person each. `name_stock` and `stock_name`
+reproduce that shape:
+
+```python
+stock = heritage.name_stock(resolved, heritage.lexicon())   # seedless, build once per people
+name, gloss = heritage.stock_name(stock, draw)              # two draws, whichever branch
+```
+
+| | drawn flat | on the stock | England, late 14thC |
+|---|---|---|---|
+| commonest name | 3.3% | 34.3% | 35% |
+| top five | 31% | 76.6% | 79% |
+| effective number of names | 49 | 5.8 | ~6 |
+| forms borne by one person | none | a tail | a tail |
+
+Three decisions inside it are worth knowing:
+
+- **The stock is seedless.** Rank is a property of the culture, not of the world: `Eldsel` is a
+  common heartland name in every world the way John was common in every English county. It is
+  ordered by authored template weight, then length, then spelling, so it needs no seed — which
+  this package could not supply anyway, since it carries no seed logic by design.
+- **The head is held apart.** Ordering by length alone put the whole heartland head on one root
+  — `Eldsel`, `Frosel`, `Nersel`, `Versel` — and the elves on `-naur` four times over, which is
+  worse than the flat draw it replaces: four fifths of a people would share not just a few names
+  but a few sounds. The five commonest names are filled greedily from rank order, skipping any
+  that reuses a root already standing in the head. What is skipped falls to the body of the
+  stock rather than out of it.
+- **The tail is morphemic, not phonotactic.** A rare name is still two roots joined, because the
+  syllable path coins `Wopagup` and `Yoroochaat` and a tail built from it would read as
+  generator noise exactly where a reader is meant to look. What makes it rare is the *pairing*:
+  the role pairs neither the personal nor the settlement templates spend. Excluding the
+  settlement set is what keeps a rare person from reading as a town.
+
+What this does not do is tell two people with the same name apart. At this concentration the
+commonest heartland name lands on hundreds of people in one world, and distinguishing them is
+the job of a byname — a patronymic, a trade, a home town — which nothing generates yet.
+
 ## What `resolve` will and will not guess
 
 The two arguments are treated differently, deliberately:
@@ -270,7 +318,12 @@ nothing, while a one-character override that does change an output is caught.
 - Name-space per tongue is a few hundred settlement names. Collisions resolve by bounded
   redraw, but more roots is the real fix, and the elven lexicon is the thinnest.
 - Sibling tongues whose sound changes miss a given root can still coin the same personal name.
-  Their root pools differ, so distributions diverge, but identical draws are possible.
+  Their root pools differ, so distributions diverge, but identical draws are possible. **The
+  stock makes this louder rather than quieter**: concentration puts the collision in the head
+  where it is heard. `dwarf` and `gnome` share three of their five commonest names, and so do
+  `human_heartland` and `human_rainforest`. Cognate peoples sharing common names is defensible
+  — John was John either side of a border — but it is a consequence worth knowing before
+  reading it as a bug, and more roots or more sound changes are the fix on either reading.
 - `forbidden_forms` guards against roots colliding into loaded English words. It is a substring
   check on the compound, because that is where the accident happens.
 - Four dwarven branches share one soma, so their inventories are close and distinctness rests

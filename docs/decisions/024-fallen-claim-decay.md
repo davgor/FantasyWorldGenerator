@@ -72,9 +72,15 @@ decision promises. At `0.35` a claim is under a tenth of its strength within two
 meaningfully for three ages and is gone by six, which is the shape of a fading legacy rather
 than an erasure or a monument.
 
-An age is a century (`terrain_time_schedule.AGE_YEARS`), so six ages is roughly six hundred
-years of simulated time. That is the horizon over which the world forgets who held a piece
-of ground, and it is a deliberate figure rather than a fallout of the arithmetic.
+The horizon is six *ages*, and the rule is per-age rather than per-year on purpose (see
+below), so it is the same six steps whether a world was advanced by ticks or by age
+advances. How long six ages is in simulated time is a separate constant:
+`terrain_time_schedule.AGE_YEARS` was a century when this was written and
+[028](028-an-age-is-five-thousand-years.md) ruled it to five thousand years, so six ages is
+thirty thousand years rather than six hundred. The deliberate figure here is the six ages —
+the number of times ground changes hands before the world forgets who held it — and 028
+does not reopen it. That the wall-clock horizon moved fifty-fold with it is a consequence
+worth knowing and not a re-decision.
 
 ## Alternatives rejected
 

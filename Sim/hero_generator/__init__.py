@@ -42,7 +42,10 @@ from .wells import ports as ports_well
 from .wells import ruins as ruins_well
 from .wells import shrines as shrines_well
 
-VERSION = 1
+# 2 adds the quest contract's derived fields to every `quest_hooks` record -- `verb`,
+# `difficulty`, `target_node` and `unsited_reason` -- so a consumer can tell a world whose
+# hooks can be priced from one whose hooks cannot. See `hooks.py` and `docs/hero-generator.md`.
+VERSION = 2
 ENV_SWITCH = 'FANTASY_WORLD_HEROES'
 COMPANION_JOIN = {'captive': 'rescued', 'hidden': 'found', 'refugee': 'hired'}
 METHOD = ('Walk the finished history through seven wells. Hamlets: a reeve who speaks for the farmstead that starves or loses '
@@ -59,10 +62,15 @@ METHOD = ('Walk the finished history through seven wells. Hamlets: a reeve who s
           'the cards whose preconditions the person\'s own record satisfies, seated people first so a Tyrant can make '
           'Rebels; the persona is the alignment-neutral card coloured by the two axis overlays, once per face. Claims '
           'compile into quest hooks typed against ruins, cities, nests, relics, colleges and ley nodes; a public face '
-          'states a different purpose than the effect. Each person carries an event log and a present situation, not a plan.')
+          'states a different purpose than the effect. Each hook carries the quest contract: an anchor, a verb from the '
+          'roster\'s own vocabulary, a difficulty 1-5 banded from what stands at the target plus the nest danger reaching '
+          'its ground, and the terrain node a player stands on -- or the reason there is none. '
+          'Each person carries an event log and a present situation, not a plan.')
 LIMITS = ('An artistic reading of the exported history, not a demographic claim. Council seats are a policy table by '
           'city class, not the placed rosters. Claims and hooks are exported intent; nothing here acts, fights, changes '
-          'a node, or scripts what a person will do next.')
+          'a node, or scripts what a person will do next. No hook names a reward: difficulty is an artistic danger band '
+          'derived from creature tier, ley intensity and what a place is, not a simulation of an encounter nor a promise '
+          'the quest is completable, and the consuming game is what turns it into treasure.')
 
 
 def enabled():
@@ -150,7 +158,108 @@ def generate(world, policies=None):
                         'dreads': len(dreads), 'realms': len(realms), 'orgs': len(orgs), 'camps': len(camp_list),
                         'hooks': len(hooks), 'candidates': len(rolls), 'precipitated': sum(r['precipitated'] for r in rolls)},
             'people': people, 'orgs': orgs, 'realms': realms, 'dreads': dreads, 'camps': camp_list, 'quest_hooks': hooks,
-            'bonds': edges, 'relics': relic_list, 'mantles': mantles(people), 'rolls': rolls, 'method': METHOD, 'limits': LIMITS}
+            'bonds': edges, 'relics': relic_list, 'mantles': mantles(people), 'rolls': rolls,
+            'diagnostics': role_diagnostics(world, rolls, policies), 'method': METHOD, 'limits': LIMITS}
+
+
+def _sources(world, policies):
+    """How many world records each declared role had to work with, before any roll.
+
+    This is the half `rolls` cannot answer. The ledger records every candidate that was
+    *evaluated*, so it distinguishes a role that rolled and lost from one that placed -- but a
+    role with no row in it is indistinguishable from a role that does not exist, and that is
+    exactly the Dread's case: `heroes.dreads` is empty because no ruin names a beast as its
+    cause, so no candidate was ever built and nothing rolled.
+
+    Each entry counts the population its well iterates, and the phrase beside it names what was
+    counted rather than restating the well's gate -- a second copy of a predicate answers a
+    slightly different question sooner or later. Where the count *is* the gate, it is taken
+    through the name the well itself uses (`history.BEAST_CAUSES`,
+    `wells.magic.key_point_id`, `wells.magic.SELF_MAGIC_CAUSE`, `wells.cities.DIASPORA_ROLES`),
+    so there is one definition and not two.
+    """
+    from .wells.cities import DIASPORA_ROLES
+    from .wells.magic import SELF_MAGIC_CAUSE, key_point_id, key_points
+    from .history import BEAST_CAUSES, wars
+
+    ruin_list = ruins(world)
+    living = cities(world)
+    nodes = key_points(world)
+    humans = world.get('humans') or {}
+    religion = world.get('religion') or {}
+    sites = [s for s in (religion.get('sites') or []) if isinstance(s, dict)]
+    seats = policies['wells']['seats']
+    defeated = {w.get('defeated_uid') for w in wars(world)}
+    return {
+        'heir': (len(ruin_list), 'ruined cities'),
+        'warlord': (sum(1 for r in ruin_list if r['uid'] in defeated), 'ruined cities that lost a recorded war'),
+        'dread': (sum(1 for r in ruin_list if r.get('cause') in BEAST_CAUSES), 'ruins a beast destroyed'),
+        'domain_holder': (sum(1 for r in ruin_list if key_point_id(r) in nodes),
+                          'ruin key points standing in a ley network'),
+        'magister': (sum(1 for r in ruin_list if r.get('cause') == SELF_MAGIC_CAUSE),
+                     'cities that destroyed themselves in a magical experiment'),
+        'college_magister': (len((world.get('magic') or {}).get('colleges') or []), 'living magic colleges'),
+        'camp': (len(ruin_list), 'ruined cities'),
+        'sovereign': (len(build_realms(world)), 'realms'),
+        'council': (sum(len(seats.get(c.get('city_class', 'small'), [])) for c in living),
+                    'council seats the city classes of the living cities declare'),
+        'diaspora': (sum(1 for c in living if c.get('diaspora_reason') in DIASPORA_ROLES),
+                     'living cities founded by a diaspora'),
+        'champion': (len(living) + sum(1 for r in ruin_list if r.get('cause') in BEAST_CAUSES),
+                     'living cities and cities a beast took'),
+        'reeve': (len(humans.get('hamlets') or []), 'hamlets'),
+        'castellan': (len(humans.get('fortresses') or []), 'fortresses'),
+        'harbourmaster': (len((world.get('fisheries') or {}).get('ports') or []), 'ports'),
+        'keeper': (sum(1 for s in sites if s.get('kind') == 'shrine'), 'shrines'),
+        'cult': (sum(1 for s in sites if s.get('kind') == 'cult'), 'cults'),
+    }
+
+
+def role_diagnostics(world, rolls, policies):
+    """One row per declared role: whether it placed, what it evaluated, and why none did.
+
+    The shape `key_locations` publishes, in the block that owns the roles. A consumer reading a
+    finished world could not previously tell "this world has no Dread because it has no
+    beast-ruined city" from "the Dread role is not implemented" from "the Dread role rolled and
+    lost", and `PRODUCT-REACHABILITY-REPORT` asks every catalogue to publish exactly that.
+
+    `role` is the key in `wells.json`'s `precipitation`, so the table is the policy's own list
+    and a role that stops firing cannot fall out of the report by falling out of the output.
+    Four roles mint their roll under the person's own word rather than the policy key -- a
+    diaspora precipitates a prophet, an exile or a founder -- so the kinds are mapped rather
+    than assumed equal.
+    """
+    from .wells.cities import DIASPORA_ROLES
+
+    kinds = {role: {role} for role in policies['wells']['precipitation']}
+    kinds['diaspora'] = set(DIASPORA_ROLES.values())
+    by_kind = {}
+    for entry in rolls:
+        seen = by_kind.setdefault(entry['kind'], {'candidates': 0, 'placed': 0, 'best': 0.})
+        seen['candidates'] += 1
+        seen['placed'] += 1 if entry['precipitated'] else 0
+        seen['best'] = max(seen['best'], entry['chance'])
+    sources = _sources(world, policies)
+    table = []
+    for role in sorted(kinds):
+        count, phrase = sources.get(role, (0, 'records'))
+        candidates = sum(by_kind.get(kind, {}).get('candidates', 0) for kind in kinds[role])
+        placed = sum(by_kind.get(kind, {}).get('placed', 0) for kind in kinds[role])
+        best = max([by_kind.get(kind, {}).get('best', 0.) for kind in kinds[role]] or [0.])
+        one = candidates == 1
+        if placed:
+            reason = f'{placed} of {candidates} candidates precipitated'
+        elif candidates:
+            reason = (f'{candidates} candidate{"" if one else "s"} rolled and '
+                      f'{"it" if one else "none"} did not precipitate; the best chance offered '
+                      f'was {best}')
+        elif count:
+            reason = f'{count} {phrase} were read and none produced a candidate'
+        else:
+            reason = f'no {phrase} in this world, so nothing rolled'
+        table.append({'role': role, 'placed': placed, 'candidates': candidates,
+                      'sources': count, 'source_kind': phrase, 'reason': reason})
+    return table
 
 
 def _validate(world):

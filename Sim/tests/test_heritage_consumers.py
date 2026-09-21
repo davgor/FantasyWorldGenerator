@@ -7,12 +7,15 @@ rather than by paying 70-120 s for a generated world to look at its names.
 import unittest
 
 import heritage
+from hero_generator import history as hero_history
 from hero_generator.naming import heritage_name
 from hero_generator.seeds import rng
 from icarus_sim.civilization_registry import entity_rules
 from icarus_sim.terrain_civilizations import civilization_report, heritage_of
 from icarus_sim.terrain_profiles import civilization_ids
 from icarus_sim.terrain_settlements import _settlement_names
+from key_locations.core import naming as key_location_naming
+from npc_roster import sites as npc_roster_sites
 
 NODES = [41, 7, 19, 88, 3, 56]
 POINTS = {n: (n * 13 % 97, n * 7 % 89) for n in NODES}
@@ -67,6 +70,50 @@ class SettlementNamingTests(unittest.TestCase):
         named = _settlement_names(99, nodes, points, peoples)
         values = [n for n, _ in named.values()]
         self.assertEqual(len(set(values)), len(values), 'collision redraw failed')
+
+
+class RetiredCitySuffixTests(unittest.TestCase):
+    """The ` City` disambiguator is retired, and no reader may still answer to it.
+
+    Settlement naming moved off `_settlement_names`' round-robin over twelve English
+    nature words plus the literal ` City` and onto `heritage.settlement_name`. The
+    producer moved; five readers did not, and two of those were tests making opposite
+    claims about the same strings -- `tests/test_terrain_humans.py` asserted every
+    settlement name *ends with* ` City`, while `test_no_placeholder_english_survives`
+    above asserts none *contains* it. Only the first failed, so the contradiction was
+    invisible. Three more strip a suffix that is never there and read to the next
+    person as live disambiguation.
+
+    Which convention is live is a measurement, not an opinion, so the first test here
+    takes it over a spread of seeds rather than asserting it of one.
+    """
+
+    def setUp(self):
+        heritage.reset_cache()
+
+    def test_no_seed_produces_the_retired_suffix(self):
+        for seed in (1, 42, 99, 1234, 20260921):
+            for node, (name, _gloss) in _settlement_names(seed, NODES, POINTS, PEOPLES).items():
+                self.assertFalse(name.endswith(' City'), f'seed {seed} node {node}: {name!r}')
+
+    def test_key_locations_does_not_strip_a_suffix_the_generator_never_writes(self):
+        """A place genuinely called `Gulf City` reaches a key location's name intact.
+
+        `hero_generator.history.short_name` and `npc_roster.sites._short_name` still cut
+        those characters out. Both are the identity on any generated world and both are
+        exercised only by synthetic worlds that name their cities in the retired
+        convention, so removing them is a fixture change rather than a line change; it is
+        named as unfinished on board/backlog/CONTENT-CITY-SUFFIX-DEAD-READERS.md rather than
+        asserted here, because an assertion this file cannot make pass is not a pin.
+        """
+        self.assertEqual(key_location_naming.short_name('Gulf City'), 'Gulf City')
+        self.assertEqual(hero_history.short_name('Gulf City'), 'Gulf')
+        self.assertEqual(npc_roster_sites._short_name({'name': 'Gulf City'}), 'Gulf')
+
+    def test_the_helpers_still_do_the_jobs_that_are_theirs(self):
+        self.assertIsNone(key_location_naming.short_name(None))
+        self.assertEqual(key_location_naming.short_name('Ashen wyrm'), 'Ashen wyrm')
+        self.assertEqual(npc_roster_sites._short_name({'name': 'Bargdorn (Age 2)'}), 'Bargdorn')
 
 
 class HeroNamingTests(unittest.TestCase):

@@ -16,6 +16,12 @@ SUPPORTED = frozenset((
     'type', 'properties', 'required', 'additionalProperties', 'items',
     'const', 'enum', 'pattern', 'minimum', 'maximum', 'exclusiveMinimum',
     'minItems', 'maxItems', 'minLength', 'maxLength', 'not',
+    # Annotations. They constrain nothing and this validator ignores them, but they must
+    # be listed or the unknown-keyword guard above rejects the schema that carries one.
+    # `liveness` maps each token of a person-level `status` enum to `present` or `gone`;
+    # it is the cross-block translation that lived only in Python until 2026-09-21, and
+    # tests/test_status_vocabulary.py checks it against Sim/icarus_sim/terrain_liveness.py.
+    'liveness',
 ))
 
 TYPES = {

@@ -67,7 +67,7 @@ Three statements in it are correct and were re-confirmed, and none of them neede
 
 ## What was found in its place
 
-[CORRUPTION-OPPOSING-A-REVEALED-GOD-CRASHES](../backlog/CORRUPTION-OPPOSING-A-REVEALED-GOD-CRASHES.md) -
+[CORRUPTION-OPPOSING-A-REVEALED-GOD-CRASHES](CORRUPTION-OPPOSING-A-REVEALED-GOD-CRASHES.md) -
 a reproduced `StopIteration` on the documented way to oppose the only god corruption ever
 makes walk. That is the real defect this card was standing in front of.
 

@@ -19,8 +19,8 @@ suite rather than by an import. It also carries no seed logic: callers pass thei
 deterministic draw, which keeps every seeding decision with the subsystem that owns it.
 """
 from .derive import (heritage_identity, lexicon, reset_cache, resolve, revisions)
-from .naming import (name_table, person_name, person_name_with_gloss, realm_name,
-                     settlement_name)
+from .naming import (name_stock, name_table, person_name, person_name_with_gloss, realm_name,
+                     settlement_name, stock_name)
 from .policy import (APPEARANCE_BLOCKS, AXES, BODY_SCALE_HEIGHT_M, CULTURE_BLOCKS,
                      KNOWN_SCHOOLS, load, load_all)
 
@@ -28,6 +28,6 @@ VERSION = 1
 
 __all__ = ('APPEARANCE_BLOCKS', 'AXES', 'BODY_SCALE_HEIGHT_M', 'CULTURE_BLOCKS',
            'KNOWN_SCHOOLS', 'VERSION', 'heritage_identity',
-           'lexicon', 'load', 'load_all', 'name_table', 'person_name',
+           'lexicon', 'load', 'load_all', 'name_stock', 'name_table', 'person_name',
            'person_name_with_gloss', 'realm_name', 'reset_cache', 'resolve', 'revisions',
-           'settlement_name')
+           'settlement_name', 'stock_name')

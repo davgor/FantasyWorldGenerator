@@ -207,16 +207,97 @@ class RiverThresholdBoundTests(unittest.TestCase):
         # The defect class being fixed is a constant that silently stops scaling. If the
         # derived threshold ever exceeds the bound the request must SAY so, naming the
         # width, not quietly clamp and re-saturate the rivers.
+        #
+        # The three reaches are pinned by override so this width reaches the river bound
+        # at all: they bind at 619.39, 1114.90 and 2477.55 km, all below this one, and the
+        # reach block runs first. Pinning them is what keeps this test about the river.
         from icarus_sim.terrain_world import (generate_request,
                                               RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM)
         too_wide = RIVER_THRESHOLD_MAX_CIRCUMFERENCE_KM*2
         with self.assertRaises(ValueError) as caught:
             generate_request({'recipe_version': 3, 'seed': 42,
                               'overrides': {'circumference_km': too_wide, 'size': 17,
-                                            'phase': 1}})
+                                            'phase': 1, 'settlement_spacing': 450.,
+                                            'support_reach': 1000.,
+                                            'culture_link_cost': 1800.}})
         message = str(caught.exception)
         self.assertIn('river_threshold_km2', message)
         self.assertIn(f'{too_wide:g} km', message)
+
+
+class ReachCeilingTests(unittest.TestCase):
+    """The three reach keys raise past their ceiling instead of clamping to it.
+
+    `min(100000., raw*factor)` is the `min(<absolute>, <relative>)` arm swap
+    SCALE-METRE-CONSTANTS-COLLAPSE is about, one preset away from firing:
+    `culture_link_cost` resolves 96870.01 m at the 600 km large preset, 3.13% below the
+    ceiling, so a world authored at 620 km would have stopped scaling cultural regions
+    with no error and no log line.
+
+    Widths are chosen per key so that key is the FIRST of the three to bind, which is what
+    makes each assertion name its own key rather than whichever one the loop reaches first.
+    """
+
+    KEYS = (('settlement_spacing', 450., 2477.5470281766684),
+            ('support_reach', 1000., 1114.8961626795008),
+            ('culture_link_cost', 1800., 619.3867570441671))
+
+    def request(self, circumference_km):
+        from icarus_sim.terrain_world import generate_request
+        return generate_request({'recipe_version': 3, 'seed': 42,
+                                 'overrides': {'circumference_km': circumference_km,
+                                               'size': 17, 'phase': 1}})
+
+    def test_each_key_binds_at_the_width_the_base_and_ceiling_imply(self):
+        from icarus_sim.terrain_world import REACH_MAX_M
+        for key, base, binds_km in self.KEYS:
+            self.assertAlmostEqual(REACH_MAX_M/base*REFERENCE_CIRCUMFERENCE_M/1000.,
+                                   binds_km, places=6, msg=key)
+
+    def test_a_world_past_a_reach_ceiling_is_refused_naming_that_reach(self):
+        from icarus_sim.terrain_world import REACH_MAX_M
+        # One width per key, each inside the band where that key binds first.
+        for key, base, binds_km, width_km in (('culture_link_cost', 1800., 619.3867570441671, 700.),
+                                              ('support_reach', 1000., 1114.8961626795008, 1500.),
+                                              ('settlement_spacing', 450., 2477.5470281766684, 3000.)):
+            with self.assertRaises(ValueError, msg=key) as caught:
+                self.request(width_km)
+            document = caught.exception.document()
+            self.assertEqual(document['code'], 'STATE_CAPACITY', key)
+            self.assertEqual(document['field'], key)
+            self.assertAlmostEqual(document['received'],
+                                   base*reach_scale(width_km*1000.), places=6)
+            self.assertEqual(document['expected']['max'], REACH_MAX_M)
+            self.assertAlmostEqual(document['expected']['max_circumference_km'],
+                                   binds_km, places=6)
+            message = str(caught.exception)
+            self.assertIn(key, message)
+            self.assertIn(f'{width_km:g} km', message)
+
+    def test_a_world_just_under_the_first_ceiling_still_generates(self):
+        """The bound must not move down onto a width that works today.
+
+        619 km is under `culture_link_cost`'s binding width and over the 600 km large
+        preset, so this is the nearest legal world to the refusal above.
+        """
+        world = self.request(619.)
+        self.assertLess(world['config']['culture_link_cost'], 100000.)
+
+    def test_the_presets_resolve_below_every_ceiling_and_are_unchanged(self):
+        """The acceptance criterion: no world anyone has generated moves.
+
+        Below the ceiling `min(ceiling, v)` returns `v` itself, so this is float identity
+        rather than a tolerance: the three presets resolve exactly `base*reach_scale` both
+        before and after the clamp became a raise.
+        """
+        from icarus_sim.terrain_world import REACH_MAX_M
+        for circumference_km in (200., 400., 600.):
+            world = self.request(circumference_km)
+            factor = reach_scale(circumference_km*1000.)
+            for key, base, _ in self.KEYS:
+                resolved = world['config'][key]
+                self.assertEqual(resolved, base*factor, (key, circumference_km))
+                self.assertLess(resolved, REACH_MAX_M, (key, circumference_km))
 
 
 if __name__ == '__main__':

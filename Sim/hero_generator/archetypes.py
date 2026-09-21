@@ -30,6 +30,9 @@ FEATURES = frozenset({
     'fame:renowned', 'fame:legendary',
     # reserved for later wells
     'dread:person_shaped', 'order:member', 'order:remnant', 'order:against_dark', 'keypoint:ruin_born',
+    # `villain:prior_age` is a dispossessed claimant, NOT a super villain -- `terrain_villains`
+    # owns that word in the world model and the two share no field. The full disclaimer is at
+    # `features.py`, where the token is set.
     'deed:credited_not_actual', 'deed:dark_nest', 'villain:prior_age', 'stake:regained', 'stake:none',
     'ley:tainted_home', 'rival:spared', 'realm:cold_conflicts_2', 'realm:tyrant', 'stakes:2', 'seat:trade',
     'seat:none', 'routes:2', 'mentor:successor', 'heir:unclaimed', 'council:outranks_sovereign',

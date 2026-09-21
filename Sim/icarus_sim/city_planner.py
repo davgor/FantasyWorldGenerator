@@ -7,8 +7,9 @@ from .terrain_detail import HeightField
 from .civilization_registry import city_plan, section, registry_identity
 from .city_shapes import select_shape, load_catalogue
 from .city_fortifications import program_half_m, build_fortifications, wall_and_gate_defs
+from .terrain_settlements import FOUNDED_BY, PLAYER
 
-VERSION=6
+VERSION=8
 CELL=4
 
 
@@ -58,10 +59,15 @@ def _sampler(world,site,half):
             dx=(field.height(direction_at(x+1,z))-field.height(direction_at(x-1,z)))/2
             dz=(field.height(direction_at(x,z+1))-field.height(direction_at(x,z-1)))/2
             slope=math.degrees(math.atan(math.hypot(dx,dz)))
-        flood=int(distance<28) if lines and (0 if _river is None else _river[gz][gx])>.5 \
-            else (0 if _flood is None else _flood[gz][gx])
+        # Two different things used to share one `flood` key, and a caller could not tell
+        # which it had read. `channel` is local: this point is inside the reserved river
+        # channel and setback, measured in metres from a routed centerline. `flood_risk`
+        # is the regional proxy, one value for a raster cell thousands of metres across --
+        # far larger than a city, so it is the same number everywhere in this footprint
+        # and can only ever block all of it or none of it.
+        channel=int(distance<28) if lines and (0 if _river is None else _river[gz][gx])>.5 else 0
         return {'water':(0 if _water is None else _water[gz][gx])!=0 or distance<12,'slope':slope,
-                'flood':flood,
+                'channel':channel,'flood_risk':(0 if _flood is None else _flood[gz][gx]),
                 'height':field.height(p),'moisture':.5 if _moisture is None else _moisture[gz][gx],
                 'biome':3 if _biome is None else _biome[gz][gx],'variant':-1 if _variant is None else _variant[gz][gx]}
     def height_at(x,z):
@@ -102,7 +108,13 @@ def plan_city(world,site,nearby_counts=None):
         for i in range(size):
             v=sample(-half+(i+.5)*CELL,-half+(j+.5)*CELL)
             heights[(i,j)]=v['height']
-            code=1 if v['water'] else 2 if v['slope']>25 or v['flood']>.65 else 0
+            # Standing water, real steepness and the reserved river channel block a cell.
+            # The regional flood proxy does not, for the reason hamlet_planner already
+            # records: it is a coarse layer, not a local inundation mask. It is emitted
+            # as 0 or 1 and a city is smaller than one of its cells, so honouring it here
+            # disqualified whole cities outright -- 23 of 35 in a seed-42 size-33 world,
+            # every one of them on a cell reading exactly 1.0, on ground under 21 degrees.
+            code=1 if v['water'] else 2 if v['slope']>25 or v['channel'] else 0
             row.append(code);biome_row.append(v['biome']);mutation_row.append(v['variant'])
             if code==0:valid.add((i,j));slopes.append(v['slope']);woods+=v['biome'] in (4,7,15)
         terrain.append(row);biomes.append(biome_row);mutations.append(mutation_row)
@@ -120,6 +132,20 @@ def plan_city(world,site,nearby_counts=None):
            'regional_threat':threat,'defense_priority':threat}
     # Fine topology/navigability is unknown in this world raster; do not invent it.
     selected=select_shape(facts,world['config']['seed'],str(site.get('uid',site['id'])),site['city_class'],nearby_counts)
+    # A city the player authored is not packed here. The record is still produced in full
+    # -- terrain, reference frame, road connections -- because a consumer rendering the
+    # player's town needs the ground it stands on; what it does not get is a planner's
+    # opinion about where the buildings go. `unbuildable` is a status the planner already
+    # emits, so no consumer needs a new branch for it.
+    authored=site.get(FOUNDED_BY)==PLAYER
+    # The site's own two demographic figures, copied verbatim and named for their axes.
+    # This used to be one key, `simulation_population`, holding the urban estimate under a
+    # name that said neither which axis nor whose number it was.
+    population_stats={'population_estimate':site.get('population_estimate'),
+                      'urban_population_estimate':site.get('urban_population_estimate')}
+    if authored:
+        selected={**selected,'shape_id':None,'parameters':{},
+                  'reason':'Layout authored by the player; the generator chooses no shape for an authored city.'}
     result={'version':VERSION,'city_uid':site.get('uid',str(site['id'])),'site_id':site['id'],'name':site['name'],
             'civilization_id':site['population_profile'],'city_class':site['city_class'],'unit':'metres',
             'bounds_m':[-half,-half,half,half],'terrain':{'cell_m':CELL,'size':size,'codes':terrain,'surface':surface,'natural_biome':biomes,'biome_variant':mutations,'biome_catalogue':world.get('terrain',{}).get('biomes',[]),'magical_catalogue':world.get('terrain',{}).get('magical_biomes',[]),'magic_colors':{k:v['color'] for k,v in world.get('magic',{}).get('networks',{}).items()}},
@@ -137,8 +163,11 @@ def plan_city(world,site,nearby_counts=None):
     result['road_connections']=road_entries(world,site,half)
     if resolution>half:result['warnings'].append('Regional land categories repeat coarse samples; canonical local relief supplies finer elevation detail.')
     if not selected['shape_id']:
-        result['unplaced']=[{'building_id':r['structure_id'],'count':r['count'],'reason':'No compatible buildable footprint'} for r in preset['buildings']]
-        result['stats']={'workers':0,'worker_beds':0,'housing_shortfall':0,'service_buildings':0,'houses':0}
+        reason='Layout authored by the player' if authored else 'No compatible buildable footprint'
+        result['unplaced']=[{'building_id':r['structure_id'],'count':r['count'],'reason':reason} for r in preset['buildings']]
+        result['stats']={'workers':0,'worker_beds':0,'housing_shortfall':0,'service_buildings':0,'houses':0,
+                         **population_stats}
+        if authored:result['authored_by']=PLAYER
         return result
     result['passes'][0]['placed']=len(valid);result['passes'][1]['placed']=1
     family=next(s['family'] for s in load_catalogue()['shapes'] if s['id']==selected['shape_id'])
@@ -158,7 +187,7 @@ def plan_city(world,site,nearby_counts=None):
     for c in entries:
         cell=tuple(c['cell']);gate=c['gate_local_m'];point=[-half+(v+.5)*CELL for v in cell]
         v=sample(*gate);length=math.dist(point,gate)
-        if cell in road and not v['water'] and v['flood']<=.65 and v['slope']<=25 and abs(v['height']-heights[cell])<=.35*length+1e-6:
+        if cell in road and not v['water'] and not v['channel'] and v['slope']<=25 and abs(v['height']-heights[cell])<=.35*length+1e-6:
             approach=next((path for path in paths if path[-1]==cell),[cell])
             c.update(status='connected',reason='Terrain-safe junction to regional road',local_path_m=[[-half+(a+.5)*CELL,-half+(b+.5)*CELL] for a,b in approach]+[gate])
     result['roads']=[list(c) for c in sorted(road)]
@@ -345,7 +374,7 @@ def plan_city(world,site,nearby_counts=None):
                      'houses':sum(p['building_id']==house['id'] for p in result['plots']),
                      'apartments':sum(p['building_id']==apartment['id'] for p in result['plots']),
                      'unplaced_core':failed_core,'unplaced_total':sum(r['count'] for r in result['unplaced']),
-                     'simulation_population':site.get('urban_population_estimate',site.get('population_estimate')),
+                     **population_stats,
                      'reserved_plot_area_m2':sum(p['plot_m']['width']*p['plot_m']['depth'] for p in result['plots']),
                      'wall_segments':len(fortifications['segments']),'defended_perimeter':fortifications['defended_perimeter']}
     return result

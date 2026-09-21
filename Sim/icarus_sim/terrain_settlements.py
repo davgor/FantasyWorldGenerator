@@ -11,6 +11,49 @@ from .terrain_biome_catalogue import NATURAL_BIOMES, biome_catalogue, cell_varia
 from .terrain_profiles import biome_preference, biome_food_multiplier
 from .civilization_registry import building_pack_data,layout_profile_data,entity_rules,section
 
+# The node-scale record nested in every site. Version 2 dropped `buildings`, the
+# per-option placement claim that contradicted `city_plans`, and renamed `residents` to
+# `population_estimate` so the figure names the axis it measures. See
+# docs/conformance/settlement-records.md.
+CITY_LAYOUT_VERSION = 2
+
+# A site the player founded rather than the suitability search. `terrain_settlement_api`
+# writes it; the survivor carry-back below is the only reason an authored layout outlives
+# a rebuild, so the two constants live here where both readers can see them without a
+# circular import.
+FOUNDED_BY = 'founded_by'
+PLAYER = 'player'
+
+# What a rebuilt site inherits from the survivor standing on the same node. war_history
+# travels with the city: a survivor that rebuilds its hinterland is still the city that
+# fought, and its forts answer to that. absorbed_refugees and absorbed_bands travel for the
+# same reason and are the only way absorption can persist at all: population_estimate is
+# re-derived from the population budget on every rebuild, so refugees written into it at an
+# age boundary would be erased by the next one.
+CARRIED_SURVIVOR_KEYS = ('uid', 'source_culture', 'founded_age', 'name', 'war_history',
+                         'absorbed_refugees', 'absorbed_bands', FOUNDED_BY)
+
+
+def authored_layout(site):
+    """Whether this site's `city_layout` is the player's design rather than the planner's.
+
+    Called at the one place the generator would otherwise overwrite it. A site the player
+    founded with `layout: "player"` owns where its buildings go; re-deriving the layout
+    from the ground would replace that with a planner's answer for the same node, which is
+    the requirement PLAYER-FOUNDED-SETTLEMENTS exists to meet.
+    """
+    return site.get(FOUNDED_BY) == PLAYER and 'city_layout' in site
+
+
+def carry_survivor(site, old):
+    """Copy the keys a rebuilt site inherits from the survivor it replaces, in place."""
+    for key in CARRIED_SURVIVOR_KEYS:
+        if key in old:
+            site[key] = old[key]
+    if authored_layout(old):
+        site['city_layout'] = old['city_layout']
+    return site
+
 
 def _coerce_finite_number(value, field):
     if not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -502,10 +545,13 @@ def _collect_land_anchor_candidates(points, graph, start, river_distances, water
 def _build_city_layout_plan(city_seed, node, points, layout_profile, population_profile, city_population, river_distance_m, river_neighbors, river, anchor_candidates, graph=None, building_pack=None):
     rng = random.Random(city_seed)
     placement = layout_profile['placement']
-    city_plan = {'version': 1, 'layout_profile_id': layout_profile['id'],
+    city_plan = {'version': CITY_LAYOUT_VERSION, 'layout_profile_id': layout_profile['id'],
                  'layout_profile_name': layout_profile['name'],
                  'population_profile': population_profile,
-                 'residents': city_population}
+                 # The site's own catchment estimate, copied verbatim. It was `residents`,
+                 # which reads as people standing in the city; it is a demographic
+                 # estimate two orders of magnitude above the beds the plan builds.
+                 'population_estimate': city_population}
     fork_degree = sum(1 for neighbor_id, _ in river_neighbors if river[neighbor_id])
     city_plan['river'] = {'adjacent_river_edges': fork_degree,
                           'river_distance_m': river_distance_m if math.isfinite(river_distance_m) else None,
@@ -567,10 +613,15 @@ def _build_city_layout_plan(city_seed, node, points, layout_profile, population_
         graph
     )
     city_plan['building_pack_id'] = building_pack['id']
-    city_plan['buildings'] = building_plan
+    # `buildings` is deliberately not published. It carried a per-option
+    # target_count/placed_count pair that read as "this city placed N buildings", beside a
+    # `city_plans` entry that had actually placed them -- two answers to one question, and
+    # the wrong one reported a shortfall in every city, which hid the real ones. The asset
+    # requirement the draw produces survives as the three roll-ups below.
     city_plan['required_assets'] = building_plan['required_assets']
     city_plan['required_asset_count'] = building_plan['required_asset_count']
     city_plan['required_node_slots'] = building_plan['required_node_slots']
+    city_plan['asset_anchors_missing'] = building_plan['missing_anchors']
     if building_plan['missing_anchors']:
         city_plan['fallback'] = {'reason': 'Not enough valid non-water land anchors for requested feature and building placement counts within local search band.'}
     city_plan['features'] = features
@@ -915,10 +966,7 @@ def add_settlements(result,cfg):
         for site in sites:
             old=previous.get(site['node'])
             if old and old['population_profile']==site['population_profile']:
-                # war_history travels with the city: a survivor that rebuilds its
-                # hinterland is still the city that fought, and its forts answer to that.
-                for key in ('uid','source_culture','founded_age','name','war_history'):
-                    if key in old:site[key]=old[key]
+                carry_survivor(site,old)
     if 'population_budget' in result:
         budget=result['population_budget']
         if cfg.world_recipe:
@@ -927,8 +975,20 @@ def add_settlements(result,cfg):
             members=[s for s in sites if s['population_profile']==species]
             for index,site in enumerate(members):
                 residents=allowance//len(members)+(index<allowance%len(members))
+                # Refugees a city took in at an age boundary are people the capacity split
+                # cannot know about: the split is derived from the ground this city farms,
+                # and these walked in from a town that fell. Added after it, so the split
+                # stays a pure function of habitat and the arrivals stay auditable in
+                # absorbed_bands. Zero on every generated world: nothing writes
+                # absorbed_refugees before stage 16, and absorption runs at an age boundary.
+                residents+=int(site.get('absorbed_refugees') or 0)
                 urban=round(residents*.55)
                 site.update(population_estimate=residents,urban_population_estimate=urban,rural_population_estimate=residents-urban)
+                # The player owns an authored layout. The sizing above still applies --
+                # the world owns the metadata -- but the districts are not re-derived.
+                if authored_layout(site):
+                    site['city_layout']['population_estimate']=residents
+                    continue
                 layout_profile=layout_profiles['profiles'][site['city_layout']['layout_profile_id']]
                 site_river_distance=river_distances[site['node']]
                 site_pack_entry = building_packs['pack_index'].get(site['building_pack_id'], building_packs['pack_index'][building_packs['fallback_pack_id']])
@@ -946,7 +1006,7 @@ def add_settlements(result,cfg):
                    'freshwater_distance':node_grid([v if math.isfinite(v) else -1 for v in distances],points,n)})
     classify_cities(sites)
     result['civilizations']=civilization_report(sites)
-    result['settlements']={'version':15,'founding':founding,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
+    result['settlements']={'version':16,'founding':founding,'population_profile':cfg.population_profile,'sites':sites,'seed':seed,'requested':sum(result['population_budget']['requested_cities'].values()) if 'population_budget' in result else cfg.settlement_count,
         'method':'Candidate sites, not built cities or population simulation. Resources are seeded potential, flood risk a proximity/height proxy. Outposts can accept poor conditions; water cells and slopes beyond the selected population limit remain excluded. City assets are selected from deterministic data-driven building packs.'}
     site_end=perf_counter();result['timing_ms']['settlements']=(site_end-started)*1000
     if cfg.phase>=8:

@@ -12,7 +12,7 @@ from .castle_geometry import (
 from .terrain_detail import HeightField
 from .civilization_registry import section
 
-VERSION = 1
+VERSION = 3
 CELL = 4
 CASTLES_PATH = Path(__file__).with_name('castles.json')
 PHASE_ORDER = ['map', 'kit', 'perimeter', 'courts', 'landmarks', 'services']
@@ -104,8 +104,12 @@ def _sampler(world, site, half):
             dx = (field.height(direction_at(x + 1, z)) - field.height(direction_at(x - 1, z))) / 2
             dz = (field.height(direction_at(x, z + 1)) - field.height(direction_at(x, z - 1))) / 2
             slope = math.degrees(math.atan(math.hypot(dx, dz)))
+        # `channel` is the local reserved river channel and setback; `flood_risk` is the
+        # coarse regional proxy, constant across a footprint and therefore unable to say
+        # anything about one cell within it. Mirrors city_planner.
         return {'water': get('water_type') != 0 or distance < 12, 'slope': slope,
-                'flood': int(distance < 28) if lines and get('river') > .5 else get('flood_risk'),
+                'channel': int(distance < 28) if lines and get('river') > .5 else 0,
+                'flood_risk': get('flood_risk'),
                 'height': field.height(p), 'moisture': get('moisture', .5),
                 'biome': get('natural_biome', 3), 'variant': get('biome_variant', -1)}
 
@@ -206,7 +210,9 @@ def plan_castle(world, fortress):
             v = sample(-half + (i + .5) * CELL, -half + (j + .5) * CELL)
             heights[(i, j)] = v['height']
             slopes[(i, j)] = v['slope']
-            code = 1 if v['water'] else 2 if v['slope'] > 25 or v['flood'] > .65 else 0
+            # See city_planner: the regional flood proxy cannot block a cell it cannot
+            # resolve. 34 of 56 castles were unbuildable on this rule.
+            code = 1 if v['water'] else 2 if v['slope'] > 25 or v['channel'] else 0
             row.append(code)
             biome_row.append(v['biome'])
             mutation_row.append(v['variant'])
@@ -294,8 +300,13 @@ def plan_castle(world, fortress):
             'foundation_bottom_m': round(min(ground), 4),
             'plot_m': row['plot_m'], 'dimensions_m': row['dimensions_m'],
             'road_access': [round(x, 2), round(z, 2)],
+            # No `beds`. No structure in the castle registry carries a bed count, so a
+            # number here would be invented rather than measured. The field used to be a
+            # literal 0 on every plot beside 35-53 placed `workers`, which reads as a
+            # garrison sleeping nowhere and divides into a runtime error for anything
+            # computing occupancy. Absence is representable; a zero that was never
+            # measured is not. See castle_plans['beds'] in fill_castles.
             'workers': sum(r['target'] for r in row.get('staffing', {}).get('roles', [])),
-            'beds': 0,
         }
         result['plots'].append(plot)
         result['passes'][next(i for i, p in enumerate(result['passes']) if p['id'] == phase)]['placed'] += 1
@@ -396,6 +407,10 @@ def fill_castles(world):
         'version': VERSION, 'identity': planner_identity(), 'castles': castles,
         'phase_order': list(PHASE_ORDER),
         'limits': 'Schematic fortification modules and bailey plots; not structural engineering or production art.',
+        'beds': 'A castle plan declares no sleeping capacity. No structure in the castle '
+                'registry carries a bed count, so castle plots carry no beds key at all '
+                'rather than a zero that was never measured. The garrison a plan staffs is '
+                'stats.workers, which npc_roster opens one post per.',
     }
     from .world_scene import build_scene
     build_scene(world)

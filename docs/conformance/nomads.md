@@ -14,6 +14,8 @@ emits:
 versions:
   - id: nomads
     assert: 1
+  - id: nomad-routes
+    assert: 3
   - id: nomad-api
     assert: 1
 proof:
@@ -21,15 +23,18 @@ proof:
     establishes: gate eligibility, the weighted draw, route construction, stage gating, and block isolation across a generated world
   - path: Sim/tests/test_cult_leyline_writes.py
     establishes: that every cult deepens its circuit node by the same lift whatever its school, that a cult never creates a node, that a band naming no node writes nothing, and that no world carries a pending ley queue
+  - path: Sim/tests/test_survivor_absorption.py
+    establishes: that a refugee band is absorbed by the refuge it reached rather than founding a settlement on it, that a refuge which fell at the boundary absorbs nobody, that absorbing the same band twice does not breed people, that the credited city is resolved through the band's own refuge_uid rather than through the candidate's node, and that the absorbed count is carried across the rebuild that re-derives population_estimate
 decisions: []
 tickets:
   - board/done/NOMADS.md
   - board/done/SDET-LEY-QUEUE-NO-APPLIER.md
-  - board/backlog/NOMAD-FISSION.md
-  - board/backlog/NOMAD-SURVIVOR-SETTLEMENT.md
-  - board/backlog/NOMAD-CARAVAN-ECONOMY.md
-  - board/backlog/NOMAD-IRRUPTION-TRIGGER.md
-  - board/backlog/NOMAD-CORRUPTION-CONTRACT.md
+  - board/done/NOMAD-FISSION.md
+  - board/done/NOMAD-SURVIVOR-SETTLEMENT.md
+  - board/done/NOMAD-SUBDIVIDE-DROPS-THE-LAST-CUT.md
+  - board/retired/NOMAD-CARAVAN-ECONOMY.md
+  - board/done/NOMAD-IRRUPTION-TRIGGER.md
+  - board/done/NOMAD-CORRUPTION-CONTRACT.md
 ---
 
 # Conformance: nomads
@@ -57,12 +62,16 @@ Unlike `heroes`, `story_web`, `npcs` and `key_locations`, this is a pass inside
 | `population_of(site)` | `terrain_nomads` | the market-floor population for the merchant gate |
 | `CLASSIFICATIONS` | `terrain_nomads` | the gate order, most specific first — **append-only** |
 | `GATES`, `ORIGIN_CAMP_KIND` | `terrain_nomads` | gate dispatch, and the camp kind each classification opens with |
-| `add_nomad_routes(result, cfg)` | `terrain_nomad_routes` | camps, legs and day windows for every band |
+| `add_nomad_routes(result, cfg)` | `terrain_nomad_routes` | camps, legs and day windows for every band, then lineage fission |
+| `apply_fission(...)` | `terrain_nomad_routes` | the daughter clans, re-derived rather than accumulated |
+| `round_forage(band, cells)` / `round_capacity(band, pol, forage)` | `terrain_nomad_routes` | the fission trigger's two halves, callable on their own |
+| `ROUTES_VERSION` | `terrain_nomad_routes` | the route pass version, separate from the band block's |
 | `travel_cost(points, cells, cfg)` | `terrain_nomad_routes` | the traversal cost function routes are built on |
 | `midsummer_day(z, n)` / `midwinter_day(z, n)` | `terrain_nomad_routes` | the two seasonal anchors |
 | `DAY_MARCH_M`, `CAMP_REST`, `CAMP_REST_CEILING`, `GRADE_RELIEF`, `MIDSUMMER_NORTH`, `BUILDERS` | `terrain_nomad_routes` | the authored route constants |
 | `apply_nomad_effects(result, cfg)` | `terrain_nomad_effects` | all four write-backs |
 | `apply_cultist_leylines`, `apply_raid_pressure`, `apply_caravan_trade`, `seed_survivor_camps` | `terrain_nomad_effects` | the individual write-backs |
+| `absorb_survivor_camps(result, survivors, age)` | `terrain_nomad_effects` | the age-boundary pass that grows a refuge by the band that reached it; called from `terrain_history.age_transition`, not from `apply_nomad_effects` |
 | `DEVOTION_GAIN`, `INTENSITY_CEILING`, `RAID_WEIGHT`, `STRIKE_SPACINGS` | `terrain_nomad_effects` | the write-back magnitudes |
 | `validate_nomad_request(body)` / `nomad_request(body)` | `terrain_nomad_api` | the external request surface; `FIELDS` is the exact accepted key set |
 
@@ -89,6 +98,28 @@ not; it is diagnostic, and a consumer building encounters reads `groups`.
 
 Write-backs additionally mutate `magic.networks` (cult devotion) and
 `threat_assessments` (raid pressure).
+
+`settlement_candidates` is a **migration ledger, not a founding queue**. Each entry's
+`node` is the refuge city's own node rather than free ground -- true by construction,
+because `_flight` routes a survivor band to the node of the site whose uid is
+`basis['refuge_uid']` -- so at the next age boundary the refuge **absorbs** the band
+instead of a settlement being founded on top of a standing city.
+`absorb_survivor_camps` runs inside `age_transition` immediately before `rebuild_tail`,
+after the fates are decided and against the list of cities that survived them: a refuge
+that fell absorbs nobody. It stamps `absorbed_age` and `absorbed_into` on the candidate and
+credits the city with `absorbed_refugees` and a sorted `absorbed_bands`, and it is
+idempotent by band uid, because the candidate list can be carried unchanged into a later
+advance. Measured on seed 42 size 17: the age-3 boundary leaves 3 of 12 cities standing and
+takes all three refuges with it, so that world absorbs nobody -- the filter working, not the
+pass failing.
+
+Those two city fields are in `CARRIED_SURVIVOR_KEYS` because they have to be:
+`add_settlements` re-derives `population_estimate` from the population budget on every
+rebuild, so refugees written into that field at a boundary would be erased by the rebuild.
+The count is added back after the capacity split, which keeps the split a pure function of
+the ground the city farms. Nothing writes these fields during generation -- candidates
+appear at stage 16, after both generation-internal age transitions -- so they are visible
+only on a world that has been advanced.
 
 **Determinism is an invariant.** Seeds derive through
 `child_seed(cfg.seed, 'nomads-v1', nomad_variation)`, with per-entity domains
@@ -130,11 +161,31 @@ lab would silently show the final bands at every earlier stage.
 | What | Value |
 |---|---|
 | `nomads` block and pass | <!-- conformance:version nomads=1 --> |
+| `nomads.routes` block and the route pass | <!-- conformance:version nomad-routes=3 --> |
 | Request API | <!-- conformance:version nomad-api=1 --> |
+
+The route pass moved to 2 when lineage fission landed, and the band block did not move
+with it. That split is deliberate and is the precise statement of what changed: no field
+of a band is new, no enum gained a member, and a v1 document still validates field for
+field — `parent_uid` and the `fission` branch were both declared from the start. What a
+consumer could misread is the **occupancy** of those slots. Under routes v1 `parent_uid`
+was null on every band and `fission` never appeared, and the v1 `limits` sentence promised
+exactly that, so code written against it may have treated every band as independently
+placed and every band as present in `rolls`. Neither holds at 2.
+
+It moved again to **3** on 2026-09-21, and for the same kind of reason: no field is new and
+a v2 document still validates, but the pass's central guarantee changed. `_subdivide` now
+closes a caravan leg at the last node inside the day's march instead of the first node past
+it, so **no merchant leg exceeds one day's march**. At 2 the tail condition declined to cut
+a remainder of half a march or less, which absorbed it backwards and let a segment reach
+1.5 marches -- measured at 1.171 on seed 42 size 33, where a 12-node leg ran 40980.3 m
+against a 35000 m march. A consumer that sized a day's travel off the longest leg, or
+counted a route's stations, reads different numbers at 3: legs are shorter and there are
+more of them.
 
 ## Proven by
 
-`Sim/tests/test_terrain_nomads.py`, 22 test methods. Isolation is established by a
+`Sim/tests/test_terrain_nomads.py`, 27 test methods. Isolation is established by a
 structural comparison of generated worlds before and after: a declared set of blocks
 that may change, each with a specific assertion about how. Raw sha256 equality is
 useless once a feature declares a new key, and a blunt allowlist waves through the
@@ -164,7 +215,12 @@ weighted draw.
 Each rests on a mechanism rather than a genre convention. Transhumance is two long moves
 a year between summer pasture and sheltered winter ground, not continuous drift.
 Caravanserai sat a day's march apart precisely so a caravan never overnighted in the
-unpoliced gaps. Banditry wants rugged refuge beside prosperity and weak authority, which
+unpoliced gaps, which is a bound and not a target: `_subdivide` closes a leg at the last
+node **inside** `DAY_MARCH_M` and stands a station there, so no merchant leg is longer than
+one march. Cutting on the crossing instead would overshoot by a graph step -- 6250 m at
+size 33 -- and the guarantee would be a slogan. What it cannot cut is a single graph step
+wider than a march, or a leg with no interior node to stand a station on; both are
+properties of the route graph, and neither arises at any raster the generator ships. Banditry wants rugged refuge beside prosperity and weak authority, which
 is why the third bandit condition is the *absence* of a seat. Refugees overwhelmingly
 stay near home. Pilgrimage is a fixed repeated circuit widely read as tracing ley lines,
 which is why cultists snap to the world's existing networks rather than inventing
@@ -184,10 +240,59 @@ authored constant: every destroyed city leaves a ley key point at intensity 3.5 
 so a bloody age manufactures sacred ground. Tuning cult frequency means tuning the
 weight, not the gate.
 
+## Lineage fission
+
+A clan whose head count passes what its own round carries splits, once, when it is
+placed. The daughter is seated on a camp of the parent's round — summer pasture first,
+because that is the ground a herd that has outgrown its range competes for — names the
+parent in `parent_uid`, and carries one leg of branch `fission` joining its round to the
+parent's start camp. That leg is the only one whose `to` names a camp of another band, it
+carries no day window because the split happened once rather than every year, and it is
+excluded from `round_length_m`.
+
+Capacity is **dimensionless**: `round_capacity` reads the classification's authored
+`size` band and the forage of the round picks a point on it, from the gate's forage floor
+up to the authored `rich_forage`. A head-per-square-kilometre figure was rejected for the
+reason the placement rate rejected a clearance *rejection*: it reads the raster rather
+than the land. A cell is 52 km² at raster 17 against 13 km² at raster 33, so the same
+clan on the same ground would outgrow it at one resolution and not the other.
+
+**Cadence — an open design question, decided here so it can be reversed knowingly.**
+Fission runs **once at placement**, not at every age transition. Three reasons, the first
+two load-bearing:
+
+1. Nothing kills a band, so a per-age rule grows the population every age with no term
+   removing anyone. Once at placement is bounded by construction: at most one child per
+   placed band and a child never splits, so a world holds fewer than twice the bands it
+   placed. The rejected reading needs both a ceiling and a death term that do not exist.
+2. A band does not survive an age anyway. `add_nomads` replaces the block wholesale at
+   every age turn, deliberately, so there is no surviving parent at a boundary to split
+   from; "fission per age" would have meant inventing a lineage across a gap the
+   generator does not model.
+3. An age is five thousand years ([028](../decisions/028-an-age-is-five-thousand-years.md),
+   ruled the same day this was built). A rule firing once per age fires once per two
+   hundred generations of herders. The cadence argument that made per-age attractive was
+   written when an age was a century.
+
+What is given up: a clan's descent is not legible across ages, and no band has a
+grandchild.
+
+A child is **not** written into `rolls`. `rolls` records what the point process considered
+at a candidate point, and a child was never considered — it descends. The invariant a
+consumer can hold is that every band either names a roll or names a parent that does.
+
+`nomads.counts` is recomputed from the band set at the end of the route pass rather than
+incremented, because three callers add to it — placement, the request API and fission —
+and a tally that is only ever incremented cannot survive a pass that removes anybody.
+
 ## Does not establish
 
-- **Lineage fission does not exist.** No band has a child and `fission` never appears as
-  a branch.
+- Fission is a split, not a demographic model. A fissioned parent keeps its own head
+  count: the route pass has no population model, and rewriting a placed band's `size`
+  from here would make the authored size band a fiction. `rich_forage` is calibrated
+  against measured rounds (0.32–0.57 on seed 42 at size 33) rather than derived.
+- A daughter clan whose inherited camp cannot support a round of its own is **refused**,
+  not recorded as a stranded child. A segment with nowhere to winter has not split.
 - Circuits are static. A band walks the same round every year and nothing re-routes it
   when the world changes underneath.
 - `route_status: "stranded"` is a real outcome, not an error. The wanderer gate checks

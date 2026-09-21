@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/person-state-request.schema.json",
+  "title": "Change a person's liveness in an existing recipe 3 world",
+  "description": "The body of POST /world/person-state. `status` is the liveness pair `terrain_liveness` already publishes and reads, not any block's own words: the producer finds which of heroes.people, heroes.dreads, npcs.people or villains.people the uid came from and writes that block's word -- `living`/`legend`, `alive`/`dead` or `living`/`fallen`. A caller never names the block and never sends one of those words. A uid that names a person in more than one block is refused rather than resolved by iteration order.",
+  "type": "object",
+  "required": ["api_version", "world"],
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"const": 1},
+    "world": {"type": "object", "required": ["config"]},
+    "changes": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": {
+        "type": "object",
+        "required": ["uid", "status", "reason", "day"],
+        "additionalProperties": false,
+        "properties": {
+          "uid": {"type": "string", "minLength": 1},
+          "status": {
+            "enum": ["present", "gone"],
+            "description": "The published liveness vocabulary. Sending a block-local word such as `dead` or `fallen` is refused with both accepted values named."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Why, in the caller's own words. Copied verbatim into history.operations, which is persisted, so it is bounded."
+          },
+          "day": {"type": "number", "minimum": 0}
+        }
+      }
+    }
+  }
+}

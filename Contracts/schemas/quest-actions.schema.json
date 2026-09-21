@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fantasy-world-generator.local/schemas/quest-actions.schema.json",
+  "title": "quest_actions report v1",
+  "description": "The `quest_actions` block a world carries after POST /world/quest: the report for the call just made, not accumulated state. It is overwritten by the next such call and says nothing about earlier ones -- `quests.log` and `history.operations` are where a sequence is recorded. `applied` is zero for a call that carried no actions, and such a call records no operation.",
+  "type": "object",
+  "required": ["api_version", "day", "applied", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {"const": 1},
+    "day": {
+      "type": "number",
+      "description": "The world clock's day at the moment of the call, which is the default any action that named no day was given."
+    },
+    "applied": {"type": "integer", "minimum": 0},
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["quest_id", "action", "day", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "quest_id": {"type": "string", "minLength": 1},
+          "action": {"enum": ["take", "abandon"]},
+          "day": {"type": "number", "minimum": 0},
+          "state": {
+            "enum": ["taken", "abandoned"],
+            "description": "The lifecycle state the quest holds after this action. These are two of the states terrain_time already writes; this route publishes no new one."
+          }
+        }
+      }
+    }
+  }
+}

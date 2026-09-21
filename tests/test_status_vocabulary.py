@@ -97,6 +97,33 @@ def published():
     return rows
 
 
+def status_objects(node, path=''):
+    """The same walk as `status_sites`, yielding the declaration object rather than a summary.
+
+    Kept separate rather than widening `status_sites` to a four-tuple: three tests below
+    unpack that one, and a shape change to a walker they share would be a change to what
+    they assert made silently, on the way past.
+    """
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key == 'status' and isinstance(value, dict):
+                yield path + '/status', value
+            yield from status_objects(value, f'{path}/{key}')
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from status_objects(value, f'{path}/{index}')
+
+
+def declarations():
+    """{(schema file, path within it): the declaration object} for every `status` site."""
+    out = {}
+    for path in sorted(SCHEMAS.glob('*.schema.json')):
+        doc = json.loads(path.read_text(encoding='utf-8'))
+        for where, decl in status_objects(doc):
+            out[(path.name, where)] = decl
+    return out
+
+
 def vocabularies():
     """Every distinct declared `status` enum, as a set of token tuples."""
     return {tokens for _, _, tokens, _ in published() if tokens}
@@ -173,6 +200,20 @@ REASONED_ABOUT = (
 LIVE = {'heroes': 'living', 'npcs': 'alive', 'villains': 'living'}
 ENDED = {'heroes': 'legend', 'npcs': 'dead', 'villains': 'fallen'}
 PEOPLE_SCHEMAS = {'heroes': 'hero-generator.schema.json', 'npcs': 'npc-roster.schema.json'}
+
+# Every `status` a *person record of an emitted block* declares, and the liveness block it
+# belongs to. `read-place.schema.json`'s `post` is a read-API projection of `npcs` rather
+# than a block contract and is deliberately not here; `person-state-request.schema.json`
+# already speaks `present`/`gone` and needs no translation.
+PERSON_STATUS_SITES = {
+    ('hero-generator.schema.json', '/$defs/person/properties/status'): 'heroes',
+    ('hero-generator.schema.json', '/$defs/dread/properties/status'): 'dreads',
+    ('npc-roster.schema.json', '/$defs/person/properties/status'): 'npcs',
+    ('villains.schema.json', '/properties/people/items/properties/status'): 'villains',
+}
+# The two states `Sim/icarus_sim/terrain_liveness.py` answers in, and the only values a
+# published `liveness` mapping may take.
+STATES = ('present', 'gone')
 
 
 def person_tokens(block):
@@ -296,6 +337,120 @@ class StatusVocabularyTests(unittest.TestCase):
                          '`hero-generator.schema.json` for a different block, so a consumer that '
                          'found it there learned the wrong complement -- a hero who is not `living` '
                          'is a `legend`, a villain who is not `living` is `fallen`.')
+
+
+class PublishedLivenessMappingTests(unittest.TestCase):
+    """The three failures above are not fixed here, and that is deliberate.
+
+    They pin a token divergence that only a rename of three shipped enums can close, and
+    `docs/decisions/030-magnitude-and-identity-conventions.md` C1 part 3 rules that no
+    shipped schema is renamed. `board/backlog/SDET-STATUS-VOCABULARY.md` names the other
+    option the Contracts owner had -- *a `liveness` sibling keyword on each person-level
+    `status`* -- and that is what these tests hold.
+
+    What the annotation buys is the thing the card actually asks for: **the mapping is
+    published**. It existed only as Python (`Sim/icarus_sim/terrain_liveness.py`) and,
+    before that, only as one hand-written expression inside a private record builder. A
+    consumer reading exported JSON and the schemas beside it -- the roadmap phase 2
+    reader -- could not see it at all. Now each person-level `status` carries a `liveness`
+    object mapping each of its own tokens to `present` or `gone`, so the translation is
+    readable from the contract without running the generator.
+
+    What it does not buy is one token. `status == 'living'` is still right twice and wrong
+    once, and the three tests above still say so.
+    """
+
+    def test_the_sites_this_class_maps_are_the_blocks_the_predicate_knows(self):
+        """Control. Every test below iterates `PERSON_STATUS_SITES`, and iterating an empty
+        or stale mapping agrees with anything."""
+        from icarus_sim.terrain_liveness import GONE_STATUS, PRESENT_STATUS
+
+        self.assertEqual(set(PERSON_STATUS_SITES.values()), set(PRESENT_STATUS),
+                         'terrain_liveness answers for a set of blocks this module does not map, '
+                         'or the other way round, so the agreement test below is comparing a '
+                         'subset and calling it the surface')
+        self.assertEqual(set(PRESENT_STATUS), set(GONE_STATUS))
+        found = declarations()
+        missing = sorted(site for site in PERSON_STATUS_SITES if site not in found)
+        self.assertEqual(missing, [],
+                         f'a person `status` this class maps is no longer at that path: {missing}')
+
+    def test_every_person_status_declaration_publishes_its_liveness_mapping(self):
+        """A consumer that cannot run Python still has to be able to ask who is here."""
+        found = declarations()
+        without = sorted(f'{name}{where}' for name, where in PERSON_STATUS_SITES
+                         if not (found.get((name, where)) or {}).get('liveness'))
+        self.assertEqual(without, [],
+                         f'these person `status` declarations publish an enum but no mapping from '
+                         f'its tokens to liveness: {without}. The live token is `living` for heroes, '
+                         '`alive` for npcs and `living` for villains, so a consumer reading only the '
+                         'schema has to guess which word this block uses, and guessing `living` is '
+                         'right twice and silently wrong once.')
+
+    def test_the_published_mapping_is_total_over_the_enum_and_two_valued(self):
+        """A partial mapping is worse than none: it answers for some records and not others."""
+        found = declarations()
+        for (name, where), block in sorted(PERSON_STATUS_SITES.items()):
+            with self.subTest(block=block):
+                decl = found[(name, where)]
+                tokens = set(decl.get('enum') or ())
+                mapping = decl.get('liveness') or {}
+                self.assertEqual(set(mapping), tokens,
+                                 f'{name}{where}: the mapping covers {sorted(mapping)} and the enum '
+                                 f'declares {sorted(tokens)}; a token with no entry is a record no '
+                                 'consumer can resolve, and an entry with no token is a value the '
+                                 'contract says cannot occur')
+                self.assertEqual(set(mapping.values()) - set(STATES), set(),
+                                 f'{name}{where}: a liveness state outside {STATES}')
+                self.assertEqual(sorted(mapping.values()).count('present'), 1,
+                                 f'{name}{where}: exactly one token means still here')
+
+    def test_the_published_mapping_agrees_with_the_predicate_that_implements_it(self):
+        """Two statements of one rule is the defect `terrain_liveness` exists to prevent.
+
+        The schema is the published half and the module is the running half, so they are
+        compared rather than one being derived from the other -- a derivation would make
+        this test compare a value with itself.
+        """
+        from icarus_sim.terrain_liveness import GONE_STATUS, PRESENT_STATUS
+
+        found = declarations()
+        for (name, where), block in sorted(PERSON_STATUS_SITES.items()):
+            with self.subTest(block=block):
+                mapping = found[(name, where)].get('liveness') or {}
+                self.assertEqual(mapping.get(PRESENT_STATUS[block]), 'present',
+                                 f'{name}{where}: terrain_liveness writes '
+                                 f'{PRESENT_STATUS[block]!r} for a person who is still here and the '
+                                 'contract does not say so')
+                self.assertEqual(mapping.get(GONE_STATUS[block]), 'gone',
+                                 f'{name}{where}: terrain_liveness writes {GONE_STATUS[block]!r} for '
+                                 'a person who is gone and the contract does not say so')
+
+    def test_the_published_mapping_resolves_a_real_record_the_same_way_the_predicate_does(self):
+        """End to end, on a record of each block's own shape rather than on the tables.
+
+        The three tests above compare two descriptions of the rule. This one applies both
+        to a record, including the absent-status case, which is the clause every consumer
+        gets wrong: a record written before its package recorded departure described
+        someone who stood, so a missing `status` is `present` and not `gone`.
+        """
+        from icarus_sim.terrain_liveness import liveness
+
+        found = declarations()
+        for (name, where), block in sorted(PERSON_STATUS_SITES.items()):
+            mapping = found[(name, where)].get('liveness') or {}
+            # Without this the token loop below is empty when the annotation is missing and
+            # the absent-status clause carries the whole test, which is a green that means
+            # nothing. It was exactly that on the first run.
+            self.assertTrue(mapping, f'{name}{where}: no mapping to apply')
+            for token, state in sorted(mapping.items()):
+                with self.subTest(block=block, token=token):
+                    self.assertEqual(liveness({'status': token}, block), state)
+            with self.subTest(block=block, token='<absent>'):
+                self.assertEqual(liveness({}, block), 'present',
+                                 'an absent status must read as present, or every world '
+                                 'generated before its package recorded departure becomes a '
+                                 'world of ghosts')
 
 
 if __name__ == '__main__':

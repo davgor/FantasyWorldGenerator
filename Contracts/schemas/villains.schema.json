@@ -1,8 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Villains v1",
-  "description": "The `villains` block a finished world carries. It describes what the generator emits today and does not design anything: every property here was read off Sim/icarus_sim/terrain_villains.py rather than proposed. A world built with `villain_rise: 0` carries no block at all, so absence is a legal state of a world and not a failure of this contract. Tier is a continuous reach and `super villain` is a band on it rather than a flag: SUPER_TIER is 1.0, a reign is held above `villain_hold`, and the simulation's final age promotes the most concentrated regions to exactly SUPER_TIER so a generated world ends with antagonists standing in it. `people` holds everyone who ever held a region, living and fallen, the same shape `heroes.people` uses for legends and `npcs.people` for the dead: one list, a status field, and the reader filters. Every consumer that means \"who stands right now\" must say so, and absent status reads as living so older records still resolve.",
+  "title": "Villains v2",
+  "description": "The `villains` block a finished world carries. It describes what the generator emits today and does not design anything: every property here was read off Sim/icarus_sim/terrain_villains.py and off a generated world advanced far enough to produce a fall, rather than proposed. A world built with `villain_rise: 0` carries no block at all, so absence is a legal state of a world and not a failure of this contract. Tier is a continuous reach and `super villain` is a band on it rather than a flag: SUPER_TIER is 1.0, a reign is held above `villain_hold`, and the simulation's final age promotes the most concentrated regions to exactly SUPER_TIER so a generated world ends with antagonists standing in it. `people` holds everyone who ever held a region, living and fallen, the same shape `heroes.people` uses for legends and `npcs.people` for the dead: one list, a status field, and the reader filters. Every consumer that means \"who stands right now\" must say so, and absent status reads as living so older records still resolve. ON CLOSED CONTAINERS: every object container here is closed, deliberately and against the habit of the rest of Contracts/. The block's failure mode is not a consumer sending something unexpected -- nothing sends this, the generator emits it -- it is the emitter growing a field no contract mentions, which is exactly what an open container cannot catch. `npc-roster`'s `summary` declared six counters against eight emitted with a green suite; this block spent its whole life with no contract at all. Closing costs one line of maintenance per new field and buys the reverse direction, which is the half this block never had. Version 2 is the first version emitted by a generator whose fall band is reachable, so `people` can actually contain a `fallen` record and `tiers` is a decaying ledger rather than a running total.",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "version",
     "people",
@@ -12,11 +13,11 @@
   ],
   "properties": {
     "version": {
-      "const": 1
+      "const": 2
     },
     "tiers": {
       "type": "object",
-      "description": "Accumulated tier per region anchor, the thing that actually persists. A villain is the name the world puts on a region that has concentrated past the band; the region outlives the villain. Keys are ley node ids, or `seat-<city uid>` where a world has no magic at all, and never culture ids -- a culture's id is rebuilt every age from whatever the roads join, so tier keyed to one silently resets and nothing can ever reach the band. A villain's own well is excluded from anchor selection, because a region anchored to its holder's work is anchored to something that did not exist before that holder.",
+      "description": "Tier per region anchor, the thing that actually persists. A villain is the name the world puts on a region that has concentrated past the band; the region outlives the villain. Keys are ley node ids, or `seat-<city uid>` where a world has no magic at all, and never culture ids -- a culture's id is rebuilt every age from whatever the roads join, so tier keyed to one silently resets and nothing can ever reach the band. A villain's own well is excluded from anchor selection, because a region anchored to its holder's work is anchored to something that did not exist before that holder. IN VERSION 2 THIS IS NOT A RUNNING TOTAL. Each age the ledger keeps TIER_KEPT_PER_AGE (0.9) of what it held and adds `villain_rise x concentration`, so it measures turmoil sustained rather than turmoil ever, and a steady concentration `p` settles at `rise x p / 0.1` instead of climbing with the world's age. A version 1 value read as \"the worst this region ever was\" is read wrong here. The decay is what makes `villain_hold` reachable at all: while the ledger only ever rose, a seated villain's tier could never come back down through a band declared 0..1.",
       "additionalProperties": {
         "type": "number",
         "minimum": 0
@@ -118,95 +119,34 @@
           },
           "status": {
             "type": "string",
-            "description": "Whether this villain still holds its region. Read through terrain_villains.standing(); absent reads as living.",
+            "description": "Whether this villain still holds its region. Read through terrain_villains.standing(); absent reads as living. `living`/`fallen` are THIS BLOCK's words and the complement is the trap: a hero who is not `living` is a `legend`, so a consumer that learned the token from hero-generator.schema.json learned the wrong other half. `liveness` beside this enum is the published translation into the two states Sim/icarus_sim/terrain_liveness.py answers in, and it is what a predicate spanning heroes, dreads, npcs and villains should read. Note `fallen` is a reign ending, not a death: the person may still be in the world, and `gone` here means gone from the band.",
             "enum": [
               "living",
               "fallen"
-            ]
+            ],
+            "liveness": {
+              "living": "present",
+              "fallen": "gone"
+            }
           },
           "well": {
-            "type": "object",
-            "description": "The leyline well a god-bound villain sank: a source that is joined, so the edges are the point.",
-            "required": [
-              "node",
-              "school",
-              "god",
-              "lines",
-              "age"
-            ],
-            "properties": {
-              "node": {
-                "type": "string"
-              },
-              "school": {
-                "type": "string"
-              },
-              "god": {
-                "type": "string"
-              },
-              "lines": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "age": {
-                "type": "integer",
-                "minimum": 0
-              }
-            }
+            "$ref": "#/$defs/well"
           },
           "claims": {
             "type": "array",
-            "description": "Ground this villain took. Claims persist after a fall -- held ground outlives its holder -- and each one carries its holder's state so a consumer reads how hard it presses off the claim itself rather than joining against the roster.",
+            "description": "Ground this villain took. See `$defs/claim`.",
             "items": {
-              "type": "object",
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "influence": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "holder_status": {
-                  "type": "string",
-                  "enum": [
-                    "living",
-                    "fallen"
-                  ]
-                },
-                "holder_fell_age": {
-                  "type": "integer",
-                  "minimum": 0
-                }
-              }
+              "$ref": "#/$defs/claim"
             }
           },
           "log": {
             "type": "array",
-            "description": "What happened to this villain and when. `promoted` is the terminal pass that seats a region as the simulation ends; `rose` is accumulation crossing the band during an age.",
             "items": {
-              "type": "object",
-              "required": [
-                "age",
-                "event"
-              ],
-              "properties": {
-                "age": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "event": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/$defs/logEntry"
             }
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "fallen": {
@@ -218,9 +158,16 @@
           "id",
           "kind",
           "uid",
-          "fell_age",
+          "region",
           "born_age",
+          "fell_age",
           "reigned_ages",
+          "tier_at_fall",
+          "seat_uid",
+          "node",
+          "direction",
+          "held_nodes",
+          "log",
           "left"
         ],
         "properties": {
@@ -279,16 +226,99 @@
                   "type": "string"
                 }
               }
+            },
+            "additionalProperties": false
+          },
+          "region": {
+            "type": "string"
+          },
+          "tier_at_fall": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The tier it held at the moment the band let go. The live `tier` and `reach_m` are deliberately absent -- both describe a grip it no longer has -- but the number the fall happened at is part of what happened."
+          },
+          "seat_uid": {
+            "type": "string"
+          },
+          "node": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "direction": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "school": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "god": {
+            "type": "string"
+          },
+          "growth": {
+            "type": "string",
+            "enum": [
+              "devouring",
+              "spreading",
+              "hoarding",
+              "usurping"
+            ]
+          },
+          "held_nodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "claims": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/claim"
+            }
+          },
+          "well": {
+            "$ref": "#/$defs/well"
+          },
+          "log": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/logEntry"
             }
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "works": {
       "type": "array",
       "description": "What seated villains built this age, present only in an age that built something. Written after the rebuild, on settled ground: a well joins the holdings a villain actually has this age and a claim names the peoples actually near it.",
       "items": {
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "villain_uid",
+          "well",
+          "claim"
+        ],
+        "properties": {
+          "villain_uid": {
+            "type": "string"
+          },
+          "well": {
+            "type": "boolean",
+            "description": "Whether a well was sunk this age."
+          },
+          "claim": {
+            "type": "boolean",
+            "description": "Whether ground was claimed or refreshed this age."
+          }
+        }
       }
     },
     "outlook": {
@@ -334,7 +364,11 @@
                 "type": "string"
               },
               "culture": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The `humans.cultures` id this region was grouped from, or null for a row that is a holding rather than a region: a villain still standing on an anchor no region was produced for this age, because its seat city died or a nearer ley node took the anchor. Those rows exist so `standing` always equals the number of rows with `seated` true -- one document, one answer."
               },
               "concentration": {
                 "type": "number"
@@ -357,8 +391,172 @@
                 "type": "integer",
                 "minimum": 0
               }
-            }
+            },
+            "additionalProperties": false
           }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "description": "Ground a villain took for its own, recorded rather than injected into `settlements.sites`. A claim is a SNAPSHOT WITH A STANDING HALF, and the split is the contract. `age`, `direction`, `node`, `factions` and `drawn_from` record what was taken and when and never move again, so a city founded two ages later does not retroactively join a claim staked before it existed -- and a `drawn_from` uid that names a ruin by now is this record being honest about a claim taken from the living. What tracks the present is the holder's own standing: `kind`, `refreshed_age`, `holder_status`, `holder_fell_age` and `influence`. Claims persist after a fall, because held ground outlives its holder, and each carries its holder's state so a consumer reads how hard it presses off the claim itself rather than joining against the roster -- which matters because `key_locations` is a leaf package and cannot import the sim.",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "villain_uid",
+        "age",
+        "refreshed_age",
+        "direction",
+        "node",
+        "kind",
+        "factions",
+        "drawn_from",
+        "well",
+        "holder_status",
+        "influence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "`claim-<villain uid>`, one constant per villain."
+        },
+        "villain_uid": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The age the claim was first taken. It never moves."
+        },
+        "refreshed_age": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The age the standing half was last recomputed, so a consumer never has to read `age` as if it were that."
+        },
+        "direction": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "node": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "seat",
+            "village"
+          ],
+          "description": "A band on the holder's tier NOW -- `seat` at or above 1.5x SUPER_TIER, `village` below. It tracks in both directions: a villain that grows past the band promotes its claim, and one whose region quietens demotes it."
+        },
+        "factions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The peoples of the nearest cities at the age it was taken. Mixed by construction: a villain takes whoever is close, not whoever shares its blood."
+        },
+        "drawn_from": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "City uids, at the age it was taken."
+        },
+        "well": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The holder's well node id, or null if it never sank one."
+        },
+        "holder_status": {
+          "type": "string",
+          "enum": [
+            "living",
+            "fallen"
+          ]
+        },
+        "holder_fell_age": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Present once the holder has fallen."
+        },
+        "influence": {
+          "type": "number",
+          "minimum": 0,
+          "description": "How hard this claim still presses on the ground it took. 1.0 while its holder stands; FALLEN_CLAIM_INFLUENCE at the fall and CLAIM_DECAY_PER_AGE of that each further age, reported as exactly zero below CLAIM_INFLUENCE_FLOOR. The record is never pruned; only the pressure fades."
+        }
+      }
+    },
+    "logEntry": {
+      "type": "object",
+      "description": "What happened to this villain and when. `rose` is accumulation crossing the band during an age, `promoted` the terminal pass that seats the most concentrated regions as the simulation ends, `fell` a reign ending below `villain_hold`, and `sank a well` a god-bound villain re-routing the ley tracks. The extra keys belong to the well entry alone.",
+      "additionalProperties": false,
+      "required": [
+        "age",
+        "event"
+      ],
+      "properties": {
+        "age": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "event": {
+          "type": "string"
+        },
+        "concentration": {
+          "type": "number"
+        },
+        "school": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "well": {
+      "type": "object",
+      "description": "The leyline well a god-bound villain sank: a source that is JOINED, so the edges are the point -- they change what the network carries between its holdings, which a lone node cannot do.",
+      "additionalProperties": false,
+      "required": [
+        "node",
+        "school",
+        "god",
+        "lines",
+        "age"
+      ],
+      "properties": {
+        "node": {
+          "type": "string"
+        },
+        "school": {
+          "type": "string"
+        },
+        "god": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     }

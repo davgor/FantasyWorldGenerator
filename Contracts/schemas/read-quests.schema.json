@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fantasy-world-generator/schemas/read-quests.schema.json",
+  "title": "Read: quests",
+  "description": "Open, taken and recently closed quests with giver and anchor resolved. Answered by POST /world/quests (Sim/icarus_sim/terrain_read.quests_request), from the quests block the time capability writes and nothing else writes. A world that has never been advanced carries no board at all and is refused as missing_block, because no quests and no quest lifecycle are different facts.",
+  "type": "object",
+  "required": ["schema", "schema_version", "read", "api_version", "source", "quests", "counts",
+               "states", "row_ceiling", "joins"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "fantasy-world-generator.read.quests" },
+    "schema_version": { "const": 1 },
+    "read": { "const": "quests" },
+    "api_version": { "const": 1 },
+    "source": { "$ref": "#/$defs/source" },
+    "quests": {
+      "type": "array",
+      "description": "In the order terrain_time sorts the board, which is by quest_id. This read preserves that order rather than imposing one.",
+      "items": { "$ref": "#/$defs/quest" }
+    },
+    "counts": {
+      "type": "object",
+      "description": "Over the whole board, not the filtered view, so a caller asking only for offered quests still learns how many are expired.",
+      "required": ["total"],
+      "properties": {
+        "offered": { "type": "integer" },
+        "taken": { "type": "integer" },
+        "expired": { "type": "integer" },
+        "completed": { "type": "integer" },
+        "failed": { "type": "integer" },
+        "abandoned": { "type": "integer" },
+        "total": { "type": "integer" },
+        "unknown_state": { "type": "integer", "description": "Rows carrying a state this vocabulary does not know. Reported rather than dropped." }
+      }
+    },
+    "states": { "type": ["array", "null"], "items": { "type": "string" }, "description": "The filter applied, or null for the whole board." },
+    "row_ceiling": { "type": "integer" },
+    "joins": { "type": "array", "items": { "$ref": "#/$defs/join" } }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["generator_version", "seed", "size", "phase", "day", "age"],
+      "properties": {
+        "generator_version": { "type": ["integer", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "size": { "type": ["integer", "null"] },
+        "phase": { "type": ["integer", "null"] },
+        "day": { "type": ["number", "null"] },
+        "age": { "type": ["integer", "null"] }
+      }
+    },
+    "quest": {
+      "type": "object",
+      "required": ["quest_id", "state", "giver_uid", "giver", "anchor", "verb"],
+      "additionalProperties": false,
+      "properties": {
+        "quest_id": { "type": "string", "description": "Equal to the hook_id it was opened from, and it names one age's offer only: an age turn retires the whole board and rebuilds it from the new age's hooks, so an id seen before and after an age turn is two different quests. A hook that disappears while the world around it stands closes its quest with closed_reason hook_gone." },
+        "state": { "enum": ["offered", "taken", "expired", "completed", "failed", "abandoned"] },
+        "giver_uid": { "type": ["string", "null"] },
+        "giver": {
+          "type": ["object", "null"],
+          "description": "Resolved against the same index, in the same first-writer-wins order, that terrain_time uses to decide whether a giver is gone. Null where the uid names nobody this world still holds.",
+          "required": ["uid", "block", "name", "role", "liveness", "anchor"],
+          "properties": {
+            "uid": { "type": "string" },
+            "block": { "enum": ["heroes", "dreads", "npcs", "villains"] },
+            "name": { "type": ["string", "null"] },
+            "role": { "type": ["string", "null"] },
+            "liveness": { "enum": ["present", "gone"] },
+            "anchor": { "type": "object" }
+          }
+        },
+        "anchor": { "type": ["string", "null"], "description": "Carried verbatim from the row terrain_time wrote, which took it from heroes.quest_hooks[].target or the hook's own nest_id. Never re-derived here." },
+        "verb": { "type": ["string", "null"], "description": "The hook's declared action. Difficulty is deliberately absent: it belongs to the quest generator and is not emitted by the time capability." },
+        "stated_purpose": { "type": ["string", "null"] },
+        "unwitting": { "type": ["boolean", "null"] },
+        "offered_day": { "type": ["number", "null"] },
+        "expires_day": { "type": ["number", "null"] },
+        "closed_day": { "type": ["number", "null"] },
+        "closed_reason": {
+          "type": ["string", "null"],
+          "enum": ["expired", "giver_gone", "target_gone", "hook_gone", "age_turned", "resolved", "abandoned", null],
+          "description": "Why the quest closed, or null while it is still open. expired is its own offer window passing; giver_gone and target_gone are the person or the thing it points at leaving; hook_gone is this hook leaving heroes.quest_hooks while the world around it stands; age_turned is the world moving on - an age is five thousand years, the cast is regenerated wholesale, and everyone who could have offered or populated the quest is gone. resolved is an outcome the game reported through advance-time; abandoned is the party putting the promise down through POST /world/quest. terrain_time.CLOSED_REASONS is the one home of this list."
+        }
+      }
+    },
+    "join": {
+      "type": "object",
+      "required": ["name", "from", "to", "writer"],
+      "properties": {
+        "name": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "writer": { "type": "string" }
+      }
+    }
+  }
+}
