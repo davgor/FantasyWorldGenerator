@@ -1,12 +1,12 @@
 # PERF-SHOWCASE-TEST-COST — one test method generates six worlds, and the guard that would stop it runs last
 
-Owner: none. State: **backlog — two of three fixes landed, the falsification is still unrun.**
+Owner: none. State: **backlog — two of three fixes landed; the falsification RAN on 2026-09-21 and this is a breakage card, not a cost card.** The exporter cannot produce a publishable bundle at all: `crossroads.html` is 313.0 MB against a 100 MB hard limit. See [The falsification ran 2026-09-21](#the-falsification-ran-2026-09-21--it-is-a-breakage-card-not-a-cost-card) at the end — it supersedes the header below and the 41,806,542-byte figure in this card. What remains is a product decision (shrink the grid, or stop embedding `build_stages`), not a performance fix.
 
 > **Swept 2026-09-21 at `4778a3e`.** Fix **3** (compare digests, not bytes) and fix **1** (move
 > the size guard inside the generation loop) are both landed, with tests that failed first and
 > that cost no world generation to run. Fix **2** (shrink the reproducibility input) was
 > **rejected and deliberately not stacked** on fix 1 — it is the only one of the three that gives
-> up a stated guarantee. **The card stays open for one reason: the falsification did not finish**,
+> up a stated guarantee. **Superseded 2026-09-21: the falsification has since finished** — see the > final section. It stayed open at the time because the run did not finish,
 > twice, so whether this is a cost card or a breakage card is still formally undecided. See
 > [Falsification](#falsification).
 

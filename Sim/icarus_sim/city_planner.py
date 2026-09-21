@@ -1,5 +1,6 @@
 """Deterministic final-world schematic city packing, in local metres."""
 import hashlib
+import os
 import json
 import math
 from .city_geometry import grow_roads, corners, footprint_cells
@@ -11,6 +12,44 @@ from .terrain_settlements import FOUNDED_BY, PLAYER
 
 VERSION=8
 CELL=4
+_ROOT2=math.sqrt(2)
+
+
+def _clearance(free,size):
+    """Chebyshev cell distance from each cell to the nearest cell that is not free ground.
+
+    Two sweeps over the city raster, once per city, so that the candidate sweep can
+    decide most positions without rasterizing anything. Roughly four candidate positions
+    in five are rejected because the plot overlaps blocked ground or a street, and each
+    of those used to cost a footprint rasterization and two set tests.
+    """
+    far=size+size
+    grid=[[far if (i,j) in free else 0 for i in range(size)] for j in range(size)]
+    for j in range(size):
+        row=grid[j];up=grid[j-1] if j else None
+        for i in range(size):
+            if not row[i]:continue
+            best=row[i-1]+1 if i else 1
+            if up is None:
+                if best>1:best=1
+            else:
+                if up[i]+1<best:best=up[i]+1
+                if i and up[i-1]+1<best:best=up[i-1]+1
+                if i+1<size and up[i+1]+1<best:best=up[i+1]+1
+            if best<row[i]:row[i]=best
+    for j in range(size-1,-1,-1):
+        row=grid[j];down=grid[j+1] if j+1<size else None
+        for i in range(size-1,-1,-1):
+            if not row[i]:continue
+            best=row[i+1]+1 if i+1<size else 1
+            if down is None:
+                if best>1:best=1
+            else:
+                if down[i]+1<best:best=down[i]+1
+                if i+1<size and down[i+1]+1<best:best=down[i+1]+1
+                if i and down[i-1]+1<best:best=down[i-1]+1
+            if best<row[i]:row[i]=best
+    return grid
 
 
 def planner_identity():
@@ -85,7 +124,30 @@ def _sampler(world,site,half):
     return sample,math.pi*radius/(n-1)
 
 
-def plan_city(world,site,nearby_counts=None):
+class _Replay:
+    """A generator's output, remembered so it can be iterated any number of times.
+
+    `candidates` used to build the whole anchor sweep for every plot size, but
+    `install` takes the first free option and stops: between 22% and 61% of each
+    list was built and never looked at. Yielding on demand and keeping what was
+    yielded leaves the order and the first match identical -- no plot moves -- and
+    simply stops producing options past the deepest one anybody asked for.
+    """
+    __slots__=('_memo','_source','_spent')
+    def __init__(self,source):self._memo=[];self._source=source;self._spent=False
+    def __iter__(self):
+        memo=self._memo;i=0
+        while True:
+            if i<len(memo):
+                yield memo[i];i+=1;continue
+            if self._spent:return
+            try:option=next(self._source)
+            except StopIteration:
+                self._spent=True;return
+            memo.append(option);yield option;i+=1
+
+
+def plan_city(world,site,nearby_counts=None,shape_only=False):
     preset=city_plan(site['population_profile'],site['city_class']+'_city')
     housing=section('housing_profiles');house=housing['worker_house'];apartment=housing['worker_apartment']
     # Bound footprints by neighbouring city anchors, without moving any anchor.
@@ -118,11 +180,6 @@ def plan_city(world,site,nearby_counts=None):
             row.append(code);biome_row.append(v['biome']);mutation_row.append(v['variant'])
             if code==0:valid.add((i,j));slopes.append(v['slope']);woods+=v['biome'] in (4,7,15)
         terrain.append(row);biomes.append(biome_row);mutations.append(mutation_row)
-    surface_size=size+1
-    surface={'size':surface_size,'step_m':2*half/(surface_size-1),
-             'heights_m':[[round(sample.height_at(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1)),4) for i in range(surface_size)] for j in range(surface_size)],
-             'source':'canonical terrain height in metres','terrain_detail':world.get('terrain_detail'),
-             'coordinates':'local east/north gnomonic coordinates; radial elevation above reference sphere'}
     center=sample(0,0)
     threat=next((c['regional_threat'] for c in world.get('threat_assessments',{}).get('cities',[])
                  if c['city_uid']==site.get('uid',str(site['id']))),0.)
@@ -130,6 +187,16 @@ def plan_city(world,site,nearby_counts=None):
            'local_slope_degrees':sum(slopes)/len(slopes) if slopes else 90,
            'aridity':1-max(0,min(1,center['moisture'])),'wooded_fraction':woods/max(1,len(valid)),
            'regional_threat':threat,'defense_priority':threat}
+    # Shape selection reads `facts` and nothing below it, and fill_cities needs every
+    # city's shape before it can plan any city, because the repetition counter runs in
+    # uid order. A caller taking that pass asks for the facts alone; the surface grid
+    # below is (size+1) squared height samples it would only throw away.
+    if shape_only:return facts
+    surface_size=size+1
+    surface={'size':surface_size,'step_m':2*half/(surface_size-1),
+             'heights_m':[[round(sample.height_at(-half+i*2*half/(surface_size-1),-half+j*2*half/(surface_size-1)),4) for i in range(surface_size)] for j in range(surface_size)],
+             'source':'canonical terrain height in metres','terrain_detail':world.get('terrain_detail'),
+             'coordinates':'local east/north gnomonic coordinates; radial elevation above reference sphere'}
     # Fine topology/navigability is unknown in this world raster; do not invent it.
     selected=select_shape(facts,world['config']['seed'],str(site.get('uid',site['id'])),site['city_class'],nearby_counts)
     # A city the player authored is not packed here. The record is still produced in full
@@ -191,6 +258,7 @@ def plan_city(world,site,nearby_counts=None):
             approach=next((path for path in paths if path[-1]==cell),[cell])
             c.update(status='connected',reason='Terrain-safe junction to regional road',local_path_m=[[-half+(a+.5)*CELL,-half+(b+.5)*CELL] for a,b in approach]+[gate])
     result['roads']=[list(c) for c in sorted(road)]
+    clearance=_clearance(valid-road,size)
     result['street_paths_m']=[[[round(-half+(x+.5)*CELL,2),round(-half+(z+.5)*CELL,2)] for x,z in path] for path in paths]
     wall_def,gate_def=wall_and_gate_defs(preset)
     gate_budget=next((row['count'] for row in preset['buildings'] if row['structure_id']=='building.gatehouse'),0)
@@ -218,14 +286,20 @@ def plan_city(world,site,nearby_counts=None):
     # made the eleven-step rasterization the hottest call in city planning.
     corridor_cache={}
     def cells(x,z,w,d,angle=0):return footprint_cells(x,z,w,d,angle,half,CELL)
-    def candidates(w,d):
-        if (w,d) in candidate_cache:return candidate_cache[(w,d)]
-        options=[]
+    def _stream(w,d):
         for ax,az,angle in anchors:
             for side in (1,-1):
                 dx=-math.sin(angle)*side;dz=math.cos(angle)*side
                 x=round(ax+dx*(d/2+10),2);z=round(az+dz*(d/2+10),2)
                 degrees=round(math.degrees(angle),4);angle=math.radians(degrees)
+                # The nearest cell that is not free ground has its centre within
+                # (k+1)*CELL of this plot centre in Chebyshev terms, so within
+                # (k+1)*CELL*sqrt(2) Euclidean. When that lands inside the inscribed
+                # circle it is inside the rectangle and therefore inside the footprint,
+                # so the two tests below are already decided and the rasterization is
+                # skipped. It can never fire on a candidate they would have accepted.
+                ci=int((x+half)//CELL);cj=int((z+half)//CELL)
+                if 0<=ci<size and 0<=cj<size and (clearance[cj][ci]+1)*CELL*_ROOT2<=(w if w<d else d)/2:continue
                 footprint=cells(x,z,w,d,angle)
                 if not footprint<=valid or footprint&road:continue
                 # Check the actual interpolated ground, including within coarse raster cells.
@@ -240,8 +314,10 @@ def plan_city(world,site,nearby_counts=None):
                     corridor=set()
                     for t in range(11):corridor|=cells(ax+(ex-ax)*t/10,az+(ez-az)*t/10,4,4)
                     corridor_cache[(ax,az,ex,ez)]=corridor
-                if corridor<=valid:options.append((x,z,degrees,ax,az,footprint,corridor,ground))
-        candidate_cache[(w,d)]=options
+                if corridor<=valid:yield (x,z,degrees,ax,az,footprint,corridor,ground)
+    def candidates(w,d):
+        options=candidate_cache.get((w,d))
+        if options is None:options=candidate_cache[(w,d)]=_Replay(_stream(w,d))
         return options
     def free_frontage(w,d):
         return sum(1 for x,z,degrees,ax,az,footprint,corridor,ground in candidates(w,d)
@@ -380,12 +456,94 @@ def plan_city(world,site,nearby_counts=None):
     return result
 
 
-def fill_cities(world):
+# One city's plan is a pure function of (world, site, nearby_counts) -- it reads the
+# world and never writes to it -- so the only thing serialising the cities is the shape
+# repetition counter, which each city reads and the next one sees updated. Splitting that
+# one dependency out lets the geometry, which is all of the cost, run in a pool.
+_POOL_WORLD=None
+_MIN_SITES_FOR_POOL=3
+
+
+def _pool_init(blob):
+    global _POOL_WORLD
+    import pickle
+    _POOL_WORLD=pickle.loads(blob)
+
+
+def _pool_sites():
+    return sorted(_POOL_WORLD['settlements']['sites'],key=lambda s:str(s.get('uid',s['id'])))
+
+
+def _pool_facts(index):
+    return plan_city(_POOL_WORLD,_pool_sites()[index],None,shape_only=True)
+
+
+def _pool_plan(task):
+    index,counts=task
+    return plan_city(_POOL_WORLD,_pool_sites()[index],counts)
+
+
+def _shape_counts(world,sites,facts):
+    """The nearby_counts each city sees, in uid order, without planning any of them.
+
+    This is the serial loop's counter and nothing else: fill_cities increments on the
+    shape a city was given, and an authored city is given none, so it does not count.
+    """
+    counts={};seen=[]
+    for site,fact in zip(sites,facts):
+        seen.append(dict(counts))
+        if site.get(FOUNDED_BY)==PLAYER:continue
+        selected=select_shape(fact,world['config']['seed'],str(site.get('uid',site['id'])),
+                              site['city_class'],counts)
+        key=selected['shape_id']
+        if key:counts[key]=counts.get(key,0)+1
+    return seen
+
+
+def _plan_serial(world,sites):
     cities=[];counts={}
-    for site in sorted(world['settlements']['sites'],key=lambda s:str(s.get('uid',s['id']))):
+    for site in sites:
         plan=plan_city(world,site,counts);cities.append(plan)
         key=plan['shape']['shape_id']
         if key:counts[key]=counts.get(key,0)+1
+    return cities
+
+
+def _plan_pooled(world,sites,workers):
+    """Same plans, two passes. Falls back to the serial loop rather than failing.
+
+    A process pool on a spawn platform re-imports the caller's __main__, so a caller
+    that generates a world at import time instead of under `if __name__ == "__main__"`
+    cannot use this. That is what the fallback is for; set workers=1 to skip it outright.
+    """
+    import os,pickle
+    from concurrent.futures import ProcessPoolExecutor
+    blob=pickle.dumps(world,protocol=pickle.HIGHEST_PROTOCOL)
+    workers=min(workers or (os.cpu_count() or 1),len(sites))
+    with ProcessPoolExecutor(max_workers=workers,initializer=_pool_init,initargs=(blob,)) as pool:
+        facts=list(pool.map(_pool_facts,range(len(sites))))
+        counts=_shape_counts(world,sites,facts)
+        return list(pool.map(_pool_plan,list(enumerate(counts))))
+
+
+def fill_cities(world,workers=None):
+    sites=sorted(world['settlements']['sites'],key=lambda s:str(s.get('uid',s['id'])))
+    env=os.environ.get('ICARUS_CITY_WORKERS')
+    if workers is None and env:workers=int(env)
+    cities=None
+    if workers!=1 and len(sites)>=_MIN_SITES_FOR_POOL:
+        # A world must still generate if the pool cannot start, so this falls back rather
+        # than failing -- but a silent fallback is indistinguishable from a planner that
+        # is simply slow, which is exactly the thing nobody would investigate. Say it.
+        try:cities=_plan_pooled(world,sites,workers)
+        except Exception as error:
+            import warnings
+            warnings.warn('City planning fell back to one process (%s: %s). A spawn platform '
+                          're-imports the caller\'s __main__, so generation must happen under '
+                          '`if __name__ == "__main__"` for the pool to start.'
+                          %(type(error).__name__,error),RuntimeWarning,stacklevel=2)
+            cities=None
+    if cities is None:cities=_plan_serial(world,sites)
     world['city_plans']={'version':VERSION,'identity':planner_identity(),'cities':cities,
                          'phase_order':['map','shape','fortification','high','high_housing','low','low_housing'],
                          'scope':'Schematic local metres from final world raster; does not change simulated population.'}

@@ -16,147 +16,226 @@ python tools/stage_profile.py --size 128 --seed 42
 ## The reference measurement
 
 Seed 42, size 128 (16 384 cells), phase 16, recipe 3. Windows 11, Intel 24-core, 31.4 GB
-RAM, CPython 3.12.10, box at 21 % background load when the run started.
+RAM, CPython 3.12.10, box at 2 % background load when the run started. Measured-code digest
+`de592f00bfc582e7` over 30 modules.
 
-**1 244 s (20 min 44 s) wall, peak resident 2 773 MB.**
+**450.3 s (7 min 30 s) wall, peak resident 2 792 MB.**
 
-> **Two of the largest figures below are stale, and the run cannot be repeated to fix them
-> without first quieting the tree.** This measurement finished at 01:45 on 2026-09-21. A
-> concurrent session then restructured `city_planner.py` at 02:10 and `terrain_nests.py`
-> **twice**, at 02:18 (`3360718c14301b8f`) and again at 02:33 (`c5af625157f10ee2`). Those
-> two modules carry `add_nests` (505 s, 41 %) and `fill_cities` (275 s, 22 %) — together
-> 62 % of this run. **Treat the 505 s and 275 s figures, the two exponents derived from
-> them, and the whole-run total as describing the tree as it stood at 01:45, not as it
-> stands now.**
->
-> No figure for the size of the `add_nests` change is quoted here, and that is deliberate.
-> Two were offered while this paragraph was being written and the first was obsolete within
-> half an hour, because the second change altered what the predicate does rather than how
-> fast it does it. The session that made them reports a full phase-16 generation moving from
-> 356 s to 209 s at their reference world, on a contended box, as an upper bound — their
-> measurement, not this one, and provisional. A number that keeps moving is better named as
-> a moving number than pinned at whichever value it held when someone wrote it down.
->
-> Everything else here is unaffected. `add_world_society` (`terrain_society.py`, last
-> touched 01:06), `fill_hamlets` (01:22) and `add_beast_movements` (2026-09-19) all predate
-> the run, and the structural findings — the stage split, the call counts, the two
-> superlinear exponents, the search-count tables — do not depend on the two stale passes.
->
-> `tools/stage_profile.py` now records a digest of every measured module in each report, so
-> this ambiguity cannot recur: a report states the code it measured. This run predates that,
-> which is why it needs a paragraph instead of a hash. The two modules stood at versions
-> this document cannot name. At 02:22 on 2026-09-21 they were `terrain_nests.py`
-> `3360718c14301b8f` and `city_planner.py` `e6133a003130fb7f` — stated with their timestamp
-> rather than as "current", because on this tree a hash is current only for as long as it
-> takes to write the sentence. Compare against the tree before trusting any figure above.
+| # | Stage | Body s | Capture s | Total s | Share | Cum | RSS MB |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 1 | Plate layout | 0.7 | 0.0 | 0.8 | 0.2 % | 0.2 % | 37 |
+| 2 | Tectonic relief | 1.1 | 0.0 | 1.1 | 0.2 % | 0.4 % | 47 |
+| 3 | Surface detail | 1.3 | 0.0 | 1.3 | 0.3 % | 0.7 % | 56 |
+| 4 | Erosion and sediment | 1.6 | 0.0 | 1.6 | 0.4 % | 1.1 % | 84 |
+| 5 | Connected water | 1.6 | 0.0 | 1.6 | 0.4 % | 1.4 % | 106 |
+| 6 | Second tectonic relief | 1.2 | 0.1 | 1.3 | 0.3 % | 1.7 % | 109 |
+| 7 | Valleys and gorges | 0.3 | 0.0 | 0.3 | 0.1 % | 1.8 % | 112 |
+| 8 | Wind and rain | 1.0 | 0.2 | 1.2 | 0.3 % | 2.1 % | 157 |
+| 9 | Leylines | 2.6 | 0.2 | 2.8 | 0.6 % | 2.7 % | 205 |
+| 10 | Founding | 2.0 | 0.2 | 2.2 | 0.5 % | 3.2 % | 221 |
+| 11 | Roads | 3.2 | 0.0 | 3.2 | 0.7 % | 3.9 % | 230 |
+| 12 | Populated regions | 70.3 | 0.1 | **70.4** | 15.6 % | 19.5 % | 246 |
+| 13 | Beasties and animals | 4.7 | 0.3 | 5.0 | 1.1 % | 20.7 % | 321 |
+| 14 | Age transition 1 | 89.3 | 0.6 | **89.9** | 20.0 % | 40.6 % | 412 |
+| 15 | Age transition 2 | 94.0 | 0.5 | **94.5** | 21.0 % | 61.6 % | 492 |
+| 16 | Simulation complete | 169.0 | 4.1 | **173.1** | 38.4 % | 100 % | 1 060 |
 
-| # | Stage | Body s | Capture s | Total s | Share | Cum | RSS MB | ΔRSS |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| 1 | Plate layout | 0.8 | 0.0 | 0.8 | 0.1 % | 0.1 % | 37 | +8 |
-| 2 | Tectonic relief | 1.1 | 0.0 | 1.1 | 0.1 % | 0.2 % | 47 | +10 |
-| 3 | Surface detail | 1.4 | 0.0 | 1.4 | 0.1 % | 0.3 % | 56 | +9 |
-| 4 | Erosion and sediment | 1.9 | 0.0 | 2.0 | 0.2 % | 0.4 % | 84 | +28 |
-| 5 | Connected water | 2.0 | 0.0 | 2.0 | 0.2 % | 0.6 % | 107 | +23 |
-| 6 | Second tectonic relief | 1.5 | 0.1 | 1.6 | 0.1 % | 0.7 % | 109 | +2 |
-| 7 | Valleys and gorges | 0.4 | 0.1 | 0.4 | 0.0 % | 0.8 % | 111 | +2 |
-| 8 | Wind and rain | 1.2 | 0.3 | 1.5 | 0.1 % | 0.9 % | 157 | +46 |
-| 9 | Leylines | 3.2 | 0.2 | 3.5 | 0.3 % | 1.2 % | 205 | +48 |
-| 10 | Founding | 2.8 | 0.1 | 2.9 | 0.2 % | 1.4 % | 221 | +16 |
-| 11 | Roads | 4.3 | 0.0 | 4.3 | 0.3 % | 1.7 % | 230 | +9 |
-| 12 | Populated regions | 88.9 | 0.1 | **89.1** | 7.2 % | 8.9 % | 245 | +15 |
-| 13 | Beasties and animals | 103.9 | 0.4 | **104.3** | 8.4 % | 17.3 % | 318 | +74 |
-| 14 | Age transition 1 | 307.9 | 0.6 | **308.5** | 24.8 % | 42.1 % | 384 | +65 |
-| 15 | Age transition 2 | 290.2 | 0.5 | **290.7** | 23.4 % | 65.4 % | 468 | +84 |
-| 16 | Simulation complete | 426.5 | 3.6 | **430.1** | 34.6 % | 100 % | 1 044 | +576 |
+Stages 1 to 11 — the entire physical world, its climate, its leylines, its cities and its
+roads — are 17.4 s, 3.9 %. Snapshot capture is 6.2 s, 1.4 %. Peak resident is 2 792 MB, a
+stage-16 transient that settles back to 1 060 MB.
 
-The first eleven stages — the entire physical world, its climate, its leylines, its cities
-and its roads — are **21.6 s, 1.7 % of the run**. Everything else is stages 12 to 16.
+### Four runs, three optimisations, measured one at a time
 
-Snapshot capture is 6.2 s across the whole run, 0.5 %. It is not a time problem. It is a
-memory one: the sixteen snapshots retain a copy of every layer that changed, and
-`generate_history` builds them whether or not a caller exports them.
+Same seed, size and machine across 2026-09-21. Each pair differs by a known set of modules,
+confirmed by the subject digest rather than by reading a changelog.
 
-## The four passes that are the run
+| Run | Digest | Changed since previous | Total |
+|---|---|---|---:|
+| 01:45 | unknown (predates digests) | — | 1 244.2 s |
+| 10:00 | `6c17d71d47833ef5` | `terrain_nests.py`, `terrain_beast_movement.py`, `city_planner.py` | 699.8 s |
+| 11:41 | `2eb01cdc5f6307fe` | **`city_planner.py` only** | 602.3 s |
+| 12:35 | `de592f00bfc582e7` | **`city_planner.py` only** | **450.3 s** |
 
-Self time, summed across every call, at size 128:
+**1 244 s → 450 s, a 64 % cut, in three steps.** The whole ladder moved with it, and by
+more at the small sizes than the large:
 
-| Pass | Calls | Self s | Share | Slowest call |
+| Size | 01:45 | now | Change | Factor |
+|---:|---:|---:|---:|---:|
+| 17 | 89.7 | **13.3** | −85.2 % | 6.7× |
+| 33 | 281.2 | **55.5** | −80.2 % | 5.1× |
+| 65 | 637.6 | **177.0** | −72.2 % | 3.6× |
+| 128 | 1 244.2 | **450.3** | −63.8 % | 2.8× |
+
+That gradient is the whole story of what is left. Every optimisation so far has cut work
+that was sublinear in cells, so the gain shrinks as the world grows, and what remains is
+weighted ever more heavily toward the passes that are not.
+
+### The city planner, second pass: −83 % at identical output
+
+| Pass | 11:41 | 12:35 | Change | Code |
+|---|---:|---:|---:|---|
+| **`city_planner.fill_cities`** | 166.7 | **27.7** | **−83.4 %** | **changed** |
+| `terrain_society.add_world_society` | 221.2 | 213.3 | −3.5 % | same |
+| `hamlet_planner.fill_hamlets` | 86.8 | 86.2 | −0.7 % | same |
+| `terrain_beast_movement.add_beast_movements` | 36.4 | 34.6 | −4.7 % | same |
+| `terrain_nests.add_nests` | 24.7 | 24.0 | −2.7 % | same |
+| `castle_planner.fill_castles` | 17.1 | 17.0 | −0.4 % | same |
+| `terrain_settlements.add_settlements` | 14.5 | 14.2 | −2.5 % | same |
+
+Seven byte-identical passes moved between −4.7 % and −0.4 % — the tightest noise floor of
+the four runs. `fill_cities` at −83 % clears it about eighteenfold.
+
+**Identical output again, and this time it also got flatter.** Every content count matches
+at all four sizes. The cut is consistent across the ladder — −74.8 %, −81.6 %, −80.6 %,
+−83.4 % at 17, 33, 65 and 128 — and unlike the first city pass, the exponent moved too:
+**0.45 → 0.36**. So this one is a large constant factor *and* slightly better scaling, where
+the previous pass was constant-factor only.
+
+Across the two city passes together `fill_cities` has gone 252.8 s → 27.7 s, **9.1×**, from
+the largest pass in the generator to the fourth largest, with the world it produces
+unchanged at every size measured.
+
+### What the beast and monster work changed
+
+The 01:45 → 10:00 pair. Same seed, same size, same machine:
+
+| Stage | Before | After | Change |
+|---|---:|---:|---:|
+| **13 Beasties and animals** | 104.3 | **5.2** | **−95 %** |
+| **14 Age transition 1** | 308.5 | **95.2** | **−69 %** |
+| **15 Age transition 2** | 290.7 | **106.4** | **−63 %** |
+| 12 Populated regions | 89.1 | 73.9 | −17 % |
+| 16 Simulation complete | 430.1 | 401.3 | −7 % |
+| 1–11 combined | 21.6 | 17.8 | −18 % |
+| **Whole run** | **1 244.2** | **699.8** | **−44 %** |
+
+One pass accounts for essentially all of it:
+
+| Pass | Before | After | Change |
+|---|---:|---:|---:|
+| `terrain_nests.add_nests` | 505.4 | **26.5** | **−95 %** |
+| `city_planner.fill_cities` | 274.8 | 252.8 | −8 % |
+| `terrain_society.add_world_society` | 259.8 | 229.6 | −12 % |
+| `hamlet_planner.fill_hamlets` | 88.4 | 87.4 | −1 % |
+| `terrain_beast_movement.add_beast_movements` | 41.7 | 35.8 | −14 % |
+
+**Read the other four rows as the noise floor, not as wins.** The box was quieter for the
+second run (11 % against 21 % load), and three of those four passes are byte-identical
+across it: `hamlet_planner.py`, `terrain_society.py` and `castle_planner.py` did not change,
+and they moved −1 %, −12 % and −0 %. So an unchanged pass moved anywhere between −1 % and
+−18 % on this pair of runs, and that band is what a real change has to clear.
+`add_nests` at −95 % clears it by two orders of magnitude. The rest do not clear it at all.
+
+**And it is the good case.** A pass can get faster by doing less, and the counts say this
+one did not: nests placed went **4 379 → 6 128, up 40 %**, with `beast_movements`,
+`encounters`, `npcs` and every settlement count flat. Faster *and* more world. Cost per
+placed nest fell from 0.115 s to 0.0043 s, **26.7×**.
+
+**`add_beast_movements` shows no win at this size.** That module was rewritten too
+(15 662 → 23 481 bytes), and it moved −14 % with its group count flat at 11 119 → 11 184 —
+inside the noise band above. On the ladder its exponent moved the wrong way, 1.66 → 1.81.
+Whatever that rework achieved is not a speed-up at size 128.
+
+## The passes that are the run
+
+Self time, summed across every call, at size 128 on the current tree:
+
+| Pass | Calls | Self s | Share | Exponent |
 |---|---:|---:|---:|---:|
-| `terrain_nests.add_nests` | 5 real (+5 free) | 505.4 | 40.6 % | 108.1 s |
-| `city_planner.fill_cities` | 1 | 274.8 | 22.1 % | 274.8 s |
-| `terrain_society.add_world_society` | 3 real (+5 free) | 259.8 | 20.9 % | 92.8 s |
-| `hamlet_planner.fill_hamlets` | 1 | 88.4 | 7.1 % | 88.4 s |
-| `terrain_beast_movement.add_beast_movements` | 1 | 41.7 | 3.4 % | 41.7 s |
+| `terrain_society.add_world_society` | 3 real (+5 free) | 213.3 | **47.4 %** | **2.05** |
+| `hamlet_planner.fill_hamlets` | 1 | 86.2 | 19.1 % | 0.83 |
+| `terrain_beast_movement.add_beast_movements` | 1 | 34.6 | 7.7 % | **1.79** |
+| `city_planner.fill_cities` | 1 | 27.7 | 6.2 % | 0.36 |
+| `terrain_nests.add_nests` | 5 real (+5 free) | 24.0 | 5.3 % | 0.91 |
+| `castle_planner.fill_castles` | 1 | 17.0 | 3.8 % | 0.65 |
+| `terrain_settlements.add_settlements` | 5 real (+5 free) | 14.2 | 3.2 % | 0.85 |
 
-Those five are **1 170 s of 1 244 s — 94 % of the run.** Nothing else reaches 20 s.
+**`add_world_society` is now nearly half the generation and it has never been touched.** It
+has moved 259.8 → 213.3 s across the day, all of it box variation, while its share went from
+21 % to 47 %. Three passes have been optimised out from under it. It is also the quadratic
+one, so its share keeps rising with world size as well as with every further optimisation
+elsewhere.
 
 "Free" calls are the ones in stages 1 to 5, where the phase is too low for the pass to have
 anything to do; see [Stages 1 to 5 build the world five times](#stages-1-to-5-build-the-world-five-times).
 
 ## How each stage scales
 
-Four full generations at seed 42, phase 16: sizes 17, 33, 65 and 128. The exponent is a
-least-squares fit of log(seconds) against log(cells), so **1.0 is linear in cell count and
-2.0 is quadratic**. The size-65 run started on a box at 44 % background load; the others
-were between 19 % and 28 %, so read 65 as slightly pessimistic.
+Four full generations at seed 42, phase 16, at each of sizes 17, 33, 65 and 128, re-run on
+each tree. The exponent is a least-squares fit of log(seconds) against log(cells), so
+**1.0 is linear in cell count and 2.0 is quadratic**.
 
-| Stage | 17 s | 33 s | 65 s | 128 s | exp |
+| Whole run | 17 | 33 | 65 | 128 | exp |
 |---|---:|---:|---:|---:|---:|
-| Plate layout | 0.02 | 0.05 | 0.20 | 0.78 | 0.92 |
-| Tectonic relief | 0.02 | 0.08 | 0.29 | 1.15 | 0.98 |
-| Surface detail | 0.02 | 0.08 | 0.32 | 1.44 | 1.04 |
-| Erosion and sediment | 0.03 | 0.09 | 0.39 | 1.96 | 1.08 |
-| Connected water | 0.03 | 0.10 | 0.39 | 2.05 | 1.08 |
-| Second tectonic relief | 0.02 | 0.08 | 0.32 | 1.58 | 1.07 |
-| Valleys and gorges | 0.01 | 0.02 | 0.09 | 0.42 | 1.05 |
-| Wind and rain | 0.02 | 0.07 | 0.29 | 1.53 | 1.10 |
-| Leylines | 0.05 | 0.18 | 0.71 | 3.46 | 1.04 |
-| Founding | 0.11 | 0.23 | 0.68 | 2.92 | 0.80 |
-| Roads | 0.10 | 0.37 | 1.18 | 4.31 | 0.92 |
-| **Populated regions** | 0.19 | 1.10 | 17.83 | 89.07 | **1.58** |
-| Beasties and animals | 6.38 | 24.11 | 55.12 | 104.29 | 0.68 |
-| Age transition 1 | 14.42 | 51.54 | 127.03 | 308.50 | 0.75 |
-| Age transition 2 | 15.49 | 55.45 | 131.78 | 290.72 | 0.72 |
-| Simulation complete | 52.84 | 147.63 | 300.99 | 430.06 | 0.52 |
-| **Whole run** | **89.7** | **281.2** | **637.6** | **1 244.2** | **0.65** |
-| Peak resident MB | 379 | 460 | 713 | 2 773 | 0.49 |
+| 01:45 | 89.7 | 281.2 | 637.6 | 1 244.2 | 0.65 |
+| 10:00 | 51.2 | 150.1 | 330.6 | 699.8 | 0.64 |
+| 11:41 | 33.5 | 112.4 | 270.9 | 602.3 | 0.71 |
+| **12:35** | **13.3** | **55.5** | **177.0** | **450.3** | **0.87** |
 
-And the same fit per pass, which is where the shape actually lives:
+The whole-run exponent has climbed 0.65 → 0.87 across the day, and **that is the cost of
+the wins rather than a regression**. Every optimisation so far cut a pass that was
+sublinear in cells, so the remaining mix is weighted toward the two that are not. The
+generator is far cheaper at every size measured and its cost now grows closer to linearly
+with cell count than it did this morning.
 
-| Pass | 17 s | 33 s | 65 s | 128 s | exp |
-|---|---:|---:|---:|---:|---:|
-| `terrain_society.add_world_society` | 0.07 | 1.34 | 44.21 | 259.77 | **2.09** |
-| `terrain_beast_movement.add_beast_movements` | 0.06 | 0.57 | 6.85 | 41.69 | **1.66** |
-| `terrain_nomad_routes.add_nomad_routes` | 0.01 | 0.05 | 0.36 | 1.27 | 1.27 |
-| `terrain_nomads.add_nomads` | 0.01 | 0.04 | 0.28 | 1.05 | 1.24 |
-| `terrain_ecology.add_environment` | 0.03 | 0.15 | 0.68 | 3.32 | 1.14 |
-| `terrain_tectonics.generate_tectonics` | 0.08 | 0.31 | 1.31 | 5.96 | 1.08 |
-| `terrain_settlements.add_settlements` | 0.48 | 1.46 | 4.65 | 18.78 | 0.90 |
-| `hamlet_planner.fill_hamlets` | 3.58 | 26.10 | 79.66 | 88.37 | 0.80 |
-| `terrain_nests.add_nests` | 35.66 | 128.42 | 280.26 | 505.42 | 0.65 |
-| `city_planner.fill_cities` | 46.78 | 110.98 | 189.23 | 274.82 | 0.43 |
+Per pass, current tree, with the previous ladder's exponent beside it:
 
-The whole-run exponent of 0.65 is the headline that misleads. Total cost is **sublinear**
-in cells because the planet is a fixed 200 km world: raising the grid samples the same
-ground more finely rather than adding more of it, so the content counts that drive most
-passes grow far slower than cells do. That is why 57× the cells costs only 14× the time.
+| Pass | 17 | 33 | 65 | 128 | exp | prev exp |
+|---|---:|---:|---:|---:|---:|---:|
+| `add_world_society` | 0.07 | 1.29 | 42.71 | 213.32 | **2.05** | 2.07 |
+| `fill_hamlets` | 2.78 | 25.69 | 66.16 | 86.17 | 0.83 | 0.83 |
+| `add_beast_movements` | 0.03 | 0.42 | 5.36 | 34.63 | **1.79** | 1.80 |
+| `fill_cities` | 6.73 | 12.90 | 23.17 | 27.74 | **0.36** | 0.45 |
+| `add_nests` | 0.62 | 1.75 | 6.18 | 24.04 | 0.91 | 0.92 |
+| `fill_castles` | 1.24 | 7.24 | 16.81 | 17.03 | 0.65 | 0.64 |
+| `add_settlements` | 0.46 | 1.41 | 4.43 | 14.16 | 0.85 | 0.85 |
 
-For the largest pass that is not a guess at a mechanism but a measured relationship. Cost
-per *placed nest* is flat across the whole ladder, over a 16× range in nest count:
+**The harness reproduces across four ladders.** Six of those seven passes are byte-identical
+between the last two and every exponent came back within 0.02: 2.05/2.07, 0.83/0.83,
+1.79/1.80, 0.91/0.92, 0.65/0.64, 0.85/0.85. That stability is what makes a changed row
+readable — `fill_cities` moving 0.45 → 0.36 is five times the reproducibility spread and so
+a real change in shape, not scatter.
 
-| Size | Cells | Nests placed | `add_nests` | Per nest | Nests per cell |
-|---:|---:|---:|---:|---:|---:|
-| 17 | 289 | 271 | 35.7 s | 0.132 s | 0.94 |
-| 33 | 1 089 | 957 | 128.4 s | 0.134 s | 0.88 |
-| 65 | 4 225 | 2 215 | 280.3 s | 0.127 s | 0.52 |
-| 128 | 16 384 | 4 379 | 505.4 s | 0.115 s | 0.27 |
+### Where this goes at the next size up
 
-So `add_nests` is linear in nests placed at about **0.12 s each**, and the grid enters only
-by changing how many get placed. That is the model to re-test after the restructure, and it
-is a sharper prediction than the 0.65 exponent: a pass that got genuinely cheaper should
-move the per-nest column, while one that merely places fewer nests will move only the count.
+Projecting each pass from its size-128 figure at its own fitted exponent to size 257
+(4× the cells). **Projection only — nothing at 257 has been run, and the size-192 crossing
+described below sits between here and there, so treat these as the shape of the problem
+rather than as numbers:**
 
-### Re-measured 2026-09-21: the pass is 6–13× cheaper and places exactly the same nests
+| Pass | 128 s | exp | 257 s (projected) | share |
+|---|---:|---:|---:|---:|
+| `add_world_society` | 213.3 | 2.05 | **~3 720** | **78 %** |
+| `add_beast_movements` | 34.6 | 1.79 | ~418 | 9 % |
+| `fill_hamlets` | 86.2 | 0.83 | ~276 | 6 % |
+| `add_nests` | 24.0 | 0.91 | ~85 | 2 % |
+| `fill_cities` | 27.7 | 0.36 | ~46 | 1 % |
+| **Projected total** | **450** | | **~4 750 (79 min)** | |
+
+This is now the entire argument for what to do next. Three optimisations have taken the
+size-128 run from 1 244 s to 450 s without touching `add_world_society`, and the projected
+size-257 total has barely moved with them — 5 290 s then, 4 750 s now — because that run is
+three quarters one pass. **At 257 the two superlinear passes are a projected 87 % of the
+work.** Every further gain elsewhere is bounded by what is left: `fill_cities`, `add_nests`,
+`fill_castles` and `add_settlements` together are 83 s at 128 and a projected 180 s at 257.
+
+### One change inside `add_nests`, isolated: 6–13× cheaper at identical placements
+
+Written by another session, measuring **one indexing change in isolation** rather than the
+whole interval the ladder above spans. Both statements are true and they are not about the
+same thing:
+
+- *This* section's change reindexed three flat scans and moved no placement at all.
+- The ladder above spans **every** change to `terrain_nests.py` between 01:45 and 09:42,
+  which also includes a refusal rule moving from `a['tier'] >= p['tier']` to `==`. That is
+  a semantic change and it raises placements: `beast_nests.sites` goes 957 → 1 571 at size
+  33, 2 215 → 3 346 at 65 and 4 379 → 6 128 at 128, the same key read the same way in both
+  reports.
+
+So "places exactly the same nests" is a property of the indexing change, not of the
+generator between the two reference runs. The counts in this section are also a different
+quantity from the ladder's — 14 418 at size 33 here against 1 571 there — so the two columns
+should not be divided into one another.
 
 The prediction above was the right one to make and it came out cleanly. A later pass
 indexed three flat scans inside `add_nests` without changing a single placement — the
@@ -177,7 +256,9 @@ reports all five real calls of a phase-16 run, so multiply by five to compare.
 The per-nest column moves by an order of magnitude and the placed counts do not move at
 all, which is the result the paragraph above asked for. It also shows the flat per-nest
 model was reading a coincidence: the same pass at the same placements now costs 25× less
-per nest at size 33 and 6× less at 129, so "0.12 s per nest" was never a mechanism.
+per nest at size 33 and 6× less at 129, so "0.12 s per nest" was never a mechanism. The
+end-to-end ladder agrees from the other direction — per-nest cost is no longer flat there
+either, rising 3× across the four sizes.
 
 Where the time went, by phase inside `_place`, both passes summed:
 
@@ -206,7 +287,9 @@ A caution on reading it too far. The session that restructured this pass reports
 refusal scan is per-*pair* within a single raster cell, that no species' territory is as
 wide as the cell pitch at any shipped world width, and that 93 % of draws were being
 refused — so the placed count is bounded by cells reached rather than by the density
-budget. Their axis is not this one: they varied surface area at a fixed raster and saw
+budget. **The middle clause of that is false and the last is a point on a falling curve;
+both were measured directly afterwards — see the superseded section below.** The first
+clause survives: the scan was per-pair, which is what the indexing removed. Their axis is not this one: they varied surface area at a fixed raster and saw
 saturated tiers barely move, while this ladder varies the raster at a fixed planet and sees
 nests grow 16×. The two are consistent and neither settles the other. What follows from
 theirs is that a per-cell cost model will mispredict, which is worth knowing because the
@@ -326,11 +409,16 @@ the other.
 For scale against what it buys: that whole pass produces **4 sea routes** at size 128, and
 4 at size 65 as well.
 
-### `add_beast_movements` is the second tail
+### `add_beast_movements` is the other superlinear pass
 
-Exponent 1.66, 41.7 s at size 128 from 0.06 s at 17, producing 11 119 groups. It is only
-3.4 % of a size-128 run, but at that exponent it passes `fill_hamlets` somewhere above size
-200 and keeps going.
+Exponent 1.81 on the current tree, up from 1.66 before its module was rewritten. 35.8 s at
+size 128, 5.1 % of the run — third by size, behind `fill_cities` and `add_world_society`.
+
+It is here because of the exponent, not the seconds. On the projection above it reaches
+roughly 445 s at size 257, about the same as `fill_cities`, having been an eighth of it at
+128. Its rewrite between the two reference runs did not change that: the pass moved −14 %,
+inside the −1 % to −18 % band that unchanged passes moved on the same pair of runs, with
+its group count flat at 11 119 → 11 184.
 
 ## Where the repeated work is
 
@@ -341,18 +429,17 @@ the finished world, each run replacing the last one's output.
 directly in `age_transition` ("nests before fates", so city fate can read them) and again
 inside `rebuild_tail`. At size 128 the five calls are:
 
-| Stage | Calls | Total | Slowest | Other |
-|---|---:|---:|---:|---:|
-| 13 | 1 | 103.8 s | 103.8 s | — |
-| 14 | 2 | 206.2 s | 108.1 s | 98.1 s |
-| 15 | 2 | 195.5 s | 102.2 s | 93.3 s |
+| Stage | Calls | Before | Now |
+|---|---:|---:|---:|
+| 13 | 1 | 103.8 s | 4.9 s |
+| 14 | 2 | 206.2 s | 8.9 s |
+| 15 | 2 | 195.5 s | 9.2 s |
 
-Read those carefully, because two different sums are quotable and only one answers a given
-question. **All five calls are 505.5 s, 41 % of the run.** The *second* call of each
-age-transition pair — the one a reader asks about when asking whether this is repeated
-work — is one call from each of stages 14 and 15, so between 191 s and 210 s depending on
-which of each pair ran first, which the profile does not record. Call it **about 200 s, 16 %
-of the run**. It is not 206.2 s; that figure is one whole stage, both its calls.
+The repetition is unchanged; only its price is. All five calls were 505.5 s and 41 % of the
+run, and are now 23.0 s and 3.3 %. The pair-repeat that used to be worth about 200 s — one
+call from each of stages 14 and 15 — is now worth roughly 9 s. **This is no longer a place
+to save time**, and the paragraph survives because the structure is still worth knowing,
+not because the number is.
 
 **The second call is not redundant**, and this profile did not establish that — a separate
 investigation did. `city_fate` runs between the two, reads `beast_nests` and feeds it to the
@@ -392,15 +479,20 @@ sublinear whole.
 
 ## Memory
 
-Peak resident is 2 773 MB at size 128, and 2 200 MB of that arrives inside stage 16 alone:
-resident is 469 MB entering the stage, peaks at 2 773 MB during it, and settles at 1 044 MB
+Peak resident is 2 775 MB at size 128, and 2 290 MB of that arrives inside stage 16 alone:
+resident is 482 MB entering the stage, peaks at 2 775 MB during it, and settles at 1 040 MB
 when it ends. So the peak is a transient in the planners and the satellite packages, not
 retained world state.
 
-Peak memory grew 379 → 460 → 713 → 2 773 MB across the ladder. The jump from 65 to 128 is
+Peak memory grew 379 → 460 → 711 → 2 775 MB across the ladder. The jump from 65 to 128 is
 3.9× for 3.9× the cells, far steeper than the three points below it, so the sublinear fit
 of 0.49 is a bad summary and the true curve steepens. A size-257 run on this machine is
 memory-plausible but was not attempted.
+
+**The beast and monster work did not move memory at all** — 379/460/711/2 775 MB now against
+379/460/713/2 773 MB before, identical within a megabyte at every size, while placing 40 %
+more nests. Time halved and the memory curve did not notice, which says the peak is not
+nest state. It is stage 16.
 
 ## What this does not tell you
 
@@ -413,12 +505,18 @@ memory-plausible but was not attempted.
   scales with nests placed; it does not say the work is per nest. A separate investigation
   reports it as per-*pair* scanning within one raster cell, which produces the same flat
   column whenever the nests-per-cell distribution holds steady, and would diverge from it
-  as soon as the cell pitch drops below a species' territory width. That crossing is at
-  size 192 and this ladder tops out at 128, so nothing here tests it.
-- **Nothing about the nest counts after the restructure.** The session that made it reports
-  58 % more monsters placed on their reference world, animals byte-identical. If that
-  carries, the content counts in this document move and the per-nest column has to be
-  re-taken, not adjusted.
+  as soon as the cell pitch drops below a species' territory width. That crossing was
+  put at size 192; it is not there. Pitch is not one number on a lat/lon grid, the polar
+  rings cross first, and a direct count puts the crossing between 33 and 65 — so this
+  ladder is entirely above it, not below it. See the superseded section above.
+- **Nothing about why `add_nests` got steeper.** Its exponent moved 0.65 → 0.93 and its
+  per-nest cost stopped being flat. Both are measured; neither is explained here, and the
+  section on the isolated indexing change points at `rooms` as the term that is linear in
+  cells without a plateau. Nothing here confirms that is the cause of the ladder's move.
+- **Nothing at size 257, where it now matters most.** The projection above is four
+  extrapolations from four points each.
+  `add_world_society` reaching 73 % of a 257-run is the most consequential claim in this
+  document and it is the least measured.
 - **Nothing about whether the 4 sea routes are worth 3 788 searches.** That is a design
   question about what the pass is for, and this document only prices it. A pass can be
   worth a great deal and still cost what it costs.
