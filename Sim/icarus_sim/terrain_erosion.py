@@ -31,6 +31,28 @@ def sphere_grid(n, radius):
     return points,areas,neighbors
 
 
+_INDEX={}
+
+
+def sphere_index(points):
+    """`{(x,z):i}` and the grid width for a `sphere_grid` point list, built once.
+
+    Every routing cost function needs to name the two corner cells a diagonal step would
+    otherwise slip between, and each was rebuilding this sixteen-thousand-entry map --
+    and rescanning the same points for the width -- on every call. One
+    `add_world_society` at size 128 built it 3 886 times for twelve seconds.
+
+    Keyed on the identity of the point list rather than on `(n, radius)`, because
+    `water_cost` is handed the points and never learns the radius. The entry holds the
+    list itself, so the id cannot be recycled by a later grid while the entry lives.
+    """
+    entry=_INDEX.get(id(points))
+    if entry is None or entry[0] is not points:
+        if len(_INDEX)>4:_INDEX.clear()
+        entry=_INDEX[id(points)]=(points,{p:i for i,p in enumerate(points)},max(z for x,z in points)+1)
+    return entry[1],entry[2]
+
+
 def erode(height,radius,sea_level,passes,strength):
     n=len(height); points,areas,neighbors=sphere_grid(n,radius)
     h=[height[z][x] for x,z in points]; original=h[:]; ceiling=max(h)

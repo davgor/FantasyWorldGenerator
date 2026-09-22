@@ -6,7 +6,7 @@ from dataclasses import replace
 from .terrain_world import options
 from .terrain_ecology import angle, clamp, monthly_temperatures, cold_habitat
 from .terrain_tectonics import child_seed
-from .terrain_erosion import sphere_grid
+from .terrain_erosion import sphere_grid, sphere_index
 from .terrain_globe import direction
 from .terrain_climate import node_grid
 from .terrain_profiles import get_profile
@@ -26,7 +26,7 @@ def trace(parent,start,end):
 
 
 def water_cost(points,water,depth,hazard,limit,draft):
-    lookup={p:i for i,p in enumerate(points)};n=max(z for x,z in points)+1
+    lookup,n=sphere_index(points)
     def passable(i):return water[i]==1 and depth[i]>=draft and hazard[i]<=limit
     def cost(i,j,d):
         # passable() is inlined here: the routing search calls this several million
@@ -163,7 +163,9 @@ def add_world_society(result,cfg):
         site['layer']='surface';site['mobility']='settled';profile=get_profile(site['population_profile'])
         risk=vals('magic_risk_'+site['population_profile']) if 'magic_risk_'+site['population_profile'] in l else hazard
         cost=road_cost_function(points,water,height,flood,river,replace(cfg,human_magic_limit=profile['mutation_limit'],road_max_grade=profile['road_grade_limit']),risk)
-        distances,parents=shortest_paths(graph,site['node'],cost,ground_candidates)
+        # Only landings inside support_reach are ever eligible, so the search stops there
+        # rather than crossing the whole landmass to price candidates it will discard.
+        distances,parents=shortest_paths(graph,site['node'],cost,ground_candidates,cfg.support_reach)
         eligible=[i for i in ground_candidates if distances[i]<=cfg.support_reach and i not in occupied]
         for node in sorted(eligible,key=lambda i:-(harbor[i]+.5*l['coastal_support'][points[i][1]][points[i][0]])*math.exp(-distances[i]/cfg.support_reach))[:o['coastal_hamlets']]:
             access=[(j,d) for j,d in graph[node] if water[j]==1 and depth[j]>=o['sea_draft'] and risk[j]<=profile['mutation_limit']]
@@ -220,14 +222,26 @@ def add_world_society(result,cfg):
     routes=[]
     for road,model in zip(result['roads']['routes'],result['seasonal_food']['routes']):
         routes.append({**model,'mode':'ground','nodes':road['nodes'],'length_m':road['length_m']})
-    sea_pairs={}
+    # A route is priced pair by pair, but the search behind it only ever depends on where
+    # it starts and which mutation limit it respects, and nothing past sea_reach can
+    # survive the length test below -- a landing distance is never negative. So the search
+    # runs once per (origin, limit), bounded, and the pair loop reads it. The loop keeps
+    # its original order and its original tests: sea_pairs resolves a duplicate by first
+    # writer, and its insertion order is the order the sea routes are emitted in.
+    sea_pairs={};sea_costs={}
+    sea_limits={pid:get_profile(pid)['mutation_limit'] for pid in sorted({p['population_profile'] for p in ports})}
     for a,port in enumerate(ports):
+        searches={}
         for other in ports[a+1:]:
             if not port['trade_terminal'] or not other['trade_terminal']:continue
             if port['core_id']==other['core_id']:continue
-            limit=min(get_profile(port['population_profile'])['mutation_limit'],get_profile(other['population_profile'])['mutation_limit'])
-            cost=water_cost(points,water,depth,hazard,limit,o['sea_draft'])
-            distances,parent=shortest_paths(graph,port['sea_node'],cost,{other['sea_node']})
+            limit=min(sea_limits[port['population_profile']],sea_limits[other['population_profile']])
+            routed=searches.get(limit)
+            if routed is None:
+                cost=sea_costs.get(limit)
+                if cost is None:cost=sea_costs[limit]=water_cost(points,water,depth,hazard,limit,o['sea_draft'])
+                routed=searches[limit]=shortest_paths(graph,port['sea_node'],cost,None,o['sea_reach'])
+            distances,parent=routed
             length=distances[other['sea_node']]+port['landing_distance_m']+other['landing_distance_m']
             if length>o['sea_reach']:continue
             path=trace(parent,port['sea_node'],other['sea_node']);a_id,b_id=sorted((port['core_id'],other['core_id']))

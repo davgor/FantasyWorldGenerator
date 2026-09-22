@@ -5,6 +5,11 @@ the whole block against `Contracts/schemas/beast-movements.schema.json`. What th
 see is behaviour *across time*, because it reads one world at one moment. This module runs
 the pass repeatedly against the same world at different years, which is the only way to
 tell a swarm that erupts from a swarm that is simply always there.
+
+It also holds the two pieces of mathematics the pass uses to avoid looking at the whole
+world: a search that stops at the reach, and a walk that stops at the nearest host. Both
+are supposed to give exactly what the exhaustive form gave, and both are checked here by
+running the exhaustive form beside them rather than by reasoning about them.
 """
 import unittest
 
@@ -16,10 +21,46 @@ PHASE = 16
 # because `year_forage_factor` touches no world.
 WINDOW = 100
 
+_SHARED = {}
+
 
 def build(seed=42, size=17, **overrides):
     from icarus_sim.terrain_world import generate_request
     return generate_request({'seed': seed, 'overrides': {'size': size, 'phase': PHASE, **overrides}})
+
+
+def shared_world():
+    """One world for the classes that only read it, built once and at size 33.
+
+    `IrruptionTriggerTests` builds its own at 17, because it re-runs the pass against a
+    moved clock and would otherwise hand the others a block from a year they did not ask
+    for. It can afford 17; the two below cannot, and the reason is measured rather than
+    assumed. At size 17 a search from a routed group's cell settles **2.0 cells on
+    average** -- mostly the group's own -- so a bounded search agrees with an unbounded one
+    for want of anywhere to disagree, and every perturbation of it still passes. At 33 the
+    same sample settles 13, and four separate ways of breaking the search all go red.
+
+    The cost is one size-33 generation, about 35 s against 12 s, paid once for both
+    classes. `test_searches_here_are_not_trivial` is what will say so if that stops being
+    enough on some future world.
+    """
+    if 'world' not in _SHARED:
+        from icarus_sim.terrain_lab import Config
+        world = build(size=33)
+        _SHARED['world'] = world
+        _SHARED['cfg'] = Config(**world['config'])
+    return _SHARED['world'], _SHARED['cfg']
+
+
+def ground(world, cfg):
+    """The graph, the cells and the walking cost, exactly as the pass builds them."""
+    from icarus_sim.terrain_erosion import sphere_grid
+    from icarus_sim.terrain_nests import habitat_cells
+    from icarus_sim.terrain_nomad_routes import travel_cost
+    radius = world['effective_config']['globe_radius']
+    points, areas, graph = sphere_grid(cfg.size, radius)
+    cells = habitat_cells(world, cfg, points, areas)
+    return radius, graph, cells, travel_cost(points, cells, cfg)
 
 
 class IrruptionTriggerTests(unittest.TestCase):
@@ -114,6 +155,127 @@ class IrruptionTriggerTests(unittest.TestCase):
         self.world['world_clock'] = {'version': 1, 'day': 41.0 * DAYS_PER_YEAR, 'age': 0,
                                      'epoch_day': 0., 'derived_from': 'test'}
         self.assertEqual(world_year(self.world), 41)
+
+
+class BoundedSearchTests(unittest.TestCase):
+    """The search that stops at the reach, against the one that searched the whole map.
+
+    The claim the pass rests on is that stopping early costs nothing inside the bound:
+    edge costs are strictly positive, so a node the bounded search settles keeps the
+    distance and the parent the unbounded search gave it, and the set it settles is
+    exactly the set that falls inside the bound. Neither half is obvious enough to take on
+    trust, and a defect in either is silent -- a route quietly re-pointed at a different
+    cell, on some seeds only.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        from icarus_sim.terrain_beast_movement import _priced, _searcher, SEASONAL_REACH
+        cls.world, cls.cfg = shared_world()
+        cls.radius, cls.graph, cls.cells, cost = ground(cls.world, cls.cfg)
+        # staticmethod on both, or `self.search` hands the search the test case as its
+        # start node and `self.cost` hands the cost function a fourth argument.
+        cls.cost = staticmethod(cost)
+        cls.search = staticmethod(_searcher(_priced(cls.graph, cost)))
+        cls.limit = SEASONAL_REACH * float(cls.cfg.settlement_spacing)
+        # Start nodes of groups that actually routed, sampled across the list.
+        #
+        # **Not simply the lowest two dozen node indices.** That was the first shape of
+        # this and it proved nothing: node 0 is the north pole and the cells around it on
+        # this world are all isolated, so every one of those searches settled exactly one
+        # cell -- itself -- and passed against any search that can return its own start.
+        # A group that routed reached somewhere by definition, and `test_searches_here_are
+        # _not_trivial` keeps that honest rather than leaving it to this comment.
+        nodes = sorted({group['node'] for group in cls.world['beast_movements']['groups']
+                        if group['route_status'] == 'routed'})
+        cls.starts = nodes[::max(1, len(nodes) // 24)][:24]
+
+    def test_searches_here_are_not_trivial(self):
+        """The guard on the two tests below: a search that settles only its own start
+        agrees with everything, so a suite full of them is green and empty."""
+        self.assertTrue(self.starts, 'no group start nodes to search from')
+        settled = [len(self.search(start, self.limit)[2]) for start in self.starts]
+        # 13 on the world this runs against, 2.0 at size 17 where this test is empty.
+        self.assertGreater(sum(settled) / len(settled), 6.,
+                           'the sampled starts barely reach anywhere, so the comparison '
+                           'below is against a search that returns its own start')
+
+    def test_inside_the_bound_it_is_the_search_it_replaced(self):
+        from icarus_sim.terrain_settlements import shortest_paths
+        from icarus_sim.terrain_nomad_routes import _within
+        self.assertTrue(self.starts, 'no group start nodes to search from')
+        for start in self.starts:
+            distances, parent, reached = self.search(start, self.limit)
+            want_d, want_p = shortest_paths(self.graph, start, self.cost)
+            # The set, both ways round: nothing reached that is outside the bound, and
+            # nothing inside the bound left unreached.
+            self.assertEqual(reached, [i for i, d in enumerate(want_d) if d <= self.limit],
+                             'node %d settled a different set' % start)
+            self.assertEqual(reached, _within(distances, self.limit))
+            for node in reached:
+                self.assertEqual(distances[node], want_d[node], 'node %d to %d' % (start, node))
+                self.assertEqual(parent[node], want_p[node], 'node %d to %d' % (start, node))
+
+    def test_a_target_traces_the_route_the_whole_search_would_have_traced(self):
+        from icarus_sim.terrain_settlements import shortest_paths
+        from icarus_sim.terrain_society import trace
+        pairs = set()
+        for group in self.world['beast_movements']['groups']:
+            for leg in group['legs']:
+                pairs.add((leg['nodes'][0], leg['nodes'][-1]))
+        pairs = sorted(pairs)[:24]
+        self.assertTrue(pairs, 'the world routed nothing, so this proves nothing')
+        for source, destination in pairs:
+            _, parent, _ = self.search(source, target=destination)
+            _, want_p = shortest_paths(self.graph, source, self.cost)
+            self.assertEqual(trace(parent, source, destination),
+                             trace(want_p, source, destination),
+                             'route %d -> %d' % (source, destination))
+
+
+class HostWalkTests(unittest.TestCase):
+    """The nearest host, found by walking outwards instead of by looking at every host.
+
+    `_follow` stops the walk on two floors, and if either is a hair too tight it drops the
+    winner: the follower silently attaches to the wrong thing, or to nothing. So the flat
+    scan it replaced is run here against every follower the world placed.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.world, cls.cfg = shared_world()
+        cls.radius, _, cls.cells, _ = ground(cls.world, cls.cfg)
+
+    def test_every_follower_took_the_host_a_flat_scan_would_have_given(self):
+        from icarus_sim.terrain_nests import distance
+        from icarus_sim.terrain_beast_movement import FOLLOW_REACH, HOST_BIAS, DEFAULT_BIAS
+        block = self.world['beast_movements']
+        # The host list as it stood when the followers were built: the bands that walk,
+        # then the herds this pass had already routed.
+        hosts = [band for band in (self.world.get('nomads', {}).get('groups') or [])
+                 if band.get('legs')]
+        hosts += [group for group in block['groups']
+                  if group['movement'] != 'follower' and group['legs']]
+        reach = FOLLOW_REACH * float(self.cfg.settlement_spacing)
+        followers = [group for group in block['groups'] if group['movement'] == 'follower']
+        self.assertTrue(followers, 'the world placed no followers, so this proves nothing')
+        self.assertTrue(hosts, 'the world placed no hosts, so this proves nothing')
+        attached = 0
+        for group in followers:
+            bias = HOST_BIAS.get(group.get('role'), DEFAULT_BIAS)
+            here = self.cells[group['node']]['direction']
+            best = None
+            for host in hosts:
+                span = distance(here, self.cells[host['node']]['direction'], self.radius)
+                if span > reach:
+                    continue
+                kind = 'nomad' if host['uid'].startswith('nomad-') else 'beastmove'
+                mark = (span * bias.get(kind, 1.), host['uid'])
+                if best is None or mark < best:
+                    best = mark
+            self.assertEqual(group['host_uid'], best[1] if best else None, group['uid'])
+            attached += best is not None
+        self.assertTrue(attached, 'no follower found a host, so the walk was never tested')
 
 
 if __name__ == '__main__':

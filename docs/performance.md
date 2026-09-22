@@ -16,35 +16,21 @@ python tools/stage_profile.py --size 128 --seed 42
 ## The reference measurement
 
 Seed 42, size 128 (16 384 cells), phase 16, recipe 3. Windows 11, Intel 24-core, 31.4 GB
-RAM, CPython 3.12.10, box at 2 % background load when the run started. Measured-code digest
-`de592f00bfc582e7` over 30 modules.
+RAM, CPython 3.12.10, box at 4 % background load when the run started. Measured-code digest
+`e9922f7ee1c6754b` over 30 modules.
 
-**450.3 s (7 min 30 s) wall, peak resident 2 792 MB.**
+**137.0 s (2 min 17 s) wall, peak resident 1 069 MB.**
 
-| # | Stage | Body s | Capture s | Total s | Share | Cum | RSS MB |
-|---|---|---:|---:|---:|---:|---:|---:|
-| 1 | Plate layout | 0.7 | 0.0 | 0.8 | 0.2 % | 0.2 % | 37 |
-| 2 | Tectonic relief | 1.1 | 0.0 | 1.1 | 0.2 % | 0.4 % | 47 |
-| 3 | Surface detail | 1.3 | 0.0 | 1.3 | 0.3 % | 0.7 % | 56 |
-| 4 | Erosion and sediment | 1.6 | 0.0 | 1.6 | 0.4 % | 1.1 % | 84 |
-| 5 | Connected water | 1.6 | 0.0 | 1.6 | 0.4 % | 1.4 % | 106 |
-| 6 | Second tectonic relief | 1.2 | 0.1 | 1.3 | 0.3 % | 1.7 % | 109 |
-| 7 | Valleys and gorges | 0.3 | 0.0 | 0.3 | 0.1 % | 1.8 % | 112 |
-| 8 | Wind and rain | 1.0 | 0.2 | 1.2 | 0.3 % | 2.1 % | 157 |
-| 9 | Leylines | 2.6 | 0.2 | 2.8 | 0.6 % | 2.7 % | 205 |
-| 10 | Founding | 2.0 | 0.2 | 2.2 | 0.5 % | 3.2 % | 221 |
-| 11 | Roads | 3.2 | 0.0 | 3.2 | 0.7 % | 3.9 % | 230 |
-| 12 | Populated regions | 70.3 | 0.1 | **70.4** | 15.6 % | 19.5 % | 246 |
-| 13 | Beasties and animals | 4.7 | 0.3 | 5.0 | 1.1 % | 20.7 % | 321 |
-| 14 | Age transition 1 | 89.3 | 0.6 | **89.9** | 20.0 % | 40.6 % | 412 |
-| 15 | Age transition 2 | 94.0 | 0.5 | **94.5** | 21.0 % | 61.6 % | 492 |
-| 16 | Simulation complete | 169.0 | 4.1 | **173.1** | 38.4 % | 100 % | 1 060 |
+| # | Stage | Total s | Share | Cum | RSS MB |
+|---|---|---:|---:|---:|---:|
+| 1–11 | physical world, climate, leylines, cities, roads | 17.1 | 12.4 % | 12.4 % | 229 |
+| 12 | Populated regions | 4.3 | 3.2 % | 15.6 % | 235 |
+| 13 | Beasties and animals | 5.0 | 3.6 % | 19.2 % | 321 |
+| 14 | Age transition 1 | **16.8** | 12.3 % | 31.5 % | 413 |
+| 15 | Age transition 2 | **20.3** | 14.8 % | 46.4 % | 495 |
+| 16 | Simulation complete | **73.5** | 53.6 % | 100 % | 1 067 |
 
-Stages 1 to 11 — the entire physical world, its climate, its leylines, its cities and its
-roads — are 17.4 s, 3.9 %. Snapshot capture is 6.2 s, 1.4 %. Peak resident is 2 792 MB, a
-stage-16 transient that settles back to 1 060 MB.
-
-### Four runs, three optimisations, measured one at a time
+### Six runs, five rounds of optimisation
 
 Same seed, size and machine across 2026-09-21. Each pair differs by a known set of modules,
 confirmed by the subject digest rather than by reading a changelog.
@@ -52,48 +38,65 @@ confirmed by the subject digest rather than by reading a changelog.
 | Run | Digest | Changed since previous | Total |
 |---|---|---|---:|
 | 01:45 | unknown (predates digests) | — | 1 244.2 s |
-| 10:00 | `6c17d71d47833ef5` | `terrain_nests.py`, `terrain_beast_movement.py`, `city_planner.py` | 699.8 s |
-| 11:41 | `2eb01cdc5f6307fe` | **`city_planner.py` only** | 602.3 s |
-| 12:35 | `de592f00bfc582e7` | **`city_planner.py` only** | **450.3 s** |
+| 10:00 | `6c17d71d47833ef5` | `terrain_nests`, `terrain_beast_movement`, `city_planner` | 699.8 s |
+| 11:41 | `2eb01cdc5f6307fe` | `city_planner` only | 602.3 s |
+| 12:35 | `de592f00bfc582e7` | `city_planner` only | 450.3 s |
+| 13:38 | `17f0f741e3d6a69b` | `terrain_society`, `hamlet_planner`, `terrain_settlements`, `city_planner`, `terrain_erosion` | 184.6 s |
+| 16:08 | `e9922f7ee1c6754b` | `terrain_beast_movement` **only** | **137.0 s** |
 
-**1 244 s → 450 s, a 64 % cut, in three steps.** The whole ladder moved with it, and by
-more at the small sizes than the large:
+**1 244 s → 137 s, a 9.1× reduction**, at content identical to the first run in every count
+this report tracks, at every size on the ladder.
 
-| Size | 01:45 | now | Change | Factor |
-|---:|---:|---:|---:|---:|
-| 17 | 89.7 | **13.3** | −85.2 % | 6.7× |
-| 33 | 281.2 | **55.5** | −80.2 % | 5.1× |
-| 65 | 637.6 | **177.0** | −72.2 % | 3.6× |
-| 128 | 1 244.2 | **450.3** | −63.8 % | 2.8× |
+| Size | 01:45 | now | Factor |
+|---:|---:|---:|---:|
+| 17 | 89.7 | **12.2** | 7.4× |
+| 33 | 281.2 | **35.3** | 8.0× |
+| 65 | 637.6 | **75.2** | 8.5× |
+| 128 | 1 244.2 | **137.0** | 9.1× |
 
-That gradient is the whole story of what is left. Every optimisation so far has cut work
-that was sublinear in cells, so the gain shrinks as the world grows, and what remains is
-weighted ever more heavily toward the passes that are not.
+### The quadratic is gone
 
-### The city planner, second pass: −83 % at identical output
+`add_world_society` was the pass this document has pointed at since the first measurement:
+21 % of the run in the morning, 47 % by midday, exponent 2.05–2.09 reproduced across four
+separate ladders, and a projected 78 % of a size-257 generation. It has now been cut, and
+the shape went with the seconds.
 
-| Pass | 11:41 | 12:35 | Change | Code |
-|---|---:|---:|---:|---|
-| **`city_planner.fill_cities`** | 166.7 | **27.7** | **−83.4 %** | **changed** |
-| `terrain_society.add_world_society` | 221.2 | 213.3 | −3.5 % | same |
-| `hamlet_planner.fill_hamlets` | 86.8 | 86.2 | −0.7 % | same |
-| `terrain_beast_movement.add_beast_movements` | 36.4 | 34.6 | −4.7 % | same |
-| `terrain_nests.add_nests` | 24.7 | 24.0 | −2.7 % | same |
-| `castle_planner.fill_castles` | 17.1 | 17.0 | −0.4 % | same |
-| `terrain_settlements.add_settlements` | 14.5 | 14.2 | −2.5 % | same |
+| | 12:35 | 13:38 |
+|---|---:|---:|
+| `add_world_society` at size 128 | 213.3 s | **1.85 s** (−99.1 %) |
+| Its exponent | **2.05** | **0.80** |
+| Stage 12 "Populated regions" | 70.4 s | **4.5 s** (−93.6 %) |
+| Projected size-257 total | ~4 750 s | **~790 s** |
 
-Seven byte-identical passes moved between −4.7 % and −0.4 % — the tightest noise floor of
-the four runs. `fill_cities` at −83 % clears it about eighteenfold.
+That last row is the one that matters. Four rounds of optimisation had taken the size-128
+run from 1 244 s to 450 s while barely moving the projected 257 cost, because that run was
+three quarters one quadratic pass. Removing the quadratic moves it 6× in a single step.
 
-**Identical output again, and this time it also got flatter.** Every content count matches
-at all four sizes. The cut is consistent across the ladder — −74.8 %, −81.6 %, −80.6 %,
-−83.4 % at 17, 33, 65 and 128 — and unlike the first city pass, the exponent moved too:
-**0.45 → 0.36**. So this one is a large constant factor *and* slightly better scaling, where
-the previous pass was constant-factor only.
+`fill_hamlets` was cut in the same round: **86.2 s → 17.5 s (−79.7 %)**, exponent 0.83 → 0.57.
 
-Across the two city passes together `fill_cities` has gone 252.8 s → 27.7 s, **9.1×**, from
-the largest pass in the generator to the fourth largest, with the world it produces
-unchanged at every size measured.
+### What this round does not establish
+
+Unlike the two city-planner rounds, this one is **not** a clean single-variable experiment
+and its noise floor is much looser. Five modules changed at once — `terrain_society`,
+`hamlet_planner`, `terrain_settlements`, `city_planner` and `terrain_erosion` — so the
+hamlet work and the society work cannot be separated from each other here.
+
+Only four measured passes were byte-identical across the pair, and they moved by
+−0.6 %, +0.4 %, +11.7 % and +13.1 % at size 128, with `add_environment` at +23.5 %. That is
+a noise floor of roughly ±20 %, against −4.7 % to −0.4 % in the previous round. The two
+large wins clear it by a wide margin; **nothing smaller in this round is interpretable**,
+including the +14.8 % on `add_settlements` and the +6.5 % on `fill_cities`, both of which
+changed and both of which sit inside the band.
+
+One movement is unexplained and worth recording rather than smoothing: `add_beast_movements`
+is byte-identical and its exponent moved **1.79 → 1.61**, nine times the ±0.02 spread the
+previous four ladders reproduced to. Its size-128 figure rose 11.7 % while its size-65
+figure fell 15 %. No explanation is offered here.
+
+The size-128 run also overlapped an independent size-128 profile started by another session
+in the same window. The two agree to 0.7 % — 183.3 s against 184.6 s on the same digest —
+which is a genuine cross-session reproduction, but both may carry the same shared-box cost.
+Single-threaded CPython on 24 cores makes that small; it is not zero.
 
 ### What the beast and monster work changed
 
@@ -136,25 +139,78 @@ placed nest fell from 0.115 s to 0.0043 s, **26.7×**.
 inside the noise band above. On the ladder its exponent moved the wrong way, 1.66 → 1.81.
 Whatever that rework achieved is not a speed-up at size 128.
 
+*(That rework was the irruption trigger, which bought behaviour rather than speed. The
+speed came separately, in the round below.)*
+
+### The fifth round: `add_beast_movements`, and the memory went with it
+
+The 13:38 → 16:08 pair, and **the cleanest single-variable experiment in this document**:
+`terrain_beast_movement.py` is the only file in the measured digest that changed, confirmed
+by modification time against the 13:38 run as well as by the digest.
+
+| | 13:38 | 16:08 |
+|---|---:|---:|
+| `add_beast_movements` at size 128 | 38.68 s | **3.60 s** (−90.7 %) |
+| Its exponent | 1.62 | **1.10** |
+| Whole run at size 128 | 184.6 s | **137.0 s** (−25.8 %) |
+| **Peak resident at size 128** | **2 823 MB** | **1 069 MB** (−62 %) |
+| Its rank among passes | 1st of 8, 21.0 % | **8th, 2.6 %** |
+| Projected size-257 cost of the pass | ~366 s | **~17–25 s** |
+
+**The memory is the second finding and it was not the target.** Timed around the pass alone
+on a baked size-128 world, resident set sampled during the call: the old form peaked
+**2 208 MB above entry** and the new one **158 MB**, a 93 % cut, because the old one cached
+a full-width distance and parent array for every one of ~9 000 start nodes and never
+dropped one. At size 65 the same measurement is 216 MB against 48 MB, and the whole-run
+peak does not move there (765.7 → 765.6 MB) because something else sets it; at 128 this
+pass *was* the peak.
+
+**Noise floor.** At size 65 every unchanged pass moved between 0.0 % and −0.7 % on this
+pair, so the floor is under a percent and the −86.7 % there is unambiguous. At size 128 the
+floor is much looser — unchanged passes moved −22.7 % (`add_settlements`), −12.1 %
+(`add_nests`) and +25 % (`_attach_key_location_plans`, a 0.4 → 0.5 s rounding) — and the
+−90.7 % clears even that. **Nothing else in the size-128 column of this pair is
+interpretable**, including the apparent improvements in `add_nests` and `add_settlements`,
+which run entirely before stage 16 and cannot have been caused by this change.
+
+**Content is unmoved, and by the strongest available check.** The `beast_movements` block
+was captured before and after at sizes 17, 33, 65 and 128 and compares **byte for byte with
+every float printed by `repr`** — same groups, same camps, same leg node paths, same
+`routed`/`stranded`/`solitary` counts. No seed changes, no version moves and no world needs
+regenerating. See
+[PERF-BEAST-MOVEMENTS-IS-THE-PASS](../board/done/PERF-BEAST-MOVEMENTS-IS-THE-PASS.md).
+
 ## The passes that are the run
 
 Self time, summed across every call, at size 128 on the current tree:
 
 | Pass | Calls | Self s | Share | Exponent |
 |---|---:|---:|---:|---:|
-| `terrain_society.add_world_society` | 3 real (+5 free) | 213.3 | **47.4 %** | **2.05** |
-| `hamlet_planner.fill_hamlets` | 1 | 86.2 | 19.1 % | 0.83 |
-| `terrain_beast_movement.add_beast_movements` | 1 | 34.6 | 7.7 % | **1.79** |
-| `city_planner.fill_cities` | 1 | 27.7 | 6.2 % | 0.36 |
-| `terrain_nests.add_nests` | 5 real (+5 free) | 24.0 | 5.3 % | 0.91 |
-| `castle_planner.fill_castles` | 1 | 17.0 | 3.8 % | 0.65 |
-| `terrain_settlements.add_settlements` | 5 real (+5 free) | 14.2 | 3.2 % | 0.85 |
+| `city_planner.fill_cities` | 1 | 27.7 | 20.2 % | 0.37 |
+| `terrain_nests.add_nests` | 5 real (+5 free) | 23.9 | 17.4 % | 0.94 |
+| `castle_planner.fill_castles` | 1 | 17.3 | 12.6 % | 0.66 |
+| `hamlet_planner.fill_hamlets` | 1 | 17.2 | 12.6 % | 0.57 |
+| `terrain_settlements.add_settlements` | 5 real (+5 free) | 12.6 | 9.2 % | 0.87 |
+| `terrain_tectonics.generate_tectonics` | 5 | 5.2 | 3.8 % | 1.05 |
+| `terrain_history.rebuild_tail` | 2 | 4.2 | 3.1 % | — |
+| `terrain_beast_movement.add_beast_movements` | 1 | **3.6** | 2.6 % | **1.10** |
+| `terrain_society.add_world_society` | 3 real (+5 free) | 1.4 | 1.0 % | 0.80 |
 
-**`add_world_society` is now nearly half the generation and it has never been touched.** It
-has moved 259.8 → 213.3 s across the day, all of it box variation, while its share went from
-21 % to 47 %. Three passes have been optimised out from under it. It is also the quadratic
-one, so its share keeps rising with world size as well as with every further optimisation
-elsewhere.
+**The profile is flat, and it is flat at both ends now.** No pass is more than a fifth of
+the run and the top four are within 11 s of each other. `add_world_society` has gone from
+first place at 47 % to ninth at 1 %; `add_beast_movements` from first at 21 % to eighth at
+2.6 %.
+
+**Nothing left is meaningfully superlinear.** `add_beast_movements` still carries the
+largest exponent, but at 1.10 against 1.62 it is now barely above linear in cells and it is
+2.6 % of the run, so its exponent no longer decides anything. Read the 1.10 loosely: the
+size-17 figure it is fitted through is 0.05 s, at the edge of what the profile resolves,
+and an isolated harness that times the pass alone on a baked world fits **1.47** over the
+same four sizes against **1.79** for the old code. Both say the shape improved; the second
+is the better-resolved number and the more conservative one.
+
+The exponents in the `add_beast_movements` row and the ladder below are from the 16:08 run.
+Every other row is unchanged from 13:38, because every other module is.
 
 "Free" calls are the ones in stages 1 to 5, where the phase is too low for the pass to have
 anything to do; see [Stages 1 to 5 build the world five times](#stages-1-to-5-build-the-world-five-times).
@@ -170,54 +226,62 @@ each tree. The exponent is a least-squares fit of log(seconds) against log(cells
 | 01:45 | 89.7 | 281.2 | 637.6 | 1 244.2 | 0.65 |
 | 10:00 | 51.2 | 150.1 | 330.6 | 699.8 | 0.64 |
 | 11:41 | 33.5 | 112.4 | 270.9 | 602.3 | 0.71 |
-| **12:35** | **13.3** | **55.5** | **177.0** | **450.3** | **0.87** |
+| 12:35 | 13.3 | 55.5 | 177.0 | 450.3 | 0.87 |
+| 13:38 | 12.1 | 35.1 | 79.3 | 184.6 | 0.67 |
+| **16:08** | **12.2** | **35.3** | **75.2** | **137.0** | **0.59** |
 
-The whole-run exponent has climbed 0.65 → 0.87 across the day, and **that is the cost of
-the wins rather than a regression**. Every optimisation so far cut a pass that was
-sublinear in cells, so the remaining mix is weighted toward the two that are not. The
-generator is far cheaper at every size measured and its cost now grows closer to linearly
-with cell count than it did this morning.
+The whole-run exponent climbed 0.65 → 0.87 over the first three rounds, fell back to 0.67
+when the society quadratic went, and is now 0.59. That is the same mechanism each time:
+those early rounds cut passes that were sublinear in cells, leaving the mix weighted toward
+the two that were not, and the last two rounds cut both of those. **The generator is now
+far cheaper than it started and better shaped than it has ever been.**
 
 Per pass, current tree, with the previous ladder's exponent beside it:
 
 | Pass | 17 | 33 | 65 | 128 | exp | prev exp |
 |---|---:|---:|---:|---:|---:|---:|
-| `add_world_society` | 0.07 | 1.29 | 42.71 | 213.32 | **2.05** | 2.07 |
-| `fill_hamlets` | 2.78 | 25.69 | 66.16 | 86.17 | 0.83 | 0.83 |
-| `add_beast_movements` | 0.03 | 0.42 | 5.36 | 34.63 | **1.79** | 1.80 |
-| `fill_cities` | 6.73 | 12.90 | 23.17 | 27.74 | **0.36** | 0.45 |
-| `add_nests` | 0.62 | 1.75 | 6.18 | 24.04 | 0.91 | 0.92 |
-| `fill_castles` | 1.24 | 7.24 | 16.81 | 17.03 | 0.65 | 0.64 |
-| `add_settlements` | 0.46 | 1.41 | 4.43 | 14.16 | 0.85 | 0.85 |
+| `fill_cities` | 6.71 | 12.79 | 22.18 | 27.70 | 0.37 | 0.36 |
+| `add_nests` | 0.62 | 1.75 | 6.19 | 23.90 | 0.94 | 0.94 |
+| `fill_castles` | 1.16 | 7.02 | 16.62 | 17.30 | 0.66 | 0.66 |
+| `fill_hamlets` | 1.65 | 6.80 | 13.40 | 17.20 | 0.57 | 0.57 |
+| `add_settlements` | 0.47 | 1.32 | 3.99 | 12.60 | 0.87 | 0.87 |
+| `generate_tectonics` | 0.07 | 0.31 | 1.26 | 5.22 | 1.05 | 1.05 |
+| `add_beast_movements` | 0.05 | 0.08 | 0.57 | 3.60 | **1.10** | **1.62** |
+| `add_world_society` | 0.07 | 0.35 | 0.78 | 1.40 | 0.80 | 0.80 |
 
-**The harness reproduces across four ladders.** Six of those seven passes are byte-identical
-between the last two and every exponent came back within 0.02: 2.05/2.07, 0.83/0.83,
-1.79/1.80, 0.91/0.92, 0.65/0.64, 0.85/0.85. That stability is what makes a changed row
-readable — `fill_cities` moving 0.45 → 0.36 is five times the reproducibility spread and so
-a real change in shape, not scatter.
+Only the last-but-one row moved on this ladder, because only its module did. The other
+rows' small size-128 movements — `add_nests` 27.18 → 23.90, `add_settlements` 16.26 → 12.60
+— are box variance on passes whose bytes did not change and which run entirely before the
+one that did; **do not read them as wins.** The size-65 column is the tight one: every
+unchanged pass there moved by less than a percent.
 
 ### Where this goes at the next size up
 
 Projecting each pass from its size-128 figure at its own fitted exponent to size 257
 (4× the cells). **Projection only — nothing at 257 has been run, and the size-192 crossing
-described below sits between here and there, so treat these as the shape of the problem
-rather than as numbers:**
+described below sits between here and there:**
 
 | Pass | 128 s | exp | 257 s (projected) | share |
 |---|---:|---:|---:|---:|
-| `add_world_society` | 213.3 | 2.05 | **~3 720** | **78 %** |
-| `add_beast_movements` | 34.6 | 1.79 | ~418 | 9 % |
-| `fill_hamlets` | 86.2 | 0.83 | ~276 | 6 % |
-| `add_nests` | 24.0 | 0.91 | ~85 | 2 % |
-| `fill_cities` | 27.7 | 0.36 | ~46 | 1 % |
-| **Projected total** | **450** | | **~4 750 (79 min)** | |
+| `add_nests` | 23.9 | 0.94 | ~88 | 28 % |
+| `fill_cities` | 27.7 | 0.37 | ~46 | 15 % |
+| `fill_castles` | 17.3 | 0.66 | ~43 | 14 % |
+| `add_settlements` | 12.6 | 0.87 | ~42 | 13 % |
+| `fill_hamlets` | 17.2 | 0.57 | ~38 | 12 % |
+| `add_beast_movements` | 3.6 | 1.10 | **~17** | 5 % |
+| **Projected total** | **137** | | **~310 (5 min)** | |
 
-This is now the entire argument for what to do next. Three optimisations have taken the
-size-128 run from 1 244 s to 450 s without touching `add_world_society`, and the projected
-size-257 total has barely moved with them — 5 290 s then, 4 750 s now — because that run is
-three quarters one pass. **At 257 the two superlinear passes are a projected 87 % of the
-work.** Every further gain elsewhere is bounded by what is left: `fill_cities`, `add_nests`,
-`fill_castles` and `add_settlements` together are 83 s at 128 and a projected 180 s at 257.
+Against ~4 750 s projected two rounds ago and ~790 s one round ago: **fifteen times cheaper
+at 257 over two changes.** A size-257 world moves from "an hour and a quarter, if the memory
+holds" to about five minutes, which is the difference between a size nobody runs and a size
+somebody runs without thinking about it.
+
+**No pass is a candidate for the same treatment any more.** The projected 257 cost is now
+spread across five passes between 12 % and 28 %, none of them superlinear, and the largest
+remaining exponent belongs to the pass with the smallest share. **A size-257 run is cheap
+enough to measure rather than project** — and the memory that used to make that doubtful is
+also gone, since peak resident at 128 fell from 2 823 MB to 1 069 MB in the last round. It
+would also settle the size-192 crossing described below.
 
 ### One change inside `add_nests`, isolated: 6–13× cheaper at identical placements
 
@@ -409,16 +473,21 @@ the other.
 For scale against what it buys: that whole pass produces **4 sea routes** at size 128, and
 4 at size 65 as well.
 
-### `add_beast_movements` is the other superlinear pass
+### `add_beast_movements` was the other superlinear pass — **closed 2026-09-21**
 
-Exponent 1.81 on the current tree, up from 1.66 before its module was rewritten. 35.8 s at
-size 128, 5.1 % of the run — third by size, behind `fill_cities` and `add_world_society`.
+This section used to say: exponent 1.81, 35.8 s at size 128, here because of the exponent
+rather than the seconds, projected to roughly 445 s at size 257. That is now history and the
+numbers above supersede it. The pass is **3.60 s at size 128 and 2.6 % of the run**, its
+exponent is 1.10 in situ and 1.47 on an isolated harness, and it projects to ~17–25 s at
+257. The block it writes is byte-identical across the change at every size.
 
-It is here because of the exponent, not the seconds. On the projection above it reaches
-roughly 445 s at size 257, about the same as `fill_cities`, having been an eighth of it at
-128. Its rewrite between the two reference runs did not change that: the pass moved −14 %,
-inside the −1 % to −18 % band that unchanged passes moved on the same pair of runs, with
-its group count flat at 11 119 → 11 184.
+Four things were wrong with it, and each had grown with the world rather than with the
+routes: a nearest-host scan that compared every follower against every group already routed;
+an unbounded Dijkstra per group, cached at full map width so the cache alone reached 2.2 GB;
+a re-scan of every cell in the world to recover the two hundred each search reached; and one
+route built per group where a route depends only on the cell it starts from. See
+[PERF-BEAST-MOVEMENTS-IS-THE-PASS](../board/done/PERF-BEAST-MOVEMENTS-IS-THE-PASS.md) and
+[The fifth round](#the-fifth-round-add_beast_movements-and-the-memory-went-with-it).
 
 ## Where the repeated work is
 
@@ -479,20 +548,28 @@ sublinear whole.
 
 ## Memory
 
-Peak resident is 2 775 MB at size 128, and 2 290 MB of that arrives inside stage 16 alone:
-resident is 482 MB entering the stage, peaks at 2 775 MB during it, and settles at 1 040 MB
-when it ends. So the peak is a transient in the planners and the satellite packages, not
-retained world state.
+**Peak resident is 1 069 MB at size 128, down from 2 823 MB, and the transient that made
+the difference is gone.** Resident is 495 MB entering stage 16, peaks at 1 069 MB during it
+and settles at 1 067 MB when it ends — so what is left is retained world state rather than a
+spike. Before the 16:08 round it peaked at 2 823 MB during that stage and settled at
+1 100 MB, a transient of 1 723 MB with nothing to show for it.
 
-Peak memory grew 379 → 460 → 711 → 2 775 MB across the ladder. The jump from 65 to 128 is
-3.9× for 3.9× the cells, far steeper than the three points below it, so the sublinear fit
-of 0.49 is a bad summary and the true curve steepens. A size-257 run on this machine is
-memory-plausible but was not attempted.
+That transient was one pass. Timed around `add_beast_movements` alone on a baked size-128
+world, with resident sampled during the call, it peaked **2 208 MB above entry**; it now
+peaks **158 MB** above entry. It was caching a full-width distance and parent array for
+every start node it searched from and never dropping one.
 
-**The beast and monster work did not move memory at all** — 379/460/711/2 775 MB now against
-379/460/713/2 773 MB before, identical within a megabyte at every size, while placing 40 %
-more nests. Time halved and the memory curve did not notice, which says the peak is not
-nest state. It is stage 16.
+Peak memory across the ladder is now 187 → 473 → 766 → 1 069 MB, against
+187 → 473 → 766 → 2 823 MB before. **The three smaller sizes are unchanged to the megabyte
+and only 128 moved**, which is the shape to expect: below 128 something else sets the peak
+and this pass never reached it. The 65 → 128 jump was 3.7× for 3.9× the cells and is now
+1.4×, so the curve no longer steepens at the top and a size-257 run is memory-plausible
+with far more room than it had. It has still not been attempted.
+
+**The beast and monster work — the earlier rewrite, not this one — did not move memory at
+all**: 379/460/711/2 775 MB then against 379/460/713/2 773 MB before it, identical within a
+megabyte at every size while placing 40 % more nests. So the peak was never nest state, and
+the round that finally moved it named the pass directly.
 
 ## What this does not tell you
 

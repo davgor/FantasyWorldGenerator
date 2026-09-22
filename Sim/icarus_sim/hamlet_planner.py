@@ -1,8 +1,9 @@
 """Deterministic final-world schematic hamlet packing, independent of city_plans."""
 import hashlib
 import math
+import os
 from .city_geometry import grow_roads, corners, footprint_cells
-from .city_planner import _sampler, CELL
+from .city_planner import _sampler, CELL, _Replay, _clearance, _ROOT2
 from .civilization_registry import hamlet_plan, section, registry_identity
 
 VERSION=3
@@ -162,6 +163,7 @@ def plan_hamlet(world,hamlet):
             c.update(status='connected',reason='Terrain-safe junction to parent-city approach',
                      local_path_m=[[-half+(a+.5)*CELL,-half+(b+.5)*CELL] for a,b in approach]+[gate])
     result['roads']=[list(c) for c in sorted(road)]
+    clearance=_clearance(valid-road,size)
     result['street_paths_m']=[[[round(-half+(x+.5)*CELL,2),round(-half+(z+.5)*CELL,2)] for x,z in path] for path in paths]
     anchors=[]
     for path in result['street_paths_m']:
@@ -172,26 +174,40 @@ def plan_hamlet(world,hamlet):
             angle+=math.radians(5*math.sin(x*.13+z*.17+(seed%1000)))
             anchors.append((x,z,angle))
     anchors=sorted(set(anchors),key=lambda p:(p[0]**2+p[1]**2,p))
-    occupied=set();access=set();candidate_cache={}
+    occupied=set();access=set();candidate_cache={};corridor_cache={}
     def cells(x,z,w,d,angle=0):return footprint_cells(x,z,w,d,angle,half,CELL)
+    # Yielded rather than listed, for the reason _Replay records: install takes the first
+    # free option and stops, so the tail of every list was built and never looked at.
     def candidates(w,d):
-        if (w,d) in candidate_cache:return candidate_cache[(w,d)]
-        options=[]
+        options=candidate_cache.get((w,d))
+        if options is None:options=candidate_cache[(w,d)]=_Replay(_stream(w,d))
+        return options
+    def _stream(w,d):
         for ax,az,angle in anchors:
             for side in (1,-1):
                 dx=-math.sin(angle)*side;dz=math.cos(angle)*side
                 x=round(ax+dx*(d/2+8),2);z=round(az+dz*(d/2+8),2)
                 degrees=round(math.degrees(angle),4);angle=math.radians(degrees)
+                # Decided without rasterizing when the nearest cell that is not free
+                # ground must fall inside the inscribed circle. See _clearance.
+                ci=int((x+half)//CELL);cj=int((z+half)//CELL)
+                if 0<=ci<size and 0<=cj<size and (clearance[cj][ci]+1)*CELL*_ROOT2<=(w if w<d else d)/2:continue
                 footprint=cells(x,z,w,d,angle)
                 if not footprint<=valid or footprint&road:continue
                 ground=[sample.height_at(px,pz) for px,pz in corners(x,z,w,d,angle)]
                 ground+=[heights[c] for c in sorted(footprint)]
                 if max(ground)-min(ground)>math.hypot(w,d)*math.tan(math.radians(25)):continue
-                ex=x-dx*d/2;ez=z-dz*d/2;corridor=set()
-                for t in range(11):corridor|=cells(ax+(ex-ax)*t/10,az+(ez-az)*t/10,4,4)
-                if corridor<=valid:options.append((x,z,degrees,ax,az,footprint,corridor,ground))
-        candidate_cache[(w,d)]=options
-        return options
+                ex=x-dx*d/2;ez=z-dz*d/2
+                # An access corridor depends only on its endpoints, so building it once per
+                # distinct pair is the same set. The key is the endpoints as computed and
+                # not a tidied version of them, so this can only ever return what the
+                # eleven rasterizations below would have produced.
+                corridor=corridor_cache.get((ax,az,ex,ez))
+                if corridor is None:
+                    corridor=set()
+                    for t in range(11):corridor|=cells(ax+(ex-ax)*t/10,az+(ez-az)*t/10,4,4)
+                    corridor_cache[(ax,az,ex,ez)]=corridor
+                if corridor<=valid:yield (x,z,degrees,ax,az,footprint,corridor,ground)
     def install(row,phase,kind='service'):
         w=row['plot_m']['width'];d=row['plot_m']['depth']
         for x,z,degrees,ax,az,footprint,corridor,ground in candidates(w,d):
@@ -254,10 +270,48 @@ def plan_hamlet(world,hamlet):
     return result
 
 
-def fill_hamlets(world):
-    hamlets=[]
-    for site in sorted(world.get('humans',{}).get('hamlets',[]),key=lambda h:str(h['id'])):
-        hamlets.append(plan_hamlet(world,site))
+# plan_hamlet is a pure function of (world, hamlet) and, unlike a city, carries no
+# cross-hamlet state at all -- no shape counter, nothing a later hamlet reads from an
+# earlier one. So the pool needs one pass, not the city planner's two.
+_POOL_WORLD=None
+_MIN_SITES_FOR_POOL=3
+
+
+def _pool_init(blob):
+    global _POOL_WORLD
+    import pickle
+    _POOL_WORLD=pickle.loads(blob)
+
+
+def _pool_plan(index):
+    sites=sorted(_POOL_WORLD.get('humans',{}).get('hamlets',[]),key=lambda h:str(h['id']))
+    return plan_hamlet(_POOL_WORLD,sites[index])
+
+
+def _plan_pooled(world,sites,workers):
+    import os,pickle
+    from concurrent.futures import ProcessPoolExecutor
+    blob=pickle.dumps(world,protocol=pickle.HIGHEST_PROTOCOL)
+    workers=min(workers or (os.cpu_count() or 1),len(sites))
+    with ProcessPoolExecutor(max_workers=workers,initializer=_pool_init,initargs=(blob,)) as pool:
+        return list(pool.map(_pool_plan,range(len(sites))))
+
+
+def fill_hamlets(world,workers=None):
+    sites=sorted(world.get('humans',{}).get('hamlets',[]),key=lambda h:str(h['id']))
+    env=os.environ.get('ICARUS_CITY_WORKERS')
+    if workers is None and env:workers=int(env)
+    hamlets=None
+    if workers!=1 and len(sites)>=_MIN_SITES_FOR_POOL:
+        try:hamlets=_plan_pooled(world,sites,workers)
+        except Exception as error:
+            import warnings
+            warnings.warn('Hamlet planning fell back to one process (%s: %s). A spawn platform '
+                          're-imports the caller\'s __main__, so generation must happen under '
+                          '`if __name__ == "__main__"` for the pool to start.'
+                          %(type(error).__name__,error),RuntimeWarning,stacklevel=2)
+            hamlets=None
+    if hamlets is None:hamlets=[plan_hamlet(world,site) for site in sites]
     world['hamlet_plans']={'version':VERSION,'identity':planner_identity(),'hamlets':hamlets,
                            'phase_order':['map','shape','high','high_housing','low','low_housing'],
                            'scope':'Schematic local metres for support hamlets; independent of city_plans; does not change simulated population.'}

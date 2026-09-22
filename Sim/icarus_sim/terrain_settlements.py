@@ -3,7 +3,7 @@ import heapq
 import math
 import random
 from time import perf_counter
-from .terrain_erosion import sphere_grid
+from .terrain_erosion import sphere_grid, sphere_index
 from .terrain_globe import direction,perlin3
 from .terrain_tectonics import child_seed
 from .terrain_climate import node_grid
@@ -663,7 +663,18 @@ def _pick_city_building_pack(city_seed, profile_id, biome, height_m, slope_deg, 
     return candidates[-1][0]
 
 
-def shortest_paths(graph,start,cost,targets=None):
+def shortest_paths(graph,start,cost,targets=None,limit=math.inf):
+    """Cheapest routes from one node, optionally only out to `limit`.
+
+    A caller that discards every result past a reach was still paying for the whole
+    component: the sea routes in `add_world_society` ran 3 828 unbounded searches over
+    the ocean at size 128 and kept four of them, because `sea_reach` is 6 000 m against a
+    5 834 m median edge. Stopping at the reach is not an approximation -- edge costs are
+    non-negative, so every prefix of a path costing `limit` or less also costs `limit` or
+    less, and a node inside the bound keeps the same distance and the same parent it had
+    when the search was unbounded. Nodes outside it stay at infinity rather than taking
+    their true value, so read a bounded result only inside the bound.
+    """
     distances=[math.inf]*len(graph);parent=[-1]*len(graph);distances[start]=0
     queue=[(0,start)];remaining=set(targets) if targets is not None else None
     while queue:
@@ -676,7 +687,7 @@ def shortest_paths(graph,start,cost,targets=None):
             edge=cost(i,j,d)
             if edge is None:continue
             candidate=value+edge
-            if candidate<distances[j]:
+            if candidate<=limit and candidate<distances[j]:
                 distances[j]=candidate;parent[j]=i;heapq.heappush(queue,(candidate,j))
     return distances,parent
 
@@ -684,7 +695,7 @@ def shortest_paths(graph,start,cost,targets=None):
 
 def road_cost_function(points,water,height,flood,river,cfg,hazard=None):
     n=cfg.size
-    lookup={p:i for i,p in enumerate(points)}
+    lookup,_=sphere_index(points)
     def cost(i,j,d):
         if water[i] or water[j] or d<=0:return None
         if hazard is not None and max(hazard[i],hazard[j])>cfg.human_magic_limit:return None

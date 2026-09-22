@@ -21,7 +21,34 @@ classes rather than one "wanders" flag:
 Groups share the shape of `nomads.groups` deliberately, so an encounter index or a time
 mover reads both with one code path. A beast group additionally carries `species_id` and,
 for followers, `host_uid`.
+
+Cost, and the four things that decide it
+----------------------------------------
+This pass is the largest in a size-128 generation and the only superlinear one, so the
+shape of the work is part of the design rather than an implementation detail. Four
+structures carry it, and each exists to remove a term that grew with the world:
+
+  priced edges   every passable step is priced once, by `_priced`, instead of once per
+                 search that crosses it. The search below is run thousands of times over
+                 one static graph, and the cost function is the expensive part of it
+  bounded search `_searcher`'s search stops at the reach its caller will read and reports
+                 the nodes it settled, out of arrays it keeps rather than rebuilds. The
+                 old form searched the whole land component and then scanned every cell
+                 in the world to find the two hundred it wanted
+  one shape per  a route depends on the ground under the group, not on the group. Two
+  ground         species standing on one cell walk the same circuit, so the circuit is
+                 built once and worn by both -- see `shape`
+  a latitude     `_follow` picks the nearest host out of everything that already walks,
+  walk           and everything that already walks is most of this block. Comparing every
+                 follower against every host is the quadratic that made the pass the
+                 successor to `add_world_society`; the walk in `_follow` replaces it
+
+None of the four moves a float. The block this module writes is byte-identical across the
+change, floats by `repr`, at sizes 33, 65 and 128 -- which is the only claim worth making
+about a performance change to a deterministic generator.
 """
+import bisect
+import heapq
 import math
 import random
 from time import perf_counter
@@ -29,11 +56,14 @@ from .terrain_tectonics import child_seed
 from .terrain_world import options
 from .terrain_astrology import DAYS_PER_YEAR
 from .terrain_erosion import sphere_grid
-from .terrain_nests import habitat_cells, profiles, distance, clamp
-from .terrain_settlements import shortest_paths
+from .terrain_nests import habitat_cells, profiles, distance
 from .terrain_society import trace
-from .terrain_nomad_routes import (travel_cost, _camp, _best, _within, _assign_days,
-                                   midwinter_day)
+from .terrain_nomad_routes import travel_cost, _camp, _assign_days
+
+# A sentinel the shape cache can tell apart from a builder that legitimately returned
+# `None`, which is how a stranded group is reported and is very much a result worth
+# remembering.
+_MISSING = object()
 
 # 2: irruptions gained a condition in time. Under version 1 every irruptive group marched
 # in every year, so a consumer could read the block as a fixed roster of swarms; now a
@@ -69,6 +99,16 @@ SEASONAL_REACH = 3.
 IRRUPTION_REACH = 4.
 DRIFT_REACH = 2.5
 FOLLOW_REACH = 3.
+
+# Slack on the latitude bound the host walk in `_follow` stops on, in radians. The bound
+# -- that the angle between two directions is at least the difference of their latitudes
+# -- is exact in real arithmetic; this absorbs the rounding in the `asin` that stands in
+# for a latitude and the `acos` inside `distance`. It is the same number and the same
+# argument as `terrain_nests.LATITUDE_SLACK`, kept here rather than imported because the
+# two walks stop on different quantities and a shared constant would imply they move
+# together. 1e-9 rad is 3e-5 m on the widest world this product ships, and the slack is
+# ADDED to the threshold, so the walk goes one candidate too far rather than one too few.
+WALK_SLACK = 1e-9
 
 # How much a year's forage departs from an ordinary one. One draw for the whole world, not
 # one per group: a bad year is bad for everybody at once, which is what makes the swarms of
@@ -155,39 +195,155 @@ def _site_groups(result):
     return out
 
 
+def _priced(graph, cost):
+    """Every passable edge priced once, in place of once per search that crosses it.
+
+    `travel_cost` is a closure over four per-cell lists with a diagonal-corner test in it,
+    and it was being called on every relaxation of every search this pass runs -- several
+    million evaluations of a function whose answer cannot change, because the graph and
+    the ground are both fixed for the whole pass. Pricing the graph once is one call per
+    directed edge, about eight per cell, and the searches then read floats.
+
+    Impassable edges are dropped rather than priced as infinite, so the search never sees
+    them. That is the same set the old form skipped on `edge is None`, in the same order,
+    which is why the distances come out float for float the same.
+    """
+    priced = []
+    for i, edges in enumerate(graph):
+        row = []
+        for j, span in edges:
+            value = cost(i, j, span)
+            if value is not None:
+                row.append((j, value))
+        priced.append(row)
+    return priced
+
+
+def _searcher(priced):
+    """A search over `priced` that keeps its two arrays between calls.
+
+    Four differences from `terrain_settlements.shortest_paths`, and each buys something
+    this pass in particular needed.
+
+    **It stops at the reach.** Every caller here discards everything past a reach of two
+    and a half to four settlement spacings, and stopping inside the search is not an
+    approximation: edge costs are strictly positive, so every prefix of a path costing
+    `limit` or less also costs `limit` or less, and a node inside the bound keeps the
+    distance and the parent it had when the search was unbounded.
+
+    **It reports what it reached.** The callers used to recover that by scanning every
+    cell in the world -- `_within` over 16 004 cells to find the 190 a search on a world
+    four fifths ocean actually settles. A node enters the set the first time it is given a
+    finite distance, which is the first time its parent stops being -1, and the list is
+    sorted before it is returned so a caller reads it in ascending node order. That order
+    is load-bearing: `_irruption` sums forage over it, and float addition is not
+    associative.
+
+    **It can stop on a target.** A leg only needs the path to one node. Every node on that
+    path has a strictly smaller distance than the target -- strictly, because no edge here
+    is free -- so all of them are settled with final parents by the time the target is
+    popped, and the traced route is the one the unbounded search would have given.
+
+    **It does not rebuild the arrays.** They are the width of the world and a search
+    touches a few hundred cells of it, so allocating them per call was the one cost left
+    in here that grew with the map rather than with the route -- 148 million list slots
+    over a size-128 run, against 4.4 million cells actually settled. Each call clears
+    what the last one dirtied instead.
+
+    **`distances` and `parent` are therefore scratch.** They hold for exactly as long as
+    it takes to call this again, which every caller in this module respects: two read only
+    the reached list, `_drift` reads the distances before returning, and `route` traces
+    the parents before returning. The reached list is a fresh one each time and is safe to
+    keep. Nothing here is thread-safe, and nothing in this generator is.
+    """
+    distances = [math.inf] * len(priced)
+    parent = [-1] * len(priced)
+    dirty = []
+
+    def search(start, limit=math.inf, target=None):
+        pop, push = heapq.heappop, heapq.heappush
+        for node in dirty:
+            distances[node] = math.inf
+            parent[node] = -1
+        del dirty[:]
+        distances[start] = 0
+        dirty.append(start)
+        queue = [(0, start)]
+        while queue:
+            value, i = pop(queue)
+            if value != distances[i]:
+                continue
+            if i == target:
+                break
+            for j, edge in priced[i]:
+                candidate = value + edge
+                # Distance first, reach second, and not the other way round: the reach
+                # test passes on almost every edge a bounded search looks at and is pure
+                # overhead there, while most neighbours of a settled cell are already
+                # settled better. Both have to hold, so the order is free to choose.
+                if candidate < distances[j] and candidate <= limit:
+                    if parent[j] < 0:
+                        dirty.append(j)
+                    distances[j] = candidate
+                    parent[j] = i
+                    push(queue, (candidate, j))
+        return distances, parent, sorted(dirty)
+
+    return search
+
+
+def _host_index(hosts, dirs):
+    """The hosts sorted by latitude, which is what `_follow` walks outwards from.
+
+    Ties break on position in the caller's list so the order is a function of the world
+    and not of the sort's stability.
+    """
+    lats = [math.asin(max(-1., min(1., dirs[host['node']][1]))) for host in hosts]
+    order = sorted(range(len(hosts)), key=lambda i: (lats[i], i))
+    return ([lats[i] for i in order], [hosts[i] for i in order],
+            [dirs[hosts[i]['node']] for i in order])
+
+
 def _seasonal(group, ctx):
-    """The green wave: high and open for the warm months, sheltered and low for the cold."""
-    cells, spacing = ctx['cells'], ctx['spacing']
+    """The green wave: high and open for the warm months, sheltered and low for the cold.
+
+    Both scores are taken in one pass over the reachable ground, and `clamp` is spelled
+    out rather than called. That is not style: the two scorers are the innermost loop of
+    this pass and were four million Python calls at size 128. It is the same arithmetic in
+    the same order -- `clamp` *is* `max(0., min(1., v))` -- and the pick is the same
+    `(score, -node)` maximum `_best` takes, so the two camps come out the same cells.
+    """
+    heights, forage = ctx['height'], ctx['forage']
+    slope, temperature, tpi = ctx['slope'], ctx['temperature'], ctx['tpi']
     start = group['node']
-    distances, parent = ctx['paths'](start)
-    heights = [c['fields'].get('height', 0.) for c in cells]
     base = heights[start]
-    reach = SEASONAL_REACH * spacing
-
-    def summer(node):
-        f = cells[node]['fields']
-        lift = clamp((heights[node] - base) / max(1., abs(base) + 400.))
-        forage = max(f.get('food_potential', 0.), f.get('natural_food_potential', 0.))
-        return forage * (1. + lift) * (.4 + clamp(1. - f.get('slope', 0.) / 30.))
-
-    def winter(node):
-        f = cells[node]['fields']
-        drop = clamp((base - heights[node]) / max(1., abs(base) + 400.))
-        warmth = clamp((f.get('temperature', 0.) + 20.) / 45.)
-        forage = max(f.get('food_potential', 0.), f.get('natural_food_potential', 0.))
-        return (.3 + forage) * (1. + drop) * (.4 + clamp(abs(f.get('tpi', 0.)) / 30.)) * (.5 + warmth)
-
-    reachable = [i for i in _within(distances, reach) if i != start]
-    s = _best(reachable, summer)
-    w = _best(reachable, winter)
+    # Loop-invariant: the denominator is the group's own ground, not the candidate's.
+    span = max(1., abs(base) + 400.)
+    _, _, reached = ctx['search'](start, SEASONAL_REACH * ctx['spacing'])
+    s = w = None
+    best_s = best_w = None
+    for node in reached:
+        # The start node is the calving camp and cannot also be a seasonal one.
+        if node == start:
+            continue
+        food = forage[node]
+        height = heights[node]
+        lift = max(0., min(1., (height - base) / span))
+        mark = (food * (1. + lift) * (.4 + max(0., min(1., 1. - slope[node] / 30.))), -node)
+        if best_s is None or mark > best_s:
+            best_s, s = mark, node
+        drop = max(0., min(1., (base - height) / span))
+        warmth = max(0., min(1., (temperature[node] + 20.) / 45.))
+        mark = ((.3 + food) * (1. + drop) * (.4 + max(0., min(1., abs(tpi[node]) / 30.)))
+                * (.5 + warmth), -node)
+        if best_w is None or mark > best_w:
+            best_w, w = mark, node
     if s is None or w is None or s == w:
         return None
-    camps = [_camp(group, 0, start, cells, 'calving'),
-             _camp(group, 1, s, cells, 'summer'),
-             _camp(group, 2, w, cells, 'winter')]
     # Calving is the reason the round has a third stop: moving to it is what buys the young
     # their distance from the predators that follow the herd.
-    return camps, [(0, 1, 'trunk'), (1, 2, 'trunk'), (2, 0, 'trunk')], parent
+    return ([(start, 'calving'), (s, 'summer'), (w, 'winter')],
+            [(0, 1, 'trunk'), (1, 2, 'trunk'), (2, 0, 'trunk')])
 
 
 def _irruption(group, ctx):
@@ -211,30 +367,33 @@ def _irruption(group, ctx):
     A group that fails to clear the bar is `SOLITARY`, which is a normal state. `None` is
     kept for its old meaning -- no reachable ground to march to -- and is still `stranded`.
     """
-    cells, spacing = ctx['cells'], ctx['spacing']
+    forage = ctx['forage']
     start = group['node']
-    distances, parent = ctx['paths'](start)
-
-    def fed(node):
-        f = cells[node]['fields']
-        return max(f.get('food_potential', 0.), f.get('natural_food_potential', 0.))
-
-    within = _within(distances, IRRUPTION_REACH * spacing)
+    _, _, within = ctx['search'](start, IRRUPTION_REACH * ctx['spacing'])
     if not within:
         return None
     # Plain accumulation rather than sum(): CPython compensates a builtin sum of floats and
-    # a native port would have to replicate that to stay bit-exact.
+    # a native port would have to replicate that to stay bit-exact. `within` is in
+    # ascending node order, which is what makes this total reproducible.
     total = 0.
     for node in within:
-        total += fed(node)
+        total += forage[node]
     local_mean = total / len(within)
-    if fed(start) * ctx['year_forage'] >= IRRUPTION_MARGIN * local_mean:
+    if forage[start] * ctx['year_forage'] >= IRRUPTION_MARGIN * local_mean:
         return SOLITARY
-    target = _best([i for i in within if i != start], fed)
+    # `_best` written out, for the reason `_seasonal` gives: the same `(score, -node)`
+    # maximum, without a Python call per candidate.
+    target = None
+    best = None
+    for node in within:
+        if node == start:
+            continue
+        mark = (forage[node], -node)
+        if best is None or mark > best:
+            best, target = mark, node
     if target is None:
         return None
-    return ([_camp(group, 0, start, cells, 'base'), _camp(group, 1, target, cells, 'terminal')],
-            [(0, 1, 'trunk')], parent)
+    return [(start, 'base'), (target, 'terminal')], [(0, 1, 'trunk')]
 
 
 def _drift(group, ctx):
@@ -243,10 +402,10 @@ def _drift(group, ctx):
     These are the dead nobody buried, so the route has no seasonal logic at all. It is a
     wandering between sites of violence, which is the only thing that anchors them.
     """
-    cells, spacing = ctx['cells'], ctx['spacing']
     start = group['node']
-    distances, parent = ctx['paths'](start)
-    reach = DRIFT_REACH * spacing
+    reach = DRIFT_REACH * ctx['spacing']
+    distances, _, _ = ctx['search'](start, reach)
+    cells = ctx['cells']
     haunts = []
     for ruin in ctx['ruins']:
         node = ruin.get('node')
@@ -257,12 +416,12 @@ def _drift(group, ctx):
     haunts.sort()
     if not haunts:
         return None
-    camps = [_camp(group, 0, start, cells, 'base')]
-    for i, (_, _, node) in enumerate(haunts[:3]):
-        camps.append(_camp(group, i + 1, node, cells, 'terminal'))
+    camps = [(start, 'base')]
+    for _, _, node in haunts[:3]:
+        camps.append((node, 'terminal'))
     order = [(i, i + 1, 'trunk') for i in range(len(camps) - 1)]
     order.append((len(camps) - 1, 0, 'trunk'))
-    return camps, order, parent
+    return camps, order
 
 
 def _follow(group, ctx):
@@ -270,39 +429,82 @@ def _follow(group, ctx):
 
     This is the class that closes the loop the whole feature is for: predators and
     scavengers walking the routes that nomads and herds already walk.
+
+    Finding the host is the part that had to change. A follower takes the nearest host in
+    reach, biased by kind, and by the time followers are built nearly everything else in
+    this block is a host -- so comparing each follower against every host is quadratic in
+    the size of the block, and at size 128 that was half the pass. It is now the same
+    outward walk `terrain_nests.nearest_settled` uses, over the same mathematics: the
+    angle between two directions is at least the difference of their latitudes, so with
+    the hosts sorted by latitude and taken nearest-latitude first, from whichever side has
+    the smaller remaining gap, everything still unvisited is at least that far away.
+
+    Two thresholds stop it, and the walk stops on whichever it meets first.
+
+      the reach  a host whose latitude alone puts it past the reach cannot pass the cut,
+                 and neither can anything behind it
+      the mark   the winner is the smallest `span * bias`, and `bias` is never above one,
+                 so a host at latitude gap `g` cannot mark below `radius * g * bias_min`.
+                 Once that floor passes the best mark already found, nothing left can win
+
+    The answer is the one the flat scan gave. The winner is the unique minimum of
+    `(span * bias, uid)`, which does not depend on the order candidates arrive in, and
+    `span` is the same `distance` call on the same two directions.
     """
-    cells, spacing = ctx['cells'], ctx['spacing']
+    dirs, radius = ctx['dirs'], ctx['radius']
     start = group['node']
-    reach = FOLLOW_REACH * spacing
+    reach = FOLLOW_REACH * ctx['spacing']
     bias = HOST_BIAS.get(group.get('role'), DEFAULT_BIAS)
+    # `bias.get(kind, 1.)` falls back to one, so the floor has to admit one as well.
+    floor = min(min(bias.values()), 1.)
+    lats, ordered, host_dirs = ctx['host_index']
+    total = len(lats)
+    here = dirs[start]
+    phi = math.asin(max(-1., min(1., here[1])))
+    left = bisect.bisect_left(lats, phi)
+    right = left
+    slack = radius * WALK_SLACK
     best = None
-    for host in ctx['hosts']:
-        if not host.get('legs'):
-            continue
-        span = distance(cells[start]['direction'], cells[host['node']]['direction'], ctx['radius'])
-        if span > reach:
-            continue
+    while True:
+        gap_l = phi - lats[left - 1] if left else None
+        gap_r = lats[right] - phi if right < total else None
+        if gap_l is None and gap_r is None:
+            break
+        if gap_r is None or (gap_l is not None and gap_l <= gap_r):
+            gap = gap_l
+            left -= 1
+            at = left
+        else:
+            gap = gap_r
+            at = right
+            right += 1
+        floor_span = radius * gap
+        if floor_span > reach + slack:
+            break
+        if best is not None and floor_span * floor > best[0][0] + slack:
+            break
         # A bias below one shortens the effective distance, so a preferred host wins from
         # further away without ever letting an unreachable one through.
+        span = distance(here, host_dirs[at], radius)
+        if span > reach:
+            continue
+        host = ordered[at]
         kind = 'nomad' if host['uid'].startswith('nomad-') else 'beastmove'
         mark = (span * bias.get(kind, 1.), host['uid'])
         if best is None or mark < best[0]:
             best = (mark, host)
     if best is None:
-        return None
+        return None, None
     host = best[1]
-    group['host_uid'] = host['uid']
     # The host's camps become the follower's, one step behind: it arrives where the host
-    # has been rather than where it is going.
-    camps = []
-    for i, camp in enumerate(host['camps']):
-        camps.append(_camp(group, i, camp['node'], cells,
-                           'terminal' if camp['kind'] in ('station', 'terminal') else 'base'))
+    # has been rather than where it is going. The uid is claimed even when the circuit is
+    # too short to derive from, because the follower did find a host -- it is the host's
+    # route that failed it, and the block should say which host.
+    camps = [(camp['node'], 'terminal' if camp['kind'] in ('station', 'terminal') else 'base')
+             for camp in host['camps']]
     if len(camps) < 2:
-        return None
-    order = [(i, (i + 1) % len(camps), 'trunk') for i in range(len(camps))]
-    _, parent = ctx['paths'](start)
-    return camps, order, parent
+        return host['uid'], None
+    return host['uid'], (camps, [(i, (i + 1) % len(camps), 'trunk') for i in range(len(camps))])
 
 
 BUILDERS = {'migratory': _seasonal, 'irruptive': _irruption,
@@ -319,22 +521,33 @@ def add_beast_movements(result, cfg):
     radius = result['effective_config']['globe_radius']
     points, areas, graph = sphere_grid(cfg.size, radius)
     cells = habitat_cells(result, cfg, points, areas)
-    cost = travel_cost(points, cells, cfg)
+    priced = _priced(graph, travel_cost(points, cells, cfg))
     spacing = float(cfg.settlement_spacing)
-    cache = {}
+    # One searcher for the whole pass, builders and legs alike. Its arrays are scratch and
+    # a builder is finished with them before `route` searches again -- see `_searcher`.
+    search = _searcher(priced)
 
-    def paths(start):
-        if start not in cache:
-            cache[start] = shortest_paths(graph, start, cost)
-        return cache[start]
+    # The fields the scorers read, lifted out of the cell dictionaries once. Every one of
+    # them was being fetched with a `.get` inside a scoring function called for each
+    # candidate node of each group -- and `height` was being rebuilt as a whole-world list
+    # on every seasonal build. Same values, same defaults, same order of operations.
+    dirs = [c['direction'] for c in cells]
+    fields = [c['fields'] for c in cells]
+    height = [f.get('height', 0.) for f in fields]
+    forage = [max(f.get('food_potential', 0.), f.get('natural_food_potential', 0.)) for f in fields]
+    slope = [f.get('slope', 0.) for f in fields]
+    temperature = [f.get('temperature', 0.) for f in fields]
+    tpi = [f.get('tpi', 0.) for f in fields]
 
     # Followers derive from whatever already walks: nomad bands first, then the herds built
     # in this same pass. So followers are built last, once there is something to follow.
     hosts = [b for b in (result.get('nomads', {}).get('groups', []) or []) if b.get('legs')]
     year = world_year(result)
-    ctx = {'cells': cells, 'spacing': spacing, 'paths': paths, 'radius': radius,
-           'ruins': result.get('ruins', []) or [], 'hosts': hosts,
-           'year': year, 'year_forage': year_forage_factor(result, year)}
+    ctx = {'cells': cells, 'spacing': spacing, 'search': search, 'radius': radius,
+           'ruins': result.get('ruins', []) or [],
+           'year': year, 'year_forage': year_forage_factor(result, year),
+           'dirs': dirs, 'height': height, 'forage': forage, 'slope': slope,
+           'temperature': temperature, 'tpi': tpi, 'host_index': _host_index(hosts, dirs)}
 
     rng = random.Random(child_seed(cfg.seed, 'beast-movement-v1', int(o.get('nomad_variation', 0))))
     groups, deferred, stranded, solitary = [], [], 0, 0
@@ -365,9 +578,42 @@ def add_beast_movements(result, cfg):
         }
         (deferred if movement == 'follower' else groups).append((group, movement))
 
+    # A circuit is a property of the ground a group stands on, not of the group: nothing
+    # any builder reads varies between two groups on one cell of one movement class -- a
+    # follower additionally reads its role, because that is what biases its choice of
+    # host. So the shape is built once per key and worn by everyone who shares it. What
+    # cannot be shared is the naming: `_camp` stamps the group's own uid into every camp
+    # id, and `_assign_days` runs on the group's own speed.
+    shapes = {}
+
+    def shape(group, movement):
+        key = (movement, group['node'], group['role']) if movement == 'follower' \
+            else (movement, group['node'])
+        built = shapes.get(key, _MISSING)
+        if built is _MISSING:
+            built = shapes[key] = BUILDERS[movement](group, ctx)
+        return built
+
+    # One traced route per pair of camps, for the same reason. The nodes are copied out
+    # per leg so two groups never share one list.
+    routes = {}
+
+    def route(source, destination):
+        found = routes.get((source, destination))
+        if found is None:
+            _, parent, _ = search(source, target=destination)
+            nodes = trace(parent, source, destination)
+            length = 0.
+            for i in range(len(nodes) - 1):
+                length += distance(dirs[nodes[i]], dirs[nodes[i + 1]], radius)
+            found = routes[(source, destination)] = (nodes, length)
+        return found
+
     def build(group, movement):
         nonlocal stranded, solitary
-        built = BUILDERS[movement](group, ctx)
+        built = shape(group, movement)
+        if movement == 'follower':
+            group['host_uid'], built = built
         if built is SOLITARY:
             # Sparse and staying put, which is the normal state for this class and not a
             # route that failed. It keeps a base camp, so the encounter index still places
@@ -381,21 +627,19 @@ def add_beast_movements(result, cfg):
             group['camps'] = [_camp(group, 0, group['node'], cells, 'base')]
             stranded += 1
             return
-        camps, order, parent = built
+        spec, order = built
+        camps = [_camp(group, i, node, cells, kind) for i, (node, kind) in enumerate(spec)]
         legs = []
         for a, b, branch in order:
             src, dst = camps[a], camps[b]
             if src['node'] == dst['node']:
                 continue
-            sub_d, sub_p = paths(src['node'])
-            nodes = trace(sub_p, src['node'], dst['node'])
+            nodes, length = route(src['node'], dst['node'])
             if not nodes:
                 continue
-            length = 0.
-            for i in range(len(nodes) - 1):
-                length += distance(cells[nodes[i]]['direction'], cells[nodes[i + 1]]['direction'], radius)
-            legs.append({'from': src['id'], 'to': dst['id'], 'nodes': nodes, 'length_m': length,
-                         'depart_day': None, 'arrive_day': None, 'branch': branch})
+            legs.append({'from': src['id'], 'to': dst['id'], 'nodes': list(nodes),
+                         'length_m': length, 'depart_day': None, 'arrive_day': None,
+                         'branch': branch})
         if not legs:
             group['route_status'] = 'stranded'
             group['camps'] = [_camp(group, 0, group['node'], cells, 'base')]
@@ -410,7 +654,7 @@ def add_beast_movements(result, cfg):
     for group, movement in groups:
         build(group, movement)
     # Herds now exist, so a follower may attach to one as readily as to a nomad band.
-    ctx['hosts'] = hosts + [g for g, _ in groups if g['legs']]
+    ctx['host_index'] = _host_index(hosts + [g for g, _ in groups if g['legs']], dirs)
     for group, movement in deferred:
         build(group, movement)
 
@@ -451,3 +695,4 @@ def add_beast_movements(result, cfg):
     result['timing_ms']['beast_movements'] = elapsed
     result['timing_ms']['total'] += elapsed
     return result
+

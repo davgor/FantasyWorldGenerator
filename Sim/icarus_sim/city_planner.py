@@ -145,6 +145,12 @@ class _Replay:
             except StopIteration:
                 self._spent=True;return
             memo.append(option);yield option;i+=1
+    def __len__(self):
+        # Asking how many options there are is asking for all of them, so this is a
+        # full pass by definition -- the same work the eager list used to do up front.
+        # It stays correct while an iteration is open: that iteration reads the memo.
+        for _ in self:pass
+        return len(self._memo)
 
 
 def plan_city(world,site,nearby_counts=None,shape_only=False):
