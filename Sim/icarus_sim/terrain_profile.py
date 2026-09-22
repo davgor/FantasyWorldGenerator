@@ -32,7 +32,6 @@ from __future__ import annotations
 
 import hashlib
 import importlib
-import os
 from pathlib import Path
 from contextlib import contextmanager
 from time import perf_counter
@@ -366,8 +365,3 @@ def mark():
 def end(result, snapshots=None):
     if _ACTIVE is not None:
         _ACTIVE.end(result, snapshots)
-
-
-def enabled_by_environment():
-    """`FANTASY_WORLD_PROFILE=1`, for a caller that cannot wrap the generate call itself."""
-    return os.environ.get('FANTASY_WORLD_PROFILE', '') not in ('', '0')

@@ -35,6 +35,7 @@
 - [Unreal Editor MCP](unreal-mcp.md) is the UnrealWorldGen editor bridge; Unity MCP is not a substitute.
 - [Publishing](publishing.md) defines release artifacts and the exhaustive asset-list policy.
 - [Agent workflow](agent-workflow.md) defines implementation and evidence standards.
+- [Porting notes](porting-notes.md) records the CPython substrate a reimplementation has to reproduce and which lives only in `Core/` comments today: compensated `sum()` and the 3.12 interpreter floor, the random-stream algorithms and four seed idioms, banker's rounding and float `repr` inside published digests, container ordering, the float build flags nobody has specified, and two undocumented execution switches. Decision 027 deletes `Core/`; this is what must survive it.
 - [Generation performance](performance.md) records what a world costs stage by stage and where the cost is: the reference measurement at seed 42 size 128, how each stage scales across a size ladder, the two passes that are superlinear and the passes that run three and five times on the finished world. Every figure is description, not invariant, and nothing in it gates.
 - [World asset catalogue](catalogue/world-assets/README.md) contains the inherited production briefs.
 - [Human civilization blocks](catalogue/human-civilization-blocks.md) define non-housing city layout requirements and provisional metre-scale measurements for the later catalogue rebuild.
